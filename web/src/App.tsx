@@ -14,7 +14,7 @@ import { Source } from './screens/Source.tsx';
 import { audienceOf, JOURNEYS } from './journey.ts';
 import { CHECKS, CODE, DECIDE, initial, READ, READY, reducer, RUN, SOURCE, type Action, type Flow } from './state.ts';
 
-export type ScreenProps = { s: Flow; dispatch: (a: Action) => void; go: (step: number) => void; pack: AppPack; name: string };
+export type ScreenProps = { s: Flow; dispatch: (a: Action) => void; go: (step: number) => void; onRead: (url: string) => void; pack: AppPack; name: string };
 
 const Code = lazy(() => import('./screens/Code.tsx').then(m => ({ default: m.Code })));
 const Run = lazy(() => import('./screens/Run.tsx').then(m => ({ default: m.Run })));
@@ -87,7 +87,7 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
   }, [s, pack]);
   // A connector saved as ready can outlive the pack it was checked against.
   useEffect(() => {
-    if (s.step === READY && pack?.manifest.app.slug === s.slug && isStale(s, pack)) dispatch({ type: 'go', step: CHECKS });
+    if (s.step === READY && pack?.manifest.app.slug === s.slug && isStale(s, pack)) dispatch({ type: 'pack-changed' });
   }, [s, pack]);
   const stopReading = () => {
     reading.current?.abort();
@@ -146,9 +146,9 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
     {!s.id && !connectors ? <div className="centered">{loadFailed ? <><Callout>{loadFailed}</Callout><Button variant="secondary" style={{ marginTop: 16 }} onClick={load}>Try again</Button></> : <P>Loading your workspace…</P>}</div>
       : !s.id ? <Home connectors={connectors!} onNew={() => leave({ type: 'new', id: crypto.randomUUID(), audience: lastAudience(connectors!) })} onOpen={open} onRemove={remove} />
       : s.step === SOURCE ? <Source s={s} dispatch={dispatch} go={go} onRead={startRead} />
-      : s.step === READ && s.read.kind !== 'idle' ? <LiveReading read={s.read} url={s.url} go={go} onPaste={text => startRead(s.url, text)} />
+      : s.step === READ && s.read.kind !== 'idle' ? <LiveReading read={s.read} url={s.url} go={go} onRetry={() => startRead(s.url)} onPaste={text => startRead(s.url, text)} />
       : pack && s.step === READY ? <Ready s={s} go={go} name={pack.manifest.app.name} onHome={home} onAnother={() => leave({ type: 'new', id: crypto.randomUUID(), audience: s.audience })} />
-      : pack ? <Suspense><Screen key={s.slug} s={s} dispatch={dispatch} go={go} pack={pack} name={pack.manifest.app.name} /></Suspense>
+      : pack ? <Suspense><Screen key={s.slug} s={s} dispatch={dispatch} go={go} onRead={startRead} pack={pack} name={pack.manifest.app.name} /></Suspense>
       : <div className="centered"><P>{failed ? "This app's data didn't load. Reload the page to try again." : 'Loading…'}</P></div>}
     </div>
   </>;

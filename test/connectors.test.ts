@@ -5,7 +5,7 @@ import { dropPack, isStale, packLost, savePack, upsert, type SavedConnector } fr
 import { applyDecisions, DEFAULT_DECISIONS } from '../web/src/decisions.ts';
 import type { AppPack } from '../web/src/pack.ts';
 import type { Audience } from '../web/src/journey.ts';
-import { CODE, DECIDE, initial, READ, READY, reducer, type Action, type Flow } from '../web/src/state.ts';
+import { CHECKS, CODE, DECIDE, initial, READ, READY, reducer, type Action, type Flow } from '../web/src/state.ts';
 import { AUTHS, makeManifest, PAGINATIONS } from './fixtures.ts';
 
 const manifest = makeManifest(Object.values(PAGINATIONS)[0], Object.values(AUTHS)[0]);
@@ -81,6 +81,12 @@ test('taking the code marks a ready connector handed off, and only the first tim
   const opened = reducer(initial(), { type: 'open', saved: c, lost: false });
   assert.deepEqual([opened.step, opened.handedOff], [READY, 5]);
   assert.equal(saved(opened, [c])[0].status, 'handed-off');
+});
+
+test('a changed pack sends a handed-off connector back through Checks as a draft', () => {
+  const after = play(atCode(started()), { type: 'hand-off', at: 5 }, { type: 'pack-changed' });
+  assert.equal(after.step, CHECKS);
+  assert.equal(saved(passing(after))[0].status, 'draft');
 });
 
 test('a connector with failing checks is not handed off', () => {

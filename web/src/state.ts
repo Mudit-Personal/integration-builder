@@ -49,6 +49,7 @@ export type Action =
   | { type: 'checks-reset' }
   | { type: 'checks-abandon' }
   | { type: 'hand-off'; at: number }
+  | { type: 'pack-changed' }
   | { type: 'reset' };
 
 const IDLE: ChecksRun = { kind: 'idle' };
@@ -111,6 +112,7 @@ export const reducer = (s: Flow, a: Action): Flow => {
     case 'checks-reset': return { ...s, checks: IDLE };
     case 'checks-abandon': return s.checks.kind === 'running' ? { ...s, checks: IDLE } : s;
     case 'hand-off': return { ...s, handedOff: s.handedOff ?? a.at };
+    case 'pack-changed': return { ...s, step: CHECKS, maxStep: CHECKS, result: null, codeReached: false, handedOff: null };
     // Keeps the app and any live read, so starting over never spends a second read.
     case 'reset': return { ...s, ...CLEAN, step: SOURCE, maxStep: SOURCE, read: NOT_READING };
   }

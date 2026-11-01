@@ -19,7 +19,7 @@ function Elapsed() {
 
 const HOW_READ = <SectionHeading lead="An AI reads the docs and drafts a connector. Anything it claims has to quote the source, or it fails review.">How this is read</SectionHeading>;
 
-export function LiveReading({ read, url, go, onPaste }: { read: Exclude<LiveRead, { kind: 'idle' }>; url: string; go: (step: number) => void; onPaste: (text: string) => void }) {
+export function LiveReading({ read, url, go, onRetry, onPaste }: { read: Exclude<LiveRead, { kind: 'idle' }>; url: string; go: (step: number) => void; onRetry: () => void; onPaste: (text: string) => void }) {
   const [text, setText] = useState('');
   const host = hostFrom(url) ?? 'this site';
   const back = <Button variant="link" onClick={() => go(SOURCE)}>Back</Button>;
@@ -31,17 +31,12 @@ export function LiveReading({ read, url, go, onPaste }: { read: Exclude<LiveRead
       </div>
     </SplitLayout>;
   }
-  if (read.kind === 'paste') {
-    return <SplitLayout footer={<>{back}<Push /><Button disabled={!text.trim()} onClick={() => onPaste(text)}>Read pasted text</Button></>} panel={HOW_READ}>
-      <PageTitle title={`Paste ${host}'s docs`} lead={read.message} />
-      <label style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 36, font: 'var(--type-label)', color: 'var(--text-strong)' }}>Documentation text
-        <textarea className="paste" rows={14} value={text} onChange={e => setText(e.target.value)} />
-      </label>
-    </SplitLayout>;
-  }
-  return <SplitLayout footer={back} panel={HOW_READ}>
-    <PageTitle title="We couldn't finish reading these docs" />
-    <Callout style={{ marginTop: 28 }}>{read.message}</Callout>
+  const failed = read.kind === 'failed';
+  return <SplitLayout footer={<>{back}<Push />{failed ? <Button variant="secondary" onClick={onRetry}>Read the docs again</Button> : null}<Button disabled={!text.trim()} onClick={() => onPaste(text)}>Read pasted text</Button></>} panel={HOW_READ}>
+    {failed ? <><PageTitle title="We couldn't finish reading these docs" /><Callout style={{ marginTop: 28 }}>{read.message}</Callout></> : <PageTitle title={`Paste ${host}'s docs`} lead={read.message} />}
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 36, font: 'var(--type-label)', color: 'var(--text-strong)' }}>Documentation text
+      <textarea className="paste" rows={14} value={text} onChange={e => setText(e.target.value)} />
+    </label>
   </SplitLayout>;
 }
 

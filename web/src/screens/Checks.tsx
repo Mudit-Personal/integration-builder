@@ -21,7 +21,7 @@ const scenarioRow = (r: ScenarioResult | undefined, replay: boolean): { descript
   return { description: r.proves, meta: replay ? 'Passed · replayed' : 'Passed', status: 'done' };
 };
 
-export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
+export function Checks({ s, dispatch, go, onRead, pack, name }: ScreenProps) {
   const d = s.decisions;
   const m = useMemo(() => applyDecisions(pack.manifest, d), [pack, d]);
   const key = runKey(m, d);
@@ -56,7 +56,7 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
   const requests = results.reduce((sum, r) => sum + r.requests, 0);
   const stored = storedResults(key)?.length ?? 0;
   const canGenerate = done && !failed;
-  const blockFinding = pack.findings?.find(f => f.severity === 'block');
+  const problem = done ? [...results, ...fixed].find(c => c.status === 'fail')?.detail : undefined;
   const sample = maskedSample(m);
   const survived = done && !failed ? HIGHLIGHTS.map(id => results.find(r => r.id === id && r.status === 'pass')).filter(r => !!r).slice(0, 4) : [];
   const verdict = JOURNEYS[s.audience].checks === 'verdict';
@@ -65,7 +65,7 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
   const untested = results.filter(r => r.status === 'skipped' && r.detail.startsWith(NOT_TESTED)).length;
   const title = !done ? 'Running checks…' : failed ? `${failed} ${failed === 1 ? 'check' : 'checks'} failed` : 'All checks passed';
   const lead = !done ? (replay ? 'Replaying stored results.' : `Running the connector against a simulated ${name} built from its docs. Nothing leaves your browser.`)
-    : failed ? 'Generate stays off until this is fixed. Nothing was written.'
+    : failed ? 'Nothing was written. Read the docs again to rebuild it, or change a decision and test again.'
     : `${passed} checks passed against a simulated ${name} built from its docs.${untested ? ` ${untested} not tested, because you left out what they test.` : ''} Nothing was written. The real ${name} API was not called.`;
 
   const people = <>
@@ -87,8 +87,9 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
     <P>Scenario results only: pass or fail, a short detail and a request count. No credentials exist here, because the vendor is simulated.</P>
     {people}</>;
 
-  return <SplitLayout footer={<><Button variant="link" onClick={() => go(DECIDE)}>{verdict ? 'Back' : 'Back to decisions'}</Button><Push /><Button variant="secondary" disabled={run.kind === 'running'} onClick={() => dispatch({ type: 'checks-reset' })}>Run again</Button><Button disabled={!canGenerate} onClick={() => go(CODE)}>{verdict ? 'Continue' : 'Generate code'}</Button></>} panel={panel}>
+  return <SplitLayout footer={<><Button variant="link" onClick={() => go(DECIDE)}>{verdict ? 'Back' : 'Back to decisions'}</Button><Push /><Button variant="secondary" disabled={run.kind === 'running'} onClick={() => dispatch({ type: 'checks-reset' })}>Run again</Button>{problem ? <Button onClick={() => onRead(s.url)}>Read the docs again</Button> : <Button disabled={!canGenerate} onClick={() => go(CODE)}>{verdict ? 'Continue' : 'Generate code'}</Button>}</>} panel={panel}>
     <PageTitle title={title} lead={lead} aside={canGenerate ? <StatusLabel size="lg">{verdict ? 'Ready to hand off' : 'Ready to generate'}</StatusLabel> : null} />
+    {problem ? <Callout title="What's wrong" style={{ marginTop: 28 }}>{problem}</Callout> : null}
     {survived.length ? <><SectionHeading size="group" style={{ marginTop: 40 }}>What it survived</SectionHeading>
       <div className="highlights">{survived.map(r => <div key={r.id} className="highlight">
         <span className="highlight-title">{r.title}</span>
@@ -102,6 +103,5 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
         {g.categories.includes('safety') ? fixed.map(c => <CheckItem key={c.id} title={c.title} description={run.kind === 'idle' ? 'Waiting' : c.detail} meta={run.kind === 'idle' ? '' : STATIC_META[c.status][0]} status={run.kind === 'idle' ? 'pending' : STATIC_META[c.status][1]} />) : null}
       </div>)}
     </div>}
-    {done && blockFinding ? <Callout title="The verifier blocked this manifest" style={{ marginTop: 28 }}>{blockFinding.message}</Callout> : null}
   </SplitLayout>;
 }

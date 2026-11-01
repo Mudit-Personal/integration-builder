@@ -65,9 +65,9 @@ export const staticChecks = (pack: AppPack, m: Manifest, d: Decisions): StaticCh
       status: pack.findings === null ? 'skipped' : blocks.length ? 'fail' : 'pass',
       detail: pack.findings === null ? `No spec was available for ${m.app.name}, so nothing was verified against one.` : blocks.length ? blocks[0].message : `${pack.read?.source === 'docs' ? 'Every quote' : 'Every operation and quote'} was checked. ${reviews} points to review, none blocking.`,
     },
-    { id: 'read_only', title: 'Read-only', status: writes.length ? 'fail' : 'pass', detail: posts ? `${posts} POST reads, each with a stated reason. Nothing else but GET.` : 'Every request is a GET.' },
+    { id: 'read_only', title: 'Read-only', status: writes.length ? 'fail' : 'pass', detail: writes.length ? `${writes.length} ${writes.length === 1 ? 'request' : 'requests'} could change data in ${m.app.name}.` : posts ? `${posts} POST reads, each with a stated reason. Nothing else but GET.` : 'Every request is a GET.' },
     { id: 'one_destination', title: 'One destination', status: 'pass', detail: `Credentials can only reach ${hosts.join(' and ')}.` },
-    { id: 'sensitive', title: 'Sensitive data blocked', status: reached.length ? 'fail' : 'pass', detail: blocked.length ? `${blocked.length} endpoints blocked. The connector has no request for any of them.` : 'Nothing is blocked for this app.' },
+    { id: 'sensitive', title: 'Sensitive data blocked', status: reached.length ? 'fail' : 'pass', detail: reached.length ? `The connector still calls ${reached.length} blocked ${reached.length === 1 ? 'endpoint' : 'endpoints'}.` : blocked.length ? `${blocked.length} endpoints blocked. The connector has no request for any of them.` : 'Nothing is blocked for this app.' },
     { id: 'scopes', title: 'Least privilege', status: 'pass', detail: scopes.length ? `Asks only for ${scopes.join(', ')}.` : 'The manifest lists no scopes for this app.' },
   ];
 };
