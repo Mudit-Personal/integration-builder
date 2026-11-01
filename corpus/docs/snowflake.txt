@@ -1,0 +1,1291 @@
+User | Snowflake Documentation For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/developer-guide/snowflake-rest-api/reference/user.md 
+ User
+ Create a user ¶ 
+ POST /api/v2/users 
+ Create a user according to the parameters given
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Query Parameters ¶ 
+ Parameter Description 
+ createMode   string Parameter allowing support for different modes of resource creation. Possible values include:
+ errorIfExists : Throws an error if you try to create a resource that already exists. 
+ orReplace : Automatically replaces the existing resource with the current one. 
+ ifNotExists : Creates a new resource when an alter is requested for a non-existent resource. 
+ Response ¶ 
+ Code Description 
+ 200 Successful request. 
+ Response Object 
+ Response Headers 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ List users in the system ¶ 
+ GET /api/v2/users 
+ Lists the users in the system.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Query Parameters ¶ 
+ Parameter Description 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ startsWith   string Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+ showLimit   integer Parameter to limit the maximum number of rows returned by a command.
+ fromName   string Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+ Response ¶ 
+ Code Description 
+ 200 successful 
+ Response Object 
+ Response Headers 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ Response Object 
+ Response Headers 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Fetch information about a user ¶ 
+ GET /api/v2/users/{name} 
+ Fetch user information using the result of the DESCRIBE command
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Path Parameters ¶ 
+ Parameter Description 
+ name   Identifier (i.e. name) for the resource.
+ Response ¶ 
+ Code Description 
+ 200 successful 
+ Response Object 
+ Response Headers 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Delete a user ¶ 
+ DELETE /api/v2/users/{name} 
+ Delete a user with the given name.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Query Parameters ¶ 
+ Parameter Description 
+ ifExists   boolean Parameter that specifies how to handle the request for a resource that does not exist:
+ true : The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource. 
+ false : The endpoint throws an error if the resource doesn&#x27;t exist. 
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Create a (or alter an existing) user ¶ 
+ PUT /api/v2/users/{name} 
+ Create a (or alter an existing) user. Even if the operation is just an alter, the full property set must be provided. Note that password is not currently altered by this operation but is supported for a newly-created object.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ List all grants to the user ¶ 
+ GET /api/v2/users/{name}/grants 
+ List all grants to the user
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Response ¶ 
+ Code Description 
+ 200 successful 
+ Response Object 
+ Response Headers 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Grant a role to the user ¶ 
+ POST /api/v2/users/{name}/grants 
+ Grant a role to the user
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Revoke grants from the user ¶ 
+ POST /api/v2/users/{name}/grants:revoke 
+ Revoke grants from the user
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Set tags on a user ¶ 
+ POST /api/v2/users/{name}:set-tags 
+ Set tags on a user.
+ Request Body Parameters ¶ 
+ Request Example ¶ 
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Unset tags from a user ¶ 
+ POST /api/v2/users/{name}:unset-tags 
+ Unset tags from a user.
+ Request Body Parameters ¶ 
+ Request Example ¶ 
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Get the tag assignments for a user ¶ 
+ GET /api/v2/users/{name}:get-tags 
+ Returns all tags assigned to a user. This operation requires an active warehouse.
+ Query Parameters ¶ 
+ Parameter Description 
+ withLineage   boolean Parameter that specifies whether tag assignments inherited by the object from its ancestors in securable object hierarchy should be returned as well:
+ true : All tags assigned to this object should be returned, inheritance included. 
+ false : Only tags explicitly assigned to this object should be returned. 
+ Response ¶ 
+ Code Description 
+ 200 successful 
+ Response Object 
+ Response Headers 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶
+
+[Page: /en/sql-reference/account-usage/llms.txt]
+# Snowflake Documentation — Account Usage
+
+> SNOWFLAKE.ACCOUNT_USAGE schema views for querying account-level activity and history.
+
+- [ACCESS_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/access_history.md)
+- [Account Usage](https://docs.snowflake.com/en/sql-reference/account-usage.md)
+- [ACCOUNT_USAGE.ONLINE_FEATURE_TABLE_REFRESH_HISTORY](https://docs.snowflake.com/en/sql-reference/account-usage/online_feature_table_refresh_history.md)
+- [AGGREGATE_ACCESS_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/aggregate_access_history.md)
+- [AGGREGATE_QUERY_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/aggregate_query_history.md)
+- [AGGREGATION_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/aggregation_policies.md)
+- [AI_GATEWAY_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/ai_gateway_usage_history.md)
+- [ALERT_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/alert_history.md)
+- [ANOMALIES_DAILY view](https://docs.snowflake.com/en/sql-reference/account-usage/anomalies_daily.md)
+- [APPLICATION_CALLBACK_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/application_callback_history.md)
+- [APPLICATION_CONFIGURATION_VALUE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/application_configuration_value_history.md)
+- [APPLICATION_CONFIGURATIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/application_configurations.md)
+- [APPLICATION_DAILY_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/application_daily_usage_history.md)
+- [APPLICATION_REMOTE_OPERATION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/application_remote_operation_history.md)
+- [APPLICATION_SPECIFICATION_STATUS_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/application_specification_status_history.md)
+- [APPLICATION_SPECIFICATIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/application_specifications.md)
+- [ARCHIVE_STORAGE_DATA_RETRIEVAL_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/archive_storage_data_retrieval_usage_history.md)
+- [AUTOMATIC_CLUSTERING_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/automatic_clustering_history.md)
+- [BACKUP_OPERATION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/backup_operation_history.md)
+- [BACKUP_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/backup_policies.md)
+- [BACKUP_SETS view](https://docs.snowflake.com/en/sql-reference/account-usage/backup_sets.md)
+- [BACKUP_STORAGE_USAGE view](https://docs.snowflake.com/en/sql-reference/account-usage/backup_storage_usage.md)
+- [BACKUPS view](https://docs.snowflake.com/en/sql-reference/account-usage/backups.md)
+- [BLOCK_STORAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/block_storage_history.md)
+- [BLOCK_STORAGE_SNAPSHOTS view](https://docs.snowflake.com/en/sql-reference/account-usage/block_storage_snapshots.md)
+- [CATALOG_LINKED_DATABASE_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/catalog_linked_database_usage_history.md)
+- [CLASS_INSTANCES view](https://docs.snowflake.com/en/sql-reference/account-usage/class_instances.md)
+- [CLASSES view](https://docs.snowflake.com/en/sql-reference/account-usage/classes.md)
+- [COLUMN_QUERY_PRUNING_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/column_query_pruning_history.md)
+- [COLUMNS view](https://docs.snowflake.com/en/sql-reference/account-usage/columns.md)
+- [COMPLETE_TASK_GRAPHS view](https://docs.snowflake.com/en/sql-reference/account-usage/complete_task_graphs.md)
+- [COMPUTE_POOLS view](https://docs.snowflake.com/en/sql-reference/account-usage/compute_pools.md)
+- [CONTACT_REFERENCES view](https://docs.snowflake.com/en/sql-reference/account-usage/contact_references.md)
+- [CONTACTS view](https://docs.snowflake.com/en/sql-reference/account-usage/contacts.md)
+- [COPY_FILES_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/copy_files_history.md)
+- [COPY_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/copy_history.md)
+- [CORTEX_AGENT_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_agent_usage_history.md)
+- [CORTEX_AI_FUNCTIONS_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_ai_functions_usage_history.md)
+- [CORTEX_AI_GUARDRAILS_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_ai_guardrails_usage_history.md)
+- [CORTEX_AISQL_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_aisql_usage_history.md)
+- [CORTEX_ANALYST_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_analyst_usage_history.md)
+- [CORTEX_CODE_CLI_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_code_cli_usage_history.md)
+- [CORTEX_CODE_DESKTOP_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_code_desktop_usage_history.md)
+- [CORTEX_CODE_SNOWSIGHT_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_code_snowsight_usage_history.md)
+- [CORTEX_DOCUMENT_PROCESSING_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_document_processing_usage_history.md)
+- [CORTEX_FINE_TUNING_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_fine_tuning_usage_history.md)
+- [CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_functions_query_usage_history.md)
+- [CORTEX_FUNCTIONS_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_functions_usage_history.md)
+- [CORTEX_PROVISIONED_THROUGHPUT_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_provisioned_throughput_usage_history.md)
+- [CORTEX_REST_API_RATE_LIMIT_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_rest_api_rate_limit_policies.md)
+- [CORTEX_REST_API_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_rest_api_usage_history.md)
+- [CORTEX_SEARCH_BATCH_QUERY_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_search_batch_query_usage_history.md)
+- [CORTEX_SEARCH_DAILY_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_search_daily_usage_history.md)
+- [CORTEX_SEARCH_SERVING_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/cortex_search_serving_usage_history.md)
+- [CREDENTIALS view](https://docs.snowflake.com/en/sql-reference/account-usage/credentials.md)
+- [DATA_CLASSIFICATION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/data_classification_history.md)
+- [DATA_CLASSIFICATION_LATEST view](https://docs.snowflake.com/en/sql-reference/account-usage/data_classification_latest.md)
+- [DATA_METRIC_FUNCTION_EXPECTATIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/data_metric_function_expectations.md)
+- [DATA_METRIC_FUNCTION_REFERENCES view](https://docs.snowflake.com/en/sql-reference/account-usage/data_metric_function_references.md)
+- [DATA_MOVEMENT_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/data_movement_policies.md)
+- [DATA_MOVEMENT_POLICY_RULES view](https://docs.snowflake.com/en/sql-reference/account-usage/data_movement_policy_rules.md)
+- [DATA_MOVEMENT_RULE_REFERENCES view](https://docs.snowflake.com/en/sql-reference/account-usage/data_movement_rule_references.md)
+- [DATA_MOVEMENT_VIOLATIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/data_movement_violations.md)
+- [DATA_QUALITY_MONITORING_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/data_quality_monitoring_usage_history.md)
+- [DATA_TRANSFER_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/data_transfer_history.md)
+- [DATABASE_REPLICATION_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/database_replication_usage_history.md)
+- [DATABASE_STORAGE_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/database_storage_usage_history.md)
+- [DATABASES view](https://docs.snowflake.com/en/sql-reference/account-usage/databases.md)
+- [DBT_PROJECT_EXECUTION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/dbt_project_execution_history.md)
+- [DOCUMENT_AI_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/document_ai_usage_history.md)
+- [DYNAMIC_TABLE_REFRESH_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/dynamic_table_refresh_history.md)
+- [ELEMENT_TYPES view](https://docs.snowflake.com/en/sql-reference/account-usage/element_types.md)
+- [EVENT_ROUTING_TABLES view](https://docs.snowflake.com/en/sql-reference/account-usage/event_routing_tables.md)
+- [EVENT_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/event_usage_history.md)
+- [EXTERNAL_ACCESS_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/external_access_history.md)
+- [FEATURE_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/feature_policies.md)
+- [FIELDS view](https://docs.snowflake.com/en/sql-reference/account-usage/fields.md)
+- [FILE_FORMATS view](https://docs.snowflake.com/en/sql-reference/account-usage/file_formats.md)
+- [FUNCTIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/functions.md)
+- [GRANTS_TO_ROLES view](https://docs.snowflake.com/en/sql-reference/account-usage/grants_to_roles.md)
+- [GRANTS_TO_SHARES view](https://docs.snowflake.com/en/sql-reference/account-usage/grants_to_shares.md)
+- [GRANTS_TO_USERS view](https://docs.snowflake.com/en/sql-reference/account-usage/grants_to_users.md)
+- [HYBRID_TABLE_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/hybrid_table_usage_history.md)
+- [HYBRID_TABLES view](https://docs.snowflake.com/en/sql-reference/account-usage/hybrid_tables.md)
+- [ICEBERG_STORAGE_OPTIMIZATION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/iceberg_storage_optimization_history.md)
+- [INDEX_COLUMNS view](https://docs.snowflake.com/en/sql-reference/account-usage/index_columns.md)
+- [INDEXES view](https://docs.snowflake.com/en/sql-reference/account-usage/indexes.md)
+- [INGRESS_NETWORK_ACCESS_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/ingress_network_access_history.md)
+- [INTERNAL_DATA_TRANSFER_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/internal_data_transfer_history.md)
+- [INTERNAL_STAGE_NETWORK_ACCESS_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/internal_stage_network_access_history.md)
+- [JOIN_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/join_policies.md)
+- [LISTINGS view](https://docs.snowflake.com/en/sql-reference/account-usage/listings.md)
+- [LOAD_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/load_history.md)
+- [LOCK_WAIT_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/lock_wait_history.md)
+- [LOGIN_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/login_history.md)
+- [MASKING_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/masking_policies.md)
+- [MATERIALIZED_VIEW_REFRESH_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/materialized_view_refresh_history.md)
+- [METERING_DAILY_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/metering_daily_history.md)
+- [METERING_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/metering_history.md)
+- [MODEL_SERVING_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/model_serving_usage_history.md)
+- [MULTI_PARTY_APPROVAL_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/multi_party_approval_policies.md)
+- [MULTI_PARTY_APPROVAL_REQUESTS view](https://docs.snowflake.com/en/sql-reference/account-usage/multi_party_approval_requests.md)
+- [NETWORK_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/network_policies.md)
+- [NETWORK_RULE_REFERENCES view](https://docs.snowflake.com/en/sql-reference/account-usage/network_rule_references.md)
+- [NETWORK_RULES view](https://docs.snowflake.com/en/sql-reference/account-usage/network_rules.md)
+- [NOTEBOOKS_CONTAINER_RUNTIME_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/notebooks_container_runtime_history.md)
+- [OBJECT_ACCESS_REQUEST_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/object_access_request_history.md)
+- [OBJECT_DEPENDENCIES view](https://docs.snowflake.com/en/sql-reference/account-usage/object_dependencies.md)
+- [OPENFLOW_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/openflow_usage_history.md)
+- [OUTBOUND_PRIVATELINK_ENDPOINTS view](https://docs.snowflake.com/en/sql-reference/account-usage/outbound_privatelink_endpoints.md)
+- [PASSWORD_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/password_policies.md)
+- [PIPE_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/pipe_usage_history.md)
+- [PIPES view](https://docs.snowflake.com/en/sql-reference/account-usage/pipes.md)
+- [POLICY_REFERENCES view](https://docs.snowflake.com/en/sql-reference/account-usage/policy_references.md)
+- [POSTGRES_COMPUTE_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/postgres_compute_usage_history.md)
+- [POSTGRES_STORAGE_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/postgres_storage_usage_history.md)
+- [PRIVACY_BUDGETS view](https://docs.snowflake.com/en/sql-reference/account-usage/privacy_budgets.md)
+- [PRIVACY_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/privacy_policies.md)
+- [PROCEDURES view](https://docs.snowflake.com/en/sql-reference/account-usage/procedures.md)
+- [PROJECTION_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/projection_policies.md)
+- [QUERY_ACCELERATION_ELIGIBLE view](https://docs.snowflake.com/en/sql-reference/account-usage/query_acceleration_eligible.md)
+- [QUERY_ACCELERATION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/query_acceleration_history.md)
+- [QUERY_ATTRIBUTION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/query_attribution_history.md)
+- [QUERY_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/query_history.md)
+- [QUERY_INSIGHTS view](https://docs.snowflake.com/en/sql-reference/account-usage/query_insights.md)
+- [QUERY_METERING_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/query_metering_history.md)
+- [REFERENTIAL_CONSTRAINTS view](https://docs.snowflake.com/en/sql-reference/account-usage/referential_constraints.md)
+- [REPLICATION_GROUP_REFRESH_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/replication_group_refresh_history.md)
+- [REPLICATION_GROUP_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/replication_group_usage_history.md)
+- [REPLICATION_GROUPS view](https://docs.snowflake.com/en/sql-reference/account-usage/replication_groups.md)
+- [REPLICATION_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/replication_usage_history.md)
+- [RESOURCE_MONITORS view](https://docs.snowflake.com/en/sql-reference/account-usage/resource_monitors.md)
+- [ROLES view](https://docs.snowflake.com/en/sql-reference/account-usage/roles.md)
+- [ROW_ACCESS_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/row_access_policies.md)
+- [SCHEMATA view](https://docs.snowflake.com/en/sql-reference/account-usage/schemata.md)
+- [SEARCH_OPTIMIZATION_BENEFITS view](https://docs.snowflake.com/en/sql-reference/account-usage/search_optimization_benefits.md)
+- [SEARCH_OPTIMIZATION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/search_optimization_history.md)
+- [SECRETS view](https://docs.snowflake.com/en/sql-reference/account-usage/secrets.md)
+- [SEMANTIC_DIMENSIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_dimensions.md)
+- [SEMANTIC_FACTS view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_facts.md)
+- [SEMANTIC_METRICS view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_metrics.md)
+- [SEMANTIC_RELATIONSHIPS view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_relationships.md)
+- [SEMANTIC_TABLES view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_tables.md)
+- [SEMANTIC_VARIABLES view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_variables.md)
+- [SEMANTIC_VIEW_IMPORTS view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_view_imports.md)
+- [SEMANTIC_VIEWS view](https://docs.snowflake.com/en/sql-reference/account-usage/semantic_views.md)
+- [SEQUENCES view](https://docs.snowflake.com/en/sql-reference/account-usage/sequences.md)
+- [SERVERLESS_ALERT_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/serverless_alert_history.md)
+- [SERVERLESS_TASK_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/serverless_task_history.md)
+- [SERVICES view](https://docs.snowflake.com/en/sql-reference/account-usage/services.md)
+- [SESSION_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/session_policies.md)
+- [SESSIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/sessions.md)
+- [SHARES view](https://docs.snowflake.com/en/sql-reference/account-usage/shares.md)
+- [SNAPSHOT_OPERATION_HISTORY view — *Deprecated*](https://docs.snowflake.com/en/sql-reference/account-usage/snapshot_operation_history.md)
+- [SNAPSHOT_POLICIES view — *Deprecated*](https://docs.snowflake.com/en/sql-reference/account-usage/snapshot_policies.md)
+- [SNAPSHOT_SETS view — *Deprecated*](https://docs.snowflake.com/en/sql-reference/account-usage/snapshot_sets.md)
+- [SNAPSHOT_STORAGE_USAGE view — *Deprecated*](https://docs.snowflake.com/en/sql-reference/account-usage/snapshot_storage_usage.md)
+- [SNAPSHOTS view — *Deprecated*](https://docs.snowflake.com/en/sql-reference/account-usage/snapshots.md)
+- [SNOWFLAKE_APP_RUNTIME_COMPUTE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/snowflake_app_runtime_compute_history.md)
+- [SNOWFLAKE_COCO_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/snowflake_coco_usage_history.md)
+- [SNOWFLAKE_COWORK_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/snowflake_cowork_usage_history_view.md)
+- [SNOWPARK_CONTAINER_SERVICES_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/snowpark_container_services_history.md)
+- [SNOWPIPE_STREAMING_CHANNEL_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/snowpipe_streaming_channel_history.md)
+- [SNOWPIPE_STREAMING_CLIENT_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/snowpipe_streaming_client_history.md)
+- [SNOWPIPE_STREAMING_FILE_MIGRATION_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/snowpipe_streaming_file_migration_history.md)
+- [STAGE_STORAGE_USAGE_DETAILS view](https://docs.snowflake.com/en/sql-reference/account-usage/stage_storage_usage_details.md)
+- [STAGE_STORAGE_USAGE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/stage_storage_usage_history.md)
+- [STAGES view](https://docs.snowflake.com/en/sql-reference/account-usage/stages.md)
+- [STORAGE_LIFECYCLE_POLICIES view](https://docs.snowflake.com/en/sql-reference/account-usage/storage_lifecycle_policies.md)
+- [STORAGE_LIFECYCLE_POLICY_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/storage_lifecycle_policy_history.md)
+- [STORAGE_REQUEST_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/storage_request_history.md)
+- [STORAGE_USAGE view](https://docs.snowflake.com/en/sql-reference/account-usage/storage_usage.md)
+- [STREAMS view](https://docs.snowflake.com/en/sql-reference/account-usage/streams.md)
+- [TABLE_CONSTRAINTS view](https://docs.snowflake.com/en/sql-reference/account-usage/table_constraints.md)
+- [TABLE_DML_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/table_dml_history.md)
+- [TABLE_OPTIMA_FEATURES view](https://docs.snowflake.com/en/sql-reference/account-usage/table_optima_features.md)
+- [TABLE_PRUNING_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/table_pruning_history.md)
+- [TABLE_QUERY_PRUNING_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/table_query_pruning_history.md)
+- [TABLE_STORAGE_METRICS view](https://docs.snowflake.com/en/sql-reference/account-usage/table_storage_metrics.md)
+- [TABLES view](https://docs.snowflake.com/en/sql-reference/account-usage/tables.md)
+- [TAG_REFERENCES view](https://docs.snowflake.com/en/sql-reference/account-usage/tag_references.md)
+- [TAGS view](https://docs.snowflake.com/en/sql-reference/account-usage/tags.md)
+- [TASK_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/task_history.md)
+- [TASK_VERSIONS view](https://docs.snowflake.com/en/sql-reference/account-usage/task_versions.md)
+- [TASKS view](https://docs.snowflake.com/en/sql-reference/account-usage/tasks.md)
+- [TRI_SECRET_SECURE_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/tri-secret-secure-history.md)
+- [TRUST_CENTER_FINDINGS view](https://docs.snowflake.com/en/sql-reference/account-usage/trust_center_findings.md)
+- [TYPES view](https://docs.snowflake.com/en/sql-reference/account-usage/types.md)
+- [USERS view](https://docs.snowflake.com/en/sql-reference/account-usage/users.md)
+- [VIEWS view](https://docs.snowflake.com/en/sql-reference/account-usage/views.md)
+- [WAREHOUSE_EVENTS_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/warehouse_events_history.md)
+- [WAREHOUSE_LOAD_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/warehouse_load_history.md)
+- [WAREHOUSE_METERING_HISTORY view](https://docs.snowflake.com/en/sql-reference/account-usage/warehouse_metering_history.md)
+
+
+[Page: /fr/developer-guide/snowflake-rest-api/reference/user]
+User | Snowflake Documentation 
+ User
+ Create a user ¶ 
+ POST /api/v2/users 
+ Create a user according to the parameters given
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Paramètres de requête ¶ 
+ Paramètre Description 
+ createMode   string Parameter allowing support for different modes of resource creation. Possible values include:
+ errorIfExists : Throws an error if you try to create a resource that already exists. 
+ orReplace : Automatically replaces the existing resource with the current one. 
+ ifNotExists : Creates a new resource when an alter is requested for a non-existent resource. 
+ Réponse ¶ 
+ Code Description 
+ 200 Successful request. 
+ Objet de réponse 
+ En-têtes de réponse 
+ 202 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶ 
+ List users in the system ¶ 
+ GET /api/v2/users 
+ Lists the users in the system.
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Paramètres de requête ¶ 
+ Paramètre Description 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ startsWith   string Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+ showLimit   integer Parameter to limit the maximum number of rows returned by a command.
+ fromName   string Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+ Réponse ¶ 
+ Code Description 
+ 200 successful 
+ Objet de réponse 
+ En-têtes de réponse 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ Objet de réponse 
+ En-têtes de réponse 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶ 
+ Fetch information about a user ¶ 
+ GET /api/v2/users/{name} 
+ Fetch user information using the result of the DESCRIBE command
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Paramètres de chemin ¶ 
+ Paramètre Description 
+ name   string Identifier (i.e. name) for the resource.
+ Réponse ¶ 
+ Code Description 
+ 200 successful 
+ Objet de réponse 
+ En-têtes de réponse 
+ 202 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶ 
+ Delete a user ¶ 
+ DELETE /api/v2/users/{name} 
+ Delete a user with the given name.
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Paramètres de requête ¶ 
+ Paramètre Description 
+ ifExists   boolean Parameter that specifies how to handle the request for a resource that does not exist:
+ true : The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource. 
+ false : The endpoint throws an error if the resource doesn&#x27;t exist. 
+ Réponse ¶ 
+ Code Description 
+ 200 
+ 202 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶ 
+ Create a (or alter an existing) user ¶ 
+ PUT /api/v2/users/{name} 
+ Create a (or alter an existing) user. Even if the operation is just an alter, the full property set must be provided. Note that password is not currently altered by this operation but is supported for a newly-created object.
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Réponse ¶ 
+ Code Description 
+ 200 
+ 202 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶ 
+ List all grants to the user ¶ 
+ GET /api/v2/users/{name}/grants 
+ List all grants to the user
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Réponse ¶ 
+ Code Description 
+ 200 successful 
+ Objet de réponse 
+ En-têtes de réponse 
+ 202 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶ 
+ Grant a role to the user ¶ 
+ POST /api/v2/users/{name}/grants 
+ Grant a role to the user
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Réponse ¶ 
+ Code Description 
+ 200 
+ 202 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶ 
+ Revoke grants from the user ¶ 
+ POST /api/v2/users/{name}/grants:revoke 
+ Revoke grants from the user
+ Pour plus d’informations
+ Accéder à la page de la commande SQL pour afficher plus d’informations sur les arguments, les options, les exigences relatives aux privilèges et les directives d’utilisation.
+ Vue 
+ Réponse ¶ 
+ Code Description 
+ 200 
+ 202 
+ Codes de réponse d&#x27;erreur 
+ Schéma du corps de la réponse ¶
+
+[Page: /de/developer-guide/snowflake-rest-api/reference/user]
+User | Snowflake Documentation 
+ User
+ Create a user ¶ 
+ POST /api/v2/users 
+ Create a user according to the parameters given
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Abfrageparameter ¶ 
+ Parameter Beschreibung 
+ createMode   string Parameter allowing support for different modes of resource creation. Possible values include:
+ errorIfExists : Throws an error if you try to create a resource that already exists. 
+ orReplace : Automatically replaces the existing resource with the current one. 
+ ifNotExists : Creates a new resource when an alter is requested for a non-existent resource. 
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 Successful request. 
+ Antwort-Objekt 
+ Antwort-Header 
+ 202 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶ 
+ List users in the system ¶ 
+ GET /api/v2/users 
+ Lists the users in the system.
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Abfrageparameter ¶ 
+ Parameter Beschreibung 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ startsWith   string Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+ showLimit   integer Parameter to limit the maximum number of rows returned by a command.
+ fromName   string Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 successful 
+ Antwort-Objekt 
+ Antwort-Header 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ Antwort-Objekt 
+ Antwort-Header 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶ 
+ Fetch information about a user ¶ 
+ GET /api/v2/users/{name} 
+ Fetch user information using the result of the DESCRIBE command
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Pfadparameter ¶ 
+ Parameter Beschreibung 
+ name   string Identifier (i.e. name) for the resource.
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 successful 
+ Antwort-Objekt 
+ Antwort-Header 
+ 202 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶ 
+ Delete a user ¶ 
+ DELETE /api/v2/users/{name} 
+ Delete a user with the given name.
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Abfrageparameter ¶ 
+ Parameter Beschreibung 
+ ifExists   boolean Parameter that specifies how to handle the request for a resource that does not exist:
+ true : The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource. 
+ false : The endpoint throws an error if the resource doesn&#x27;t exist. 
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 
+ 202 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶ 
+ Create a (or alter an existing) user ¶ 
+ PUT /api/v2/users/{name} 
+ Create a (or alter an existing) user. Even if the operation is just an alter, the full property set must be provided. Note that password is not currently altered by this operation but is supported for a newly-created object.
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 
+ 202 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶ 
+ List all grants to the user ¶ 
+ GET /api/v2/users/{name}/grants 
+ List all grants to the user
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 successful 
+ Antwort-Objekt 
+ Antwort-Header 
+ 202 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶ 
+ Grant a role to the user ¶ 
+ POST /api/v2/users/{name}/grants 
+ Grant a role to the user
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 
+ 202 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶ 
+ Revoke grants from the user ¶ 
+ POST /api/v2/users/{name}/grants:revoke 
+ Revoke grants from the user
+ Weitere Informationen dazu
+ Rufen Sie die SQL-Befehlsseite auf, um weitere Informationen zu Argumenten, Optionen, Berechtigungsanforderungen und Nutzungsrichtlinien anzuzeigen.
+ Ansicht 
+ Antwort ¶ 
+ Code Beschreibung 
+ 200 
+ 202 
+ Fehlerantwort-Codes 
+ Antwort-Bodyschema ¶
+
+[Page: /ja/developer-guide/snowflake-rest-api/reference/user]
+User | Snowflake Documentation 
+ User
+ Create a user ¶ 
+ POST /api/v2/users 
+ Create a user according to the parameters given
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ クエリパラメーター ¶ 
+ パラメーター 説明 
+ createMode   string Parameter allowing support for different modes of resource creation. Possible values include:
+ errorIfExists : Throws an error if you try to create a resource that already exists. 
+ orReplace : Automatically replaces the existing resource with the current one. 
+ ifNotExists : Creates a new resource when an alter is requested for a non-existent resource. 
+ 応答 ¶ 
+ コード 説明 
+ 200 Successful request. 
+ オブジェクトに応答する 
+ ヘッダに応答する 
+ 202 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶ 
+ List users in the system ¶ 
+ GET /api/v2/users 
+ Lists the users in the system.
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ クエリパラメーター ¶ 
+ パラメーター 説明 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ startsWith   string Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+ showLimit   integer Parameter to limit the maximum number of rows returned by a command.
+ fromName   string Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+ 応答 ¶ 
+ コード 説明 
+ 200 successful 
+ オブジェクトに応答する 
+ ヘッダに応答する 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ オブジェクトに応答する 
+ ヘッダに応答する 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶ 
+ Fetch information about a user ¶ 
+ GET /api/v2/users/{name} 
+ Fetch user information using the result of the DESCRIBE command
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ パスパラメータ ¶ 
+ パラメーター 説明 
+ name   string Identifier (i.e. name) for the resource.
+ 応答 ¶ 
+ コード 説明 
+ 200 successful 
+ オブジェクトに応答する 
+ ヘッダに応答する 
+ 202 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶ 
+ Delete a user ¶ 
+ DELETE /api/v2/users/{name} 
+ Delete a user with the given name.
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ クエリパラメーター ¶ 
+ パラメーター 説明 
+ ifExists   boolean Parameter that specifies how to handle the request for a resource that does not exist:
+ true : The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource. 
+ false : The endpoint throws an error if the resource doesn&#x27;t exist. 
+ 応答 ¶ 
+ コード 説明 
+ 200 
+ 202 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶ 
+ Create a (or alter an existing) user ¶ 
+ PUT /api/v2/users/{name} 
+ Create a (or alter an existing) user. Even if the operation is just an alter, the full property set must be provided. Note that password is not currently altered by this operation but is supported for a newly-created object.
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ 応答 ¶ 
+ コード 説明 
+ 200 
+ 202 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶ 
+ List all grants to the user ¶ 
+ GET /api/v2/users/{name}/grants 
+ List all grants to the user
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ 応答 ¶ 
+ コード 説明 
+ 200 successful 
+ オブジェクトに応答する 
+ ヘッダに応答する 
+ 202 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶ 
+ Grant a role to the user ¶ 
+ POST /api/v2/users/{name}/grants 
+ Grant a role to the user
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ 応答 ¶ 
+ コード 説明 
+ 200 
+ 202 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶ 
+ Revoke grants from the user ¶ 
+ POST /api/v2/users/{name}/grants:revoke 
+ Revoke grants from the user
+ 詳細情報をご参照ください
+ 引数、オプション、権限要件、使用ガイドラインに関する詳細情報を表示するには、 SQL コマンドページに移動してください。
+ ビュー 
+ 応答 ¶ 
+ コード 説明 
+ 200 
+ 202 
+ エラー・レスポンス・コード 
+ ボディ・スキーマに応答する ¶
+
+[Page: /ko/developer-guide/snowflake-rest-api/reference/user]
+User | Snowflake Documentation 
+ User
+ Create a user ¶ 
+ POST /api/v2/users 
+ Create a user according to the parameters given
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 쿼리 매개 변수 ¶ 
+ 매개 변수 설명 
+ createMode   string Parameter allowing support for different modes of resource creation. Possible values include:
+ errorIfExists : Throws an error if you try to create a resource that already exists. 
+ orReplace : Automatically replaces the existing resource with the current one. 
+ ifNotExists : Creates a new resource when an alter is requested for a non-existent resource. 
+ 응답 ¶ 
+ 코드 설명 
+ 200 Successful request. 
+ 응답 오브젝트 
+ 응답 헤더 
+ 202 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶ 
+ List users in the system ¶ 
+ GET /api/v2/users 
+ Lists the users in the system.
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 쿼리 매개 변수 ¶ 
+ 매개 변수 설명 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ startsWith   string Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+ showLimit   integer Parameter to limit the maximum number of rows returned by a command.
+ fromName   string Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+ 응답 ¶ 
+ 코드 설명 
+ 200 successful 
+ 응답 오브젝트 
+ 응답 헤더 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ 응답 오브젝트 
+ 응답 헤더 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶ 
+ Fetch information about a user ¶ 
+ GET /api/v2/users/{name} 
+ Fetch user information using the result of the DESCRIBE command
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 경로 매개 변수 ¶ 
+ 매개 변수 설명 
+ name   string Identifier (i.e. name) for the resource.
+ 응답 ¶ 
+ 코드 설명 
+ 200 successful 
+ 응답 오브젝트 
+ 응답 헤더 
+ 202 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶ 
+ Delete a user ¶ 
+ DELETE /api/v2/users/{name} 
+ Delete a user with the given name.
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 쿼리 매개 변수 ¶ 
+ 매개 변수 설명 
+ ifExists   boolean Parameter that specifies how to handle the request for a resource that does not exist:
+ true : The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource. 
+ false : The endpoint throws an error if the resource doesn&#x27;t exist. 
+ 응답 ¶ 
+ 코드 설명 
+ 200 
+ 202 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶ 
+ Create a (or alter an existing) user ¶ 
+ PUT /api/v2/users/{name} 
+ Create a (or alter an existing) user. Even if the operation is just an alter, the full property set must be provided. Note that password is not currently altered by this operation but is supported for a newly-created object.
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 응답 ¶ 
+ 코드 설명 
+ 200 
+ 202 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶ 
+ List all grants to the user ¶ 
+ GET /api/v2/users/{name}/grants 
+ List all grants to the user
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 응답 ¶ 
+ 코드 설명 
+ 200 successful 
+ 응답 오브젝트 
+ 응답 헤더 
+ 202 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶ 
+ Grant a role to the user ¶ 
+ POST /api/v2/users/{name}/grants 
+ Grant a role to the user
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 응답 ¶ 
+ 코드 설명 
+ 200 
+ 202 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶ 
+ Revoke grants from the user ¶ 
+ POST /api/v2/users/{name}/grants:revoke 
+ Revoke grants from the user
+ 자세한 내용
+ SQL 명령 페이지로 이동하여 인자, 옵션, 권한 요구 사항 및 사용 지침에 대한 자세한 정보를 확인할 수 있습니다.
+ 뷰 
+ 응답 ¶ 
+ 코드 설명 
+ 200 
+ 202 
+ 오류 응답 코드 
+ 응답 본문 스키마 ¶
+
+[Page: /pt/developer-guide/snowflake-rest-api/reference/user]
+User | Snowflake Documentation 
+ User
+ Create a user ¶ 
+ POST /api/v2/users 
+ Create a user according to the parameters given
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Parâmetros de consulta ¶ 
+ Parâmetro Descrição 
+ createMode   string Parameter allowing support for different modes of resource creation. Possible values include:
+ errorIfExists : Throws an error if you try to create a resource that already exists. 
+ orReplace : Automatically replaces the existing resource with the current one. 
+ ifNotExists : Creates a new resource when an alter is requested for a non-existent resource. 
+ Resposta ¶ 
+ Código Descrição 
+ 200 Successful request. 
+ Objeto de resposta 
+ Cabeçalhos de resposta 
+ 202 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶ 
+ List users in the system ¶ 
+ GET /api/v2/users 
+ Lists the users in the system.
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Parâmetros de consulta ¶ 
+ Parâmetro Descrição 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ startsWith   string Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+ showLimit   integer Parameter to limit the maximum number of rows returned by a command.
+ fromName   string Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+ Resposta ¶ 
+ Código Descrição 
+ 200 successful 
+ Objeto de resposta 
+ Cabeçalhos de resposta 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ Objeto de resposta 
+ Cabeçalhos de resposta 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶ 
+ Fetch information about a user ¶ 
+ GET /api/v2/users/{name} 
+ Fetch user information using the result of the DESCRIBE command
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Parâmetros de trajeto ¶ 
+ Parâmetro Descrição 
+ name   string Identifier (i.e. name) for the resource.
+ Resposta ¶ 
+ Código Descrição 
+ 200 successful 
+ Objeto de resposta 
+ Cabeçalhos de resposta 
+ 202 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶ 
+ Delete a user ¶ 
+ DELETE /api/v2/users/{name} 
+ Delete a user with the given name.
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Parâmetros de consulta ¶ 
+ Parâmetro Descrição 
+ ifExists   boolean Parameter that specifies how to handle the request for a resource that does not exist:
+ true : The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource. 
+ false : The endpoint throws an error if the resource doesn&#x27;t exist. 
+ Resposta ¶ 
+ Código Descrição 
+ 200 
+ 202 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶ 
+ Create a (or alter an existing) user ¶ 
+ PUT /api/v2/users/{name} 
+ Create a (or alter an existing) user. Even if the operation is just an alter, the full property set must be provided. Note that password is not currently altered by this operation but is supported for a newly-created object.
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Resposta ¶ 
+ Código Descrição 
+ 200 
+ 202 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶ 
+ List all grants to the user ¶ 
+ GET /api/v2/users/{name}/grants 
+ List all grants to the user
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Resposta ¶ 
+ Código Descrição 
+ 200 successful 
+ Objeto de resposta 
+ Cabeçalhos de resposta 
+ 202 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶ 
+ Grant a role to the user ¶ 
+ POST /api/v2/users/{name}/grants 
+ Grant a role to the user
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Resposta ¶ 
+ Código Descrição 
+ 200 
+ 202 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶ 
+ Revoke grants from the user ¶ 
+ POST /api/v2/users/{name}/grants:revoke 
+ Revoke grants from the user
+ Para obter mais informações
+ Acesse a página do comando SQL para obter mais informações sobre argumentos, opções, requisitos de privilégios e diretrizes de uso.
+ Exibição 
+ Resposta ¶ 
+ Código Descrição 
+ 200 
+ 202 
+ Códigos de resposta de erro 
+ Esquema do corpo de resposta ¶
+
+[Page: /en/user-guide-getting-started]
+For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/user-guide-getting-started.md 
+ Get started
+ To begin with Snowflake and learn about its key features and benefits, start with the following topics.
+ Get started with Snowflake for users
+ Learn basic information and follow instructions as a first-time user of Snowflake.
+ Before you begin
+ Make sure that you meet the prerequisites for using our applications that connect to Snowflake.
+ Sign into Snowflake
+ Learn how to use various interfaces to sign into Snowflake.
+ Architecture and key concepts
+ Learn about Snowflake’s architecture, how data is stored, and how queries are processed.
+ Snowsight quick tour
+ Learn about the features in Snowsight that you can use to manage database objects and query data.
+ Data lifecycle
+ Learn about how data is organized, stored, queried, and managed.
+ Start learning Snowflake with interactive lessons
+ Complete essential Snowflake tasks through step-by-step tutorials.
+ TUTORIAL
+ Snowflake in 20 Minutes
+ Learn how to create Snowflake objects, load data, and query data.
+ TUTORIAL
+ Load and query sample data using SQL
+ Learn how to load and query Tasty Bytes sample data using SQL.
+ TUTORIAL
+ Load data from cloud storage (Amazon S3)
+ Learn how to load a table from an S3 bucket.
+ TUTORIAL
+ Load data from cloud storage (Microsoft Azure)
+ Learn how to load a table from an Azure container.
+ TUTORIAL
+ Load data from cloud storage (Google Cloud Storage)
+ Learn how to load a table from a GCS bucket.
+ TUTORIAL
+ Bulk loading from a local file system using COPY
+ Learn how to load data from files in your local file system into a table.
+ TUTORIAL
+ Bulk loading from Amazon S3 using COPY
+ Learn how to load data from files in an existing Amazon Simple Storage Service (Amazon S3) bucket into a table.
+ TUTORIAL
+ JSON basics
+ Learn how to load JSON data from files, query the data, and flatten and store the data in a table.
+ TUTORIAL
+ Loading JSON data into a relational table
+ Learn more about how to store JSON objects, extract JSON elements, and transform those elements into table columns.
+ TUTORIAL
+ Loading and unloading Parquet data
+ Learn how to upload Parquet data by transforming elements of a staged Parquet file directly into table columns.
+ TUTORIAL
+ Create users and grant roles
+ Learn how to create a user and grant roles to it using SQL.
+ Learn key concepts for Snowflake administrators
+ Understand the fundamentals of Snowflake administration.
+ Cloud platforms
+ Learn about the cloud platforms that are supported for use with Snowflake.
+ Cloud regions
+ Learn about the cloud provider regions in which Snowflake accounts are hosted.
+ Editions
+ Learn about the different editions provided by Snowflake and the features and levels of service offered with each edition.
+ Releases
+ Learn about our process for deploying new releases.
+ Features
+ Learn about some of the key features of Snowflake.
+ Continuous data protection
+ Learn about how your data is protected and how you can access and recover your data.
+ Regulatory compliance
+ Learn about our commitment to meeting industry-standard regulatory compliance requirements.
+ Sample data sets
+ Snowflake provides sample data sets, such as the industry-standard TPC-DS and TPC-H benchmarks, for evaluating and testing a broad range of Snowflake’s SQL support.
+ See all 
+ SNOWFLAKE_SAMPLE_DATA
+ The sample database, SNOWFLAKE_SAMPLE_DATA, is identical to the databases that you create in your account, except that it is read-only.
+ TPC-DS
+ TPC-DS models the decision support functions of a retail product supplier. The supporting schema contains vital business information, such as customer, order, and product data.
+ TPC-H
+ TPC-H is a decision support benchmark. It consists of a suite of business-oriented ad hoc queries and concurrent data modifications.
+
+[Page: /en/developer-guide/snowflake-rest-api/account/account-introduction]
+Manage accounts | Snowflake Documentation For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/developer-guide/snowflake-rest-api/account/account-introduction.md 
+ Manage accounts ¶ 
+ The Snowflake REST Account API provides the following endpoints to access, update, and perform certain actions on Account resources.
+ Snowflake REST Account API endpoints 
+ Endpoint Description 
+ GET /api/v2/accounts Lists available accounts. 
+ POST /api/v2/accounts Creates an account. 
+ DELETE /api/v2/accounts/ name Deletes an account. 
+ POST /api/v2/accounts/ name :undrop Restores a dropped account. 
+ Expand 
+ Show less See more 
+ For reference documentation, see Snowflake Account API reference .
+ Related content
+ Snowflake REST APIs 
+ Account API reference
+
+[Page: /en/developer-guide/snowflake-rest-api/managed-account/managed-account-introduction]
+Work with managed accounts | Snowflake Documentation For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/developer-guide/snowflake-rest-api/managed-account/managed-account-introduction.md 
+ Work with managed accounts ¶ 
+ The Snowflake REST Managed Account API provides the following endpoints to access, update, and perform certain actions on Managed Account resources.
+ Snowflake REST Managed Account API endpoints 
+ Endpoint Description 
+ GET /api/v2/managed-accounts Lists available managed accounts. 
+ POST /api/v2/managed-accounts Creates a managed account. 
+ DELETE /api/v2/managed-accounts/ name Deletes a managed account. 
+ Expand 
+ Show less See more 
+ For reference documentation, see Snowflake Managed Account API reference .
+ Related content
+ Snowflake REST APIs 
+ Managed Account API reference
+
+[Page: /en/developer-guide/snowflake-rest-api/users/users-introduction]
+Manage users | Snowflake Documentation For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/developer-guide/snowflake-rest-api/users/users-introduction.md 
+ Manage users ¶ 
+ The Snowflake REST User API provides the following endpoints to manage Snowflake users:
+ Snowflake REST User API endpoints 
+ Endpoint Description 
+ POST /api/v2/users Creates a Snowflake user. 
+ GET /api/v2/users Lists the users in the system. 
+ GET /api/v2/users/{name} Fetches user information using the result of the DESCRIBE command. 
+ DELETE /api/v2/users/{name} Deletes a user with the given name. 
+ PUT /api/v2/users/{name} Creates a new, or alters an existing, user. 
+ GET /api/v2/users/{name}/grants List all grants to the user. 
+ POST /api/v2/users/{name}/grants Grants a role to the specified user. 
+ POST /api/v2/users/{name}/grants:revoke Revokes grants from the specified user. 
+ Expand 
+ Show less See more 
+ For reference documentation, see Snowflake User API reference 
+ Related content
+ Snowflake REST APIs 
+ Authenticating Snowflake REST APIs with Snowflake 
+ User API reference
+
+[Page: /en/developer-guide/snowflake-rest-api/user-defined-function/user-defined-function-introduction]
+Manage user-defined functions | Snowflake Documentation For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/developer-guide/snowflake-rest-api/user-defined-function/user-defined-function-introduction.md 
+ Manage user-defined functions ¶ 
+ The Snowflake REST User-Defined Function API provides the following endpoints to access, update, and perform certain actions on User-Defined Function resources.
+ Snowflake REST User-Defined Function API endpoints 
+ Endpoint Description 
+ GET /api/v2/databases/ database /schemas/ schema /user-defined-functions Lists available user-defined functions. 
+ POST /api/v2/databases/ database /schemas/ schema /user-defined-functions Creates a user-defined function. 
+ GET /api/v2/databases/ database /schemas/ schema /user-defined-functions/ nameWithArgs Fetches a user-defined function. 
+ DELETE /api/v2/databases/ database /schemas/ schema /user-defined-functions/ nameWithArgs Deletes a user-defined function. 
+ POST /api/v2/databases/ database /schemas/ schema /user-defined-functions/ name :execute Executes a user-defined function. 
+ POST /api/v2/databases/ database /schemas/ schema /user-defined-functions/ nameWithArgs :rename Renames a user-defined function. 
+ Expand 
+ Show less See more 
+ For reference documentation, see Snowflake User-Defined Function API reference .
+ Related content
+ Snowflake REST APIs 
+ User-Defined Function API reference
+
+[Page: /en/developer-guide/snowflake-rest-api/reference/account]
+Account | Snowflake Documentation For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/developer-guide/snowflake-rest-api/reference/account.md 
+ Account
+ List accounts ¶ 
+ GET /api/v2/accounts 
+ Lists the accessible accounts.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Query Parameters ¶ 
+ Parameter Description 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ showLimit   integer Parameter to limit the maximum number of rows returned by a command.
+ history   boolean Optionally includes dropped accounts that have not yet been purged.
+ Response ¶ 
+ Code Description 
+ 200 Successful request. 
+ Response Object 
+ Response Headers 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ Response Object 
+ Response Headers 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Create an account ¶ 
+ POST /api/v2/accounts 
+ Creates a account. You must provide the full account definition when creating a account.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Response ¶ 
+ Code Description 
+ 200 Successful request. 
+ Response Object 
+ Response Headers 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Delete an account ¶ 
+ DELETE /api/v2/accounts/{name} 
+ Deletes the specified account. If you enable the `ifExists` parameter, the operation succeeds even if the account does not exist. Otherwise, a 404 failure is returned if the account does not exist. if the drop is unsuccessful.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Path Parameters ¶ 
+ Parameter Description 
+ name   Identifier (i.e. name) for the resource.
+ Query Parameters ¶ 
+ Parameter Description 
+ ifExists   boolean Parameter that specifies how to handle the request for a resource that does not exist:
+ true : The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource. 
+ false : The endpoint throws an error if the resource doesn&#x27;t exist. 
+ gracePeriodInDays   integer Specifies the number of days during which the account can be restored (“undropped”). The minimum is 3 days and the maximum is 90 days.
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Restore an account ¶ 
+ POST /api/v2/accounts/{name}:undrop 
+ Restores a dropped account that has not yet been permanently deleted (a dropped account that is within its grace period).
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶
+
+[Page: /en/developer-guide/snowflake-rest-api/reference/managed-account]
+Managed Account | Snowflake Documentation For AI agents: documentation index at /llms.txt — fetch to discover all Snowflake documentation pages. Markdown version of this page: /en/developer-guide/snowflake-rest-api/reference/managed-account.md 
+ Managed Account
+ List managed accounts ¶ 
+ GET /api/v2/managed-accounts 
+ Lists the accessible managed accounts.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Query Parameters ¶ 
+ Parameter Description 
+ like   string Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+ Response ¶ 
+ Code Description 
+ 200 Successful request. 
+ Response Object 
+ Response Headers 
+ 202 Successfully accepted the request, but it is not completed yet. 
+ Response Object 
+ Response Headers 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Create a managed accounts ¶ 
+ POST /api/v2/managed-accounts 
+ Creates a managed account. You must provide the full managed account definition when creating a managed account.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Response ¶ 
+ Code Description 
+ 200 Successful request. 
+ Response Object 
+ Response Headers 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶ 
+ Delete a managed account ¶ 
+ DELETE /api/v2/managed-accounts/{name} 
+ Removes a managed account, including all objects created in the account, and immediately restricts access to the account. Currently used by data providers to create reader accounts for their consumers. For more details, see Manage reader accounts.
+ For more information
+ Go to the SQL command page to view more information about arguments, options, privileges requirements, and usage guidelines.
+ View 
+ Path Parameters ¶ 
+ Parameter Description 
+ name   Identifier (i.e. name) for the resource.
+ Response ¶ 
+ Code Description 
+ 200 
+ 202 
+ Error Response Codes 
+ Response Body Schema ¶

@@ -1,0 +1,426 @@
+[
+  {
+    "slug": "1password",
+    "name": "1Password",
+    "docsUrl": "https://www.1password.dev/users-api/reference.md",
+    "host": "api.1password.com",
+    "domains": [
+      "1password.dev",
+      "1password.com"
+    ],
+    "logo": "1password.svg"
+  },
+  {
+    "slug": "adobe-umapi",
+    "name": "Adobe User Management API (UMAPI)",
+    "docsUrl": "https://adobe-apiplatform.github.io/umapi-documentation/en/",
+    "host": "usermanagement.adobe.io",
+    "domains": [
+      "github.io",
+      "adobe.io"
+    ],
+    "logo": "adobe.svg"
+  },
+  {
+    "slug": "amplitude",
+    "name": "Amplitude",
+    "docsUrl": "https://amplitude.com/docs/apis/analytics/scim",
+    "host": "amplitude.com",
+    "domains": [
+      "amplitude.com"
+    ],
+    "logo": null
+  },
+  {
+    "slug": "asana",
+    "name": "Asana",
+    "docsUrl": "https://developers.asana.com/docs",
+    "host": "app.asana.com",
+    "domains": [
+      "asana.com"
+    ],
+    "logo": "asana.png"
+  },
+  {
+    "slug": "auth0",
+    "name": "Auth0",
+    "docsUrl": "https://auth0.com/docs/api/management/v2/users/get-users",
+    "host": "{subdomain}.auth0.com",
+    "domains": [
+      "auth0.com"
+    ],
+    "logo": "auth0.svg"
+  },
+  {
+    "slug": "bamboohr",
+    "name": "BambooHR",
+    "docsUrl": "https://documentation.bamboohr.com/reference/get-employees-directory",
+    "host": "{companySubDomain}.bamboohr.com",
+    "domains": [
+      "bamboohr.com"
+    ],
+    "logo": null
+  },
+  {
+    "slug": "bitbucket",
+    "name": "Bitbucket Cloud",
+    "docsUrl": "https://developer.atlassian.com/cloud/bitbucket/rest/intro/",
+    "host": "api.bitbucket.org",
+    "domains": [
+      "atlassian.com",
+      "bitbucket.org"
+    ],
+    "logo": "bitbucket.svg"
+  },
+  {
+    "slug": "box",
+    "name": "Box",
+    "docsUrl": "https://developer.box.com/reference",
+    "host": "api.box.com",
+    "domains": [
+      "box.com"
+    ],
+    "logo": "box.svg"
+  },
+  {
+    "slug": "calendly",
+    "name": "Calendly",
+    "docsUrl": "https://developer.calendly.com/api-docs/4b402d5ab3edd-calendly-developer",
+    "host": "api.calendly.com",
+    "domains": [
+      "calendly.com"
+    ],
+    "logo": "calendly.svg"
+  },
+  {
+    "slug": "canva",
+    "name": "Canva",
+    "docsUrl": "https://www.canva.dev/docs/connect/",
+    "host": "api.canva.com",
+    "domains": [
+      "canva.dev",
+      "canva.com"
+    ],
+    "logo": "canva.svg"
+  },
+  {
+    "slug": "clickup",
+    "name": "ClickUp",
+    "docsUrl": "https://developer.clickup.com/reference/getauthorizedteams",
+    "host": "api.clickup.com",
+    "domains": [
+      "clickup.com"
+    ],
+    "logo": "clickup.svg"
+  },
+  {
+    "slug": "confluence-cloud",
+    "name": "Confluence Cloud",
+    "docsUrl": "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",
+    "host": "{subdomain}.atlassian.net",
+    "domains": [
+      "atlassian.com",
+      "atlassian.net"
+    ],
+    "logo": "confluence.svg"
+  },
+  {
+    "slug": "datadog",
+    "name": "Datadog",
+    "docsUrl": "https://docs.datadoghq.com/api/latest/users/",
+    "host": "{subdomain}.datadoghq.com",
+    "domains": [
+      "datadoghq.com"
+    ],
+    "logo": "datadog.svg"
+  },
+  {
+    "slug": "docusign-admin",
+    "name": "Docusign Admin",
+    "docsUrl": "https://developers.docusign.com/docs/admin-api/reference/",
+    "host": "api.docusign.net",
+    "domains": [
+      "docusign.com",
+      "docusign.net"
+    ],
+    "logo": null
+  },
+  {
+    "slug": "dropbox-business",
+    "name": "Dropbox Business",
+    "docsUrl": "https://www.dropbox.com/developers/documentation/http/teams",
+    "host": "api.dropboxapi.com",
+    "domains": [
+      "dropbox.com",
+      "dropboxapi.com"
+    ],
+    "logo": "dropbox.svg"
+  },
+  {
+    "slug": "freshdesk",
+    "name": "Freshdesk",
+    "docsUrl": "https://developers.freshdesk.com/api/",
+    "host": "{subdomain}.freshdesk.com",
+    "domains": [
+      "freshdesk.com"
+    ],
+    "logo": null
+  },
+  {
+    "slug": "github",
+    "name": "GitHub",
+    "docsUrl": "https://docs.github.com/en/rest",
+    "host": "api.github.com",
+    "domains": [
+      "github.com"
+    ],
+    "logo": "github.png"
+  },
+  {
+    "slug": "gitlab",
+    "name": "GitLab",
+    "docsUrl": "https://docs.gitlab.com/api/users/",
+    "host": "gitlab.com",
+    "domains": [
+      "gitlab.com"
+    ],
+    "logo": "gitlab.svg"
+  },
+  {
+    "slug": "google-workspace",
+    "name": "Google Workspace",
+    "docsUrl": "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/list",
+    "host": "admin.googleapis.com",
+    "domains": [
+      "google.com",
+      "googleapis.com"
+    ],
+    "logo": "google-workspace.svg"
+  },
+  {
+    "slug": "greenhouse-harvest",
+    "name": "Greenhouse Harvest",
+    "docsUrl": "https://developers.greenhouse.io/harvest.html",
+    "host": "harvest.greenhouse.io",
+    "domains": [
+      "greenhouse.io"
+    ],
+    "logo": "greenhouse.svg"
+  },
+  {
+    "slug": "gusto",
+    "name": "Gusto",
+    "docsUrl": "https://docs.gusto.com/app-integrations/reference/get-v1-companies-company_id-employees",
+    "host": "api.gusto-demo.com",
+    "domains": [
+      "gusto.com",
+      "gusto-demo.com"
+    ],
+    "logo": "gusto.svg"
+  },
+  {
+    "slug": "hubspot",
+    "name": "HubSpot",
+    "docsUrl": "https://developers.hubspot.com/docs/api-reference/settings-user-provisioning-v3/guide",
+    "host": "api.hubspot.com",
+    "domains": [
+      "hubspot.com"
+    ],
+    "logo": "hubspot.svg"
+  },
+  {
+    "slug": "intercom",
+    "name": "Intercom",
+    "docsUrl": "https://developers.intercom.com/docs/references/rest-api/api.intercom.io/admins/listadmins",
+    "host": "api.intercom.io",
+    "domains": [
+      "intercom.com",
+      "intercom.io"
+    ],
+    "logo": "intercom.svg"
+  },
+  {
+    "slug": "jira-cloud",
+    "name": "Jira Cloud",
+    "docsUrl": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/",
+    "host": "{subdomain}.atlassian.net",
+    "domains": [
+      "atlassian.com",
+      "atlassian.net"
+    ],
+    "logo": "jira.svg"
+  },
+  {
+    "slug": "lever",
+    "name": "Lever",
+    "docsUrl": "https://hire.lever.co/developer/documentation",
+    "host": "api.lever.co",
+    "domains": [
+      "lever.co"
+    ],
+    "logo": null
+  },
+  {
+    "slug": "linear",
+    "name": "Linear",
+    "docsUrl": "https://linear.app/developers/graphql",
+    "host": "api.linear.app",
+    "domains": [
+      "linear.app"
+    ],
+    "logo": "linear.svg"
+  },
+  {
+    "slug": "microsoft-graph",
+    "name": "Microsoft Entra ID (Microsoft Graph)",
+    "docsUrl": "https://learn.microsoft.com/en-us/graph/api/user-list",
+    "host": "graph.microsoft.com",
+    "domains": [
+      "microsoft.com"
+    ],
+    "logo": "microsoft-365.svg"
+  },
+  {
+    "slug": "miro",
+    "name": "Miro",
+    "docsUrl": "https://developers.miro.com/reference/api-reference",
+    "host": "api.miro.com",
+    "domains": [
+      "miro.com"
+    ],
+    "logo": "miro.svg"
+  },
+  {
+    "slug": "monday",
+    "name": "monday.com",
+    "docsUrl": "https://developer.monday.com/api-reference/reference/users",
+    "host": "api.monday.com",
+    "domains": [
+      "monday.com"
+    ],
+    "logo": null
+  },
+  {
+    "slug": "notion",
+    "name": "Notion",
+    "docsUrl": "https://developers.notion.com/reference/get-users",
+    "host": "api.notion.com",
+    "domains": [
+      "notion.com"
+    ],
+    "logo": "notion.svg"
+  },
+  {
+    "slug": "okta",
+    "name": "Okta",
+    "docsUrl": "https://developer.okta.com/docs/reference",
+    "host": "{subdomain}.okta.com",
+    "domains": [
+      "okta.com"
+    ],
+    "logo": "okta.png"
+  },
+  {
+    "slug": "pagerduty",
+    "name": "PagerDuty",
+    "docsUrl": "https://developer.pagerduty.com/api-reference",
+    "host": "api.pagerduty.com",
+    "domains": [
+      "pagerduty.com"
+    ],
+    "logo": "pagerduty.svg"
+  },
+  {
+    "slug": "sendgrid-teammates",
+    "name": "Twilio SendGrid Teammates",
+    "docsUrl": "https://www.twilio.com/docs/sendgrid/api-reference/teammates/retrieve-all-teammates",
+    "host": "api.sendgrid.com",
+    "domains": [
+      "twilio.com",
+      "sendgrid.com"
+    ],
+    "logo": "sendgrid.svg"
+  },
+  {
+    "slug": "sentry",
+    "name": "Sentry",
+    "docsUrl": "https://docs.sentry.io/api/organizations/list-an-organizations-members/",
+    "host": "{region}.sentry.io",
+    "domains": [
+      "sentry.io"
+    ],
+    "logo": "sentry.svg"
+  },
+  {
+    "slug": "shopify",
+    "name": "Shopify",
+    "docsUrl": "https://shopify.dev/docs/api/admin-graphql/latest/queries/staffMembers",
+    "host": "{subdomain}.myshopify.com",
+    "domains": [
+      "shopify.dev",
+      "myshopify.com"
+    ],
+    "logo": "shopify.svg"
+  },
+  {
+    "slug": "slack",
+    "name": "Slack",
+    "docsUrl": "https://api.slack.com/web",
+    "host": "slack.com",
+    "domains": [
+      "slack.com"
+    ],
+    "logo": "slack.png"
+  },
+  {
+    "slug": "smartsheet-resource-management",
+    "name": "Smartsheet Resource Management",
+    "docsUrl": "https://developers.smartsheet.com/api/smartsheet/openapi/users",
+    "host": "api.rm.smartsheet.com",
+    "domains": [
+      "smartsheet.com"
+    ],
+    "logo": null
+  },
+  {
+    "slug": "snowflake",
+    "name": "Snowflake",
+    "docsUrl": "https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/user",
+    "host": "{account}.snowflake.com",
+    "domains": [
+      "snowflake.com"
+    ],
+    "logo": "snowflake.svg"
+  },
+  {
+    "slug": "trello",
+    "name": "Trello",
+    "docsUrl": "https://developer.atlassian.com/cloud/trello/rest/",
+    "host": "api.trello.com",
+    "domains": [
+      "atlassian.com",
+      "trello.com"
+    ],
+    "logo": "trello.svg"
+  },
+  {
+    "slug": "zendesk",
+    "name": "Zendesk",
+    "docsUrl": "https://developer.zendesk.com/api-reference/ticketing/users/users/",
+    "host": "{subdomain}.zendesk.com",
+    "domains": [
+      "zendesk.com"
+    ],
+    "logo": "zendesk.svg"
+  },
+  {
+    "slug": "zoom",
+    "name": "Zoom",
+    "docsUrl": "https://developers.zoom.us/docs/api/users/",
+    "host": "api.zoom.us",
+    "domains": [
+      "zoom.us"
+    ],
+    "logo": "zoom.svg"
+  }
+]

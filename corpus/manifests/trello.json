@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Trello",
+    "slug": "trello",
+    "apiVersion": "1"
+  },
+  "baseUrl": "https://api.trello.com/1",
+  "connectionFields": [
+    {
+      "name": "enterpriseId",
+      "label": "Trello Enterprise ID",
+      "example": "5e1f0c2a9b3d4e6f7a8b9c0d"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "api_key",
+      "label": "Trello API key (sent with a token)",
+      "in": "query",
+      "name": "key",
+      "prefix": ""
+    },
+    {
+      "type": "api_key",
+      "label": "Trello API token (sent with the API key)",
+      "in": "query",
+      "name": "token",
+      "prefix": ""
+    },
+    {
+      "type": "oauth2_authorization_code",
+      "label": "Atlassian OAuth 2.0",
+      "authorizeUrl": "https://auth.atlassian.com/authorize",
+      "tokenUrl": "https://auth.atlassian.com/authorize/oauth/token",
+      "scopes": [
+        "read:enterprise:trello",
+        "write:enterprise:trello",
+        "read:member:trello",
+        "read:organization:trello"
+      ]
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/enterprises/{{connection.enterpriseId}}/members",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "$",
+    "pagination": {
+      "type": "offset",
+      "offsetParam": "startIndex",
+      "limitParam": "count",
+      "pageSize": 100,
+      "totalPath": null,
+      "hasMorePath": null
+    },
+    "requiredScopes": [
+      "read:enterprise:trello"
+    ],
+    "planRequirement": "Enterprise",
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "fullName",
+        "fallbackPaths": [
+          "username"
+        ],
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "confirmed",
+        "fallbackPaths": null,
+        "map": {
+          "true": "active",
+          "false": "pending"
+        },
+        "format": null
+      },
+      "role": null,
+      "userType": {
+        "path": "memberType",
+        "fallbackPaths": null,
+        "map": {
+          "normal": "member",
+          "ghost": "unknown"
+        },
+        "format": null
+      },
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "event_log",
+    "request": {
+      "method": "GET",
+      "path": "/enterprises/{{connection.enterpriseId}}/auditlog",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "$",
+    "pagination": {
+      "type": "none"
+    },
+    "requiredScopes": [
+      "write:enterprise:trello"
+    ],
+    "planRequirement": "Enterprise",
+    "forEachUser": false,
+    "window": null,
+    "fields": {
+      "userRef": {
+        "path": "memberCreator.id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userRefType": "externalId",
+      "occurredAt": {
+        "path": "date",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "metric": {
+        "path": "type",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "metricConstant": null,
+      "value": null
+    }
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "users",
+      "quote": "Get the members of an enterprise."
+    },
+    {
+      "claim": "usage",
+      "quote": "Returns an array of Actions related to the Enterprise object."
+    },
+    {
+      "claim": "plan",
+      "quote": "An Enterprise admin token is required for this route."
+    },
+    {
+      "claim": "pagination",
+      "quote": "The response is paginated and will return 100 users at a time."
+    }
+  ],
+  "assumptions": [
+    "The customer must supply their Trello Enterprise ID; the source does not say how to find it automatically.",
+    "Trello needs both an API key and a token together; they are listed as two separate credentials.",
+    "The member list uses startIndex/count paging; the source names these parameters but not the maximum page size, so 100 is assumed (it is the documented page size for the related users query).",
+    "The source gives no explicit way to see deactivated members in this listing; they may not appear. A filter parameter exists, but its values are not documented.",
+    "Trello member records have no suspended/deactivated flag here, so 'confirmed' is used as a rough status: confirmed means active, unconfirmed means pending.",
+    "The member list returns a plain array, so the records path '$' is assumed to mean the top level of the response.",
+    "No per-user last-active field exists on the member records in this listing, so the enterprise audit log is used as the activity signal.",
+    "The audit log documents no date window or paging parameters, so the manifest requests it with none; older events may be missing or truncated.",
+    "The audit log entries are assumed to identify the actor in memberCreator.id and to carry an ISO date in 'date'.",
+    "The audit log is listed with the write:enterprise:trello scope and needs an Enterprise admin token, even though it is a read-only GET.",
+    "The source states no rate limits, so none are configured.",
+    "Enterprise features require an Enterprise plan; non-enterprise workspaces would need a different (per-workspace) member listing."
+  ]
+}

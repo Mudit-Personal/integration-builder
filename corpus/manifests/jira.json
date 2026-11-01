@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Jira Cloud",
+    "slug": "jira-cloud",
+    "apiVersion": "3"
+  },
+  "baseUrl": "https://{subdomain}.atlassian.net",
+  "connectionFields": [
+    {
+      "name": "subdomain",
+      "label": "Jira site subdomain",
+      "example": "your-domain"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "oauth2_authorization_code",
+      "label": "Atlassian OAuth 2.0 (3LO)",
+      "authorizeUrl": "https://auth.atlassian.com/authorize",
+      "tokenUrl": "https://auth.atlassian.com/oauth/token",
+      "scopes": [
+        "read:jira-user"
+      ]
+    },
+    {
+      "type": "basic",
+      "label": "Basic auth (email and API token)",
+      "usernameLabel": "Email",
+      "passwordLabel": "API token"
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/rest/api/3/users/search",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "$",
+    "pagination": {
+      "type": "offset",
+      "offsetParam": "startAt",
+      "limitParam": "maxResults",
+      "pageSize": 100,
+      "totalPath": null,
+      "hasMorePath": null
+    },
+    "requiredScopes": [
+      "read:jira-user"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "accountId",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "emailAddress",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "displayName",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "active",
+        "fallbackPaths": null,
+        "map": {
+          "true": "active",
+          "false": "inactive"
+        },
+        "format": null
+      },
+      "role": null,
+      "userType": {
+        "path": "accountType",
+        "fallbackPaths": null,
+        "map": {
+          "atlassian": "member",
+          "customer": "guest",
+          "app": "service",
+          "unknown": "unknown"
+        },
+        "format": null
+      },
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The user record has no last-active or last-login field. The only activity-style source is the audit records endpoint, which logs administrative configuration changes (identified by authorKey), not product usage, so it cannot show who actually uses Jira."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "users",
+      "quote": "Returns a list of all users, including active users, inactive users and previously deleted users that have an Atlassian account."
+    },
+    {
+      "claim": "auth",
+      "quote": "You can access this resource via basic auth."
+    }
+  ],
+  "assumptions": [
+    "The source does not state the maximum page size for the user list; 100 is a sensible guess.",
+    "The user list returns a bare JSON array, so recordsPath is written as '$' (the top-level array). Confirm the runtime accepts this.",
+    "Pagination uses startAt and maxResults; the source does not say when the last page is reached, so the runtime should stop on an empty or short page.",
+    "Because the user list is an offset-based endpoint, the runtime must stop when a page returns no rows.",
+    "Email addresses may be hidden by users' privacy settings, so some emails may be blank.",
+    "The source does not list the read:jira-user scope in its truncated scope list, but the endpoints state it as required.",
+    "OAuth 2.0 (3LO) calls normally go through api.atlassian.com with a cloud ID, which the source does not describe; the base URL here is the site's own host. Basic auth with an API token is the confirmed route against that host.",
+    "Basic auth uses a person's API token, so access stops if that person leaves; no service-account or client-credentials method is documented.",
+    "Usage is marked unavailable: no per-user last-active field exists and the audit log only records admin configuration changes, and requires the manage:jira-configuration scope.",
+    "The source says nothing about rate limits, so those fields are left empty.",
+    "Users with account type 'customer' are assumed to be guests (e.g. service desk customers)."
+  ]
+}

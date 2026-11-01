@@ -1,0 +1,1388 @@
+[
+  {
+    "slug": "sendgrid",
+    "name": "SendGrid",
+    "docsUrl": "https://www.twilio.com/docs/sendgrid/api-reference/teammates/retrieve-all-teammates",
+    "readUrl": "https://raw.githubusercontent.com/twilio/sendgrid-oai/main/spec/json/tsg_teammates_v3.json",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 51476,
+    "attempts": 1,
+    "tokens": {
+      "input": 13724,
+      "output": 1144
+    },
+    "ms": 10332,
+    "scenarios": {
+      "passed": 22,
+      "failed": 0,
+      "skipped": 7
+    },
+    "usageKind": "unavailable",
+    "reason": "9 findings to review"
+  },
+  {
+    "slug": "freshdesk",
+    "name": "Freshdesk",
+    "docsUrl": "https://developers.freshdesk.com/api/",
+    "readUrl": "https://developers.freshdesk.com/api/",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 660015,
+    "attempts": 1,
+    "tokens": {
+      "input": 61987,
+      "output": 2212
+    },
+    "ms": 25501,
+    "scenarios": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 5
+    },
+    "usageKind": "last_activity_field",
+    "reason": "9 findings to review"
+  },
+  {
+    "slug": "asana",
+    "name": "Asana",
+    "docsUrl": "https://developers.asana.com/docs",
+    "readUrl": "https://developers.asana.com/docs",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 306,
+    "scenarios": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 4
+    },
+    "usageKind": "event_log",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "box",
+    "name": "Box",
+    "docsUrl": "https://developer.box.com/reference",
+    "readUrl": "https://developer.box.com/reference",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 315,
+    "scenarios": {
+      "passed": 27,
+      "failed": 0,
+      "skipped": 2
+    },
+    "usageKind": "event_log",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "calendly",
+    "name": "Calendly",
+    "docsUrl": "https://developer.calendly.com/api-docs/4b402d5ab3edd-calendly-developer",
+    "readUrl": "https://developer.calendly.com/api-docs/4b402d5ab3edd-calendly-developer",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 322,
+    "scenarios": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 4
+    },
+    "usageKind": "event_log",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "github",
+    "name": "GitHub",
+    "docsUrl": "https://docs.github.com/en/rest",
+    "readUrl": "https://docs.github.com/en/rest",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 211,
+    "scenarios": {
+      "passed": 21,
+      "failed": 0,
+      "skipped": 8
+    },
+    "usageKind": "unavailable",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "jira",
+    "name": "Jira Cloud",
+    "docsUrl": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/",
+    "readUrl": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 217,
+    "scenarios": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 6
+    },
+    "usageKind": "unavailable",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "linear",
+    "name": "Linear",
+    "docsUrl": "https://linear.app/developers/graphql",
+    "readUrl": "https://linear.app/developers/graphql",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 242,
+    "scenarios": {
+      "passed": 27,
+      "failed": 0,
+      "skipped": 2
+    },
+    "usageKind": "event_log",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "notion",
+    "name": "Notion",
+    "docsUrl": "https://developers.notion.com/reference/get-users",
+    "readUrl": "https://developers.notion.com/reference/get-users",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 197,
+    "scenarios": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 5
+    },
+    "usageKind": "unavailable",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "okta",
+    "name": "Okta",
+    "docsUrl": "https://developer.okta.com/docs/reference",
+    "readUrl": "https://developer.okta.com/docs/reference",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 205,
+    "scenarios": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 4
+    },
+    "usageKind": "last_activity_field",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "pagerduty",
+    "name": "PagerDuty",
+    "docsUrl": "https://developer.pagerduty.com/api-reference",
+    "readUrl": "https://developer.pagerduty.com/api-reference",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 197,
+    "scenarios": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 6
+    },
+    "usageKind": "event_log",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "slack",
+    "name": "Slack",
+    "docsUrl": "https://api.slack.com/web",
+    "readUrl": "https://api.slack.com/web",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 221,
+    "scenarios": {
+      "passed": 27,
+      "failed": 0,
+      "skipped": 2
+    },
+    "usageKind": "event_log",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "zendesk",
+    "name": "Zendesk",
+    "docsUrl": "https://developer.zendesk.com/api-reference/ticketing/users/users/",
+    "readUrl": "https://developer.zendesk.com/api-reference/ticketing/users/users/",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 197,
+    "scenarios": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 6
+    },
+    "usageKind": "last_activity_field",
+    "reason": "Existing manifest. Sandbox rerun, no new model call."
+  },
+  {
+    "slug": "hubspot",
+    "name": "HubSpot",
+    "docsUrl": "https://developers.hubspot.com/docs/api-reference/overview",
+    "readUrl": "https://raw.githubusercontent.com/HubSpot/HubSpot-public-api-spec-collection/main/PublicApiSpecs/Settings/User%20Provisioning/Rollouts/144901/v3/userProvisioning.json",
+    "status": "unreadable",
+    "sourceKind": null,
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 452,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": null,
+    "reason": "raw.githubusercontent.com returned 404"
+  },
+  {
+    "slug": "microsoft-365",
+    "name": "Microsoft 365 (Graph)",
+    "docsUrl": "https://learn.microsoft.com/en-us/graph/api/user-list",
+    "readUrl": "https://learn.microsoft.com/en-us/graph/api/user-list",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 118591,
+    "attempts": 1,
+    "tokens": {
+      "input": 53232,
+      "output": 2772
+    },
+    "ms": 31323,
+    "scenarios": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 3
+    },
+    "usageKind": "last_activity_field",
+    "reason": "11 findings to review"
+  },
+  {
+    "slug": "zoom",
+    "name": "Zoom",
+    "docsUrl": "https://developers.zoom.us/docs/api/users/",
+    "readUrl": "https://developers.zoom.us/api-hub/users/methods/endpoints.json",
+    "status": "unreadable",
+    "sourceKind": null,
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 1042,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": null,
+    "reason": "developers.zoom.us returned 404"
+  },
+  {
+    "slug": "google-workspace",
+    "name": "Google Workspace Admin",
+    "docsUrl": "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/list",
+    "readUrl": "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/list",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 133423,
+    "attempts": 2,
+    "tokens": {
+      "input": 130475,
+      "output": 4748
+    },
+    "ms": 57172,
+    "scenarios": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 4
+    },
+    "usageKind": "unavailable",
+    "reason": "10 findings to review"
+  },
+  {
+    "slug": "salesforce",
+    "name": "Salesforce",
+    "docsUrl": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",
+    "readUrl": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",
+    "status": "blocked",
+    "sourceKind": "docs",
+    "sourceChars": 10127,
+    "attempts": 3,
+    "tokens": {
+      "input": 48447,
+      "output": 7207
+    },
+    "ms": 60020,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": "unavailable",
+    "reason": "host_undeclared baseUrl: my.salesforce.com does not appear anywhere in the source. | host_undeclared authMethods[0].tokenUrl: my.salesforce.com does not appear anywhere in the source. | host_undeclared authMethods[1].tokenUrl: my.salesforce.com does not appear anywhere in the source."
+  },
+  {
+    "slug": "docusign",
+    "name": "DocuSign",
+    "docsUrl": "https://developers.docusign.com/docs/admin-api/reference/",
+    "readUrl": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/admin.rest.swagger-v2.1.json",
+    "status": "sandbox_failed",
+    "sourceKind": "spec",
+    "sourceChars": 410651,
+    "attempts": 1,
+    "tokens": {
+      "input": 23878,
+      "output": 2562
+    },
+    "ms": 20109,
+    "scenarios": {
+      "passed": 2,
+      "failed": 22,
+      "skipped": 5
+    },
+    "usageKind": "last_activity_field",
+    "reason": "happy_path: users ended skipped, wanted complete | rate_limit_then_ok: users ended skipped, wanted complete | rate_limit_long: users ended skipped, wanted failed | server_blip: users ended skipped, wanted complete | server_down: users ended skipped, wanted failed | token_revoked: users ended skipped, wanted failed | token_expires_midway: users ended skipped, wanted complete | missing_scope: users ended skipped, wanted failed | empty_account: users ended skipped, wanted complete | offsite_redirec"
+  },
+  {
+    "slug": "dropbox",
+    "name": "Dropbox",
+    "docsUrl": "https://www.dropbox.com/developers/documentation/http/teams",
+    "readUrl": "https://www.dropbox.com/developers/documentation/http/teams",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 74520,
+    "attempts": 2,
+    "tokens": {
+      "input": 75137,
+      "output": 4043
+    },
+    "ms": 54017,
+    "scenarios": {
+      "passed": 19,
+      "failed": 0,
+      "skipped": 10
+    },
+    "usageKind": "unavailable",
+    "reason": "12 findings to review"
+  },
+  {
+    "slug": "shopify",
+    "name": "Shopify",
+    "docsUrl": "https://shopify.dev/docs/api/admin-graphql/latest/queries/staffMembers",
+    "readUrl": "https://shopify.dev/docs/api/admin-graphql/latest/queries/staffMembers",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 70308,
+    "attempts": 1,
+    "tokens": {
+      "input": 42837,
+      "output": 1973
+    },
+    "ms": 39488,
+    "scenarios": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 3
+    },
+    "usageKind": "unavailable",
+    "reason": "13 findings to review"
+  },
+  {
+    "slug": "confluence",
+    "name": "Atlassian Confluence",
+    "docsUrl": "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",
+    "readUrl": "https://developer.atlassian.com/cloud/confluence/swagger.v3.json",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 420347,
+    "attempts": 1,
+    "tokens": {
+      "input": 27459,
+      "output": 2605
+    },
+    "ms": 25227,
+    "scenarios": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 6
+    },
+    "usageKind": "unavailable",
+    "reason": "13 findings to review"
+  },
+  {
+    "slug": "trello",
+    "name": "Trello",
+    "docsUrl": "https://developer.atlassian.com/cloud/trello/rest/",
+    "readUrl": "https://developer.atlassian.com/cloud/trello/swagger.v3.json",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 275351,
+    "attempts": 1,
+    "tokens": {
+      "input": 28070,
+      "output": 2785
+    },
+    "ms": 22191,
+    "scenarios": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 6
+    },
+    "usageKind": "event_log",
+    "reason": "16 findings to review"
+  },
+  {
+    "slug": "clickup",
+    "name": "ClickUp",
+    "docsUrl": "https://developer.clickup.com/reference/getauthorizedteams",
+    "readUrl": "https://developer.clickup.com/openapi/clickup-api-v2-reference.json",
+    "status": "sandbox_failed",
+    "sourceKind": "spec",
+    "sourceChars": 529169,
+    "attempts": 1,
+    "tokens": {
+      "input": 18216,
+      "output": 1691
+    },
+    "ms": 14408,
+    "scenarios": {
+      "passed": 10,
+      "failed": 7,
+      "skipped": 12
+    },
+    "usageKind": "unavailable",
+    "reason": "happy_path: users ended failed, wanted complete | rate_limit_then_ok: users ended failed, wanted complete | server_blip: users ended failed, wanted complete | empty_account: users ended failed, wanted complete | null_emails: users ended failed, wanted complete | slow_then_ok: users ended failed, wanted complete | count_collapse: users ended failed, wanted complete"
+  },
+  {
+    "slug": "monday",
+    "name": "Monday.com",
+    "docsUrl": "https://developer.monday.com/api-reference/reference/users",
+    "readUrl": "https://developer.monday.com/api-reference/reference/users",
+    "status": "sandbox_failed",
+    "sourceKind": "docs",
+    "sourceChars": 113436,
+    "attempts": 1,
+    "tokens": {
+      "input": 51962,
+      "output": 3441
+    },
+    "ms": 44070,
+    "scenarios": {
+      "passed": 17,
+      "failed": 7,
+      "skipped": 5
+    },
+    "usageKind": "last_activity_field",
+    "reason": "happy_path: users ended partial, wanted complete | rate_limit_then_ok: users ended partial, wanted complete | server_blip: users ended partial, wanted complete | null_emails: users ended partial, wanted complete | slow_then_ok: users ended partial, wanted complete | clamped_page_size: users ended partial, wanted complete | count_collapse: users ended partial, wanted complete"
+  },
+  {
+    "slug": "smartsheet",
+    "name": "Smartsheet",
+    "docsUrl": "https://developers.smartsheet.com/api/smartsheet/openapi/users",
+    "readUrl": "https://developers.smartsheet.com/api/smartsheet/openapi/users",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 67929,
+    "attempts": 1,
+    "tokens": {
+      "input": 37213,
+      "output": 2185
+    },
+    "ms": 29509,
+    "scenarios": {
+      "passed": 22,
+      "failed": 0,
+      "skipped": 7
+    },
+    "usageKind": "unavailable",
+    "reason": "9 findings to review"
+  },
+  {
+    "slug": "airtable",
+    "name": "Airtable",
+    "docsUrl": "https://airtable.com/developers/web/api/introduction",
+    "readUrl": "https://airtable.com/developers/web/api/introduction",
+    "status": "blocked",
+    "sourceKind": "docs",
+    "sourceChars": 988,
+    "attempts": 3,
+    "tokens": {
+      "input": 37562,
+      "output": 4926
+    },
+    "ms": 49660,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": "unavailable",
+    "reason": "host_undeclared baseUrl: api.airtable.com does not appear anywhere in the source."
+  },
+  {
+    "slug": "figma",
+    "name": "Figma",
+    "docsUrl": "https://www.figma.com/developers/api",
+    "readUrl": "https://raw.githubusercontent.com/figma/rest-api-spec/main/openapi/openapi.yaml",
+    "status": "sandbox_failed",
+    "sourceKind": "spec",
+    "sourceChars": 424413,
+    "attempts": 2,
+    "tokens": {
+      "input": 41624,
+      "output": 4608
+    },
+    "ms": 33530,
+    "scenarios": {
+      "passed": 4,
+      "failed": 22,
+      "skipped": 3
+    },
+    "usageKind": "event_log",
+    "reason": "happy_path: got 12 users of 57 | rate_limit_then_ok: no retries happened | rate_limit_long: users ended complete, wanted failed | server_blip: no retries happened | server_down: users ended complete, wanted failed | token_revoked: users ended complete, wanted failed | token_expires_midway: got 12 users | missing_scope: users ended complete, wanted failed | usage_plan_gated: users ended failed, wanted complete | empty_account: a bad run was allowed to reconcile | offsite_redirect: error was undef"
+  },
+  {
+    "slug": "miro",
+    "name": "Miro",
+    "docsUrl": "https://developers.miro.com/reference/api-reference",
+    "readUrl": "https://developers.miro.com/reference/api-reference",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 1065591,
+    "attempts": 1,
+    "tokens": {
+      "input": 24332,
+      "output": 2143
+    },
+    "ms": 32161,
+    "scenarios": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 3
+    },
+    "usageKind": "last_activity_field",
+    "reason": "14 findings to review"
+  },
+  {
+    "slug": "canva",
+    "name": "Canva",
+    "docsUrl": "https://www.canva.dev/docs/connect/",
+    "readUrl": "https://www.canva.dev/docs/connect/",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 541715,
+    "attempts": 2,
+    "tokens": {
+      "input": 45813,
+      "output": 3621
+    },
+    "ms": 40155,
+    "scenarios": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 5
+    },
+    "usageKind": "unavailable",
+    "reason": "14 findings to review"
+  },
+  {
+    "slug": "intercom",
+    "name": "Intercom",
+    "docsUrl": "https://developers.intercom.com/docs/references/rest-api/api.intercom.io/admins/listadmins",
+    "readUrl": "https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/main/descriptions/2.11/api.intercom.io.yaml",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 711484,
+    "attempts": 2,
+    "tokens": {
+      "input": 62443,
+      "output": 3858
+    },
+    "ms": 33993,
+    "scenarios": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 11
+    },
+    "usageKind": "event_log",
+    "reason": "14 findings to review"
+  },
+  {
+    "slug": "workday",
+    "name": "Workday",
+    "docsUrl": "https://community.workday.com/sites/default/files/file-hosted/restapi/index.html",
+    "readUrl": "https://community.workday.com/sites/default/files/file-hosted/restapi/index.html",
+    "status": "unreadable",
+    "sourceKind": null,
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 1343,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": null,
+    "reason": "community.workday.com returned 404"
+  },
+  {
+    "slug": "adobe",
+    "name": "Adobe",
+    "docsUrl": "https://adobe-apiplatform.github.io/umapi-documentation/en/",
+    "readUrl": "https://adobe-apiplatform.github.io/umapi-documentation/en/",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 116325,
+    "attempts": 2,
+    "tokens": {
+      "input": 106925,
+      "output": 5598
+    },
+    "ms": 48653,
+    "scenarios": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 5
+    },
+    "usageKind": "unavailable",
+    "reason": "14 findings to review"
+  },
+  {
+    "slug": "bamboohr",
+    "name": "BambooHR",
+    "docsUrl": "https://documentation.bamboohr.com/reference/get-employees-directory",
+    "readUrl": "https://documentation.bamboohr.com/reference/get-employees-directory",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 4196,
+    "attempts": 1,
+    "tokens": {
+      "input": 13117,
+      "output": 1230
+    },
+    "ms": 17405,
+    "scenarios": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 13
+    },
+    "usageKind": "unavailable",
+    "reason": "10 findings to review"
+  },
+  {
+    "slug": "rippling",
+    "name": "Rippling",
+    "docsUrl": "https://developer.rippling.com/documentation/rest-api",
+    "readUrl": "https://developer.rippling.com/documentation/rest-api",
+    "status": "sandbox_failed",
+    "sourceKind": "docs",
+    "sourceChars": 100391,
+    "attempts": 1,
+    "tokens": {
+      "input": 42945,
+      "output": 1529
+    },
+    "ms": 24786,
+    "scenarios": {
+      "passed": 24,
+      "failed": 2,
+      "skipped": 3
+    },
+    "usageKind": "unavailable",
+    "reason": "null_emails: email coverage 0 | dirty_values: email was null"
+  },
+  {
+    "slug": "gusto",
+    "name": "Gusto",
+    "docsUrl": "https://docs.gusto.com/app-integrations/reference/get-v1-companies-company_id-employees",
+    "readUrl": "https://docs.gusto.com/app-integrations/reference/get-v1-companies-company_id-employees",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 117047,
+    "attempts": 1,
+    "tokens": {
+      "input": 43444,
+      "output": 2227
+    },
+    "ms": 45696,
+    "scenarios": {
+      "passed": 22,
+      "failed": 0,
+      "skipped": 7
+    },
+    "usageKind": "unavailable",
+    "reason": "11 findings to review"
+  },
+  {
+    "slug": "servicenow",
+    "name": "ServiceNow",
+    "docsUrl": "https://www.servicenow.com/docs/bundle/zurich-api-reference/page/integrate/inbound-rest/concept/c_TableAPI.html",
+    "readUrl": "https://www.servicenow.com/docs/bundle/zurich-api-reference/page/integrate/inbound-rest/concept/c_TableAPI.html",
+    "status": "blocked",
+    "sourceKind": "docs",
+    "sourceChars": 119230,
+    "attempts": 3,
+    "tokens": {
+      "input": 157060,
+      "output": 6182
+    },
+    "ms": 81171,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": "last_activity_field",
+    "reason": "op_not_in_docs users.request: /api/now/table/sys_user does not appear in the docs."
+  },
+  {
+    "slug": "greenhouse",
+    "name": "Greenhouse",
+    "docsUrl": "https://developers.greenhouse.io/harvest.html",
+    "readUrl": "https://developers.greenhouse.io/harvest.html",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 426921,
+    "attempts": 1,
+    "tokens": {
+      "input": 63928,
+      "output": 2587
+    },
+    "ms": 30651,
+    "scenarios": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 5
+    },
+    "usageKind": "unavailable",
+    "reason": "10 findings to review"
+  },
+  {
+    "slug": "newrelic",
+    "name": "New Relic",
+    "docsUrl": "https://docs.newrelic.com/docs/apis/nerdgraph/examples/manage-users-nerdgraph/",
+    "readUrl": "https://docs.newrelic.com/docs/apis/nerdgraph/examples/manage-users-nerdgraph/",
+    "status": "unreadable",
+    "sourceKind": null,
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 974,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": null,
+    "reason": "docs.newrelic.com returned 404"
+  },
+  {
+    "slug": "lever",
+    "name": "Lever",
+    "docsUrl": "https://hire.lever.co/developer/documentation",
+    "readUrl": "https://hire.lever.co/developer/documentation",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 360255,
+    "attempts": 1,
+    "tokens": {
+      "input": 60625,
+      "output": 2656
+    },
+    "ms": 51244,
+    "scenarios": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 4
+    },
+    "usageKind": "event_log",
+    "reason": "9 findings to review"
+  },
+  {
+    "slug": "datadog",
+    "name": "Datadog",
+    "docsUrl": "https://docs.datadoghq.com/api/latest/users/",
+    "readUrl": "https://raw.githubusercontent.com/DataDog/datadog-api-client-typescript/master/.generator/schemas/v2/openapi.yaml",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 9367442,
+    "attempts": 2,
+    "tokens": {
+      "input": 51180,
+      "output": 4501
+    },
+    "ms": 49031,
+    "scenarios": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 13
+    },
+    "usageKind": "unavailable",
+    "reason": "8 findings to review"
+  },
+  {
+    "slug": "sentry",
+    "name": "Sentry",
+    "docsUrl": "https://docs.sentry.io/api/organizations/list-an-organizations-members/",
+    "readUrl": "https://raw.githubusercontent.com/getsentry/sentry-api-schema/main/openapi-derefed.json",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 4528674,
+    "attempts": 3,
+    "tokens": {
+      "input": 78213,
+      "output": 6086
+    },
+    "ms": 55186,
+    "scenarios": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 4
+    },
+    "usageKind": "last_activity_field",
+    "reason": "11 findings to review"
+  },
+  {
+    "slug": "snowflake",
+    "name": "Snowflake",
+    "docsUrl": "https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/user",
+    "readUrl": "https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/main/specifications/user.yaml",
+    "status": "unreadable",
+    "sourceKind": null,
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 522,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": null,
+    "reason": "Cannot read properties of undefined (reading 'flows')"
+  },
+  {
+    "slug": "bitbucket",
+    "name": "Bitbucket",
+    "docsUrl": "https://developer.atlassian.com/cloud/bitbucket/rest/intro/",
+    "readUrl": "https://dac-static.atlassian.com/cloud/bitbucket/swagger.v3.json",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 1408822,
+    "attempts": 1,
+    "tokens": {
+      "input": 25130,
+      "output": 2090
+    },
+    "ms": 18619,
+    "scenarios": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 4
+    },
+    "usageKind": "last_activity_field",
+    "reason": "15 findings to review"
+  },
+  {
+    "slug": "amplitude",
+    "name": "Amplitude",
+    "docsUrl": "https://amplitude.com/docs/apis/analytics/scim",
+    "readUrl": "https://amplitude.com/docs/apis/analytics/scim",
+    "status": "sandbox_failed",
+    "sourceKind": "spec",
+    "sourceChars": 96741,
+    "attempts": 1,
+    "tokens": {
+      "input": 15124,
+      "output": 1913
+    },
+    "ms": 25133,
+    "scenarios": {
+      "passed": 15,
+      "failed": 1,
+      "skipped": 13
+    },
+    "usageKind": "unavailable",
+    "reason": "id_field_renamed: users ended complete, wanted failed"
+  },
+  {
+    "slug": "gitlab",
+    "name": "GitLab",
+    "docsUrl": "https://docs.gitlab.com/api/users/",
+    "readUrl": "https://docs.gitlab.com/api/users/",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 111754,
+    "attempts": 1,
+    "tokens": {
+      "input": 54978,
+      "output": 2932
+    },
+    "ms": 71348,
+    "scenarios": {
+      "passed": 22,
+      "failed": 0,
+      "skipped": 7
+    },
+    "usageKind": "last_activity_field",
+    "reason": "14 findings to review"
+  },
+  {
+    "slug": "1password",
+    "name": "1Password",
+    "docsUrl": "https://developer.1password.com/docs/scim/",
+    "readUrl": "https://developer.1password.com/docs/scim/",
+    "status": "unreadable",
+    "sourceKind": null,
+    "sourceChars": 0,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 2998,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": null,
+    "reason": "www.1password.dev returned 404"
+  },
+  {
+    "slug": "segment",
+    "name": "Segment",
+    "docsUrl": "https://docs.segmentapis.com/tag/IAM-Users/",
+    "readUrl": "https://docs.segmentapis.com/tag/IAM-Users/",
+    "status": "blocked",
+    "sourceKind": "docs",
+    "sourceChars": 42541,
+    "attempts": 3,
+    "tokens": {
+      "input": 95652,
+      "output": 6492
+    },
+    "ms": 59871,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": "event_log",
+    "reason": "host_undeclared baseUrl: api.segmentapis.com does not appear anywhere in the source."
+  },
+  {
+    "slug": "cloudflare",
+    "name": "Cloudflare",
+    "docsUrl": "https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/list/",
+    "readUrl": "https://raw.githubusercontent.com/cloudflare/api-schemas/main/openapi.json",
+    "status": "sandbox_failed",
+    "sourceKind": "spec",
+    "sourceChars": 27629300,
+    "attempts": 2,
+    "tokens": {
+      "input": 54641,
+      "output": 4257
+    },
+    "ms": 39000,
+    "scenarios": {
+      "passed": 3,
+      "failed": 23,
+      "skipped": 3
+    },
+    "usageKind": "event_log",
+    "reason": "happy_path: users ended skipped, wanted complete | rate_limit_then_ok: users ended skipped, wanted complete | rate_limit_long: users ended skipped, wanted failed | server_blip: users ended skipped, wanted complete | server_down: users ended skipped, wanted failed | token_revoked: users ended skipped, wanted failed | missing_scope: users ended skipped, wanted failed | usage_plan_gated: users ended skipped, wanted complete | empty_account: users ended skipped, wanted complete | offsite_redirect: e"
+  },
+  {
+    "slug": "auth0",
+    "name": "Auth0",
+    "docsUrl": "https://auth0.com/docs/api/management/v2/users/get-users",
+    "readUrl": "https://auth0.com/docs/api/management/v2/users/get-users",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 327071,
+    "attempts": 2,
+    "tokens": {
+      "input": 132222,
+      "output": 3370
+    },
+    "ms": 30512,
+    "scenarios": {
+      "passed": 22,
+      "failed": 0,
+      "skipped": 7
+    },
+    "usageKind": "last_activity_field",
+    "reason": "10 findings to review"
+  },
+  {
+    "slug": "workday",
+    "name": "Workday",
+    "docsUrl": "https://doc.workday.com/",
+    "readUrl": "https://doc.workday.com/",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 2824,
+    "attempts": 1,
+    "tokens": {
+      "input": 12445,
+      "output": 1173
+    },
+    "ms": 20052,
+    "scenarios": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 13
+    },
+    "usageKind": "unavailable",
+    "reason": "8 findings to review"
+  },
+  {
+    "slug": "zoom",
+    "name": "Zoom",
+    "docsUrl": "https://developers.zoom.us/docs/api/users/",
+    "readUrl": "https://developers.zoom.us/docs/api/users/",
+    "status": "sandbox_failed",
+    "sourceKind": "docs",
+    "sourceChars": 629204,
+    "attempts": 1,
+    "tokens": {
+      "input": 53061,
+      "output": 2262
+    },
+    "ms": 27388,
+    "scenarios": {
+      "passed": 3,
+      "failed": 21,
+      "skipped": 5
+    },
+    "usageKind": "unavailable",
+    "reason": "happy_path: users ended skipped, wanted complete | rate_limit_then_ok: users ended skipped, wanted complete | rate_limit_long: users ended skipped, wanted failed | server_blip: users ended skipped, wanted complete | server_down: users ended skipped, wanted failed | token_revoked: users ended skipped, wanted failed | missing_scope: users ended skipped, wanted failed | empty_account: users ended skipped, wanted complete | offsite_redirect: error was contract, wanted safety | html_with_200: users e"
+  },
+  {
+    "slug": "hubspot",
+    "name": "HubSpot",
+    "docsUrl": "https://developers.hubspot.com/docs/api-reference/settings-user-provisioning-v3/guide",
+    "readUrl": "https://developers.hubspot.com/docs/api-reference/settings-user-provisioning-v3/guide",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 31604,
+    "attempts": 1,
+    "tokens": {
+      "input": 23112,
+      "output": 1761
+    },
+    "ms": 37511,
+    "scenarios": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 6
+    },
+    "usageKind": "unavailable",
+    "reason": "12 findings to review"
+  },
+  {
+    "slug": "newrelic",
+    "name": "New Relic",
+    "docsUrl": "https://docs.newrelic.com/docs/apis/nerdgraph/examples/nerdgraph-manage-users/",
+    "readUrl": "https://docs.newrelic.com/docs/apis/nerdgraph/examples/nerdgraph-manage-users/",
+    "status": "sandbox_failed",
+    "sourceKind": "docs",
+    "sourceChars": 93975,
+    "attempts": 1,
+    "tokens": {
+      "input": 45596,
+      "output": 3003
+    },
+    "ms": 43978,
+    "scenarios": {
+      "passed": 3,
+      "failed": 22,
+      "skipped": 4
+    },
+    "usageKind": "last_activity_field",
+    "reason": "happy_path: users ended skipped, wanted complete | rate_limit_then_ok: users ended skipped, wanted complete | rate_limit_long: users ended skipped, wanted failed | server_blip: users ended skipped, wanted complete | server_down: users ended skipped, wanted failed | token_revoked: users ended skipped, wanted failed | missing_scope: users ended skipped, wanted failed | empty_account: users ended skipped, wanted complete | graphql_error_200: users ended skipped, wanted failed | offsite_redirect: er"
+  },
+  {
+    "slug": "1password",
+    "name": "1Password",
+    "docsUrl": "https://www.1password.dev/users-api/reference.md",
+    "readUrl": "https://www.1password.dev/users-api/reference.md",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 114966,
+    "attempts": 1,
+    "tokens": {
+      "input": 47308,
+      "output": 2261
+    },
+    "ms": 28613,
+    "scenarios": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 3
+    },
+    "usageKind": "unavailable",
+    "reason": "12 findings to review"
+  },
+  {
+    "slug": "snowflake",
+    "name": "Snowflake",
+    "docsUrl": "https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/user",
+    "readUrl": "https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/user",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 66474,
+    "attempts": 2,
+    "tokens": {
+      "input": 84216,
+      "output": 3862
+    },
+    "ms": 70812,
+    "scenarios": {
+      "passed": 17,
+      "failed": 0,
+      "skipped": 12
+    },
+    "usageKind": "unavailable",
+    "reason": "10 findings to review"
+  },
+  {
+    "slug": "docusign",
+    "name": "DocuSign",
+    "docsUrl": "https://developers.docusign.com/docs/admin-api/reference/",
+    "readUrl": "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/admin.rest.swagger-v2.1.json",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 410651,
+    "attempts": 1,
+    "tokens": {
+      "input": 23881,
+      "output": 2511
+    },
+    "ms": 23460,
+    "scenarios": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 5
+    },
+    "usageKind": "last_activity_field",
+    "reason": "13 findings to review"
+  },
+  {
+    "slug": "zoom",
+    "name": "Zoom",
+    "docsUrl": "https://developers.zoom.us/docs/api/users/",
+    "readUrl": "https://developers.zoom.us/docs/api/users/",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 629204,
+    "attempts": 1,
+    "tokens": {
+      "input": 53064,
+      "output": 2157
+    },
+    "ms": 32247,
+    "scenarios": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 5
+    },
+    "usageKind": "unavailable",
+    "reason": "11 findings to review"
+  },
+  {
+    "slug": "clickup",
+    "name": "ClickUp",
+    "docsUrl": "https://developer.clickup.com/reference/getauthorizedteams",
+    "readUrl": "https://developer.clickup.com/openapi/clickup-api-v2-reference.json",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 529169,
+    "attempts": 1,
+    "tokens": {
+      "input": 18221,
+      "output": 1565
+    },
+    "ms": 13860,
+    "scenarios": {
+      "passed": 17,
+      "failed": 0,
+      "skipped": 12
+    },
+    "usageKind": "unavailable",
+    "reason": "8 findings to review"
+  },
+  {
+    "slug": "monday",
+    "name": "Monday.com",
+    "docsUrl": "https://developer.monday.com/api-reference/reference/users",
+    "readUrl": "https://developer.monday.com/api-reference/reference/users",
+    "status": "passed",
+    "sourceKind": "docs",
+    "sourceChars": 113436,
+    "attempts": 1,
+    "tokens": {
+      "input": 51965,
+      "output": 3501
+    },
+    "ms": 38321,
+    "scenarios": {
+      "passed": 19,
+      "failed": 0,
+      "skipped": 10
+    },
+    "usageKind": "last_activity_field",
+    "reason": "10 findings to review"
+  },
+  {
+    "slug": "rippling",
+    "name": "Rippling",
+    "docsUrl": "https://developer.rippling.com/documentation/rest-api",
+    "readUrl": "https://developer.rippling.com/documentation/rest-api",
+    "status": "sandbox_failed",
+    "sourceKind": "docs",
+    "sourceChars": 100391,
+    "attempts": 1,
+    "tokens": {
+      "input": 42946,
+      "output": 1636
+    },
+    "ms": 22600,
+    "scenarios": {
+      "passed": 24,
+      "failed": 2,
+      "skipped": 3
+    },
+    "usageKind": "unavailable",
+    "reason": "null_emails: users ended failed, wanted complete | dirty_values: email was undefined"
+  },
+  {
+    "slug": "amplitude",
+    "name": "Amplitude",
+    "docsUrl": "https://amplitude.com/docs/apis/analytics/scim",
+    "readUrl": "https://amplitude.com/docs/apis/analytics/scim",
+    "status": "passed",
+    "sourceKind": "spec",
+    "sourceChars": 96741,
+    "attempts": 1,
+    "tokens": {
+      "input": 15124,
+      "output": 1934
+    },
+    "ms": 25593,
+    "scenarios": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 13
+    },
+    "usageKind": "unavailable",
+    "reason": "9 findings to review"
+  },
+  {
+    "slug": "figma",
+    "name": "Figma",
+    "docsUrl": "https://www.figma.com/developers/api",
+    "readUrl": "https://raw.githubusercontent.com/figma/rest-api-spec/main/openapi/openapi.yaml",
+    "status": "unreadable",
+    "sourceKind": "spec",
+    "sourceChars": 424413,
+    "attempts": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "ms": 674,
+    "scenarios": {
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "usageKind": null,
+    "reason": "spawn claude ENOENT"
+  }
+]

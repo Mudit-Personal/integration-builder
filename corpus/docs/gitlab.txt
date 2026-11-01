@@ -1,0 +1,2127 @@
+Users API | GitLab Docs 
+ / 
+ Users API
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ Use this API to interact with user accounts on GitLab. These endpoints can help manage your account 
+or accounts for other users .
+ List all users
+ Lists all users.
+ Takes pagination parameters page and per_page to restrict the list of users.
+ As a regular user
+ History saml_provider_id attribute removed in GitLab 18.2.
+ GET /users 
+ Supported attributes:
+ Attribute Type Required Description 
+ username string no Get a single user with a specific username. 
+ public_email string no Get a single user with a specific public email. 
+ search string no Search for users by name, username, or public email. 
+ active boolean no Filters only active users. Default is false . 
+ external boolean no Filters only external users. Default is false . 
+ blocked boolean no Filters only blocked users. Default is false . 
+ humans boolean no Filters only regular users that are not bot or internal users. Default is false . 
+ created_after DateTime no Returns users created after specified time. 
+ created_before DateTime no Returns users created before specified time. 
+ exclude_active boolean no Filters only non active users. Default is false . 
+ exclude_external boolean no Filters only non external users. Default is false . 
+ exclude_humans boolean no Filters only bot or internal users. Default is false . 
+ exclude_internal boolean no Filters only non internal users. Default is false . 
+ without_project_bots boolean no Filters user without project bots. Default is false . 
+ Example response:
+ json 
+ [ 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;name&#34; : &#34;John Smith&#34; , 
+ &#34;state&#34; : &#34;active&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://localhost:3000/uploads/user/avatar/1/cd8.jpeg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/john_smith&#34; 
+ }, 
+ { 
+ &#34;id&#34; : 2 , 
+ &#34;username&#34; : &#34;jack_smith&#34; , 
+ &#34;name&#34; : &#34;Jack Smith&#34; , 
+ &#34;state&#34; : &#34;blocked&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://gravatar.com/../e32131cd8.jpeg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/jack_smith&#34; 
+ } 
+ ] 
+ This endpoint supports keyset pagination . In GitLab 17.0 and later, keyset pagination is required for responses of 50,000 and above.
+ You can also use ?search= to search for users by name, username, or public email. For example, /users?search=John . When you search for a:
+ Public email, you must use the full email address to get an exact match.
+ Name or username, you do not have to get an exact match because this is a fuzzy search.
+ In addition, you can lookup users by username:
+ GET /users?username=:username 
+ For example:
+ GET /users?username=jack_smith 
+ Username search is case-insensitive.
+ In addition, you can filter users based on the states blocked and active .
+It does not support active=false or blocked=false .
+ GET /users?active=true 
+ GET /users?blocked=true 
+ In addition, you can search for external users only with external=true .
+It does not support external=false .
+ GET /users?external=true 
+ GitLab supports bot users such as the alert bot 
+or the support bot .
+You can exclude the following types of internal users 
+from the users&rsquo; list with the exclude_internal=true parameter:
+ Alert bot
+ Support bot
+ However, this action does not exclude bot users for projects 
+or bot users for groups .
+ GET /users?exclude_internal=true 
+ In addition, to exclude external users from the users&rsquo; list, you can use the parameter exclude_external=true .
+ GET /users?exclude_external=true 
+ To exclude bot users for projects 
+and bot users for groups , you can use the
+parameter without_project_bots=true .
+ GET /users?without_project_bots=true 
+ As an administrator
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ History The email_reset_offered_at field in the response was removed in GitLab 18.3.
+ The provisioned_by_project_id field in the response was introduced in GitLab 19.3.
+ GET /users 
+ You can use all parameters available for everyone plus these additional attributes
+available only for administrators.
+ Supported attributes:
+ Attribute Type Required Description 
+ search string no Search for users by name, username, public email, or private email. 
+ extern_uid string no Get a single user with a specific external authentication provider UID. 
+ provider string no The external provider. 
+ order_by string no Return users ordered by id , name , username , created_at , or updated_at fields. Default is id 
+ sort string no Return users sorted in asc or desc order. Default is desc 
+ two_factor string no Filter users by Two-factor authentication. Filter values are enabled or disabled . By default it returns all users 
+ without_projects boolean no Filter users without projects. Default is false , which means that all users are returned, with and without projects. 
+ admins boolean no Return only administrators. Default is false 
+ auditors boolean no Return only auditor users. Default is false . If not included, it returns all users. Premium and Ultimate only. 
+ skip_ldap boolean no Skip LDAP users. Premium and Ultimate only. 
+ Example response:
+ json 
+ [ 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;name&#34; : &#34;John Smith&#34; , 
+ &#34;state&#34; : &#34;active&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://localhost:3000/uploads/user/avatar/1/index.jpg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/john_smith&#34; , 
+ &#34;created_at&#34; : &#34;2012-05-23T08:00:58Z&#34; , 
+ &#34;is_admin&#34; : false , 
+ &#34;bio&#34; : &#34;&#34; , 
+ &#34;location&#34; : null , 
+ &#34;linkedin&#34; : &#34;&#34; , 
+ &#34;twitter&#34; : &#34;&#34; , 
+ &#34;discord&#34; : &#34;&#34; , 
+ &#34;github&#34; : &#34;&#34; , 
+ &#34;website_url&#34; : &#34;&#34; , 
+ &#34;organization&#34; : &#34;&#34; , 
+ &#34;job_title&#34; : &#34;&#34; , 
+ &#34;last_sign_in_at&#34; : &#34;2012-06-01T11:41:01Z&#34; , 
+ &#34;confirmed_at&#34; : &#34;2012-05-23T09:05:22Z&#34; , 
+ &#34;theme_id&#34; : 1 , 
+ &#34;last_activity_on&#34; : &#34;2012-05-23&#34; , 
+ &#34;color_scheme_id&#34; : 2 , 
+ &#34;projects_limit&#34; : 100 , 
+ &#34;current_sign_in_at&#34; : &#34;2012-06-02T06:36:55Z&#34; , 
+ &#34;note&#34; : &#34;DMCA Request: 2018-11-05 | DMCA Violation | Abuse | https://gitlab.zendesk.com/agent/tickets/123&#34; , 
+ &#34;identities&#34; : [ 
+ { &#34;provider&#34; : &#34;github&#34; , &#34;extern_uid&#34; : &#34;2435223452345&#34; }, 
+ { &#34;provider&#34; : &#34;bitbucket&#34; , &#34;extern_uid&#34; : &#34;john.smith&#34; }, 
+ { &#34;provider&#34; : &#34;google_oauth2&#34; , &#34;extern_uid&#34; : &#34;8776128412476123468721346&#34; } 
+ ], 
+ &#34;can_create_group&#34; : true , 
+ &#34;can_create_project&#34; : true , 
+ &#34;two_factor_enabled&#34; : true , 
+ &#34;external&#34; : false , 
+ &#34;private_profile&#34; : false , 
+ &#34;current_sign_in_ip&#34; : &#34;196.165.1.102&#34; , 
+ &#34;last_sign_in_ip&#34; : &#34;172.127.2.22&#34; , 
+ &#34;namespace_id&#34; : 1 , 
+ &#34;provisioned_by_project_id&#34; : null , 
+ &#34;created_by&#34; : null 
+ }, 
+ { 
+ &#34;id&#34; : 2 , 
+ &#34;username&#34; : &#34;jack_smith&#34; , 
+ &#34;email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;name&#34; : &#34;Jack Smith&#34; , 
+ &#34;state&#34; : &#34;blocked&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://localhost:3000/uploads/user/avatar/2/index.jpg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/jack_smith&#34; , 
+ &#34;created_at&#34; : &#34;2012-05-23T08:01:01Z&#34; , 
+ &#34;is_admin&#34; : false , 
+ &#34;bio&#34; : &#34;&#34; , 
+ &#34;location&#34; : null , 
+ &#34;linkedin&#34; : &#34;&#34; , 
+ &#34;twitter&#34; : &#34;&#34; , 
+ &#34;discord&#34; : &#34;&#34; , 
+ &#34;github&#34; : &#34;&#34; , 
+ &#34;website_url&#34; : &#34;&#34; , 
+ &#34;organization&#34; : &#34;&#34; , 
+ &#34;job_title&#34; : &#34;&#34; , 
+ &#34;last_sign_in_at&#34; : null , 
+ &#34;confirmed_at&#34; : &#34;2012-05-30T16:53:06.148Z&#34; , 
+ &#34;theme_id&#34; : 1 , 
+ &#34;last_activity_on&#34; : &#34;2012-05-23&#34; , 
+ &#34;color_scheme_id&#34; : 3 , 
+ &#34;projects_limit&#34; : 100 , 
+ &#34;current_sign_in_at&#34; : &#34;2014-03-19T17:54:13Z&#34; , 
+ &#34;identities&#34; : [], 
+ &#34;can_create_group&#34; : true , 
+ &#34;can_create_project&#34; : true , 
+ &#34;two_factor_enabled&#34; : true , 
+ &#34;external&#34; : false , 
+ &#34;private_profile&#34; : false , 
+ &#34;current_sign_in_ip&#34; : &#34;10.165.1.102&#34; , 
+ &#34;last_sign_in_ip&#34; : &#34;172.127.2.22&#34; , 
+ &#34;namespace_id&#34; : 2 , 
+ &#34;provisioned_by_project_id&#34; : null , 
+ &#34;created_by&#34; : null 
+ } 
+ ] 
+ Users on GitLab Premium or Ultimate also see the
+ shared_runners_minutes_limit , extra_shared_runners_minutes_limit , is_auditor , and using_license_seat parameters.
+ json 
+ [ 
+ { 
+ &#34;id&#34; : 1 , 
+ ... 
+ &#34;shared_runners_minutes_limit&#34; : 133 , 
+ &#34;extra_shared_runners_minutes_limit&#34; : 133 , 
+ &#34;is_auditor&#34; : false , 
+ &#34;using_license_seat&#34; : true 
+ ... 
+ } 
+ ] 
+ Users on GitLab Premium or Ultimate also see
+the group_saml provider option and provisioned_by_group_id parameter:
+ json 
+ [ 
+ { 
+ &#34;id&#34; : 1 , 
+ ... 
+ &#34;identities&#34; : [ 
+ { &#34;provider&#34; : &#34;github&#34; , &#34;extern_uid&#34; : &#34;2435223452345&#34; }, 
+ { &#34;provider&#34; : &#34;bitbucket&#34; , &#34;extern_uid&#34; : &#34;john.smith&#34; }, 
+ { &#34;provider&#34; : &#34;google_oauth2&#34; , &#34;extern_uid&#34; : &#34;8776128412476123468721346&#34; }, 
+ { &#34;provider&#34; : &#34;group_saml&#34; , &#34;extern_uid&#34; : &#34;123789&#34; , &#34;saml_provider_id&#34; : 10 } 
+ ], 
+ &#34;provisioned_by_group_id&#34; : 123789 
+ ... 
+ } 
+ ] 
+ You can also use ?search= to search for users by name, username, or email. For example, /users?search=John . When you search for a:
+ Email, you must use the full email address to get an exact match. As an administrator, you can search for both public and private email addresses.
+ Name or username, you do not have to get an exact match because this is a fuzzy search.
+ You can lookup users by external UID and provider:
+ GET /users?extern_uid=:extern_uid&provider=:provider 
+ For example:
+ GET /users?extern_uid=1234567&provider=github 
+ Users on GitLab Premium or Ultimate have the scim provider available:
+ GET /users?extern_uid=1234567&provider=scim 
+ You can search users by creation date time range with:
+ GET /users?created_before=2001-01-02T00:00:00.060Z&created_after=1999-01-02T00:00:00.060 
+ You can search for users without projects with: /users?without_projects=true 
+ You can filter by custom attributes with:
+ GET /users?custom_attributes[key]=value&custom_attributes[other_key]=other_value 
+ You can include the users&rsquo; custom attributes in the response with:
+ GET /users?with_custom_attributes=true 
+ You can use the created_by parameter to see if a user account was created:
+ Manually by an administrator .
+ As a project bot user .
+ If the returned value is null , the account was created by a user who registered an account themselves.
+ Retrieve a single user
+ Retrieves a single user.
+ Retrieve a single user as a regular user
+ Retrieves a single user as a regular user.
+ Prerequisites:
+ You must be signed in to use this endpoint.
+ GET /users/:id 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of a user 
+ Example response:
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;name&#34; : &#34;John Smith&#34; , 
+ &#34;state&#34; : &#34;active&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://localhost:3000/uploads/user/avatar/1/cd8.jpeg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/john_smith&#34; , 
+ &#34;created_at&#34; : &#34;2012-05-23T08:00:58Z&#34; , 
+ &#34;bio&#34; : &#34;&#34; , 
+ &#34;bio_html&#34; : &#34;&#34; , 
+ &#34;bot&#34; : false , 
+ &#34;location&#34; : null , 
+ &#34;public_email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;linkedin&#34; : &#34;&#34; , 
+ &#34;twitter&#34; : &#34;&#34; , 
+ &#34;discord&#34; : &#34;&#34; , 
+ &#34;github&#34; : &#34;&#34; , 
+ &#34;website_url&#34; : &#34;&#34; , 
+ &#34;organization&#34; : &#34;&#34; , 
+ &#34;job_title&#34; : &#34;Operations Specialist&#34; , 
+ &#34;pronouns&#34; : &#34;he/him&#34; , 
+ &#34;work_information&#34; : null , 
+ &#34;followers&#34; : 1 , 
+ &#34;following&#34; : 1 , 
+ &#34;local_time&#34; : &#34;3:38 PM&#34; , 
+ &#34;is_followed&#34; : false 
+ } 
+ As an administrator
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ History The email_reset_offered_at field in the response was removed in GitLab 18.3.
+ Retrieves a single user as an administrator.
+ GET /users/:id 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of a user 
+ Example response:
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;name&#34; : &#34;John Smith&#34; , 
+ &#34;state&#34; : &#34;active&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://localhost:3000/uploads/user/avatar/1/index.jpg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/john_smith&#34; , 
+ &#34;created_at&#34; : &#34;2012-05-23T08:00:58Z&#34; , 
+ &#34;is_admin&#34; : false , 
+ &#34;bio&#34; : &#34;&#34; , 
+ &#34;bio_html&#34; : &#34;&#34; , 
+ &#34;location&#34; : null , 
+ &#34;public_email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;linkedin&#34; : &#34;&#34; , 
+ &#34;twitter&#34; : &#34;&#34; , 
+ &#34;discord&#34; : &#34;&#34; , 
+ &#34;github&#34; : &#34;&#34; , 
+ &#34;website_url&#34; : &#34;&#34; , 
+ &#34;organization&#34; : &#34;&#34; , 
+ &#34;job_title&#34; : &#34;Operations Specialist&#34; , 
+ &#34;pronouns&#34; : &#34;he/him&#34; , 
+ &#34;work_information&#34; : null , 
+ &#34;followers&#34; : 1 , 
+ &#34;following&#34; : 1 , 
+ &#34;local_time&#34; : &#34;3:38 PM&#34; , 
+ &#34;last_sign_in_at&#34; : &#34;2012-06-01T11:41:01Z&#34; , 
+ &#34;confirmed_at&#34; : &#34;2012-05-23T09:05:22Z&#34; , 
+ &#34;theme_id&#34; : 1 , 
+ &#34;last_activity_on&#34; : &#34;2012-05-23&#34; , 
+ &#34;color_scheme_id&#34; : 2 , 
+ &#34;projects_limit&#34; : 100 , 
+ &#34;current_sign_in_at&#34; : &#34;2012-06-02T06:36:55Z&#34; , 
+ &#34;note&#34; : &#34;DMCA Request: 2018-11-05 | DMCA Violation | Abuse | https://gitlab.zendesk.com/agent/tickets/123&#34; , 
+ &#34;identities&#34; : [ 
+ { &#34;provider&#34; : &#34;github&#34; , &#34;extern_uid&#34; : &#34;2435223452345&#34; }, 
+ { &#34;provider&#34; : &#34;bitbucket&#34; , &#34;extern_uid&#34; : &#34;john.smith&#34; }, 
+ { &#34;provider&#34; : &#34;google_oauth2&#34; , &#34;extern_uid&#34; : &#34;8776128412476123468721346&#34; } 
+ ], 
+ &#34;can_create_group&#34; : true , 
+ &#34;can_create_project&#34; : true , 
+ &#34;two_factor_enabled&#34; : true , 
+ &#34;external&#34; : false , 
+ &#34;private_profile&#34; : false , 
+ &#34;commit_email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;current_sign_in_ip&#34; : &#34;196.165.1.102&#34; , 
+ &#34;last_sign_in_ip&#34; : &#34;172.127.2.22&#34; , 
+ &#34;plan&#34; : &#34;gold&#34; , 
+ &#34;trial&#34; : true , 
+ &#34;sign_in_count&#34; : 1337 , 
+ &#34;namespace_id&#34; : 1 , 
+ &#34;provisioned_by_project_id&#34; : null , 
+ &#34;created_by&#34; : null 
+ } 
+ The plan and trial parameters are only available on GitLab Enterprise Edition.
+ Users on GitLab Premium or Ultimate also see
+the shared_runners_minutes_limit , is_auditor , and extra_shared_runners_minutes_limit parameters.
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;is_auditor&#34; : false , 
+ &#34;shared_runners_minutes_limit&#34; : 133 , 
+ &#34;extra_shared_runners_minutes_limit&#34; : 133 , 
+ ... 
+ } 
+ Users on GitLab.com Premium or Ultimate also
+see the group_saml option and provisioned_by_group_id parameter:
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;shared_runners_minutes_limit&#34; : 133 , 
+ &#34;extra_shared_runners_minutes_limit&#34; : 133 , 
+ &#34;identities&#34; : [ 
+ { &#34;provider&#34; : &#34;github&#34; , &#34;extern_uid&#34; : &#34;2435223452345&#34; }, 
+ { &#34;provider&#34; : &#34;bitbucket&#34; , &#34;extern_uid&#34; : &#34;john.smith&#34; }, 
+ { &#34;provider&#34; : &#34;google_oauth2&#34; , &#34;extern_uid&#34; : &#34;8776128412476123468721346&#34; }, 
+ { &#34;provider&#34; : &#34;group_saml&#34; , &#34;extern_uid&#34; : &#34;123789&#34; , &#34;saml_provider_id&#34; : 10 } 
+ ], 
+ &#34;provisioned_by_group_id&#34; : 123789 
+ ... 
+ } 
+ Users on GitLab.com Premium or Ultimate also
+see the scim_identities parameter:
+ json 
+ { 
+ ... 
+ &#34;extra_shared_runners_minutes_limit&#34; : null , 
+ &#34;scim_identities&#34; : [ 
+ { &#34;extern_uid&#34; : &#34;2435223452345&#34; , &#34;group_id&#34; : &#34;3&#34; , &#34;active&#34; : true }, 
+ { &#34;extern_uid&#34; : &#34;john.smith&#34; , &#34;group_id&#34; : &#34;42&#34; , &#34;active&#34; : false } 
+ ] 
+ ... 
+ } 
+ Administrators can use the created_by parameter to see if a user account was created:
+ Manually by an administrator .
+ As a project bot user .
+ If the returned value is null , the account was created by a user who registered an account themselves.
+ You can include the user&rsquo;s custom attributes in the response with:
+ GET /users/:id?with_custom_attributes=true 
+ Retrieve the current user
+ Retrieves the current user.
+ As a regular user
+ Retrieves your user details.
+ GET /user 
+ Example response:
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;name&#34; : &#34;John Smith&#34; , 
+ &#34;state&#34; : &#34;active&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://localhost:3000/uploads/user/avatar/1/index.jpg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/john_smith&#34; , 
+ &#34;created_at&#34; : &#34;2012-05-23T08:00:58Z&#34; , 
+ &#34;bio&#34; : &#34;&#34; , 
+ &#34;location&#34; : null , 
+ &#34;public_email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;linkedin&#34; : &#34;&#34; , 
+ &#34;twitter&#34; : &#34;&#34; , 
+ &#34;discord&#34; : &#34;&#34; , 
+ &#34;github&#34; : &#34;&#34; , 
+ &#34;website_url&#34; : &#34;&#34; , 
+ &#34;organization&#34; : &#34;&#34; , 
+ &#34;job_title&#34; : &#34;&#34; , 
+ &#34;pronouns&#34; : &#34;he/him&#34; , 
+ &#34;bot&#34; : false , 
+ &#34;work_information&#34; : null , 
+ &#34;followers&#34; : 0 , 
+ &#34;following&#34; : 0 , 
+ &#34;local_time&#34; : &#34;3:38 PM&#34; , 
+ &#34;last_sign_in_at&#34; : &#34;2012-06-01T11:41:01Z&#34; , 
+ &#34;confirmed_at&#34; : &#34;2012-05-23T09:05:22Z&#34; , 
+ &#34;theme_id&#34; : 1 , 
+ &#34;last_activity_on&#34; : &#34;2012-05-23&#34; , 
+ &#34;color_scheme_id&#34; : 2 , 
+ &#34;projects_limit&#34; : 100 , 
+ &#34;current_sign_in_at&#34; : &#34;2012-06-02T06:36:55Z&#34; , 
+ &#34;identities&#34; : [ 
+ { &#34;provider&#34; : &#34;github&#34; , &#34;extern_uid&#34; : &#34;2435223452345&#34; }, 
+ { &#34;provider&#34; : &#34;bitbucket&#34; , &#34;extern_uid&#34; : &#34;john_smith&#34; }, 
+ { &#34;provider&#34; : &#34;google_oauth2&#34; , &#34;extern_uid&#34; : &#34;8776128412476123468721346&#34; } 
+ ], 
+ &#34;can_create_group&#34; : true , 
+ &#34;can_create_project&#34; : true , 
+ &#34;two_factor_enabled&#34; : true , 
+ &#34;external&#34; : false , 
+ &#34;private_profile&#34; : false , 
+ &#34;commit_email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;preferred_language&#34; : &#34;en&#34; , 
+ } 
+ Users on GitLab Premium or Ultimate also see the shared_runners_minutes_limit , extra_shared_runners_minutes_limit parameters.
+ As an administrator
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ History The email_reset_offered_at field in the response was removed in GitLab 18.3.
+ Retrieves your user details, or the details of another user.
+ GET /user 
+ Supported attributes:
+ Attribute Type Required Description 
+ sudo integer no ID of a user to make the call in their place 
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;username&#34; : &#34;john_smith&#34; , 
+ &#34;email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;name&#34; : &#34;John Smith&#34; , 
+ &#34;state&#34; : &#34;active&#34; , 
+ &#34;locked&#34; : false , 
+ &#34;avatar_url&#34; : &#34;http://localhost:3000/uploads/user/avatar/1/index.jpg&#34; , 
+ &#34;web_url&#34; : &#34;http://localhost:3000/john_smith&#34; , 
+ &#34;created_at&#34; : &#34;2012-05-23T08:00:58Z&#34; , 
+ &#34;is_admin&#34; : true , 
+ &#34;bio&#34; : &#34;&#34; , 
+ &#34;location&#34; : null , 
+ &#34;public_email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;linkedin&#34; : &#34;&#34; , 
+ &#34;twitter&#34; : &#34;&#34; , 
+ &#34;discord&#34; : &#34;&#34; , 
+ &#34;github&#34; : &#34;&#34; , 
+ &#34;website_url&#34; : &#34;&#34; , 
+ &#34;organization&#34; : &#34;&#34; , 
+ &#34;job_title&#34; : &#34;&#34; , 
+ &#34;last_sign_in_at&#34; : &#34;2012-06-01T11:41:01Z&#34; , 
+ &#34;confirmed_at&#34; : &#34;2012-05-23T09:05:22Z&#34; , 
+ &#34;theme_id&#34; : 1 , 
+ &#34;last_activity_on&#34; : &#34;2012-05-23&#34; , 
+ &#34;color_scheme_id&#34; : 2 , 
+ &#34;projects_limit&#34; : 100 , 
+ &#34;current_sign_in_at&#34; : &#34;2012-06-02T06:36:55Z&#34; , 
+ &#34;identities&#34; : [ 
+ { &#34;provider&#34; : &#34;github&#34; , &#34;extern_uid&#34; : &#34;2435223452345&#34; }, 
+ { &#34;provider&#34; : &#34;bitbucket&#34; , &#34;extern_uid&#34; : &#34;john_smith&#34; }, 
+ { &#34;provider&#34; : &#34;google_oauth2&#34; , &#34;extern_uid&#34; : &#34;8776128412476123468721346&#34; } 
+ ], 
+ &#34;can_create_group&#34; : true , 
+ &#34;can_create_project&#34; : true , 
+ &#34;two_factor_enabled&#34; : true , 
+ &#34;external&#34; : false , 
+ &#34;private_profile&#34; : false , 
+ &#34;commit_email&#34; : &#34; [email&#160;protected] &#34; , 
+ &#34;current_sign_in_ip&#34; : &#34;196.165.1.102&#34; , 
+ &#34;last_sign_in_ip&#34; : &#34;172.127.2.22&#34; , 
+ &#34;namespace_id&#34; : 1 , 
+ &#34;provisioned_by_project_id&#34; : null , 
+ &#34;created_by&#34; : null , 
+ &#34;note&#34; : null 
+ } 
+ Users on GitLab Premium or Ultimate also see these
+parameters:
+ shared_runners_minutes_limit 
+ extra_shared_runners_minutes_limit 
+ is_auditor 
+ provisioned_by_group_id 
+ using_license_seat 
+ Create a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ Creates a user.
+ Prerequisites:
+ You must be an administrator.
+ private_profile defaults to the value of the
+ Set profiles of new users to private by default 
+setting. bio defaults to "" instead of null .
+ POST /users 
+ Supported attributes:
+ Attribute Required Description 
+ username Yes The username of the user 
+ name Yes The name of the user 
+ email Yes The email of the user 
+ password Conditionally The password for the user. Required if force_random_password or reset_password are not defined. If either force_random_password or reset_password are defined, those settings take priority. 
+ admin No User is an administrator. Valid values are true or false . Defaults to false. 
+ auditor No User is an auditor. Valid values are true or false . Defaults to false. Premium and Ultimate only. 
+ avatar No Image file for user&rsquo;s avatar 
+ bio No User&rsquo;s biography 
+ can_create_group No User can create top-level groups - true or false 
+ color_scheme_id No User&rsquo;s color scheme for the file viewer (for more information, see the user preference documentation ) 
+ commit_email No User&rsquo;s commit email address 
+ extern_uid No External UID 
+ external No Flags the user as external - true or false (default) 
+ extra_shared_runners_minutes_limit No Can be set by administrators only. Additional compute minutes for this user. Premium and Ultimate only. 
+ force_random_password No If true , set the user password to a random value. Can be used with reset_password . Takes priority over password . 
+ group_id_for_saml No ID of group where SAML has been configured 
+ linkedin No LinkedIn 
+ location No User&rsquo;s location 
+ note No Administrator notes for this user 
+ organization No Organization name 
+ private_profile No User&rsquo;s profile is private - true or false. The default value is determined by a setting . 
+ projects_limit No Number of projects user can create 
+ pronouns No User&rsquo;s pronouns 
+ provider No External provider name 
+ public_email No User&rsquo;s public email address 
+ reset_password No If true , sends the user a link to reset their password. Can be used with force_random_password . Takes priority over password . 
+ shared_runners_minutes_limit No Can be set by administrators only. Maximum number of monthly compute minutes for this user. Can be nil (default; inherit system default), 0 (unlimited), or > 0 . Premium and Ultimate only. 
+ skip_confirmation No Skip confirmation - true or false (default) 
+ theme_id No GitLab theme for the user (for more information, see the user preference documentation for more information) 
+ twitter No X (formerly Twitter) account 
+ discord No Discord account 
+ github No GitHub username 
+ view_diffs_file_by_file No Flag indicating the user sees only one file diff per page 
+ website_url No Website URL 
+ Modify a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ Modify an existing user.
+ Prerequisites:
+ You must be an administrator.
+ The email field is the user&rsquo;s primary email address. You can only change this field to an already-added secondary
+email address for that user. To add more email addresses to the same user, use the add email endpoint .
+ PUT /users/:id 
+ Supported attributes:
+ Attribute Required Description 
+ admin No User is an administrator. Valid values are true or false . Defaults to false. 
+ auditor No User is an auditor. Valid values are true or false . Defaults to false. Premium and Ultimate only. 
+ avatar No Image file for user&rsquo;s avatar 
+ bio No User&rsquo;s biography 
+ can_create_group No User can create groups - true or false 
+ color_scheme_id No User&rsquo;s color scheme for the file viewer (for more information, see the user preference documentation for more information) 
+ commit_email No User&rsquo;s commit email. Set to _private to use the private commit email. 
+ email No The email of the user 
+ extern_uid No External UID 
+ external No Flags the user as external - true or false (default) 
+ extra_shared_runners_minutes_limit No Can be set by administrators only. Additional compute minutes for this user. Premium and Ultimate only. 
+ group_id_for_saml No ID of group where SAML has been configured 
+ id Yes ID of the user 
+ linkedin No LinkedIn 
+ location No User&rsquo;s location 
+ name No The name of the user 
+ note No Administration notes for this user 
+ organization No Organization name 
+ password No The password for the user 
+ private_profile No User&rsquo;s profile is private - true or false. 
+ projects_limit No Limit projects each user can create 
+ pronouns No Pronouns 
+ provider No External provider name 
+ public_email No Public email of the user (must be already verified) 
+ shared_runners_minutes_limit No Can be set by administrators only. Maximum number of monthly compute minutes for this user. Can be nil (default; inherit system default), 0 (unlimited), or > 0 . Premium and Ultimate only. 
+ skip_reconfirmation No Skip reconfirmation - true or false (default) 
+ theme_id No GitLab theme for the user (for more information, see the user preference documentation for more information) 
+ twitter No X (formerly Twitter) account 
+ discord No Discord account 
+ github No GitHub username 
+ username No The username of the user 
+ view_diffs_file_by_file No Flag indicating the user sees only one file diff per page 
+ website_url No Website URL 
+ If you update a user&rsquo;s password, they are forced to change it when they next sign in.
+ Returns a 404 error, even in cases where a 409 (Conflict) would be more appropriate.
+For example, when renaming the email address to an existing one.
+ Delete a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ Deletes a user.
+ Prerequisites:
+ You must be an administrator.
+ Returns:
+ 204 No Content status code if the operation was successful.
+ 404 if the resource was not found.
+ 409 if the user cannot be soft deleted.
+ DELETE /users/:id 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of a user 
+ hard_delete boolean no If true, contributions that would usually be moved to Ghost User are deleted instead, and also groups owned solely by this user. 
+ Retrieve your user status
+ Retrieves your user status.
+ Prerequisites:
+ You must be authenticated.
+ GET /user/status 
+ Example request:
+ shell 
+ curl --request GET \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user/status&#34; 
+ Example response:
+ json 
+ { 
+ &#34;emoji&#34; : &#34;coffee&#34; , 
+ &#34;availability&#34; : &#34;busy&#34; , 
+ &#34;message&#34; : &#34;I crave coffee :coffee:&#34; , 
+ &#34;message_html&#34; : &#34;I crave coffee <gl-emoji title=\&#34;hot beverage\&#34; data-name=\&#34;coffee\&#34; data-unicode-version=\&#34;4.0\&#34;>☕</gl-emoji>&#34; , 
+ &#34;clear_status_at&#34; : null 
+ } 
+ Retrieve the status of a user
+ Retrieves the status of a user. You can access this endpoint without authentication.
+ GET /users/:id_or_username/status 
+ Supported attributes:
+ Attribute Type Required Description 
+ id_or_username string yes ID or username of the user to get a status of 
+ Example request:
+ shell 
+ curl --request GET \
+ --url &#34;https://gitlab.example.com/users/<username>/status&#34; 
+ Example response:
+ json 
+ { 
+ &#34;emoji&#34; : &#34;coffee&#34; , 
+ &#34;availability&#34; : &#34;busy&#34; , 
+ &#34;message&#34; : &#34;I crave coffee :coffee:&#34; , 
+ &#34;message_html&#34; : &#34;I crave coffee <gl-emoji title=\&#34;hot beverage\&#34; data-name=\&#34;coffee\&#34; data-unicode-version=\&#34;4.0\&#34;>☕</gl-emoji>&#34; , 
+ &#34;clear_status_at&#34; : null 
+ } 
+ Set your user status
+ Sets your user status.
+ Prerequisites:
+ You must be authenticated.
+ PUT /user/status
+ PATCH /user/status 
+ Supported attributes:
+ Attribute Type Required Description 
+ emoji string no Name of the emoji to use as status. If omitted speech_balloon is used. Emoji name can be one of the specified names in the Gemojione index . 
+ message string no Message to set as a status. It can also contain emoji codes. Cannot exceed 100 characters. 
+ availability string no The availability of the user. Possible values: busy and not_set . 
+ clear_status_after string no Automatically clean up the status after a given time interval, allowed values: 30_minutes , 3_hours , 8_hours , 1_day , 3_days , 7_days , 30_days 
+ Difference between PUT and PATCH :
+ When using PUT any parameters that are not passed are set to null and therefore cleared.
+ When using PATCH any parameters that are not passed are ignored. Explicitly pass null to clear a field.
+ Example request:
+ shell 
+ curl --request PUT \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user/status&#34; \
+ --data &#34;clear_status_after=1_day&#34; \
+ --data &#34;emoji=coffee&#34; \
+ --data &#34;message=I crave coffee&#34; \
+ --data &#34;availability=busy&#34; 
+ Example response:
+ json 
+ { 
+ &#34;emoji&#34; : &#34;coffee&#34; , 
+ &#34;availability&#34; : &#34;busy&#34; , 
+ &#34;message&#34; : &#34;I crave coffee&#34; , 
+ &#34;message_html&#34; : &#34;I crave coffee&#34; , 
+ &#34;clear_status_at&#34; : &#34;2021-02-15T10:49:01.311Z&#34; 
+ } 
+ Retrieve your user preferences
+ History emoji_skin_tone attribute introduced in GitLab 19.6.
+ Retrieves your user preferences.
+ Prerequisites:
+ You must be authenticated.
+ GET /user/preferences 
+ Example response:
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;user_id&#34; : 1 , 
+ &#34;view_diffs_file_by_file&#34; : true , 
+ &#34;show_whitespace_in_diffs&#34; : false , 
+ &#34;pass_user_identities_to_ci_jwt&#34; : false , 
+ &#34;emoji_skin_tone&#34; : &#34;default&#34; 
+ } 
+ Update your user preferences
+ History emoji_skin_tone attribute introduced in GitLab 19.6.
+ Updates your user preferences.
+ Prerequisites:
+ You must be authenticated.
+ PUT /user/preferences 
+ json 
+ { 
+ &#34;id&#34; : 1 , 
+ &#34;user_id&#34; : 1 , 
+ &#34;view_diffs_file_by_file&#34; : true , 
+ &#34;show_whitespace_in_diffs&#34; : false , 
+ &#34;pass_user_identities_to_ci_jwt&#34; : false , 
+ &#34;emoji_skin_tone&#34; : &#34;default&#34; 
+ } 
+ Supported attributes:
+ Attribute Required Description 
+ view_diffs_file_by_file Yes Flag indicating the user sees only one file diff per page. 
+ show_whitespace_in_diffs Yes Flag indicating the user sees whitespace changes in diffs. 
+ pass_user_identities_to_ci_jwt Yes Flag indicating the user passes their external identities as CI information. This attribute does not contain enough information to identify or authorize the user in an external system. The attribute is internal to GitLab, and must not be passed to third-party services. For more information and examples, see Token Payload . 
+ emoji_skin_tone No Default skin tone for emoji that have skin tone variants. One of default , light , medium_light , medium , medium_dark , or dark . 
+ Upload an avatar for yourself
+ History Introduced in GitLab 17.0.
+ Uploads an avatar for yourself.
+ Prerequisites:
+ You must be authenticated.
+ Your file must be 200 KB or smaller. The ideal image size is 192 x 192 pixels.
+ The image must be one of the following file types: .bmp 
+ .gif 
+ .ico 
+ .jpeg 
+ .jpg 
+ .png 
+ .tiff 
+ .webp 
+ PUT /user/avatar 
+ Supported attributes:
+ Attribute Type Required Description 
+ avatar string Yes The file to be uploaded. 
+ To upload an avatar from your file system, use the --form argument. This causes
+cURL to post data using the header Content-Type: multipart/form-data . The
+ avatar= parameter must point to an image file on your file system and be
+preceded by @ .
+ Example request:
+ shell 
+ curl --request PUT \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user/avatar&#34; \
+ --form &#34;avatar=@/path/to/your/avatar.png&#34; 
+ Example response:
+ json 
+ { 
+ &#34;avatar_url&#34; : &#34;http://gitlab.example.com/uploads/-/system/user/avatar/76/avatar.png&#34; , 
+ } 
+ Returns:
+ 200 if successful.
+ 400 Bad Request for file sizes greater than 200 KiB.
+ Retrieve a count of your assigned issues, merge requests, and reviews
+ Retrieves a count of your assigned issues, merge requests, and reviews.
+ Prerequisites:
+ You must be authenticated.
+ Supported attributes:
+ Attribute Type Description 
+ assigned_issues number Number of issues that are open and assigned to the current user. 
+ assigned_merge_requests number Number of merge requests that are active and assigned to the current user. 
+ merge_requests number Deprecated in GitLab 13.8. Equivalent to and replaced by assigned_merge_requests . 
+ review_requested_merge_requests number Number of merge requests that the current user has been requested to review. 
+ todos number Number of pending to-do items for current user. 
+ GET /user_counts 
+ Example request:
+ shell 
+ curl --request GET \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user_counts&#34; 
+ Example response:
+ json 
+ { 
+ &#34;merge_requests&#34; : 4 , 
+ &#34;assigned_issues&#34; : 15 , 
+ &#34;assigned_merge_requests&#34; : 11 , 
+ &#34;review_requested_merge_requests&#34; : 0 , 
+ &#34;todos&#34; : 1 
+ } 
+ Retrieve a count of a user&rsquo;s projects, groups, issues, and merge requests
+ Retrieves a list of a user&rsquo;s count of:
+ Projects.
+ Groups.
+ Issues.
+ Merge requests.
+ Administrators can query any user, but non-administrators can only query themselves.
+ GET /users/:id/associations_count 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of a user 
+ Example response:
+ json 
+ { 
+ &#34;groups_count&#34; : 2 , 
+ &#34;projects_count&#34; : 3 , 
+ &#34;issues_count&#34; : 8 , 
+ &#34;merge_requests_count&#34; : 5 
+ } 
+ List a user&rsquo;s activity
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ Prerequisites:
+ You must be an administrator to view the activity of users with private profiles.
+ Get the last activity date for users with public profiles, sorted from oldest to newest.
+ The activities that update the user event timestamps ( last_activity_on and current_sign_in_at ) are:
+ Git HTTP/SSH activities (such as clone, push)
+ User logging in to GitLab
+ User visiting pages related to dashboards, projects, issues, and merge requests
+ User using the API
+ User using the GraphQL API
+ By default, it shows the activity for users with public profiles in the last 6 months, but this can be
+amended by using the from parameter.
+ GET /user/activities 
+ Supported attributes:
+ Attribute Type Required Description 
+ from string no Date string in the format YEAR-MM-DD . For example, 2016-03-11 . Defaults to 6 months ago. 
+ Example request:
+ shell 
+ curl --request GET \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user/activities&#34; 
+ Example response:
+ json 
+ [ 
+ { 
+ &#34;username&#34; : &#34;user1&#34; , 
+ &#34;last_activity_on&#34; : &#34;2015-12-14&#34; , 
+ &#34;last_activity_at&#34; : &#34;2015-12-14&#34; 
+ }, 
+ { 
+ &#34;username&#34; : &#34;user2&#34; , 
+ &#34;last_activity_on&#34; : &#34;2015-12-15&#34; , 
+ &#34;last_activity_at&#34; : &#34;2015-12-15&#34; 
+ }, 
+ { 
+ &#34;username&#34; : &#34;user3&#34; , 
+ &#34;last_activity_on&#34; : &#34;2015-12-16&#34; , 
+ &#34;last_activity_at&#34; : &#34;2015-12-16&#34; 
+ } 
+ ] 
+ last_activity_at is deprecated. Use last_activity_on instead.
+ List projects and groups that a user is a member of
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ Prerequisites:
+ You must be an administrator.
+ Lists all projects and groups a user is a member of.
+ Returns the source_id , source_name , source_type , and access_level of a membership.
+Source can be of type Namespace (representing a group) or Project . The response represents only direct memberships. Inherited memberships, for example in subgroups, are not included.
+Access levels are represented by an integer value:
+ 0 : No access
+ 5 : Minimal access
+ 10 : Guest
+ 15 : Planner
+ 20 : Reporter
+ 30 : Developer
+ 40 : Maintainer
+ 50 : Owner
+ GET /users/:id/memberships 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of a specified user 
+ type string no Filter memberships by type. Can be either Project or Namespace 
+ Example request:
+ shell 
+ curl --request GET \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/users/:user_id/memberships&#34; 
+ Example response:
+ json 
+ [ 
+ { 
+ &#34;source_id&#34; : 1 , 
+ &#34;source_name&#34; : &#34;Project one&#34; , 
+ &#34;source_type&#34; : &#34;Project&#34; , 
+ &#34;access_level&#34; : &#34;20&#34; 
+ }, 
+ { 
+ &#34;source_id&#34; : 3 , 
+ &#34;source_name&#34; : &#34;Group three&#34; , 
+ &#34;source_type&#34; : &#34;Namespace&#34; , 
+ &#34;access_level&#34; : &#34;20&#34; 
+ } 
+ ] 
+ Returns:
+ 200 OK on success.
+ 404 User Not Found if user can&rsquo;t be found.
+ 403 Forbidden when not requested by an administrator.
+ 400 Bad Request when requested type is not supported.
+ Disable two-factor authentication for a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ Prerequisites:
+ You must be an administrator.
+ Disables two-factor authentication (2FA) for the specified user.
+ Administrators cannot disable 2FA for their own user account or other administrators using the API. Instead, they can disable an
+administrator&rsquo;s 2FA using the Rails console .
+ PATCH /users/:id/disable_two_factor 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of the user 
+ Example request:
+ shell 
+ curl --request PATCH \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/users/1/disable_two_factor&#34; 
+ Returns:
+ 204 No content on success.
+ 400 Bad request if two factor authentication is not enabled for the specified user.
+ 403 Forbidden if not authenticated as an administrator.
+ 404 User Not Found if user cannot be found.
+ Create a runner linked to a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ Creates a runner linked to the current user. The user is listed as the owner for audit
+purposes, but runner availability is based on runner_type . For more information,
+see Manage runners .
+ Prerequisites:
+ You must be an administrator or have the Owner role for the target namespace or project.
+ For instance_type , you must be an administrator of the GitLab instance.
+ For group_type or project_type with an Owner role, runner registration must be allowed.
+ An access token with the create_runner scope.
+ Be sure to copy or save the token in the response, the value cannot be retrieved again.
+ POST /user/runners 
+ Supported attributes:
+ Attribute Type Required Description 
+ runner_type string yes Specifies the scope of the runner; instance_type , group_type , or project_type . 
+ group_id integer no The ID of the group that the runner is created in. Required if runner_type is group_type . 
+ project_id integer no The ID of the project that the runner is created in. Required if runner_type is project_type . 
+ description string no Description of the runner. 
+ paused boolean no Specifies if the runner should ignore new jobs. 
+ locked boolean no Specifies if the runner should be locked for the current project. 
+ run_untagged boolean no Specifies if the runner should handle untagged jobs. 
+ tag_list string no A comma-separated list of runner tags. 
+ access_level string no The access level of the runner; not_protected or ref_protected . 
+ maximum_timeout integer no Maximum timeout that limits the amount of time (in seconds) that runners can run jobs. 
+ maintenance_note string no Free-form maintenance notes for the runner (1024 characters). 
+ token_expires_at datetime no The expiration time for the runner authentication token in ISO 8601 format. Must be between 5 minutes and 21 days in the future. Cannot exceed instance, group, or project-level limits if configured. Only applies to the initial token. Rotated tokens use the computed expiry from settings. (PREMIUM ALL) 
+ token_rotation_deadline datetime no The deadline after which token rotation requests are rejected. Requires token_expires_at . Must be less than or equal to token_expires_at . Setting both to the same value disables token rotation. Cleared on successful rotation. (PREMIUM ALL) 
+ Example request:
+ shell 
+ curl --request POST \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user/runners&#34; \
+ --data &#34;runner_type=instance_type&#34; 
+ Example response:
+ json 
+ { 
+ &#34;id&#34; : 9171 , 
+ &#34;token&#34; : &#34;<access-token>&#34; , 
+ &#34;token_expires_at&#34; : null 
+ } 
+ Delete authentication identity from a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ Deletes a user&rsquo;s authentication identity using the provider name associated with that identity.
+ Prerequisites:
+ You must be an administrator.
+ DELETE /users/:id/identities/:provider 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of a user 
+ provider string yes External provider name 
+ Create a Support PIN
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ History Introduced in GitLab 17.8.
+ Creates a Support PIN for your user account. The PIN expires seven days after creation.
+GitLab Support may ask for this PIN to validate your identity.
+ Prerequisites:
+ You must be authenticated.
+ POST /user/support_pin 
+ Example request:
+ shell 
+ curl --request POST \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user/support_pin&#34; 
+ Example response:
+ json 
+ { 
+ &#34;pin&#34; : &#34;123456&#34; , 
+ &#34;expires_at&#34; : &#34;2025-02-27T22:06:57Z&#34; 
+ } 
+ Get details on a Support PIN
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ History Introduced in GitLab 17.8.
+ Gets details on the Support PIN for your account.
+GitLab Support may ask for this PIN to validate your identity.
+ Prerequisites:
+ You must be authenticated.
+ GET /user/support_pin 
+ Example request:
+ shell 
+ curl --request GET \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/user/support_pin&#34; 
+ Example response:
+ json 
+ { 
+ &#34;pin&#34; : &#34;123456&#34; , 
+ &#34;expires_at&#34; : &#34;2025-02-27T22:06:57Z&#34; 
+ } 
+ Get a Support PIN for a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ History Introduced in GitLab 17.8.
+ Gets details on a Support PIN for the specified user.
+GitLab Support may ask for this PIN to validate your identity.
+ Prerequisites:
+ You must be an administrator.
+ GET /users/:id/support_pin 
+ Example request:
+ shell 
+ curl --request GET \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/users/1234/support_pin&#34; 
+ Example response:
+ json 
+ { 
+ &#34;pin&#34; : &#34;123456&#34; , 
+ &#34;expires_at&#34; : &#34;2025-02-27T22:06:57Z&#34; 
+ } 
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of user account 
+ Revoke a Support PIN for a user
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ History Introduced in GitLab 17.11.
+ Revokes a Support PIN for the specified user before its natural expiration.
+This immediately expires and removes the PIN.
+ Prerequisites:
+ You must be an administrator.
+ POST /users/:id/support_pin/revoke 
+ Example request:
+ shell 
+ curl --request POST \
+ --header &#34;PRIVATE-TOKEN: <your_access_token>&#34; \
+ --url &#34;https://gitlab.example.com/api/v4/users/1234/support_pin/revoke&#34; 
+ Example response:
+ If successful, returns 202 Accepted .
+ Supported attributes:
+ Attribute Type Required Description 
+ id integer yes ID of a user 
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /user/project/deploy_tokens]
+Deploy tokens | GitLab Docs 
+ / 
+ Deploy tokens
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ Deploy tokens provide secure access to GitLab resources without tying permissions to individual user accounts. Use them with Git operations, container registries, and package registries, giving your deployment
+automation access to exactly what it needs.
+ With deploy tokens, you have:
+ More secure deployments by removing personal credentials from automation systems
+ Fine-grained access control with specific permissions for each token
+ Simplified CI/CD pipelines with built-in authentication variables
+ Reliable deployment processes that won&rsquo;t break when team members change
+ Better audit trails by tracking deployments through dedicated token identities
+ Seamless integration with external build systems and deployment tools
+ A deploy token is a pair of values:
+ username : username in the HTTP authentication framework. The default username format is
+ gitlab+deploy-token-{n} . You can specify a custom username when you create the deploy token.
+ token : password in the HTTP authentication framework.
+ Deploy tokens do not support SSH authentication .
+ You can use a deploy token for HTTP authentication 
+to the following endpoints:
+ GitLab package registry public API.
+ Git commands .
+ GitLab virtual registry package operations .
+ You can create deploy tokens at either the project or group level:
+ Project deploy token : Permissions apply only to the project.
+ Group deploy token : Permissions apply to all projects in the group.
+ Group deploy tokens are different from group access tokens .
+On GitLab.com, group access tokens require a Premium or Ultimate subscription and are not available during a trial.
+On GitLab Self-Managed and GitLab Dedicated, group access tokens are available with any license.
+ By default, a deploy token does not expire. You can optionally set an expiry date when you create
+it. Expiry occurs at midnight UTC on that date.
+ You cannot use new or existing deploy tokens for Git operations and package registry operations if
+ external authorization is enabled.
+ Scope
+ A deploy token&rsquo;s scope determines the actions it can perform.
+ Scope Description 
+ read_repository Read-only access to the repository using git clone . 
+ read_registry Read-only access to the images in the project&rsquo;s container registry . 
+ write_registry Write access (push) to the project&rsquo;s container registry . You need both read and write access to push images. 
+ read_virtual_registry Grants read-only (pull) access to container images through the group-level Dependency Proxy and virtual registry. Does not grant direct access to the project&rsquo;s container registry. Available only when the Dependency Proxy is enabled. 
+ write_virtual_registry Grants write access to the group-level Dependency Proxy cache and implicitly permits pulls through that cache. Does not grant push or delete access to the project&rsquo;s container registry. Available only when the Dependency Proxy is enabled. 
+ read_package_registry Read-only access to the project&rsquo;s package registry. 
+ write_package_registry Write access to the project&rsquo;s package registry. 
+ GitLab deploy token
+ A GitLab deploy token is a special type of deploy token. If you create a deploy token named
+ gitlab-deploy-token , the deploy token is automatically exposed to project CI/CD jobs as variables:
+ CI_DEPLOY_USER : Username
+ CI_DEPLOY_PASSWORD : Token
+ For example, to use a GitLab token to sign in to your GitLab container registry:
+ shell 
+ echo &#34; $CI_DEPLOY_PASSWORD &#34; | docker login $CI_REGISTRY -u $CI_DEPLOY_USER --password-stdin 
+ When gitlab-deploy-token is defined in a group, the CI_DEPLOY_USER and CI_DEPLOY_PASSWORD 
+CI/CD variables are available only to immediate child projects of the group.
+ Deploy token expiration
+ History Email notifications for deploy token expiration introduced in GitLab 18.3 with a feature flag named project_deploy_token_expiring_notifications . Disabled by default.
+ The availability of this feature is controlled by a feature flag.
+For more information, see the history.
+ Deploy tokens expire on the date you define at 00:00 UTC.
+ GitLab checks every day at 01:00 AM UTC for deploy tokens that are about to expire.
+Project owners and maintainers are notified by email 60, 30, and 7 days before these tokens expire.
+ These email notifications are sent only once per interval for active (non-revoked) deploy tokens.
+ GitLab deploy token security
+ GitLab deploy tokens are long-lived, making them attractive for attackers.
+ To prevent leaking the deploy token, you should also configure your
+ runners to be secure:
+ Avoid using Docker privileged mode if the machines are re-used.
+ Avoid using the shell executor when jobs
+run on the same machine.
+ An insecure GitLab Runner configuration increases the risk that someone can steal tokens from other
+jobs.
+ GitLab public API
+ Deploy tokens can&rsquo;t be used with the GitLab public API. However, you can use deploy tokens with some
+endpoints, such as those from the package registry. You can tell an endpoint belongs to the package registry because the URL has the string packages/<format> . For example: https://gitlab.example.com/api/v4/projects/24/packages/generic/my_package/0.0.1/file.txt . For more information, see
+ Authenticate with the registry .
+ Create a deploy token
+ Create a deploy token to automate deployment tasks that can run independently of a user account.
+ Prerequisites:
+ To create a group deploy token, you must have the Owner role for the group.
+ To create a project deploy token, you must have the Maintainer or Owner role for the project.
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Settings > Repository .
+ Expand Deploy tokens .
+ Select Add token .
+ Complete the fields, and select the desired scopes .
+ Select Create deploy token .
+ Record the deploy token&rsquo;s values. After you leave or refresh the page, you cannot access it
+again.
+ Revoke a deploy token
+ Revoke a token when it&rsquo;s no longer required.
+ Prerequisites:
+ To revoke a group deploy token, you must have the Owner role for the group.
+ To revoke a project deploy token, you must have the Maintainer or Owner role for the project.
+ To revoke a deploy token:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Settings > Repository .
+ Expand Deploy tokens .
+ In the Active Deploy Tokens section, by the token you want to revoke, select Revoke .
+ Clone a repository
+ You can use a deploy token to clone a repository.
+ Prerequisites:
+ A deploy token with the read_repository scope.
+ Example of using a deploy token to clone a repository:
+ shell 
+ git clone https://<username>:<deploy_token>@gitlab.example.com/tanuki/awesome_project.git 
+ Pull images from a container registry
+ You can use a deploy token to pull images from a container registry.
+ Prerequisites:
+ A deploy token with the read_registry scope.
+ Example of using a deploy token to pull images from a container registry:
+ shell 
+ echo &#34; $DEPLOY_TOKEN &#34; | docker login -u <username> --password-stdin registry.example.com
+ docker pull $CONTAINER_TEST_IMAGE 
+ Push images to a container registry
+ You can use a deploy token to push images to a container registry.
+ Prerequisites:
+ A deploy token with the read_registry and write_registry scopes.
+ Example of using a deploy token to push an image to a container registry:
+ shell 
+ echo &#34; $DEPLOY_TOKEN &#34; | docker login -u <username> --password-stdin registry.example.com
+ docker push $CONTAINER_TEST_IMAGE 
+ Pull packages from a package registry
+ You can use a deploy token to pull packages from a package registry.
+ Prerequisites:
+ A deploy token with the read_package_registry scope.
+ For the package type of your choice , follow the authentication
+instructions for deploy tokens.
+ Example of installing a NuGet package from a GitLab registry:
+ shell 
+ nuget source Add -Name GitLab -Source &#34;https://gitlab.example.com/api/v4/projects/10/packages/nuget/index.json&#34; -UserName <username> -Password <deploy_token>
+ nuget install mypkg.nupkg 
+ Push packages to a package registry
+ You can use a deploy token to push packages to a GitLab package registry.
+ Prerequisites:
+ A deploy token with the write_package_registry scope.
+ For the package type of your choice , follow the authentication
+instructions for deploy tokens.
+ Example of publishing a NuGet package to a package registry:
+ shell 
+ nuget source Add -Name GitLab -Source &#34;https://gitlab.example.com/api/v4/projects/10/packages/nuget/index.json&#34; -UserName <username> -Password <deploy_token>
+ nuget push mypkg.nupkg -Source GitLab 
+ Pull images from the dependency proxy
+ You can use a deploy token to pull images from the dependency proxy.
+Prerequisites:
+ For Dependency Proxy: read_registry and write_registry scopes.
+ For the virtual registry: read_virtual_registry and write_virtual_registry scopes.
+ Follow the dependency proxy authentication instructions .
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /administration/auth]
+User identity | GitLab Docs 
+ / 
+ User identity
+ GitLab integrates with a number of third party tools and protocols to better support authentication and authorization.
+ Connect GitLab to your organization&rsquo;s existing identity infrastructure to centralize user
+management and enforce security policies. You can integrate with LDAP, SAML, OAuth, or SCIM
+identity providers and directory services for authentication and authorization.
+ On GitLab Self-Managed and GitLab Dedicated, administrators can integrate with identity providers
+like Active Directory, Google Workspace, or Azure AD to automatically provision users, sync group
+memberships, and enable single sign-on. GitLab.com groups can also integrate with SAML identity
+providers for centralized authentication and user provisioning.
+ Choose from multiple integration methods based on your organization&rsquo;s needs:
+ LDAP for directory synchronization
+ SAML for single sign-on
+ OAuth for third-party authentication
+ SCIM for automated user provisioning and deprovisioning
+ Core concepts
+ LDAP
+ Integrate directory services for centralized authentication.
+ OmniAuth
+ Configure external authentication with third-party identity providers.
+ SAML
+ Configure enterprise authentication with SAML integration for single sign-on access.
+ SAML Group Sync
+ Automate group membership with role assignment and synchronized access controls.
+ SCIM
+ Manage the user lifecycle with automated account provisioning.
+ GitLab.com compared to GitLab Self-Managed
+ The external authentication and authorization providers may support the following capabilities.
+For more information, see the links shown on this page for each external provider.
+ Capability GitLab.com GitLab Self-Managed 
+ User Provisioning SCIM SAML 1 LDAP 1 SAML 1 OmniAuth Providers 1 SCIM 
+ User Detail Updating (not group management) Not Available LDAP Sync 
+ Authentication SAML at top-level group (1 provider) LDAP (multiple providers) Generic OAuth 2.0 SAML (only 1 permitted per unique provider) Kerberos JWT Smart card OmniAuth Providers (only 1 permitted per unique provider) 
+ Provider-to-GitLab Role Sync SAML Group Sync LDAP Group Sync SAML Group Sync 
+ User Removal SCIM (remove user from top-level group) LDAP (remove user from groups and block from the instance) SCIM 
+ Using Just-In-Time (JIT) provisioning, user accounts are created when the user first signs in.&#160; &#8617;&#xfe0e; &#160; &#8617;&#xfe0e; &#160; &#8617;&#xfe0e; &#160; &#8617;&#xfe0e; 
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /auth/user_authentication]
+User authentication | GitLab Docs 
+ / 
+ User authentication
+ GitLab provides multiple authentication methods to secure how users can access their account and
+interact with repositories. Use passwords with optional two-factor authentication for web-based
+access, SSH keys for Git operations, and various types of access tokens for API interactions
+and automation.
+ On GitLab Self-Managed and GitLab Dedicated, administrators can configure how authentication
+works, monitor credential usage, and implement security policies to protect their instance.
+Users can manage how they authenticate, review active sessions, and configure additional
+security measures like two-factor authentication.
+ User passwords
+ Secure user passwords through requirements enforcement and password reset procedures.
+ Two-factor authentication
+ Enable multi-factor authentication for enhanced account protection.
+ Credentials inventory
+ Monitor credentials through a comprehensive access inventory.
+ SSH keys
+ Use SSH keys for secure authentication and communication with GitLab repositories.
+ Access tokens
+ Understand different authentication tokens and their security implications.
+ Smart card authentication
+ Authenticate using hardware devices for certificate-based login.
+ Account email verification
+ Confirm user identity with email verification.
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /auth/user_permissions]
+User permissions | GitLab Docs 
+ / 
+ User permissions
+ GitLab uses a comprehensive permissions system that combines user types, roles, and membership
+to control what you can do within projects and groups. Users are assigned roles that define their permissions in
+projects and groups.
+Memberships and associated permissions cascade from top-level groups to subgroups and their projects.
+ User types have different levels of access across your GitLab instance, from regular
+users with standard permissions to administrators with full system control. Users can also have
+custom roles with specific permissions tailored to your organizational needs.
+ User types
+ Auditor users
+ Provide read-only access for auditing and compliance monitoring across all resources.
+ External users
+ Grant limited access to external members with restricted permissions for specific resources.
+ Internal users
+ Enable automated system operations through internal bot users for GitLab functionality.
+ Enterprise users
+ Manage organization users through domain verification and centralized enterprise controls.
+ Service accounts
+ Create non-human accounts for automated processes and third-party service integrations.
+ Roles and permissions
+ Roles and permissions
+ Understand the permissions and capabilities available to each user role in GitLab.
+ Guest role
+ Assign basic access with limited permissions as an entry-level user role.
+ Custom roles
+ Create custom roles with tailored permissions to meet specific organizational needs.
+ Custom permissions
+ Configure granular permissions with specific abilities for fine-grained access controls.
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /user/duo_agent_platform/authentication]
+GitLab Duo Agent Platform authentication | GitLab Docs 
+ / 
+ GitLab Duo Agent Platform authentication
+ GitLab Duo Agent Platform uses a multi-token authentication chain before requests reach a model provider.
+ The following table lists the token types and time-to-live (TTL) for each token.
+ Token Issuer TTL Refresh behavior 
+ Cloud Connector JWT (self-signed) GitLab Dedicated instance One hour In each request. 
+ CustomersDot service access token customers.gitlab.com Approximately three days In an hourly cron when fewer than 2 days remain. 
+ OAuth access token GitLab Dedicated instance Two hours In each workflow. 
+ GitLab Duo Workflow Service Internal JWT GitLab Duo Workflow Service 1 hour In each workflow with the GenerateToken RPC. 
+ GLGO exchange JWT AI Gateway 1 hour In each request. 
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /user/gitlab_com/logging]
+Logs on GitLab.com | GitLab Docs 
+ / 
+ Logs on GitLab.com
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com
+ Information about logs on GitLab.com.
+ How GitLab.com creates logs
+ Fluentd 
+parses GitLab logs, then sends them to:
+ Stackdriver Logging ,
+which stores logs long-term in Google Cold Storage (GCS).
+ Cloud Pub/Sub ,
+which forwards logs to an Elastic cluster 
+using pubsubbeat .
+ For more information, see GitLab runbooks for:
+ A detailed list of what gets logged .
+ Current log retention policies .
+ A diagram of GitLab logging infrastructure .
+ Erase CI/CD job logs
+ By default, GitLab does not expire CI/CD job logs. Job logs are retained indefinitely,
+and can&rsquo;t be configured on GitLab.com to expire. You can erase job logs by either:
+ Using the Jobs API .
+ Deleting the pipeline the job belongs to.
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /user/analytics]
+Analyze GitLab usage | GitLab Docs 
+ / 
+ Analyze GitLab usage
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ GitLab provides analytics features that give you insights into your software development lifecycle.
+Use these features to track productivity, code quality, deployment performance, and security.
+Analytics features are available for instances, groups, and projects ,
+and require different roles and permissions .
+This way, you can analyze data at the scale that matters to your team.
+ End-to-end insight & visibility analytics
+ Use these features to gain insights into your overall software development lifecycle.
+ Feature Description Project-level Group-level Instance-level 
+ Value Streams Dashboard Insights into DevSecOps trends, patterns, and opportunities for digital transformation improvements. No 
+ Value Stream Management Analytics Insights into time-to-value through customizable stages. No 
+ DevOps adoption by group and by instance Organization&rsquo;s maturity in DevOps adoption, with feature adoption over time and feature distribution by group. No 
+ Usage trends Overview of instance data and changes in data volume over time. No No 
+ Insights Customizable reports to explore issues, merged merge requests, and triage hygiene. No 
+ Analytics dashboards Built-in and customizable dashboards to visualize collected data. No 
+ Productivity analytics
+ Use these features to gain insights into the productivity of your team on issues and merge requests.
+ Feature Description Project-level Group-level Instance-level 
+ Issue analytics Visualization of issues created each month. No 
+ Merge request analytics Overview of merge requests, with mean time to merge, throughput, and activity details. No No 
+ Productivity analytics Merge request lifecycle, filterable down to author level. No No 
+ Code review analytics Open merge requests with information about merge request activity. No No 
+ Developer analytics
+ Use these features to gain insights into developer productivity and code coverage.
+ Feature Description Project-level Group-level Instance-level 
+ Contribution analytics Overview of contribution events made by group members, with bar chart of push events, merge requests, and issues. No No 
+ Contributor analytics Overview of commits made by project members, with line chart of number of commits. No No 
+ Repository analytics Programming languages used in the repository and code coverage statistics. No 
+ CI/CD analytics
+ Use these features to gain insights into CI/CD performance.
+ Feature Description Project-level Group-level Instance-level 
+ CI/CD analytics Pipeline duration and successes or failures. No No 
+ DORA metrics DORA metrics over time. No 
+ Security analytics
+ Use these features to gain insights into security vulnerabilities and metrics.
+ Feature Description Project-level Group-level Instance-level 
+ Security Dashboards Collection of metrics, ratings, and charts for vulnerabilities detected by security scanners. No 
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /user/analytics/value_streams_dashboard]
+Value Streams Dashboard | GitLab Docs 
+ / 
+ Value Streams Dashboard
+ Tier : Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ History Moved from GitLab Ultimate to GitLab Premium in GitLab 18.2.
+ The Value Streams Dashboard is a customizable dashboard you can use to identify trends, patterns, and opportunities for digital transformation improvements.
+The centralized UI in the Value Streams Dashboard acts as the single source of truth (SSOT), where all stakeholders can access and view the same set of metrics that are relevant to the organization.
+The Value Streams Dashboard includes panels that visualize the following metrics:
+ DORA metrics 
+ Value Stream Analytics (VSA) - flow metrics 
+ Vulnerabilities 
+ GitLab Duo Code Suggestions
+ With the Value Streams Dashboard, you can:
+ Track and compare the metrics listed previously over a period of time.
+ Identify downward trends early on.
+ Understand security exposure.
+ Drill down into individual projects or metrics to take actions for improvement.
+ Understand the impact of adding AI to the software development lifecycle (SDLC) and demonstrate the return on investment (ROI) of investments in GitLab Duo.
+ For a click-through demo, see the Value Stream Management product tour .
+ To view the Value Streams Dashboard as an analytics dashboard for a group:
+ In the top bar, select Search or go to and find your group.
+ In the left sidebar, select Analyze > Analytics dashboards .
+ From the list of available dashboards, select Value Streams Dashboard .
+ Data displayed on the Value Streams Dashboard is continuously collected in the backend.
+If you upgrade to the Ultimate tier, you get access to historical data, and can view metrics about past GitLab usage and performance.
+ Panels
+ The Value Streams Dashboard panels have a default configuration, but you can also customize the dashboard panels.
+ Overview
+ History Introduced in GitLab 16.7 with a feature flag named group_analytics_dashboard_dynamic_vsd . Disabled by default.
+ Generally available in GitLab 17.0.
+ Feature flag group_analytics_dashboard_dynamic_vsd removed in GitLab 17.0.
+ The Overview provides a holistic view of top-level namespace activity by visualizing key DevOps metrics:
+ A namespace metadata panel that shows the namespace name, type, and visibility.
+ A row of single-stat panels that display usage counts.
+ The following table displays the available usage counts for resources in group and project namespaces:
+ Usage count Visualization Group Project 
+ Subgroups groups_count No 
+ Projects projects_count No 
+ Users users_count No 
+ Issues issues_count 
+ Merge requests merge_requests_count 
+ Pipelines pipelines_count 
+ Data displayed in the Overview is collected by batch processing. GitLab stores record counts for each subgroup in the database, then aggregates the record counts to provide metrics for the top-level group.
+Data is aggregated monthly, around the end of the month, on a best-effort basis depending on the load on GitLab systems.
+ For more information, see epic 10417 .
+ DevSecOps metrics comparison
+ History Contributor count metric at the project level introduced to GitLab.com in GitLab 18.0.
+ DevSecOps metrics comparison tables migrated to the ai_impact_table visualization in GitLab 18.5.
+ The DevSecOps metrics comparison panels display metrics for a group or project over the past six months.
+These visualizations help you understand whether the key DevSecOps metrics improve month over month. The Value Stream Dashboard displays three DevSecOps metric comparison panels:
+ Lifecycle metrics
+ DORA metrics (Ultimate only)
+ Security metrics (Ultimate only, at least the Developer role)
+ In each comparison panel, you can:
+ Compare the performance between groups, projects, and teams at a glance.
+ Identify the teams and projects that are the largest value contributors, overperforming, or underperforming.
+ Drill down the metrics for further analysis.
+ When you hover over a metric, a tooltip displays an explanation of the metric and a link to the related documentation page.
+ The Change % column also indicates a percentage increase or decrease of the metric value from the previous month, compared to six months prior.
+ The Trend column displays sparklines to help you identify patterns in metric trends (such as seasonal changes) over time.
+The sparkline color ranges from blue to green, where green indicates a positive trend, and blue indicates a negative trend.
+ DORA Performers score
+ Tier : Ultimate
+ The DORA Performers score panel is a group-level bar chart that visualizes the status of the organization&rsquo;s DevOps performance levels across different projects for the last full calendar month.
+ The chart is a breakdown of your project&rsquo;s DORA scores, categorized as high, medium, or low.
+The chart aggregates all the child projects in the group.
+ The chart bars display the total number of projects per score category, calculated monthly.
+To exclude data from the chart (for example, Not included ), in the legend select the series you want to exclude.
+Hovering over each bar reveals a dialog that explains the score&rsquo;s definition.
+ For example, if a project has a high score for deployment frequency (velocity), it means that the project has one or more deploys to production per day.
+ Metric High Medium Low Description 
+ Deployment frequency ≥30 1-29 <1 The number of deploys to production per day 
+ Lead time for changes ≤7 8-29 ≥30 The number of days to go from code committed to code successfully running in production 
+ Time to restore service ≤1 2-6 ≥7 The number of days to restore service when a service incident or a defect that impacts users occurs 
+ Change failure rate ≤15% 16%-44% ≥45% The percentage of changes to production resulted in degraded service 
+ To learn more, see the blog post Inside DORA Performers score in GitLab Value Streams Dashboard .
+ Filter the panel by project topic
+ When you customize dashboards with a YAML configuration,
+you can filter the displayed projects by assigned topics .
+ yaml 
+ panels : 
+ - title : 'My dora performers scores' 
+ visualization : dora_performers_score 
+ queryOverrides : 
+ namespace : group/my-custom-group 
+ filters : 
+ projectTopics : 
+ - JavaScript 
+ - Vue.js 
+ If multiple topics are provided, all topics must match for the project to be included in the results.
+ Projects by DORA metric
+ Tier : Ultimate
+ History Introduced in GitLab 17.7.
+ The Projects by DORA metric panel is a group-level table that lists the status of the organization&rsquo;s DevOps performance levels across projects.
+ The table lists all projects with their DORA metrics, aggregating data from child projects in groups and subgroups.
+The metrics are aggregated for the last full calendar month.
+ You can sort the projects by metric values, helping you identify high, medium, and low-performing projects.
+For further investigation, you can select a project name to drill down into that project&rsquo;s page.
+ Enable or disable overview background aggregation
+ Tier : Ultimate
+ Offering : GitLab Self-Managed, GitLab Dedicated
+ To enable or disable the overview count aggregation for the Value Streams Dashboard:
+ In the top bar, select Search or go to and find your group.
+This group must be at the top level.
+ In the left sidebar, select Settings > Analytics .
+ In Value Streams Dashboard , select or clear the Enable overview background aggregation for Value Streams Dashboard checkbox.
+ To retrieve aggregated usage counts in the group, use the GraphQL API .
+ View the Value Streams Dashboard
+ Prerequisites:
+ You must have the Reporter, Developer, Maintainer, or Owner role for the group or project.
+ Overview background aggregation must be enabled.
+ To view the contributor count metric in the comparison panel, you must set up ClickHouse .
+ To track deployment to production, the group or project must have an environment in the production deployment tier .
+ To measure the cycle time, issues must be crosslinked from commit messages .
+ For groups
+ To view the Value Streams Dashboard for a group:
+ From Analytics Dashboards: In the top bar, select Search or go to and find your group.
+ Select Analyze > Analytics Dashboards .
+ From Value Stream Analytics: In the top bar, select Search or go to and find your project or group.
+ Select Analyze > Value stream analytics .
+ Below the Filter results text box, in the Lifecycle metrics row, select Value Streams Dashboard / DORA .
+ Optional. To open the new page, append this path /analytics/dashboards/value_streams_dashboard to the group URL (for example, https://gitlab.com/groups/gitlab-org/-/analytics/dashboards/value_streams_dashboard ).
+ For projects
+ History Introduced in GitLab 16.7 with a feature flag named project_analytics_dashboard_dynamic_vsd . Disabled by default.
+ Feature flag project_analytics_dashboard_dynamic_vsd removed in GitLab 17.5.
+ To view the Value Streams Dashboard as an analytics dashboard for a project:
+ In the top bar, select Search or go to and find your project.
+ In the left sidebar, select Analyze > Analytics dashboards .
+ From the list of available dashboards, select Value Streams Dashboard .
+ Schedule reports
+ You can schedule reports using the CI/CD component
+ Value Streams Dashboard Scheduled Reports tool .
+This tool saves time and effort by eliminating the need to manually search for the right dashboard with the relevant data, so that you can focus on analyzing insights.
+By scheduling reports, you can ensure that the decision-makers in your organization receive proactive, timely, and relevant information.
+ The Scheduled Reports tool collects metrics from projects or groups through the public GitLab GraphQL API,
+then builds a report using GitLab Flavored Markdown,
+and opens an issue in a specified project.
+The issue includes a comparison metrics table in Markdown format.
+ See an example scheduled report .
+To learn more, see the blog post New Scheduled Reports Generation tool simplifies value stream management .
+ Customize dashboard panels
+ You can customize the Value Streams Dashboard and configure what subgroups and projects to include in the page.
+ To customize the default content of the page, you need to create a YAML configuration file in a project of your choice.
+In this file, you can define various settings and parameters, such as title, description, and number of panels.
+The file is schema-driven and managed with version control systems like Git.
+This enables tracking and maintaining a history of configuration changes, reverting to previous versions if necessary, and collaborating effectively with team members.
+Query parameters can still be used to override the YAML configuration.
+ Before you customize the dashboard panels, you must select a project to store your YAML configuration file.
+ Prerequisites:
+ You must have the Maintainer or Owner role for the group.
+ In the top bar, select Search or go to and find your group.
+ In the left sidebar, select Settings > Analytics .
+ Select the project where you would like to store your YAML configuration file.
+ Select Save changes .
+ After you have set up the project, set up the configuration file:
+ In the top bar, select Search or go to and find the project you selected in the previous step.
+ In the default branch, create the configuration file: .gitlab/analytics/dashboards/value_streams/value_streams.yaml .
+ In the value_streams.yaml configuration file, fill in the configuration options:
+ Field Description 
+ title Custom name for the panel 
+ queryOverrides (formerly data ) Overrides data query parameters specific to each visualization. 
+ namespace (subfield of queryOverrides ) Group or project path to use for the panel 
+ filters (subfield of queryOverrides ) Filters the query for each supported visualization type. 
+ visualization The type of visualization to be rendered. Supported options are ai_impact_table , dora_performers_score , namespace_metadata , and usage counts. 
+ gridAttributes The size and positioning of the panel 
+ xPos (subfield of gridAttributes ) Horizontal position of the panel 
+ yPos (subfield of gridAttributes ) Vertical position of the panel 
+ width (subfield of gridAttributes ) Width of the panel (max. 12) 
+ height (subfield of gridAttributes ) Height of the panel 
+ yaml 
+ # version - The latest version of the analytics dashboard schema 
+ version : '2' 
+ # title - Change the title of the Value Streams Dashboard. 
+ title : 'Custom Dashboard title' 
+ # description - Change the description of the Value Streams Dashboard. [optional] 
+ description : 'Custom description' 
+ # panels - List of panels that contain panel settings. 
+ # title - Change the title of the panel. 
+ # visualization - The type of visualization to be rendered 
+ # gridAttributes - The size and positioning of the panel 
+ # queryOverrides.namespace - The Group or Project path to use for the chart panel 
+ # queryOverrides.filters.includeMetrics - Shows rows by metric ID in the table panel. 
+ panels : 
+ - title : 'Group usage overview' 
+ visualization : namespace_metadata 
+ gridAttributes : 
+ yPos : 0 
+ xPos : 0 
+ height : 4 
+ width : 12 
+ - title : 'Groups' 
+ visualization : groups_count 
+ gridAttributes : 
+ yPos : 4 
+ xPos : 0 
+ height : 4 
+ width : 4 
+ - title : 'Issues' 
+ visualization : issues_count 
+ gridAttributes : 
+ yPos : 4 
+ xPos : 4 
+ height : 4 
+ width : 4 
+ - title : 'Merge requests' 
+ visualization : merge_requests_count 
+ gridAttributes : 
+ yPos : 4 
+ xPos : 8 
+ height : 4 
+ width : 4 
+ - title : 'Group dora and issue metrics' 
+ visualization : ai_impact_table 
+ queryOverrides : 
+ namespace : group 
+ filters : 
+ includeMetrics : 
+ - deployment_frequency 
+ - deploys 
+ gridAttributes : 
+ yPos : 8 
+ xPos : 0 
+ height : 12 
+ width : 12 
+ - title : 'My dora performers scores' 
+ visualization : dora_performers_score 
+ queryOverrides : 
+ namespace : group/my-project 
+ filters : 
+ projectTopics : 
+ - ruby 
+ - javascript 
+ gridAttributes : 
+ yPos : 20 
+ xPos : 0 
+ height : 12 
+ width : 12 
+ Supported visualization filters
+ The filters subfield on the queryOverrides field can be used to customize the data displayed in a panel.
+ DevSecOps metrics comparison panel filters
+ Filters for the ai_impact_table visualization.
+ Filter Description Supported values 
+ includeMetrics Shows rows by metric ID in the table panel. Takes priority over excludeMetrics . Any ID from available metrics . 
+ excludeMetrics Hides rows by metric ID from the table panel. Any ID from available metrics . 
+ DORA Performers score panel filters
+ Filters for the dora_performers_score visualization.
+ Filter Description Supported values 
+ projectTopics Filters the projects shown based on their assigned topics Any available group topic 
+ Additional panel filters (deprecated)
+ DORA chart filters
+ The dora_chart visualization was deprecated in GitLab 18.5.
+ Filters for the dora_chart visualization.
+ Filter Description Supported values 
+ labels Filters data by labels Any available group label. Label filtering is supported by the following metrics: lead_time , cycle_time , issues , issues_completed , merge_request_throughput , median_time_to_merge . 
+ Usage overview filters
+ The usage_overview visualization was deprecated in GitLab 19.2. Use the namespace_metadata visualization and usage count single stats instead.
+ Filters for the usage_overview visualization.
+ For group and subgroup namespaces:
+ Filter Description Supported values 
+ include Limits the metrics returned, by default displays all available groups , projects , issues , merge_requests , pipelines , users 
+ For project namespaces:
+ Filter Description Supported values 
+ include Limits the metrics returned, by default displays all available issues , merge_requests , pipelines 
+ Dashboard metrics and drill-down reports
+ History Code Suggestions, Non-Agentic Chat, and Root Cause Analysis usage metrics updated to display absolute user counts instead of percentage rates in GitLab 18.10.
+ The following table provides an overview of the metrics available in the Value Streams Dashboard,
+along with their descriptions and the name of the drill-down report where they are displayed.
+ Metric Description Drill-down report ID 
+ Deployment frequency Average number of deployments to production per day. This metric measures how often value is delivered to end users. Deployment frequency tab deployment_frequency 
+ Lead time for changes The time to successfully deliver a commit into production. This metric reflects the efficiency of CI/CD pipelines. Lead time tab lead_time_for_changes 
+ Time to restore service The time it takes an organization to recover from a failure in production. Time to restore service tab time_to_restore_service 
+ Change failure rate Percentage of deployments that cause an incident in production. Change failure rate tab change_failure_rate 
+ Lead time Median time from issue created to issue closed. Value Stream Analytics lead_time 
+ Cycle time Median time from the earliest commit of a linked issue&rsquo;s merge request to when that issue is closed. Lifecycle metrics section in Value Stream Analytics cycle_time 
+ Issues created Number of new issues created. Issue analytics issues 
+ Issues closed Number of issues closed by month. Issue analytics issues_completed 
+ Number of deploys Total number of deploys to production. Merge request analytics deploys 
+ Merge request throughput The number of merge requests merged by month. Productivity analytics merge_request_throughput 
+ Median time to merge Median time between merge request created and merge request merged. Productivity analytics median_time_to_merge 
+ Contributor count Number of monthly unique users with contributions in the group. Contribution analytics contributor_count 
+ Critical vulnerabilities over time Critical vulnerabilities over time in project or group Vulnerability report vulnerability_critical 
+ High vulnerabilities over time High vulnerabilities over time in project or group Vulnerability report vulnerability_high 
+ Total pipeline runs The total number of pipelines that have run in the selected time period. CI/CD analytics pipeline_count 
+ Pipeline median duration The median time it takes for pipelines to complete. CI/CD analytics pipeline_duration_median 
+ Pipeline success rate The percentage of pipelines that completed successfully. CI/CD analytics pipeline_success_rate 
+ Pipeline failure rate The percentage of pipelines that failed. CI/CD analytics pipeline_failed_rate 
+ Feature usage Number of contributors who used any GitLab Duo feature. duo_used_count 
+ Code Suggestions usage Number of users who used Code Suggestions. code_suggestions_users_count 
+ Code Suggestions acceptance rate Code Suggestions accepted out of total Code Suggestions generated. code_suggestions_acceptance_rate 
+ Non-Agentic Chat usage Number of users who used Non-Agentic Chat. duo_chat_users_count 
+ Root Cause Analysis usage Number of users who used Root Cause Analysis. duo_rca_users_count 
+ Metrics with Jira
+ The following metrics do not depend on using Jira:
+ DORA Deployment frequency
+ DORA Lead time for changes
+ Number of deploys
+ Merge request throughput
+ Median time to merge
+ Vulnerabilities
+ Was this page helpful? 
+ Yes 
+ No
+
+[Page: /user/group/value_stream_analytics]
+Value stream analytics | GitLab Docs 
+ / 
+ Value stream analytics
+ Tier : Free, Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ Value stream analytics calculates the duration of every stage of your software development process.
+You can measure how much time it takes to go from an idea to production by tracking merge request or issue events.
+ You can configure value stream analytics for groups and projects.
+ Use value stream analytics to identify:
+ The amount of time it takes to go from an idea to production.
+ The velocity of a given project.
+ Bottlenecks in the development process.
+ Long-running issues or merge requests.
+ Factors that cause your software development lifecycle to slow down.
+ Value stream analytics helps businesses:
+ Visualize their end-to-end DevSecOps workstreams.
+ Identify and solve inefficiencies.
+ Optimize their workstreams to deliver more value, faster (for example, reducing merge request review time ).
+ For a click-through demo, see the Value Stream Management product tour .
+ Value stream analytics has a hierarchical structure:
+ A value stream contains a value stream stage list.
+ Each value stream stage list contains one or more stages .
+ Each stage is defined by two events : start and end.
+ Metrics
+ The Overview page in value stream analytics displays key metrics of the DevSecOps lifecycle performance for projects and groups.
+ Lifecycle metrics
+ Value stream analytics includes the following lifecycle metrics:
+ Lead time : Median time from when the issue was created to when it was closed.
+ Cycle time : Median time between when an issue is first referenced in the commit message of a merge request and when that referenced issue is closed. You must include # followed by the issue number (for example, #123 ) in the commit message, otherwise no data is displayed. Cycle time is typically shorter than lead time because the merge request is created after the first commit.
+ New issues : Number of new issues created.
+ Deploys : Total number of deployments to production.
+ DORA metrics
+ Tier : Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ Value stream analytics includes the following DORA metrics:
+ Deployment frequency
+ Lead time for changes
+ Time to restore service
+ Change failure rate
+ DORA metrics are calculated based on data from the
+ DORA API .
+ If you have a GitLab Premium or Ultimate subscription:
+ The number of successful deployments is calculated with DORA data.
+ The data is filtered based on environment and environment tier.
+ Value streams
+ A value stream is the entire work process that delivers value to customers.
+Value streams are container objects for stages.
+You can have multiple value streams per group, to focus on different aspects of the DevOps lifecycle.
+ Value stream stages
+ A stage represents an event pair (start and end events) with additional metadata, such as the name of the stage.
+You can use value stream analytics with the built-in default stages, which you can reorder and hide.
+You can also create and add custom stages that align with your specific development workflows.
+ Value stream stage events
+ History Merge request first reviewer assigned event introduced in GitLab 17.2. Reviewer assignment events in merge requests created or updated prior to GitLab 17.2 are not available for reporting.
+ Events are the building blocks that define when stages start and end.
+Each event has a start and end time:
+ Start event time marks when work begins in a stage (for example, when an issue is created).
+ End event time marks when work completes in a stage (for example, when an issue is closed).
+ GitLab calculates stage duration based on the start and end event times, using this formula:
+Stage duration = End event time - Start event time
+ Value stream analytics supports the following events:
+ Issue closed
+ Issue created
+ Issue first added to a board
+ Issue first added to iteration
+ Issue first assigned
+ Issue first associated with a milestone
+ Issue first mentioned in a commit
+ Issue label added
+ Issue label removed
+ Merge request closed
+ Merge request created
+ Merge request first assigned
+ Merge request first committed
+ Merge request first deployed to production
+ Merge request label added
+ Merge request label removed
+ Merge request last approved
+ Merge request last build finished
+ Merge request last build started
+ Merge request merged
+ Merge request reviewer first assigned
+ Label events are not available for projects in a personal namespace, because the label must belong to a group.
+ You can share your ideas or feedback about stage events in
+ issue 520962 .
+ Stage measurement
+ Value stream analytics measures each stage from its start event to its end event.
+Only items that have reached their end event are included in the stage time calculation.
+ By default, blocked issues are not included in the lifecycle overview.
+However, you can use custom labels (for example workflow::blocked ) to track them.
+ You can customize stages in value stream analytics based on pre-defined events.
+To help you with the configuration, GitLab provides a pre-defined list of stages that you can use as a template.
+For example, you can define a stage that starts when you add a label to an issue,
+and ends when you add another label.
+ The following table gives an overview of the pre-defined stages in value stream analytics.
+ Stage Measurement method 
+ Issue The median time between creating an issue and taking action to solve it, by either labeling it or adding it to a milestone, whichever comes first. The label is tracked only if it already has an issue board list created for it. 
+ Plan The median time between the action you took for the previous stage, and pushing the first commit to the branch. The first commit on the branch triggers the separation between Plan and Code . At least one of the commits in the branch must contain the related issue number (for example, #42 ). If none of the commits in the branch mention the related issue number, it is not considered in the measurement time of the stage. 
+ Code The median time between pushing a first commit (previous stage) and creating a merge request (MR) related to that commit. The key to keep the process tracked is to include the issue closing pattern in the description of the merge request. For example, Closes #xxx , where xxx is the number of the issue related to this merge request. If the closing pattern is not present, then the calculation uses the creation time of the first commit in the merge request as the start time. 
+ Test The median time to run the entire pipeline for that project. It&rsquo;s related to the time GitLab CI/CD takes to run every job for the commits pushed to that merge request. It is basically the start->finish time for all pipelines. 
+ Review The median time taken to review a merge request that has a closing issue pattern, between its creation and until it&rsquo;s merged. 
+ Staging The median time between merging a merge request that has a closing issue pattern until the very first deployment to a production environment . If there isn&rsquo;t a production environment, this is not tracked. 
+ Value stream analytics works on timestamp data and aggregates only the final start and stop events of the stage. For items that move back and forth between stages multiple times, the stage time is calculated solely from the final events&rsquo; timestamps.
+ Production environment
+ Value stream analytics treats an environment as a production environment when its
+ deployment tier is production .
+GitLab infers the tier from the environment name, unless you set it with the
+ deployment_tier keyword .
+ When a production deployment runs from a tag, GitLab sets
+ Merge request first deployed to production on merge requests that:
+ Are merged and have commits in the tag that were not part of the environment&rsquo;s previous deployment.
+ Do not already have this event.
+ If the environment has no previous deployment, GitLab uses all merged merge requests that
+target the default branch, but only when the default branch contains the tag&rsquo;s commit.
+Otherwise, no merge request gets the event.
+ Example workflow
+ This example shows a workflow through all seven stages in one day.
+ If a stage does not include a start and a stop time, its data is not included in the median time.
+In this example, milestones have been created and CI/CD for testing and setting environments is configured.
+ 09:00: Create issue. Issue stage starts.
+ 11:00: Add issue to a milestone (or backlog), start work on the issue, and create a branch locally.
+ Issue stage stops and Plan stage starts.
+ 12:00: Make the first commit.
+ 12:30: Make the second commit to the branch that mentions the issue number.
+ Plan stage stops and Code stage starts.
+ 14:00: Push branch and create a merge request that contains the
+ issue closing pattern .
+ Code stage stops and Test and Review stages start.
+ GitLab CI/CD takes 5 minutes to run scripts defined in the .gitlab-ci.yml file .
+ 19:00: Merge the merge request. Review stage stops and Staging stage starts.
+ 19:30: Deployment to the production environment finishes. Staging stops.
+ Value stream analytics records the following times for each stage:
+ Issue : 09:00 to 11:00: 2 hrs
+ Plan : 11:00 to 12:00: 1 hr
+ Code : 12:00 to 14:00: 2 hrs
+ Test : 5 minutes
+ Review : 14:00 to 19:00: 5 hrs
+ Staging : 19:00 to 19:30: 30 minutes
+ Keep in mind the following observations related to this example:
+ This example demonstrates that it doesn&rsquo;t matter if your first
+commit doesn&rsquo;t mention the issue number, you can do this later in any commit
+on the branch you are working on.
+ The Test stage is used in the calculation for the overall time of
+the cycle. It is included in the Review process, as every MR should be
+tested.
+ This example illustrates only one cycle of the seven stages. The value stream analytics dashboard
+shows the median time for multiple cycles.
+ Cumulative label event duration
+ History Introduced in GitLab 16.9 with feature flags named enable_vsa_cumulative_label_duration_calculation and vsa_duration_from_db . Disabled by default.
+ Enabled on GitLab.com and GitLab Self-Managed in GitLab 16.10. Feature flag vsa_duration_from_db removed.
+ Feature flag enable_vsa_cumulative_label_duration_calculation removed in GitLab 17.0.
+ With this feature, value stream analytics measures the duration of repetitive events for label-based stages. You should configure label removal or addition events for both start and end events.
+ For example, a stage tracks when the in progress label is added and removed, with the following times:
+ 9:00: label added.
+ 10:00: label removed.
+ 12:00: label added.
+ 14:00 label removed.
+ With the original calculation method, the duration is five hours (from 9:00 to 14:00).
+With cumulative label event duration calculation enabled, the duration is three hours (9:00 to 10:00 and 12:00 to 14:00).
+ When you upgrade your GitLab version to 16.10 (or to a higher version), existing label-based value stream analytics stages are automatically reaggregated using the background aggregation process.
+ Label-based stages for custom value streams
+ To measure complex workflows, you can use scoped labels . For example, to measure deployment
+time from a staging environment to production, you could use the following labels:
+ When the code is deployed to staging, the workflow::staging label is added to the merge request.
+ When the code is deployed to production, the workflow::production label is added to the merge request.
+ Automatic data labeling with webhooks
+ You can automatically add labels by using GitLab webhook events ,
+so that a label is applied to merge requests or issues when a specific event occurs.
+Then, you can add label-based stages to track your workflow.
+To learn more about the implementation, see the blog post Applying GitLab Labels Automatically .
+ Example configuration
+ In the previous example, two independent value streams are set up for two teams that are using different development workflows in the Test Group (top-level namespace).
+ The first value stream uses standard timestamp-based events for defining the stages. The second value stream uses label events.
+ Data aggregation
+ Tier : Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ Value stream analytics uses a backend process to collect and aggregate stage-level data, which
+ensures it can scale for large groups with a high number of issues and merge requests. Due to this process,
+there may be a slight delay between when an action is taken (for example, closing an issue) and when the data
+displays on the value stream analytics page.
+ It may take up to 10 minutes to process the data and display results. Data collection may take
+longer than 10 minutes in the following cases:
+ If this is the first time you are viewing value stream analytics and have not yet created a value stream.
+ If the group hierarchy has been re-arranged.
+ If there have been bulk updates on issues and merge requests.
+ To view when the data was most recently updated, in the right corner next to Edit , hover over the Last updated badge.
+ View value stream analytics
+ Prerequisites:
+ You must have the Reporter, Developer, Maintainer, or Owner role.
+ You must create a custom value stream. Value stream analytics only shows custom value streams created for your group or project.
+ To view value stream analytics for your group or project:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value stream analytics .
+ To view metrics for a particular stage, select a stage below the Filter results text box.
+ Optional. Filter the results: Select the Filter results text box.
+ Select a parameter.
+ Select a value or enter text to refine the results.
+ To view metrics in a particular date range, from the dropdown list select a predefined date range or the Custom option. With the Custom option selected:
+ In the From field, select a start date.
+ In the To field, select an end date.
+ The charts and list display workflow items created during the date range.
+ Optional. Sort results by ascending or descending: To sort by most recent or oldest workflow item, select the Last event header.
+ To sort by most or least amount of time spent in each stage, select the Duration header.
+ A badge next to the workflow items table header shows the number of workflow items that
+completed during the selected stage.
+ The table shows a list of related workflow items for the selected stage. Based on the stage you select, this can be:
+ Issues
+ Merge requests
+ The end date for each predefined date range is the current day, and is included in the number of days selected. For example, the start date for Last 30 days is 29 days prior to the current day for a total of 30 days.
+ Data filters
+ You can filter value stream analytics to view data that matches specific criteria. The following filters are supported:
+ Date range
+ Project
+ Assignee
+ Author
+ Milestone
+ Label
+ View lifecycle and DORA metrics
+ Prerequisites:
+ To view deployment metrics, you must have a
+ production environment configured .
+ To view lifecycle metrics:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value stream analytics .
+Lifecycle metrics display below the Filter results text box.
+ Optional. Filter the results: Select the Filter results text box.
+Based on the filter you select, the dashboard automatically aggregates lifecycle metrics and displays the status of the value stream.
+ Select a parameter.
+ Select a value or enter text to refine the results.
+ To adjust the date range, up to a maximum of 180 days: In the From field, select a start date.
+ In the To field, select an end date.
+ To view the Value Streams Dashboard and DORA metrics :
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value stream analytics .
+ Below the Filter results text box, in the Lifecycle metrics row, select Value Streams Dashboard / DORA .
+ Optional. To open the new page, append this path /analytics/dashboards/value_streams_dashboard to the group URL
+(for example, https://gitlab.com/groups/gitlab-org/-/analytics/dashboards/value_streams_dashboard ).
+ View metrics for each development stage
+ Value stream analytics shows the median time spent by issues or merge requests in each development stage.
+ To view the median time spent in each stage by a group:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value stream analytics .
+ Optional. Filter the results: Select the Filter results text box.
+ Select a parameter.
+ Select a value or enter text to refine the results.
+ To adjust the date range: In the From field, select a start date.
+ In the To field, select an end date.
+ To view the metrics for each stage, above the Filter results text box, hover over a stage.
+ The date range selector filters items by the event time. The event time is when the
+selected stage finished for the given item.
+ You can also use the GraphQL API to retrieve Value Stream Analytics data.
+ View tasks by type
+ Tier : Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ The Tasks by type chart displays the cumulative number of completed tasks (closed issues and merged merge requests) per day for your group.
+ The chart uses the global page filters to display data based on the selected group and time frame.
+You can query a maximum of 180 days.
+ To view tasks by type:
+ In the top bar, select Search or go to and find your group.
+ In the left sidebar, select Analyze > Value stream analytics .
+ Below the Filter results text box, select Overview . The Tasks by type chart displays below the Total time chart.
+ Optional. To filter the tasks by type, select Settings ( ), then Issues or Merge Requests .
+ Optional. To filter the tasks by label, select Settings ( ), then one or more labels. By default the top group labels (maximum 10) are selected. You can select a maximum of 15 labels.
+ Create a value stream
+ Tier : Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ History New value stream changed from a dialog to a page in GitLab 16.10 with a feature flag named vsa_standalone_settings_page . Disabled by default.
+ Generally available in GitLab 17.7. Feature flag vsa_standalone_settings_page removed.
+ With default stages
+ To create a value stream with default stages:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value Stream analytics .
+ Select New Value Stream .
+ Enter a name for the value stream.
+ Select Create from default template .
+ Customize the default stages: To re-order stages, select the up or down arrows.
+ To hide a stage, select Hide ( ).
+ To add a custom stage, select Add a stage . Enter a name for the stage.
+ Select a Start event and a Stop event .
+ Select New value stream .
+ If you have recently upgraded to GitLab Premium, it can take up to 30 minutes for data to collect and display.
+ With custom stages
+ To create a value stream with custom stages:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value Stream analytics .
+ Select New value stream .
+ For each stage: Enter a name for the stage.
+ Select a Start event and a Stop event .
+ To add another stage, select Add a stage .
+ To re-order the stages, select the up or down arrows.
+ Select New value stream .
+For a video explanation, see Optimizing merge request review process with Value Stream Analytics .
+ Edit a value stream
+ Tier : Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ History Edit value stream changed from a dialog to a page in GitLab 16.10 with a feature flag named vsa_standalone_settings_page . Disabled by default.
+ Generally available in GitLab 17.7. Feature flag vsa_standalone_settings_page removed.
+ After you create a value stream, you can customize it to suit your purposes. To edit a value stream:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value stream analytics .
+ From the value stream dropdown list, select the value stream you want to edit.
+ Next to the value stream dropdown list, select Edit .
+ Optional: Rename the value stream.
+ Hide or re-order default stages.
+ Remove existing custom stages.
+ To add new stages, select Add a stage .
+ Select the start and end events for the stage.
+ Optional. To undo any modifications, select Restore value stream defaults .
+ Select Save Value Stream .
+ Delete a value stream
+ Tier : Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ To delete a custom value stream:
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value stream analytics .
+ From the value stream dropdown list, select the value stream you want to delete, then Delete (name of value stream) .
+ To confirm, select Delete .
+ View number of days for a cycle to complete
+ Tier : Premium, Ultimate
+ Offering : GitLab.com, GitLab Self-Managed, GitLab Dedicated
+ The Total time chart shows the average number of days it takes for development cycles to complete.
+The chart shows data for the last 500 workflow items.
+ In the top bar, select Search or go to and find your project or group.
+ In the left sidebar, select Analyze > Value stream analytics .
+ Above the Filter results box, select a stage: To view a summary of the cycle time for all stages, select Overview .
+ To view the cycle time for a specific stage, select a stage.
+ Optional. Filter the results: Select the Filter results text box.
+ Select a parameter.
+ Select a value or enter text to refine the results.
+ To adjust the date range: In the From field, select a start date.
+ In the To field, select an end date.
+ Reaggregate data after upgrade
+ Offering : GitLab Self-Managed
+ On large instances, when you upgrade the GitLab version and especially if several minor versions are skipped, the background aggregation processes might last longer. This delay can result in outdated data on the Value Stream Analytics page.
+To speed up the aggregation process and avoid outdated data, in the rails console you can invoke the synchronous aggregation snippet for a given group:
+ ruby 
+ group = Group . find ( - 1 ) # put your group id here 
+ group_to_aggregate = group . root_ancestor 
+ loop do 
+ cursor = {} 
+ context = Analytics :: CycleAnalytics :: AggregationContext . new ( cursor : cursor ) 
+ service_response = Analytics :: CycleAnalytics :: DataLoaderService . new ( group : group_to_aggregate , model : Issue , context : context ) . execute 
+ if service_response . success? && service_response . payload [ :reason ] == :limit_reached 
+ cursor = service_response . payload [ :context ]. cursor 
+ elsif service_response . success? 
+ puts &#34;finished&#34; 
+ break 
+ else 
+ puts &#34;failed&#34; 
+ break 
+ end 
+ end 
+ loop do 
+ cursor = {} 
+ context = Analytics :: CycleAnalytics :: AggregationContext . new ( cursor : cursor ) 
+ service_response = Analytics :: CycleAnalytics :: DataLoaderService . new ( group : group_to_aggregate , model : MergeRequest , context : context ) . execute 
+ if service_response . success? && service_response . payload [ :reason ] == :limit_reached 
+ cursor = service_response . payload [ :context ]. cursor 
+ elsif service_response . success? 
+ puts &#34;finished&#34; 
+ break 
+ else 
+ puts &#34;failed&#34; 
+ break 
+ end 
+ end 
+ Access permissions
+ Access permissions for value stream analytics depend on the project type.
+ Project type Permissions 
+ Public Anyone can access. 
+ Internal Any authenticated user can access. 
+ Private Any user with the Reporter, Developer, Maintainer, or Owner role can access. 
+ Feature availability
+ Value stream analytics offers features for projects and groups, with availability varying by tier.
+ In the Free tier, value stream analytics does not aggregate data. It queries the database directly where the date range filter is applied to the creation date of issues and merge requests. You can view value stream analytics with pre-defined default stages.
+ In the Premium and Ultimate tier, value stream analytics aggregates data and applies the date range filter on the end event. You can also create, edit, and delete value streams.
+ Feature Group (Premium, Ultimate) Project (Premium, Ultimate) Project (Free) 
+ Create custom value streams No 
+Only one value stream (default) is present with the default stages 
+ Create custom stages No 
+ Filtering (for example, by author, label, milestone) 
+ Stage time chart No 
+ Total time chart No 
+ Task by type chart No No 
+ DORA Metrics No 
+ Cycle time and lead time summary (Lifecycle metrics) No 
+ New issues, commits, and deploys (Lifecycle metrics) Excluding commits 
+ Uses aggregated backend No 
+ Date filter behavior Filters items finished in the date range Filters items by creation date. Filters items by creation date. 
+ Authorization At least reporter At least reporter Can be public 
+ Troubleshooting
+ 100% CPU utilization by Sidekiq cronjob:analytics_cycle_analytics 
+ It is possible that value stream analytics background jobs
+strongly impact performance by monopolizing CPU resources.
+ To recover from this situation:
+ Disable the feature for all projects in the Rails console ,
+and remove existing jobs:
+ ruby 
+ Project . find_each do | p | 
+ p . analytics_access_level = 'disabled' ; 
+ p . save! 
+ end 
+ Analytics :: CycleAnalytics :: GroupStage . delete_all 
+ Analytics :: CycleAnalytics :: Aggregation . delete_all 
+ Configure a Sidekiq routing 
+with for example a single feature_category=value_stream_management 
+and multiple feature_category!=value_stream_management entries.
+Find other relevant queue metadata in the
+ Enterprise Edition list .
+ Enable value stream analytics for one project after another.
+You might need to tweak the Sidekiq routing further according to your performance requirements.
+ Was this page helpful? 
+ Yes 
+ No

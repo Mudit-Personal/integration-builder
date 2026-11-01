@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Docusign Admin",
+    "slug": "docusign-admin",
+    "apiVersion": "v2.1"
+  },
+  "baseUrl": "https://api.docusign.net/Management",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "oauth2_authorization_code",
+      "label": "Docusign OAuth2 Authorization Code",
+      "authorizeUrl": "https://account.docusign.com/oauth/auth",
+      "tokenUrl": "https://account.docusign.com/oauth/auth",
+      "scopes": [
+        "organization_read",
+        "user_read",
+        "account_read"
+      ]
+    }
+  ],
+  "extraHeaders": {},
+  "context": [
+    {
+      "name": "org",
+      "request": {
+        "method": "GET",
+        "path": "/v2/organizations",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "extract": {
+        "organizationId": "organizations[0].id"
+      }
+    }
+  ],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/v2/organizations/{{context.organizationId}}/users",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "users",
+    "pagination": {
+      "type": "offset",
+      "offsetParam": "start",
+      "limitParam": "take",
+      "pageSize": 100,
+      "totalPath": "paging.total_set_size",
+      "hasMorePath": null
+    },
+    "requiredScopes": [
+      "user_read"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "user_name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "user_status",
+        "fallbackPaths": [
+          "membership_status"
+        ],
+        "map": {
+          "active": "active",
+          "closed": "deleted",
+          "activationrequired": "pending",
+          "activationsent": "pending",
+          "disabled": "suspended"
+        },
+        "format": null
+      },
+      "role": null,
+      "userType": null,
+      "lastActiveAt": {
+        "path": "last_login",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "createdAt": {
+        "path": "created_on",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "last_activity_field"
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "This method requires user authentication."
+    },
+    {
+      "claim": "users",
+      "quote": "To get a list of users in an organization, use"
+    },
+    {
+      "claim": "usage",
+      "quote": "\"last_login\":\"string date-time\""
+    }
+  ],
+  "assumptions": [
+    "The source does not list the organization-wide user listing endpoint. It only points to 'Users: getUsers'. I assumed it is GET /v2/organizations/{organizationId}/users. Please verify this path.",
+    "Paging for that user list (start/take, page size 100, total in paging.total_set_size) is copied from the group listing endpoint and not confirmed for users.",
+    "The user field names (id, email, user_name, user_status, last_login, created_on) come from the user profile responses and may differ in the user list response.",
+    "The user_status values (active, closed, activationrequired, activationsent, disabled) are guesses, because the source does not list them.",
+    "The source gives the same URL for authorize and token. The token URL is normally a separate endpoint, so please confirm it.",
+    "The docs say user authentication is needed, so an application token (such as a service account) will not work. The connection will stop working if the authorizing person leaves.",
+    "The first organization returned is assumed to be the one to read.",
+    "No rate limits are stated in the source.",
+    "User type and role are not mapped because no clear field was found."
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Microsoft Entra ID (Microsoft Graph)",
+    "slug": "microsoft-graph",
+    "apiVersion": "v1.0"
+  },
+  "baseUrl": "https://graph.microsoft.com/v1.0",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "bearer",
+      "label": "Microsoft Graph access token (application permissions)",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/users",
+      "query": {
+        "$select": "id,displayName,mail,userPrincipalName,accountEnabled,userType,createdDateTime,signInActivity"
+      },
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "value",
+    "pagination": {
+      "type": "next_url",
+      "urlPath": "@odata.nextLink",
+      "sizeParam": "$top",
+      "pageSize": 500
+    },
+    "requiredScopes": [
+      "User.Read.All",
+      "AuditLog.Read.All"
+    ],
+    "planRequirement": "Microsoft Entra ID P1 or P2",
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "mail",
+        "fallbackPaths": [
+          "userPrincipalName"
+        ],
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "displayName",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "accountEnabled",
+        "fallbackPaths": null,
+        "map": {
+          "true": "active",
+          "false": "inactive"
+        },
+        "format": null
+      },
+      "role": null,
+      "userType": {
+        "path": "userType",
+        "fallbackPaths": null,
+        "map": {
+          "member": "member",
+          "guest": "guest"
+        },
+        "format": null
+      },
+      "lastActiveAt": {
+        "path": "signInActivity.lastSignInDateTime",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "createdAt": {
+        "path": "createdDateTime",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "last_activity_field"
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "Bearer {token}"
+    },
+    {
+      "claim": "users",
+      "quote": "Retrieve a list of user objects."
+    },
+    {
+      "claim": "pagination",
+      "quote": "The default and maximum page sizes are 100 and 999 user objects respectively"
+    },
+    {
+      "claim": "usage",
+      "quote": "Get the last signed-in date and request ID of the sign-in for a given user."
+    },
+    {
+      "claim": "plan",
+      "quote": "Details for the signInActivity property require a Microsoft Entra ID P1 or P2 license and the AuditLog.Read.All permission."
+    }
+  ],
+  "assumptions": [
+    "The source does not give the OAuth token address, so only a bearer-token method is listed. In practice an app registration (client credentials) would be better because it survives staff leaving, but its token URL was not in the source.",
+    "The source says to use paging but does not name the next-page field. I assumed the standard Microsoft Graph field '@odata.nextLink'.",
+    "Page size is set to 500, the documented maximum when signInActivity is requested.",
+    "Last sign-in data (signInActivity) needs Microsoft Entra ID P1 or P2 and the AuditLog.Read.All permission. Without that licence the user request may fail or return no activity data, so I marked the users call as requiring it.",
+    "The source does not list the OAuth permission names for app-only access in a single place; I used User.Read.All and AuditLog.Read.All from the text.",
+    "Account status is derived from accountEnabled only (true = active, false = inactive). Users deleted in the last 30 days are on a separate endpoint not detailed in the source, so they are not included.",
+    "No role field is available on the user list, so role is left empty.",
+    "Rate limits are not stated in the source, so they are left empty.",
+    "Guests are classed by userType (Member or Guest); service accounts cannot be told apart from the data given."
+  ]
+}

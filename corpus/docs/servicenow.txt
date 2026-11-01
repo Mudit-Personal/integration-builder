@@ -1,0 +1,2926 @@
+Docs | ServiceNow 
+ Loading application...
+
+[Page: /products/saas-license-management.html]
+SaaS License Management - ServiceNow 
+ <!-- -->
+ Skip to Main Content 
+ MyNow 
+ Products 
+ Industries 
+ Learning 
+ Support 
+ Partners 
+ Company 
+ Main menu 
+ Get Started
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Search
+ Clear Search
+ Americas
+ United States - Global 
+ Brasil - Português 
+ Canada - Français 
+ América Latina - Español 
+ Asia, Pacific, and Japan
+ 日本 - 日本語 
+ 한국 - 한국어 
+ Australia/NZ - English 
+ India - English 
+ Europe, Middle East, and Africa
+ United Kingdom - English 
+ DACH - Deutsch 
+ France - Français 
+ Nederland - Nederlands 
+ España - Español 
+ Italia - Italiano 
+ Sales
+ +1 (844) 863-1987
+ Get Started
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Home
+ Products
+ Featured products 
+ ServiceNow AI Platform 
+ Demo Library 
+ Solutions
+ IT 
+ CRM 
+ Security and Risk 
+ Employee Experience 
+ App Development 
+ View All Products
+ Featured products
+ Products
+ Unite people, processes, and systems with AI-powered products for all your workflows.
+ See All Products
+ Featured products
+ AI Agents
+ Take action with autonomous AI agents that work for you.
+ IT Service Management
+ Transform service management for productivity and ROI.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ IT Asset Management
+ Improve technology use and spend over the IT asset lifecycle.
+ Governance, Risk, and Compliance
+ Enable an integrated approach that builds operational resilience and mitigates risk.
+ Security Operations
+ Defend against security threats and attacks.
+ Field Service Management
+ Reduce field service costs and improve efficiency.
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Meet the Autonomous Workforce
+ The Autonomous Workforce is more than just isolated tasks. These AI specialists are assigned to roles, with business context and permissions to handle complex workflows end-to-end.
+ Learn More
+ ServiceNow AI Platform
+ One platform, ready for anything
+ AI, data, and workflows—working together on one platform. Only ServiceNow makes it this simple at scale.
+ Explore AI Platform
+ AI
+ Put AI to work across your business with our single, intelligent platform.
+ Data
+ Power all your workflows, AI, and analytics with real-time access to data from any source.
+ Workflows
+ Automate workflows to lower costs and raise productivity.
+ ServiceNow Otto
+ Explore the AI assistant for work. You ask. Work gets done.
+ RaptorDB
+ Unify data and analytics on the ServiceNow AI Platform for ultra-fast workflow performance at scale.
+ Process Mining
+ See how workflows and AI agents actually execute and improve them right where they run.
+ AI Agents
+ AI Agents Take action with autonomous AI agents that work for you.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ Security
+ Protect sensitive data and increase security, privacy, and compliance across the enterprise.
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ ServiceNow Store
+ Do more with the ServiceNow AI Platform. Find hundreds of certified, ready to use applications.
+ Responsible AI
+ Rely on ServiceNow for AI that’s human-centered, inclusive, transparent, and accountable. 
+ Demo Library
+ Demo Library
+ Watch and learn. Our product and solutions experts offer demo options for everyone, at every skill level.
+ Explore Demo Library
+ Featured demos
+ Provide better experiences
+ Learn how you can use GenAI to equip customers and employees with self-service for requests. (3:17)
+ Resolve issues faster
+ Find out how your business can reduce manual work and help agents resolve cases faster. (4:08)
+ Create and automate workflows
+ See how to simplify the way workflows are built and custom code is developed. (4:30)
+ Solutions
+ IT
+ IT
+ Anticipate needs with efficient IT and digital operations.
+ Explore Solution
+ Related Products
+ Enterprise Architecture
+ Build a bridge between business processes and IT architecture.
+ Service Operations Workspace
+ Predict, prevent, and resolve incidents proactively from a single workspace.
+ Cloud Governance Suite
+ Automate cloud governance for better compliance, security, and costs.
+ Operational Technology Management
+ Protect your OT environment and improve uptime.
+ IT Asset Management
+ Control costs and minimize risks across the IT asset lifecycle.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ IT Service Management
+ Transform service management to boost productivity and maximize ROI.
+ ServiceNow Cloud Observability
+ Gain insights to detect and respond to changes in cloud-native apps.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ Digital End-user Experience
+ Improve your employees' endpoint technology experience. 
+ Enterprise Asset Management
+ Streamline how you manage the full lifecycle of complex assets that keep your business running.
+ CRM
+ CRM
+ Deliver a seamless, personalized end-to-end customer experience.
+ Explore Solution
+ Related Products
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Field Service Management
+ Optimize scheduling, empower technicians, and reduce unneeded visits.
+ Sales CRM
+ Accelerate the lead-to-cash cycle and boost revenue.
+ Configure, Price, Quote
+ Use AI to simplify and accelerate sales across all channels.
+ Sales Automation
+ Automate busywork and close more deals faster.
+ Healthcare and Life Sciences Service Management
+ Create consumer-grade healthcare experiences and improve operational performance.
+ Public Sector Digital Services
+ Modernize and speed up the delivery of government services.
+ Telecommunications Service Management
+ Unlock growth with AI-powered experiences across customer service and network operations.
+ Technology Provider Service Management
+ Promote speed and growth for your XaaS business with AI-powered experiences.
+ Financial Services Operations for Banking
+ Deliver frictionless onboarding and servicing on one AI platform for banking.
+ Financial Services Operations for Insurance
+ Be the insurer of choice with personalized claims and policyholder servicing.
+ Security and Risk
+ Security and Risk
+ Minimize the risk, impact, and cost of securing your business.
+ Explore Solution
+ Related Products
+ Security Operations
+ Mount an effective defense against security threats and attacks.
+ Security Incident Response
+ Respond fast to evolving threats while optimizing security operations.
+ Unified Security Exposure Management
+ Identify, prioritize, and remediate vulnerabilities across the business.
+ Threat Intelligence Security Center
+ Gain advanced threat hunting, modeling, and analysis on the ServiceNow AI Platform.
+ Integrated Risk Management
+ Make risk-informed decisions while improving efficiency and resilience.
+ Third-party Risk Management
+ Reduce third-party risk while improving resilience and compliance.
+ Security Posture Control
+ Manage the security of enterprise assets on premises and in the cloud.
+ Privacy Management
+ Manage data privacy in real time as part of a holistic enterprise risk program.
+ Identity Security
+ Take control of risk across human, non-human, and AI agent identities with Veza from ServiceNow.
+ Employee Experience
+ Employee Experience
+ Automate the busywork, so that you can unleash your talent on the big work.
+ Explore Solution
+ Related Products
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ Talent Development
+ Make AI and skills-driven talent planning and development decisions.
+ Legal Service Delivery
+ Modernize operations to make faster decisions and grow productivity.
+ Workplace Service Delivery
+ Automate desk bookings, manage facilities, and optimize operations.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Enterprise Service Management
+ Unify IT, HR, and workplace services with AI on one platform
+ Source-to-Pay Operations
+ Automate procurement from conversational intake to paid invoice.
+ Contract Management Pro
+ Contract intake, authoring, and approvals, all in one place.
+ App Development
+ App Development
+ Build custom apps fast while enhancing developer and business expert productivity.
+ Explore Solution
+ Related Products
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ Build Agent
+ Vibe code enterprise apps from the tools you already use, governed and deployed on ServiceNow.
+ View All Products
+ Industries
+ Browse solutions to help you solve the complex business challenges unique to your industry.
+ Learn More
+ Automotive
+ Put your automotive operations in overdrive with a single AI platform.
+ Banking
+ Future-proof your bank with one AI platform.
+ Consumer Goods
+ Power your product growth and efficiency with a single AI platform.
+ Healthcare
+ Fuel efficiency, reduce costs, and deliver quality care with a single AI platform.
+ Insurance
+ Be the trusted carrier of choice with one AI platform.
+ Life Sciences
+ Accelerate innovation, in and out of the lab, with one AI-powered platform.
+ Manufacturing
+ Drive manufacturing efficiency with one AI platform.
+ Nonprofit
+ Learn how to do more with less while making your nonprofit organization more agile and effective.
+ National Government
+ Deliver secure experiences for civilian, defense, and intelligence IT workflows.
+ Retail
+ Enhance retail experiences with AI-powered insights on a single AI platform.
+ Technology Providers
+ Reimagine your XaaS lifecycle with a single AI platform.
+ Telecom
+ Grow revenue, automate operations, and manage infrastructure on one AI platform.
+ Learning
+ ServiceNow University 
+ Community 
+ Developer Resources 
+ Events 
+ Customer Stories 
+ Workflow: Insight for what matters 
+ ServiceNow University
+ ServiceNow University
+ Discover a playground for learning, designed to help develop the skills you need for an AI-driven world.
+ Start Learning
+ Training & Certification
+ Explore ServiceNow certifications, career journeys, and expert programs—all designed to build your skills and elevate your career.
+ Skill Your Team
+ Upskill your teams with scalable, role-based training designed to help you reach your digital transformation goals faster.
+ Skilling Programs
+ Explore skilling programs at ServiceNow University, including RiseUp and partnerships that develop ServiceNow-skilled talent to meet rising ecosystem demands.
+ Community
+ Community
+ Learn from ServiceNow experts and engage in discussions with industry peers.
+ Visit Community
+ Product hubs
+ Find the resources, tools, and guidance you need for any ServiceNow product.
+ ServiceNow user groups
+ Join a user group in person or online to expand your network and knowledge.
+ Developer forum
+ Connect with other developers to ask questions, offer solutions, and build together.
+ Community events
+ Find live events for the ServiceNow community online or in person near you.
+ Community Central
+ From updates to best practices, find all things community related.
+ Join the community
+ Become a member of our vibrant ServiceNow community.
+ Developer Resources
+ Developer resources
+ Get your team building apps fast with tools and personal developer instances.
+ Explore Resources
+ Learn
+ Browse learning plans and courses that teach you how to build apps to tackle your company's business needs.
+ Reference documentation
+ Find APIs, libraries, and supplemental materials for working with the ServiceNow AI Platform.
+ Guides
+ Read technology overviews and recommendations for innovating on the ServiceNow AI Platform.
+ Connect
+ Meet fellow creators and gain insights from the community.
+ Design
+ Find components, patterns, and resources to help you start designing experiences on the ServiceNow AI Platform.
+ Events
+ Events
+ Join us at an event and learn how the world works with ServiceNow.
+ Find Your Event
+ Knowledge 2027
+ Get ready to unlock what's possible. Stay tuned as registration will open soon. 
+ World Forum 2026
+ Check out 2026 dates and locations, and discover how you can put AI to work in a city near you. 
+ Webinars
+ Broaden your knowledge by registering for live and on demand ServiceNow webinars.
+ Community events
+ Find live events for the ServiceNow community happening near you.
+ Livestream
+ Join live events showcasing product news, customer stories, and expert insights.
+ now[dev]26
+ Build real solutions with the engineers behind the platform.
+ World Forum 2026
+ Put AI to work in a city near you. Explore the latest innovations, hear from industry leaders, and experience AI firsthand at a complimentary World Forum event.
+ Learn More
+ Customer Stories
+ Customer stories
+ Find out how businesses like yours rely on ServiceNow to make the world work.
+ Read Stories
+ AI Agent Stories
+ Learn how ServiceNow customers are putting AI to work.
+ HR Stories
+ See how organizations are improving self-service and delivering outstanding employee experiences.
+ CRM Stories
+ Discover how businesses enable self-service for customers and reduce resolution time.
+ Public Sector/Government Stories
+ Explore ways to streamline operations, engage citizens, and empower employees.
+ Now on Now
+ Hear how ServiceNow uses ServiceNow.
+ Featured customer story
+ For FedEx, 5M ServiceNow workflows a month help get work done.
+ Read story
+ Workflow: Insight for what matters
+ Workflow
+ Proof for what works. Insight for what matters. Ideas for what’s next.
+ View the Latest
+ AI
+ Insights on AI strategy, automation, and the future of intelligent workflows.
+ CRM
+ How AI is changing the way businesses strengthen relationships with customers.
+ News & Events
+ Stay in the loop on announcements and happenings at ServiceNow.
+ People & Culture
+ A look inside ServiceNow's culture, people, and what drives us.
+ All topics
+ The conversations shaping work; walk into every room a step ahead.
+ The CX Shift
+ New research from 34,000 voices reveals a widening gap between what customers want and what they get.
+ Read Report
+ Support
+ Customer Support 
+ Documentation 
+ Best Practices 
+ MyNow 
+ Customer Success 
+ Platform Releases 
+ Customer Support
+ Customer Support
+ Access your instances, manage tasks and explore self-service help all in one place.
+ Community
+ Connect with other customers to share tips, exchange resources, and solve problems together.
+ Get support
+ Discover answers, troubleshoot issues, and get expert help, all in our support center.
+ Documentation
+ Documentation
+ Find answers to your technical questions and learn how to use ServiceNow products.
+ Visit Documentation
+ IT Service Management
+ Deliver IT services to your users all through a single cloud-based platform.
+ Customer Service Management
+ Provide customers the ability to communicate and receive support through multiple channels.
+ IT Operations Management
+ Get visibility into infrastructure and services, prevent outages, and expand operational agility.
+ ServiceNow AI Platform
+ Automate processes and develop, run, and manage applications.
+ What’s new in AI experiences
+ Use AI-based tools to prioritize and automate routine tasks, detect incidents, and surface insights.
+ Start Reading
+ Best Practices
+ Best Practices
+ Accelerate outcomes with expert-curated best practices for the ServiceNow AI Platform.
+ Home
+ ServiceNow AI Platform
+ Automate business processes, streamline app development, and manage digital infrastructure.
+ Customer Service Management
+ Deliver exceptional service, empower customers, and enhance their experience.
+ IT Service Management
+ Streamline IT service delivery, boost productivity, resolve issues, and enhance user satisfaction.
+ Employee Service Management
+ Streamline onboarding, provide HR and IT support, and empower employees with digital workflows.
+ Telecommunications Service Management
+ Unify telecom operations and deliver proactive care with quality and availability for services.
+ Governance, Risk, and Compliance
+ Build an integrated risk program, enhance decision-making, and improve performance with automation.
+ Security Operations
+ Accelerate response and strengthen security posture with SecOps workflows.
+ MyNow
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Learn More
+ Start your day with MyNow.
+ Customer Success
+ Customer Success
+ Increase your ROI and get more value from the ServiceNow platform.
+ ServiceNow Impact™ success plans
+ Receive long-term adoption guidance and support with an Impact success plan tailored to you.
+ Services
+ Implement and optimize ServiceNow with expert help from ServiceNow and our partners.
+ Platform Releases
+ The Australia release is here
+ Our latest release gives you the ability to scale AI safely, responsibly, and with your teams in control.
+ Go to Latest Release
+ Past Releases
+ Zurich
+ Confidently extend AI across your enterprise.
+ Xanadu
+ The biggest ServiceNow AI release yet.
+ Washington D.C.
+ Take work to the next level with smarter, faster, simpler experiences for everyone.
+ Partners
+ Locate the partner you need, or explore the benefits of partnering with ServiceNow.
+ Learn More
+ Find a partner
+ Connect with a ServiceNow partner to reach your business goals.
+ Become a partner
+ Join our partner ecosystem. Choose the partner paths that best fit your expertise and experience.
+ Partner awards
+ Meet the global ServiceNow partners leading the way in innovation and value for our customers.
+ Partner portal
+ Find tasks, alerts, and information you need, all in one place.
+ Partner applications
+ Explore innovative apps that extend and complement the ServiceNow AI Platform.
+ Discover how the world works with ServiceNow
+ Bring AI Agents to every corner of your business.
+ Learn More
+ Careers
+ Make your next career move with the fastest growing enterprise software company.
+ Investors
+ Explore investor news and resources.
+ ServiceNow AI Research
+ Learn how we keep innovation moving forward through our AI research team, labs, and partnerships.
+ Leadership
+ Meet the ServiceNow leadership team.
+ Locations
+ See ServiceNow office locations around the world.
+ Newsroom
+ ServiceNow is making headlines. Find announcements, media kits, and more.
+ Analyst Reports
+ Get expert insights from top industry analysts on ServiceNow.
+ Global impact
+ Join us to foster a more sustainable, fair, and ethical world.
+ Trust and compliance
+ Learn the measures ServiceNow takes to keep your data secure and compliant.
+ ServiceNow Shop
+ The official home for ServiceNow gear. Get the latest styles today.
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ SaaS License Management
+ Reduce SaaS costs and usage with actionable insights that drive savings and governance of the SaaS portfolio.
+ Get Data Sheet
+ SaaS License Management 
+ Contact Sales
+ Benefits
+ Features
+ Resources
+ How to Buy
+ Related Apps
+ Benefits of SaaS License Management
+ Reduce spend quickly
+ Identify savings opportunities, act on stale licenses, and rationalize the SaaS portfolio.
+ Tackle SaaS sprawl
+ Take action on unexposed SaaS spending by surfacing shadow IT costs and unmanaged applications.
+ Rightsize SaaS licenses 
+ Tap into deep usage analysis to avoid overspending and underutilization of license types.
+ Simplify your work
+ Employ industry best-practice workflows to manage SaaS in the same place you operate SAM. 
+ Features of SaaS License Management
+ SaaS overview dashboard
+ Analyze the usage and cost of your SaaS applications on a single dashboard. 
+ Direct integrations
+ Gain cost and usage insight for popular SaaS vendors with out-of-box integrations and capabilities.
+ SaaS license connections
+ Expand SaaS coverage by building your own low-code integration for SaaS apps with an API.
+ Single sign-on connections
+ View and manage software for all connected SSO applications in your Okta and Azure AD environments. 
+ Additional features 
+ Overlapping software
+ Discover unnecessary spending on SaaS and software products with similar functionality.
+ Software spend detection
+ Find, analyze, and adjust unmanaged SaaS and software from imported financial data.
+ SaaS detection
+ Discover unmanaged SaaS applications by tracking URLs being accessed from endpoint devices.
+ Resources
+ See All Resources
+ Data Sheets
+ ServiceNow Software Asset Management
+ White Papers
+ What is SaaS License Management?
+ Modernize and Automate ITAM across Hardware, Software, and Cloud
+ Ebooks
+ 5 Ways to Reduce Software, Hardware, and Cloud Spend
+ 8 Ways to Drive Cost Savings Using Software Asset Management
+ How to get SaaS License Management
+ SaaS License Management is available with Software Asset Management. Take control of software license management across the enterprise.
+ Get Product Info
+ View Demo
+ You might also be interested in…
+ Configuration Management Database (CMDB)
+ Track the dependencies and relationships of supported IT services to maintain continuity.
+ Discovery 
+ Get a holistic view of your operations footprint across on-premises data centers and the cloud. 
+ Dig deeper into SaaS License Management
+ View Docs
+ Visit Community
+ Start Learning
+ Get Developer Resources
+ Talk to an expert
+ Get answers to your questions and discover how ServiceNow can help you transform your business with modern digital workflows.
+ Get Started
+ Home 
+ SaaS License Management 
+ Contact 
+ Demo
+
+[Page: /products/digital-user-experience.html]
+Digital End-User Experience - ServiceNow 
+ <!-- -->
+ Skip to Main Content 
+ MyNow 
+ Products 
+ Industries 
+ Learning 
+ Support 
+ Partners 
+ Company 
+ Main menu 
+ Get Started
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Search
+ Clear Search
+ Americas
+ United States - Global 
+ Brasil - Português 
+ Canada - Français 
+ América Latina - Español 
+ Asia, Pacific, and Japan
+ 日本 - 日本語 
+ 한국 - 한국어 
+ Australia/NZ - English 
+ India - English 
+ Europe, Middle East, and Africa
+ United Kingdom - English 
+ DACH - Deutsch 
+ France - Français 
+ Nederland - Nederlands 
+ España - Español 
+ Italia - Italiano 
+ Sales
+ +1 (844) 863-1987
+ Get Started
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Home
+ Products
+ Featured products 
+ ServiceNow AI Platform 
+ Demo Library 
+ Solutions
+ IT 
+ CRM 
+ Security and Risk 
+ Employee Experience 
+ App Development 
+ View All Products
+ Featured products
+ Products
+ Unite people, processes, and systems with AI-powered products for all your workflows.
+ See All Products
+ Featured products
+ AI Agents
+ Take action with autonomous AI agents that work for you.
+ IT Service Management
+ Transform service management for productivity and ROI.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ IT Asset Management
+ Improve technology use and spend over the IT asset lifecycle.
+ Governance, Risk, and Compliance
+ Enable an integrated approach that builds operational resilience and mitigates risk.
+ Security Operations
+ Defend against security threats and attacks.
+ Field Service Management
+ Reduce field service costs and improve efficiency.
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Meet the Autonomous Workforce
+ The Autonomous Workforce is more than just isolated tasks. These AI specialists are assigned to roles, with business context and permissions to handle complex workflows end-to-end.
+ Learn More
+ ServiceNow AI Platform
+ One platform, ready for anything
+ AI, data, and workflows—working together on one platform. Only ServiceNow makes it this simple at scale.
+ Explore AI Platform
+ AI
+ Put AI to work across your business with our single, intelligent platform.
+ Data
+ Power all your workflows, AI, and analytics with real-time access to data from any source.
+ Workflows
+ Automate workflows to lower costs and raise productivity.
+ ServiceNow Otto
+ Explore the AI assistant for work. You ask. Work gets done.
+ RaptorDB
+ Unify data and analytics on the ServiceNow AI Platform for ultra-fast workflow performance at scale.
+ Process Mining
+ See how workflows and AI agents actually execute and improve them right where they run.
+ AI Agents
+ AI Agents Take action with autonomous AI agents that work for you.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ Security
+ Protect sensitive data and increase security, privacy, and compliance across the enterprise.
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ ServiceNow Store
+ Do more with the ServiceNow AI Platform. Find hundreds of certified, ready to use applications.
+ Responsible AI
+ Rely on ServiceNow for AI that’s human-centered, inclusive, transparent, and accountable. 
+ Demo Library
+ Demo Library
+ Watch and learn. Our product and solutions experts offer demo options for everyone, at every skill level.
+ Explore Demo Library
+ Featured demos
+ Provide better experiences
+ Learn how you can use GenAI to equip customers and employees with self-service for requests. (3:17)
+ Resolve issues faster
+ Find out how your business can reduce manual work and help agents resolve cases faster. (4:08)
+ Create and automate workflows
+ See how to simplify the way workflows are built and custom code is developed. (4:30)
+ Solutions
+ IT
+ IT
+ Anticipate needs with efficient IT and digital operations.
+ Explore Solution
+ Related Products
+ Enterprise Architecture
+ Build a bridge between business processes and IT architecture.
+ Service Operations Workspace
+ Predict, prevent, and resolve incidents proactively from a single workspace.
+ Cloud Governance Suite
+ Automate cloud governance for better compliance, security, and costs.
+ Operational Technology Management
+ Protect your OT environment and improve uptime.
+ IT Asset Management
+ Control costs and minimize risks across the IT asset lifecycle.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ IT Service Management
+ Transform service management to boost productivity and maximize ROI.
+ ServiceNow Cloud Observability
+ Gain insights to detect and respond to changes in cloud-native apps.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ Digital End-user Experience
+ Improve your employees' endpoint technology experience. 
+ Enterprise Asset Management
+ Streamline how you manage the full lifecycle of complex assets that keep your business running.
+ CRM
+ CRM
+ Deliver a seamless, personalized end-to-end customer experience.
+ Explore Solution
+ Related Products
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Field Service Management
+ Optimize scheduling, empower technicians, and reduce unneeded visits.
+ Sales CRM
+ Accelerate the lead-to-cash cycle and boost revenue.
+ Configure, Price, Quote
+ Use AI to simplify and accelerate sales across all channels.
+ Sales Automation
+ Automate busywork and close more deals faster.
+ Healthcare and Life Sciences Service Management
+ Create consumer-grade healthcare experiences and improve operational performance.
+ Public Sector Digital Services
+ Modernize and speed up the delivery of government services.
+ Telecommunications Service Management
+ Unlock growth with AI-powered experiences across customer service and network operations.
+ Technology Provider Service Management
+ Promote speed and growth for your XaaS business with AI-powered experiences.
+ Financial Services Operations for Banking
+ Deliver frictionless onboarding and servicing on one AI platform for banking.
+ Financial Services Operations for Insurance
+ Be the insurer of choice with personalized claims and policyholder servicing.
+ Security and Risk
+ Security and Risk
+ Minimize the risk, impact, and cost of securing your business.
+ Explore Solution
+ Related Products
+ Security Operations
+ Mount an effective defense against security threats and attacks.
+ Security Incident Response
+ Respond fast to evolving threats while optimizing security operations.
+ Unified Security Exposure Management
+ Identify, prioritize, and remediate vulnerabilities across the business.
+ Threat Intelligence Security Center
+ Gain advanced threat hunting, modeling, and analysis on the ServiceNow AI Platform.
+ Integrated Risk Management
+ Make risk-informed decisions while improving efficiency and resilience.
+ Third-party Risk Management
+ Reduce third-party risk while improving resilience and compliance.
+ Security Posture Control
+ Manage the security of enterprise assets on premises and in the cloud.
+ Privacy Management
+ Manage data privacy in real time as part of a holistic enterprise risk program.
+ Identity Security
+ Take control of risk across human, non-human, and AI agent identities with Veza from ServiceNow.
+ Employee Experience
+ Employee Experience
+ Automate the busywork, so that you can unleash your talent on the big work.
+ Explore Solution
+ Related Products
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ Talent Development
+ Make AI and skills-driven talent planning and development decisions.
+ Legal Service Delivery
+ Modernize operations to make faster decisions and grow productivity.
+ Workplace Service Delivery
+ Automate desk bookings, manage facilities, and optimize operations.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Enterprise Service Management
+ Unify IT, HR, and workplace services with AI on one platform
+ Source-to-Pay Operations
+ Automate procurement from conversational intake to paid invoice.
+ Contract Management Pro
+ Contract intake, authoring, and approvals, all in one place.
+ App Development
+ App Development
+ Build custom apps fast while enhancing developer and business expert productivity.
+ Explore Solution
+ Related Products
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ Build Agent
+ Vibe code enterprise apps from the tools you already use, governed and deployed on ServiceNow.
+ View All Products
+ Industries
+ Browse solutions to help you solve the complex business challenges unique to your industry.
+ Learn More
+ Automotive
+ Put your automotive operations in overdrive with a single AI platform.
+ Banking
+ Future-proof your bank with one AI platform.
+ Consumer Goods
+ Power your product growth and efficiency with a single AI platform.
+ Healthcare
+ Fuel efficiency, reduce costs, and deliver quality care with a single AI platform.
+ Insurance
+ Be the trusted carrier of choice with one AI platform.
+ Life Sciences
+ Accelerate innovation, in and out of the lab, with one AI-powered platform.
+ Manufacturing
+ Drive manufacturing efficiency with one AI platform.
+ Nonprofit
+ Learn how to do more with less while making your nonprofit organization more agile and effective.
+ National Government
+ Deliver secure experiences for civilian, defense, and intelligence IT workflows.
+ Retail
+ Enhance retail experiences with AI-powered insights on a single AI platform.
+ Technology Providers
+ Reimagine your XaaS lifecycle with a single AI platform.
+ Telecom
+ Grow revenue, automate operations, and manage infrastructure on one AI platform.
+ Learning
+ ServiceNow University 
+ Community 
+ Developer Resources 
+ Events 
+ Customer Stories 
+ Workflow: Insight for what matters 
+ ServiceNow University
+ ServiceNow University
+ Discover a playground for learning, designed to help develop the skills you need for an AI-driven world.
+ Start Learning
+ Training & Certification
+ Explore ServiceNow certifications, career journeys, and expert programs—all designed to build your skills and elevate your career.
+ Skill Your Team
+ Upskill your teams with scalable, role-based training designed to help you reach your digital transformation goals faster.
+ Skilling Programs
+ Explore skilling programs at ServiceNow University, including RiseUp and partnerships that develop ServiceNow-skilled talent to meet rising ecosystem demands.
+ Community
+ Community
+ Learn from ServiceNow experts and engage in discussions with industry peers.
+ Visit Community
+ Product hubs
+ Find the resources, tools, and guidance you need for any ServiceNow product.
+ ServiceNow user groups
+ Join a user group in person or online to expand your network and knowledge.
+ Developer forum
+ Connect with other developers to ask questions, offer solutions, and build together.
+ Community events
+ Find live events for the ServiceNow community online or in person near you.
+ Community Central
+ From updates to best practices, find all things community related.
+ Join the community
+ Become a member of our vibrant ServiceNow community.
+ Developer Resources
+ Developer resources
+ Get your team building apps fast with tools and personal developer instances.
+ Explore Resources
+ Learn
+ Browse learning plans and courses that teach you how to build apps to tackle your company's business needs.
+ Reference documentation
+ Find APIs, libraries, and supplemental materials for working with the ServiceNow AI Platform.
+ Guides
+ Read technology overviews and recommendations for innovating on the ServiceNow AI Platform.
+ Connect
+ Meet fellow creators and gain insights from the community.
+ Design
+ Find components, patterns, and resources to help you start designing experiences on the ServiceNow AI Platform.
+ Events
+ Events
+ Join us at an event and learn how the world works with ServiceNow.
+ Find Your Event
+ Knowledge 2027
+ Get ready to unlock what's possible. Stay tuned as registration will open soon. 
+ World Forum 2026
+ Check out 2026 dates and locations, and discover how you can put AI to work in a city near you. 
+ Webinars
+ Broaden your knowledge by registering for live and on demand ServiceNow webinars.
+ Community events
+ Find live events for the ServiceNow community happening near you.
+ Livestream
+ Join live events showcasing product news, customer stories, and expert insights.
+ now[dev]26
+ Build real solutions with the engineers behind the platform.
+ World Forum 2026
+ Put AI to work in a city near you. Explore the latest innovations, hear from industry leaders, and experience AI firsthand at a complimentary World Forum event.
+ Learn More
+ Customer Stories
+ Customer stories
+ Find out how businesses like yours rely on ServiceNow to make the world work.
+ Read Stories
+ AI Agent Stories
+ Learn how ServiceNow customers are putting AI to work.
+ HR Stories
+ See how organizations are improving self-service and delivering outstanding employee experiences.
+ CRM Stories
+ Discover how businesses enable self-service for customers and reduce resolution time.
+ Public Sector/Government Stories
+ Explore ways to streamline operations, engage citizens, and empower employees.
+ Now on Now
+ Hear how ServiceNow uses ServiceNow.
+ Featured customer story
+ For FedEx, 5M ServiceNow workflows a month help get work done.
+ Read story
+ Workflow: Insight for what matters
+ Workflow
+ Proof for what works. Insight for what matters. Ideas for what’s next.
+ View the Latest
+ AI
+ Insights on AI strategy, automation, and the future of intelligent workflows.
+ CRM
+ How AI is changing the way businesses strengthen relationships with customers.
+ News & Events
+ Stay in the loop on announcements and happenings at ServiceNow.
+ People & Culture
+ A look inside ServiceNow's culture, people, and what drives us.
+ All topics
+ The conversations shaping work; walk into every room a step ahead.
+ The CX Shift
+ New research from 34,000 voices reveals a widening gap between what customers want and what they get.
+ Read Report
+ Support
+ Customer Support 
+ Documentation 
+ Best Practices 
+ MyNow 
+ Customer Success 
+ Platform Releases 
+ Customer Support
+ Customer Support
+ Access your instances, manage tasks and explore self-service help all in one place.
+ Community
+ Connect with other customers to share tips, exchange resources, and solve problems together.
+ Get support
+ Discover answers, troubleshoot issues, and get expert help, all in our support center.
+ Documentation
+ Documentation
+ Find answers to your technical questions and learn how to use ServiceNow products.
+ Visit Documentation
+ IT Service Management
+ Deliver IT services to your users all through a single cloud-based platform.
+ Customer Service Management
+ Provide customers the ability to communicate and receive support through multiple channels.
+ IT Operations Management
+ Get visibility into infrastructure and services, prevent outages, and expand operational agility.
+ ServiceNow AI Platform
+ Automate processes and develop, run, and manage applications.
+ What’s new in AI experiences
+ Use AI-based tools to prioritize and automate routine tasks, detect incidents, and surface insights.
+ Start Reading
+ Best Practices
+ Best Practices
+ Accelerate outcomes with expert-curated best practices for the ServiceNow AI Platform.
+ Home
+ ServiceNow AI Platform
+ Automate business processes, streamline app development, and manage digital infrastructure.
+ Customer Service Management
+ Deliver exceptional service, empower customers, and enhance their experience.
+ IT Service Management
+ Streamline IT service delivery, boost productivity, resolve issues, and enhance user satisfaction.
+ Employee Service Management
+ Streamline onboarding, provide HR and IT support, and empower employees with digital workflows.
+ Telecommunications Service Management
+ Unify telecom operations and deliver proactive care with quality and availability for services.
+ Governance, Risk, and Compliance
+ Build an integrated risk program, enhance decision-making, and improve performance with automation.
+ Security Operations
+ Accelerate response and strengthen security posture with SecOps workflows.
+ MyNow
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Learn More
+ Start your day with MyNow.
+ Customer Success
+ Customer Success
+ Increase your ROI and get more value from the ServiceNow platform.
+ ServiceNow Impact™ success plans
+ Receive long-term adoption guidance and support with an Impact success plan tailored to you.
+ Services
+ Implement and optimize ServiceNow with expert help from ServiceNow and our partners.
+ Platform Releases
+ The Australia release is here
+ Our latest release gives you the ability to scale AI safely, responsibly, and with your teams in control.
+ Go to Latest Release
+ Past Releases
+ Zurich
+ Confidently extend AI across your enterprise.
+ Xanadu
+ The biggest ServiceNow AI release yet.
+ Washington D.C.
+ Take work to the next level with smarter, faster, simpler experiences for everyone.
+ Partners
+ Locate the partner you need, or explore the benefits of partnering with ServiceNow.
+ Learn More
+ Find a partner
+ Connect with a ServiceNow partner to reach your business goals.
+ Become a partner
+ Join our partner ecosystem. Choose the partner paths that best fit your expertise and experience.
+ Partner awards
+ Meet the global ServiceNow partners leading the way in innovation and value for our customers.
+ Partner portal
+ Find tasks, alerts, and information you need, all in one place.
+ Partner applications
+ Explore innovative apps that extend and complement the ServiceNow AI Platform.
+ Discover how the world works with ServiceNow
+ Bring AI Agents to every corner of your business.
+ Learn More
+ Careers
+ Make your next career move with the fastest growing enterprise software company.
+ Investors
+ Explore investor news and resources.
+ ServiceNow AI Research
+ Learn how we keep innovation moving forward through our AI research team, labs, and partnerships.
+ Leadership
+ Meet the ServiceNow leadership team.
+ Locations
+ See ServiceNow office locations around the world.
+ Newsroom
+ ServiceNow is making headlines. Find announcements, media kits, and more.
+ Analyst Reports
+ Get expert insights from top industry analysts on ServiceNow.
+ Global impact
+ Join us to foster a more sustainable, fair, and ethical world.
+ Trust and compliance
+ Learn the measures ServiceNow takes to keep your data secure and compliant.
+ ServiceNow Shop
+ The official home for ServiceNow gear. Get the latest styles today.
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Digital End-user Experience 
+ Measure and continuously improve the technology experience for your employees. Make it simple for them to self-solve issues and engage with an informed IT team when they need extra support.  
+ Watch Demo 
+ Read Product Brief
+ Digital End-user Experience Overview
+ One AI platform for enterprise automation
+ Deliver the insights and proactive experiences of service operations to your employees. Boost their efficiency with workflows and data from end-user apps, devices, and ServiceNow solutions. Automate essential processes and run them from the ServiceNow AI Platform, a single system of action for the enterprise.
+ Explore AI Platform 
+ Featured apps and capabilities for Digital End-user Experience
+ Digital End-user Experience grows with you as your needs change. 
+ Desktop Assistant 
+ Provide employees a hub for self-service diagnostic tools and simplified communication with IT.  
+ Application and Device Health
+ Collect and process data from employees’ devices and apps, and connect it with other ServiceNow IT data. 
+ Digital Experience (DEX) Score
+ Combine app and device health, user sentiment, and service metrics into a digital experience score to identify improvements. 
+ Proactive Engagement
+ Detect issues proactively, notify users, and offer recommendations with automated workflows they can initiate. 
+ Application Network Experience 
+ Identify and resolve network and application issues through network performance metrics.
+ Bulk Remedial Action
+ Resolve multiple issues simultaneously with bulk remediation actions across all impacted devices.
+ Microsoft Teams Monitoring
+ View Microsoft Teams performance data on employees' devices and help proactively fix issues before they become disruptive.
+ ESG Integration
+ Track energy consumption across devices to reduce your carbon footprint and adhere to sustainability goals. 
+ Do more with Digital End-user Experience
+ Combine Digital End-user Experience with service operations, asset management, and other products and apps to deliver seamless, always-on IT services.
+ Discover Solution
+ Explore further
+ Dive in to overview articles on a variety of topics related to Digital End-user Experience. 
+ Learn About ServiceNow
+ See All Articles
+ What is digital employee experience (DEX)?
+ What is workflow automation? 
+ What is a configuration management database (CMDB)? 
+ Benefits
+ Benefits
+ Measure and continuously improve your employees’ technology experience with Digital End-user Experience. 
+ Boost employee satisfaction
+ Connect your employees seamlessly to self-service tools so they can quickly identify, diagnose, and resolve many IT issues. Simplify their communications with IT. 
+ Read Data Sheet
+ Be proactive, not reactive 
+ Deflect app and device incidents proactively, predict issues before they impact users, and seamlessly connect to an informed agent for faster resolutions. 
+ View Predictive AIOps 
+ Measure what your employees experience 
+ Monitor app and device usage continuously to gain insights from end users on Windows or MacOS devices. 
+ Watch Video (1:37) 
+ Platform
+ Built on the ServiceNow AI Platform
+ Digital End-user Experience includes AI capabilities powered by the ServiceNow AI Platform so you can boost employee satisfaction, reduce IT workload, and enhance productivity. Transform your business with a single, unifying platform for the enterprise. 
+ One platform to make work flow
+ ServiceNow AI Platform is the single cloud application platform all ServiceNow products run on. Automate, simplify, and connect work across the enterprise to move your business forward.   
+ Watch Video (1:28)
+ Single data model 
+ Eliminate information silos with one data source for your enterprise. Collect and analyze data wherever your end users and their devices are located. 
+ See CMDB 
+ Read Ebook
+ Workflow automation 
+ Build, monitor, and optimize highly efficient no-code automated workflows. Create customized workflows or automations for end-user devices. 
+ View Capability 
+ Find Out How 
+ Actionable insights 
+ Get work done faster with AI-powered experiences. Give everyone in your organization the info they need to make smarter decisions and improve business processes.  
+ Explore Generative AI 
+ Watch Video (1:35) 
+ Security lives at the center of all we do  
+ Data security is critical to your business. The ServiceNow AI Platform arms you with the tools and processes you need to improve your security posture. We also help you adhere to regulatory compliance to keep sensitive data safe.  
+ Find Out How  
+ Get Ebook
+ Plans and Packages
+ What you get 
+ Digital End-user Experience simplifies work processes to help you solve business problems, and our experts can help you get the most value from your product. We offer services tailored to your needs and unrivaled support. Whatever workflow you need to simplify, we have a package and pricing plan that works for you.
+ Digital End-user Experience Standard
+ Get the tools you need most to meet your business needs and goals.
+ Features
+ Desktop Assistant
+ Application and Device Health
+ Digital Experience (DEX) Score
+ Application Network Experience 
+ Proactive Engagement
+ Bulk Remedial Action
+ Microsoft Teams Monitoring
+ ESG Integration
+  Key features for Digital End-user Experience 
+ Desktop Assistant 
+ Provide employees a hub for self-service diagnostic tools and simplified communication with IT.
+ Application and Device Health 
+ Collect and process data from employees’ devices and apps, and connect it with other ServiceNow IT data.
+ Digital Experience (DEX) Score 
+ Combine app and device health, user sentiment, and service metrics into a DEX score to identify improvements. 
+ Get results quickly
+ ServiceNow Impact
+ Speed innovation and increase platform performance. Boost your business value, powered by AI and human expertise. 
+ Support 
+ Find support wherever you are. Search our exhaustive knowledge database for solutions to common issues, best practices, and more.  
+ Expert services 
+ Get a team of experts to support your implementation, improve your instance health, or anything in between.  
+ Training and certification 
+ Turn knowledge into measurable outcomes when you train with us. Boost your career with a globally recognized ServiceNow certification.  
+ Partners 
+ Add more value with the right ServiceNow partner who has expertise tailored to your business needs.
+ Community 
+ Connect, share, learn, and collaborate with over 600,000 like-minded individuals in the ServiceNow user community.  
+ Product documentation 
+ Learn how to use our products, find answers to your technical questions, and explore products by release.  
+ Talk to an expert
+ Connect with us to start to understand and measure your employees’ technology experience.  
+ Contact Us
+ Home 
+ Digital End-user Experience 
+ Contact 
+ Demo
+
+[Page: /products/continuous-authorization-monitoring.html]
+CAM - Continuous Authorization and Monitoring - ServiceNow 
+ <!-- -->
+ Skip to Main Content 
+ MyNow 
+ Products 
+ Industries 
+ Learning 
+ Support 
+ Partners 
+ Company 
+ Main menu 
+ Get Started
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Search
+ Clear Search
+ Americas
+ United States - Global 
+ Brasil - Português 
+ Canada - Français 
+ América Latina - Español 
+ Asia, Pacific, and Japan
+ 日本 - 日本語 
+ 한국 - 한국어 
+ Australia/NZ - English 
+ India - English 
+ Europe, Middle East, and Africa
+ United Kingdom - English 
+ DACH - Deutsch 
+ France - Français 
+ Nederland - Nederlands 
+ España - Español 
+ Italia - Italiano 
+ Sales
+ +1 (844) 863-1987
+ Get Started
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Home
+ Products
+ Featured products 
+ ServiceNow AI Platform 
+ Demo Library 
+ Solutions
+ IT 
+ CRM 
+ Security and Risk 
+ Employee Experience 
+ App Development 
+ View All Products
+ Featured products
+ Products
+ Unite people, processes, and systems with AI-powered products for all your workflows.
+ See All Products
+ Featured products
+ AI Agents
+ Take action with autonomous AI agents that work for you.
+ IT Service Management
+ Transform service management for productivity and ROI.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ IT Asset Management
+ Improve technology use and spend over the IT asset lifecycle.
+ Governance, Risk, and Compliance
+ Enable an integrated approach that builds operational resilience and mitigates risk.
+ Security Operations
+ Defend against security threats and attacks.
+ Field Service Management
+ Reduce field service costs and improve efficiency.
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Meet the Autonomous Workforce
+ The Autonomous Workforce is more than just isolated tasks. These AI specialists are assigned to roles, with business context and permissions to handle complex workflows end-to-end.
+ Learn More
+ ServiceNow AI Platform
+ One platform, ready for anything
+ AI, data, and workflows—working together on one platform. Only ServiceNow makes it this simple at scale.
+ Explore AI Platform
+ AI
+ Put AI to work across your business with our single, intelligent platform.
+ Data
+ Power all your workflows, AI, and analytics with real-time access to data from any source.
+ Workflows
+ Automate workflows to lower costs and raise productivity.
+ ServiceNow Otto
+ Explore the AI assistant for work. You ask. Work gets done.
+ RaptorDB
+ Unify data and analytics on the ServiceNow AI Platform for ultra-fast workflow performance at scale.
+ Process Mining
+ See how workflows and AI agents actually execute and improve them right where they run.
+ AI Agents
+ AI Agents Take action with autonomous AI agents that work for you.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ Security
+ Protect sensitive data and increase security, privacy, and compliance across the enterprise.
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ ServiceNow Store
+ Do more with the ServiceNow AI Platform. Find hundreds of certified, ready to use applications.
+ Responsible AI
+ Rely on ServiceNow for AI that’s human-centered, inclusive, transparent, and accountable. 
+ Demo Library
+ Demo Library
+ Watch and learn. Our product and solutions experts offer demo options for everyone, at every skill level.
+ Explore Demo Library
+ Featured demos
+ Provide better experiences
+ Learn how you can use GenAI to equip customers and employees with self-service for requests. (3:17)
+ Resolve issues faster
+ Find out how your business can reduce manual work and help agents resolve cases faster. (4:08)
+ Create and automate workflows
+ See how to simplify the way workflows are built and custom code is developed. (4:30)
+ Solutions
+ IT
+ IT
+ Anticipate needs with efficient IT and digital operations.
+ Explore Solution
+ Related Products
+ Enterprise Architecture
+ Build a bridge between business processes and IT architecture.
+ Service Operations Workspace
+ Predict, prevent, and resolve incidents proactively from a single workspace.
+ Cloud Governance Suite
+ Automate cloud governance for better compliance, security, and costs.
+ Operational Technology Management
+ Protect your OT environment and improve uptime.
+ IT Asset Management
+ Control costs and minimize risks across the IT asset lifecycle.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ IT Service Management
+ Transform service management to boost productivity and maximize ROI.
+ ServiceNow Cloud Observability
+ Gain insights to detect and respond to changes in cloud-native apps.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ Digital End-user Experience
+ Improve your employees' endpoint technology experience. 
+ Enterprise Asset Management
+ Streamline how you manage the full lifecycle of complex assets that keep your business running.
+ CRM
+ CRM
+ Deliver a seamless, personalized end-to-end customer experience.
+ Explore Solution
+ Related Products
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Field Service Management
+ Optimize scheduling, empower technicians, and reduce unneeded visits.
+ Sales CRM
+ Accelerate the lead-to-cash cycle and boost revenue.
+ Configure, Price, Quote
+ Use AI to simplify and accelerate sales across all channels.
+ Sales Automation
+ Automate busywork and close more deals faster.
+ Healthcare and Life Sciences Service Management
+ Create consumer-grade healthcare experiences and improve operational performance.
+ Public Sector Digital Services
+ Modernize and speed up the delivery of government services.
+ Telecommunications Service Management
+ Unlock growth with AI-powered experiences across customer service and network operations.
+ Technology Provider Service Management
+ Promote speed and growth for your XaaS business with AI-powered experiences.
+ Financial Services Operations for Banking
+ Deliver frictionless onboarding and servicing on one AI platform for banking.
+ Financial Services Operations for Insurance
+ Be the insurer of choice with personalized claims and policyholder servicing.
+ Security and Risk
+ Security and Risk
+ Minimize the risk, impact, and cost of securing your business.
+ Explore Solution
+ Related Products
+ Security Operations
+ Mount an effective defense against security threats and attacks.
+ Security Incident Response
+ Respond fast to evolving threats while optimizing security operations.
+ Unified Security Exposure Management
+ Identify, prioritize, and remediate vulnerabilities across the business.
+ Threat Intelligence Security Center
+ Gain advanced threat hunting, modeling, and analysis on the ServiceNow AI Platform.
+ Integrated Risk Management
+ Make risk-informed decisions while improving efficiency and resilience.
+ Third-party Risk Management
+ Reduce third-party risk while improving resilience and compliance.
+ Security Posture Control
+ Manage the security of enterprise assets on premises and in the cloud.
+ Privacy Management
+ Manage data privacy in real time as part of a holistic enterprise risk program.
+ Identity Security
+ Take control of risk across human, non-human, and AI agent identities with Veza from ServiceNow.
+ Employee Experience
+ Employee Experience
+ Automate the busywork, so that you can unleash your talent on the big work.
+ Explore Solution
+ Related Products
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ Talent Development
+ Make AI and skills-driven talent planning and development decisions.
+ Legal Service Delivery
+ Modernize operations to make faster decisions and grow productivity.
+ Workplace Service Delivery
+ Automate desk bookings, manage facilities, and optimize operations.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Enterprise Service Management
+ Unify IT, HR, and workplace services with AI on one platform
+ Source-to-Pay Operations
+ Automate procurement from conversational intake to paid invoice.
+ Contract Management Pro
+ Contract intake, authoring, and approvals, all in one place.
+ App Development
+ App Development
+ Build custom apps fast while enhancing developer and business expert productivity.
+ Explore Solution
+ Related Products
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ Build Agent
+ Vibe code enterprise apps from the tools you already use, governed and deployed on ServiceNow.
+ View All Products
+ Industries
+ Browse solutions to help you solve the complex business challenges unique to your industry.
+ Learn More
+ Automotive
+ Put your automotive operations in overdrive with a single AI platform.
+ Banking
+ Future-proof your bank with one AI platform.
+ Consumer Goods
+ Power your product growth and efficiency with a single AI platform.
+ Healthcare
+ Fuel efficiency, reduce costs, and deliver quality care with a single AI platform.
+ Insurance
+ Be the trusted carrier of choice with one AI platform.
+ Life Sciences
+ Accelerate innovation, in and out of the lab, with one AI-powered platform.
+ Manufacturing
+ Drive manufacturing efficiency with one AI platform.
+ Nonprofit
+ Learn how to do more with less while making your nonprofit organization more agile and effective.
+ National Government
+ Deliver secure experiences for civilian, defense, and intelligence IT workflows.
+ Retail
+ Enhance retail experiences with AI-powered insights on a single AI platform.
+ Technology Providers
+ Reimagine your XaaS lifecycle with a single AI platform.
+ Telecom
+ Grow revenue, automate operations, and manage infrastructure on one AI platform.
+ Learning
+ ServiceNow University 
+ Community 
+ Developer Resources 
+ Events 
+ Customer Stories 
+ Workflow: Insight for what matters 
+ ServiceNow University
+ ServiceNow University
+ Discover a playground for learning, designed to help develop the skills you need for an AI-driven world.
+ Start Learning
+ Training & Certification
+ Explore ServiceNow certifications, career journeys, and expert programs—all designed to build your skills and elevate your career.
+ Skill Your Team
+ Upskill your teams with scalable, role-based training designed to help you reach your digital transformation goals faster.
+ Skilling Programs
+ Explore skilling programs at ServiceNow University, including RiseUp and partnerships that develop ServiceNow-skilled talent to meet rising ecosystem demands.
+ Community
+ Community
+ Learn from ServiceNow experts and engage in discussions with industry peers.
+ Visit Community
+ Product hubs
+ Find the resources, tools, and guidance you need for any ServiceNow product.
+ ServiceNow user groups
+ Join a user group in person or online to expand your network and knowledge.
+ Developer forum
+ Connect with other developers to ask questions, offer solutions, and build together.
+ Community events
+ Find live events for the ServiceNow community online or in person near you.
+ Community Central
+ From updates to best practices, find all things community related.
+ Join the community
+ Become a member of our vibrant ServiceNow community.
+ Developer Resources
+ Developer resources
+ Get your team building apps fast with tools and personal developer instances.
+ Explore Resources
+ Learn
+ Browse learning plans and courses that teach you how to build apps to tackle your company's business needs.
+ Reference documentation
+ Find APIs, libraries, and supplemental materials for working with the ServiceNow AI Platform.
+ Guides
+ Read technology overviews and recommendations for innovating on the ServiceNow AI Platform.
+ Connect
+ Meet fellow creators and gain insights from the community.
+ Design
+ Find components, patterns, and resources to help you start designing experiences on the ServiceNow AI Platform.
+ Events
+ Events
+ Join us at an event and learn how the world works with ServiceNow.
+ Find Your Event
+ Knowledge 2027
+ Get ready to unlock what's possible. Stay tuned as registration will open soon. 
+ World Forum 2026
+ Check out 2026 dates and locations, and discover how you can put AI to work in a city near you. 
+ Webinars
+ Broaden your knowledge by registering for live and on demand ServiceNow webinars.
+ Community events
+ Find live events for the ServiceNow community happening near you.
+ Livestream
+ Join live events showcasing product news, customer stories, and expert insights.
+ now[dev]26
+ Build real solutions with the engineers behind the platform.
+ World Forum 2026
+ Put AI to work in a city near you. Explore the latest innovations, hear from industry leaders, and experience AI firsthand at a complimentary World Forum event.
+ Learn More
+ Customer Stories
+ Customer stories
+ Find out how businesses like yours rely on ServiceNow to make the world work.
+ Read Stories
+ AI Agent Stories
+ Learn how ServiceNow customers are putting AI to work.
+ HR Stories
+ See how organizations are improving self-service and delivering outstanding employee experiences.
+ CRM Stories
+ Discover how businesses enable self-service for customers and reduce resolution time.
+ Public Sector/Government Stories
+ Explore ways to streamline operations, engage citizens, and empower employees.
+ Now on Now
+ Hear how ServiceNow uses ServiceNow.
+ Featured customer story
+ For FedEx, 5M ServiceNow workflows a month help get work done.
+ Read story
+ Workflow: Insight for what matters
+ Workflow
+ Proof for what works. Insight for what matters. Ideas for what’s next.
+ View the Latest
+ AI
+ Insights on AI strategy, automation, and the future of intelligent workflows.
+ CRM
+ How AI is changing the way businesses strengthen relationships with customers.
+ News & Events
+ Stay in the loop on announcements and happenings at ServiceNow.
+ People & Culture
+ A look inside ServiceNow's culture, people, and what drives us.
+ All topics
+ The conversations shaping work; walk into every room a step ahead.
+ The CX Shift
+ New research from 34,000 voices reveals a widening gap between what customers want and what they get.
+ Read Report
+ Support
+ Customer Support 
+ Documentation 
+ Best Practices 
+ MyNow 
+ Customer Success 
+ Platform Releases 
+ Customer Support
+ Customer Support
+ Access your instances, manage tasks and explore self-service help all in one place.
+ Community
+ Connect with other customers to share tips, exchange resources, and solve problems together.
+ Get support
+ Discover answers, troubleshoot issues, and get expert help, all in our support center.
+ Documentation
+ Documentation
+ Find answers to your technical questions and learn how to use ServiceNow products.
+ Visit Documentation
+ IT Service Management
+ Deliver IT services to your users all through a single cloud-based platform.
+ Customer Service Management
+ Provide customers the ability to communicate and receive support through multiple channels.
+ IT Operations Management
+ Get visibility into infrastructure and services, prevent outages, and expand operational agility.
+ ServiceNow AI Platform
+ Automate processes and develop, run, and manage applications.
+ What’s new in AI experiences
+ Use AI-based tools to prioritize and automate routine tasks, detect incidents, and surface insights.
+ Start Reading
+ Best Practices
+ Best Practices
+ Accelerate outcomes with expert-curated best practices for the ServiceNow AI Platform.
+ Home
+ ServiceNow AI Platform
+ Automate business processes, streamline app development, and manage digital infrastructure.
+ Customer Service Management
+ Deliver exceptional service, empower customers, and enhance their experience.
+ IT Service Management
+ Streamline IT service delivery, boost productivity, resolve issues, and enhance user satisfaction.
+ Employee Service Management
+ Streamline onboarding, provide HR and IT support, and empower employees with digital workflows.
+ Telecommunications Service Management
+ Unify telecom operations and deliver proactive care with quality and availability for services.
+ Governance, Risk, and Compliance
+ Build an integrated risk program, enhance decision-making, and improve performance with automation.
+ Security Operations
+ Accelerate response and strengthen security posture with SecOps workflows.
+ MyNow
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Learn More
+ Start your day with MyNow.
+ Customer Success
+ Customer Success
+ Increase your ROI and get more value from the ServiceNow platform.
+ ServiceNow Impact™ success plans
+ Receive long-term adoption guidance and support with an Impact success plan tailored to you.
+ Services
+ Implement and optimize ServiceNow with expert help from ServiceNow and our partners.
+ Platform Releases
+ The Australia release is here
+ Our latest release gives you the ability to scale AI safely, responsibly, and with your teams in control.
+ Go to Latest Release
+ Past Releases
+ Zurich
+ Confidently extend AI across your enterprise.
+ Xanadu
+ The biggest ServiceNow AI release yet.
+ Washington D.C.
+ Take work to the next level with smarter, faster, simpler experiences for everyone.
+ Partners
+ Locate the partner you need, or explore the benefits of partnering with ServiceNow.
+ Learn More
+ Find a partner
+ Connect with a ServiceNow partner to reach your business goals.
+ Become a partner
+ Join our partner ecosystem. Choose the partner paths that best fit your expertise and experience.
+ Partner awards
+ Meet the global ServiceNow partners leading the way in innovation and value for our customers.
+ Partner portal
+ Find tasks, alerts, and information you need, all in one place.
+ Partner applications
+ Explore innovative apps that extend and complement the ServiceNow AI Platform.
+ Discover how the world works with ServiceNow
+ Bring AI Agents to every corner of your business.
+ Learn More
+ Careers
+ Make your next career move with the fastest growing enterprise software company.
+ Investors
+ Explore investor news and resources.
+ ServiceNow AI Research
+ Learn how we keep innovation moving forward through our AI research team, labs, and partnerships.
+ Leadership
+ Meet the ServiceNow leadership team.
+ Locations
+ See ServiceNow office locations around the world.
+ Newsroom
+ ServiceNow is making headlines. Find announcements, media kits, and more.
+ Analyst Reports
+ Get expert insights from top industry analysts on ServiceNow.
+ Global impact
+ Join us to foster a more sustainable, fair, and ethical world.
+ Trust and compliance
+ Learn the measures ServiceNow takes to keep your data secure and compliant.
+ ServiceNow Shop
+ The official home for ServiceNow gear. Get the latest styles today.
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Continuous Authorization and Monitoring
+ Modernize your approach to the NIST Risk Management Framework (RMF). Bring IT systems online faster through automation and continuous monitoring.
+ Read Brief
+ Watch Video (3:08)
+ CAM 
+ Contact Us
+ Benefits
+ Features
+ Resources
+ How to Buy
+ Related Apps
+ Benefits of Continuous Authorization and Monitoring
+ Increase productivity
+ Make authorization faster with automated RMF processes and cross-functional workflows. 
+ Make risk-informed security decisions
+ Review evidence, vulnerabilities, controls, risks, action plans, and milestones—all in one place.
+ Improve visibility
+ Gain a real-time view of risk with information that’s accurate and timely.
+ Achieve a faster time to value
+ Get flexibility with a solution that’s easy to adapt to your processes.
+ Features of Continuous Authorization and Monitoring
+ Key indicators
+ Monitor continuously to identify compliance violations or emerging risks.
+ Integration with the CMDB
+ Identify assets in real time or manage assets manually to help assess business impact.
+ Inherited and hybrid controls 
+ Assign baseline controls automatically based on categorization and easily inherit common controls or create a hybrid control that is partially inherited. 
+ System security plan
+ Generate a system security plan automatically based on customizable self-populating templates.
+ Additional features
+ CAM Workspace 
+ Experience a persona-based user interface with boundary and package overview pages, tasks, issues, and our unique 360-degree view. 
+ Dynamic dashboards 
+ View vulnerabilities, action plans, milestones, configuration failures, security incidents, and more. 
+ Assessment engagement 
+ Create an assessment engagement that’s linked to your authorization package. 
+ POA&M management  
+ Use remediation tasks to build a process for creating and responding to ineffective controls. POA&Ms can be linked to multiple objects. 
+ Automated controls testing
+ Use continuous monitoring to identify violations and generate issues sooner. 
+ OSCAL support 
+ Export data and reports in OSCAL format.
+ Resources
+ See All Resources
+ Webinars
+ Policy and Compliance for State and Local Governments 
+ Solution Briefs
+ Power Your Business with Integrated Risk Solutions 
+ White Papers 
+ 4 Key Risks Facing Governments Today
+ How to get Continuous Authorization and Monitoring 
+ Continuous Authorization and Monitoring is available with ServiceNow Governance, Risk, and Compliance. Connect security and IT with an integrated risk management program.
+ Get Product Info 
+ View Demo
+ You might also be interested in…
+ Policy and Compliance Management
+ Automate and manage policy lifecycles and continuously monitor for compliance.
+ Risk Management
+ Enable fine-grained business impact analysis to appropriately prioritize and respond to risks.
+ Discovery
+ Get a holistic view of your operations footprint across on-premises data centers and cloud.
+ Vulnerability Response
+ Efficiently prioritize and respond to vulnerabilities based on business impact.
+ Operational Resilience Management 
+ Anticipate, prevent, respond, and adapt to business disruptions efficiently. 
+ Dig deeper into Continuous Authorization and Monitoring
+ View Docs
+ Visit Community
+ Get Developer Resources
+ Talk to an expert
+ Get answers to your questions and discover how ServiceNow can help you transform your business with modern digital workflows.  
+ Get Started
+ Home 
+ CAM 
+ Contact 
+ Demo
+
+[Page: /products/accounts-payable.html]
+Products by Category - ServiceNow 
+ <!-- -->
+ Skip to Main Content 
+ MyNow 
+ Products 
+ Industries 
+ Learning 
+ Support 
+ Partners 
+ Company 
+ Main menu 
+ Get Started
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Search
+ Clear Search
+ Americas
+ United States - Global 
+ Brasil - Português 
+ Canada - Français 
+ América Latina - Español 
+ Asia, Pacific, and Japan
+ 日本 - 日本語 
+ 한국 - 한국어 
+ Australia/NZ - English 
+ India - English 
+ Europe, Middle East, and Africa
+ United Kingdom - English 
+ DACH - Deutsch 
+ France - Français 
+ Nederland - Nederlands 
+ España - Español 
+ Italia - Italiano 
+ Sales
+ +1 (844) 863-1987
+ Get Started
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Home
+ Products
+ Featured products 
+ ServiceNow AI Platform 
+ Demo Library 
+ Solutions
+ IT 
+ CRM 
+ Security and Risk 
+ Employee Experience 
+ App Development 
+ View All Products
+ Featured products
+ Products
+ Unite people, processes, and systems with AI-powered products for all your workflows.
+ See All Products
+ Featured products
+ AI Agents
+ Take action with autonomous AI agents that work for you.
+ IT Service Management
+ Transform service management for productivity and ROI.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ IT Asset Management
+ Improve technology use and spend over the IT asset lifecycle.
+ Governance, Risk, and Compliance
+ Enable an integrated approach that builds operational resilience and mitigates risk.
+ Security Operations
+ Defend against security threats and attacks.
+ Field Service Management
+ Reduce field service costs and improve efficiency.
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Meet the Autonomous Workforce
+ The Autonomous Workforce is more than just isolated tasks. These AI specialists are assigned to roles, with business context and permissions to handle complex workflows end-to-end.
+ Learn More
+ ServiceNow AI Platform
+ One platform, ready for anything
+ AI, data, and workflows—working together on one platform. Only ServiceNow makes it this simple at scale.
+ Explore AI Platform
+ AI
+ Put AI to work across your business with our single, intelligent platform.
+ Data
+ Power all your workflows, AI, and analytics with real-time access to data from any source.
+ Workflows
+ Automate workflows to lower costs and raise productivity.
+ ServiceNow Otto
+ Explore the AI assistant for work. You ask. Work gets done.
+ RaptorDB
+ Unify data and analytics on the ServiceNow AI Platform for ultra-fast workflow performance at scale.
+ Process Mining
+ See how workflows and AI agents actually execute and improve them right where they run.
+ AI Agents
+ AI Agents Take action with autonomous AI agents that work for you.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ Security
+ Protect sensitive data and increase security, privacy, and compliance across the enterprise.
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ ServiceNow Store
+ Do more with the ServiceNow AI Platform. Find hundreds of certified, ready to use applications.
+ Responsible AI
+ Rely on ServiceNow for AI that’s human-centered, inclusive, transparent, and accountable. 
+ Demo Library
+ Demo Library
+ Watch and learn. Our product and solutions experts offer demo options for everyone, at every skill level.
+ Explore Demo Library
+ Featured demos
+ Provide better experiences
+ Learn how you can use GenAI to equip customers and employees with self-service for requests. (3:17)
+ Resolve issues faster
+ Find out how your business can reduce manual work and help agents resolve cases faster. (4:08)
+ Create and automate workflows
+ See how to simplify the way workflows are built and custom code is developed. (4:30)
+ Solutions
+ IT
+ IT
+ Anticipate needs with efficient IT and digital operations.
+ Explore Solution
+ Related Products
+ Enterprise Architecture
+ Build a bridge between business processes and IT architecture.
+ Service Operations Workspace
+ Predict, prevent, and resolve incidents proactively from a single workspace.
+ Cloud Governance Suite
+ Automate cloud governance for better compliance, security, and costs.
+ Operational Technology Management
+ Protect your OT environment and improve uptime.
+ IT Asset Management
+ Control costs and minimize risks across the IT asset lifecycle.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ IT Service Management
+ Transform service management to boost productivity and maximize ROI.
+ ServiceNow Cloud Observability
+ Gain insights to detect and respond to changes in cloud-native apps.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ Digital End-user Experience
+ Improve your employees' endpoint technology experience. 
+ Enterprise Asset Management
+ Streamline how you manage the full lifecycle of complex assets that keep your business running.
+ CRM
+ CRM
+ Deliver a seamless, personalized end-to-end customer experience.
+ Explore Solution
+ Related Products
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Field Service Management
+ Optimize scheduling, empower technicians, and reduce unneeded visits.
+ Sales CRM
+ Accelerate the lead-to-cash cycle and boost revenue.
+ Configure, Price, Quote
+ Use AI to simplify and accelerate sales across all channels.
+ Sales Automation
+ Automate busywork and close more deals faster.
+ Healthcare and Life Sciences Service Management
+ Create consumer-grade healthcare experiences and improve operational performance.
+ Public Sector Digital Services
+ Modernize and speed up the delivery of government services.
+ Telecommunications Service Management
+ Unlock growth with AI-powered experiences across customer service and network operations.
+ Technology Provider Service Management
+ Promote speed and growth for your XaaS business with AI-powered experiences.
+ Financial Services Operations for Banking
+ Deliver frictionless onboarding and servicing on one AI platform for banking.
+ Financial Services Operations for Insurance
+ Be the insurer of choice with personalized claims and policyholder servicing.
+ Security and Risk
+ Security and Risk
+ Minimize the risk, impact, and cost of securing your business.
+ Explore Solution
+ Related Products
+ Security Operations
+ Mount an effective defense against security threats and attacks.
+ Security Incident Response
+ Respond fast to evolving threats while optimizing security operations.
+ Unified Security Exposure Management
+ Identify, prioritize, and remediate vulnerabilities across the business.
+ Threat Intelligence Security Center
+ Gain advanced threat hunting, modeling, and analysis on the ServiceNow AI Platform.
+ Integrated Risk Management
+ Make risk-informed decisions while improving efficiency and resilience.
+ Third-party Risk Management
+ Reduce third-party risk while improving resilience and compliance.
+ Security Posture Control
+ Manage the security of enterprise assets on premises and in the cloud.
+ Privacy Management
+ Manage data privacy in real time as part of a holistic enterprise risk program.
+ Identity Security
+ Take control of risk across human, non-human, and AI agent identities with Veza from ServiceNow.
+ Employee Experience
+ Employee Experience
+ Automate the busywork, so that you can unleash your talent on the big work.
+ Explore Solution
+ Related Products
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ Talent Development
+ Make AI and skills-driven talent planning and development decisions.
+ Legal Service Delivery
+ Modernize operations to make faster decisions and grow productivity.
+ Workplace Service Delivery
+ Automate desk bookings, manage facilities, and optimize operations.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Enterprise Service Management
+ Unify IT, HR, and workplace services with AI on one platform
+ Source-to-Pay Operations
+ Automate procurement from conversational intake to paid invoice.
+ Contract Management Pro
+ Contract intake, authoring, and approvals, all in one place.
+ App Development
+ App Development
+ Build custom apps fast while enhancing developer and business expert productivity.
+ Explore Solution
+ Related Products
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ Build Agent
+ Vibe code enterprise apps from the tools you already use, governed and deployed on ServiceNow.
+ View All Products
+ Industries
+ Browse solutions to help you solve the complex business challenges unique to your industry.
+ Learn More
+ Automotive
+ Put your automotive operations in overdrive with a single AI platform.
+ Banking
+ Future-proof your bank with one AI platform.
+ Consumer Goods
+ Power your product growth and efficiency with a single AI platform.
+ Healthcare
+ Fuel efficiency, reduce costs, and deliver quality care with a single AI platform.
+ Insurance
+ Be the trusted carrier of choice with one AI platform.
+ Life Sciences
+ Accelerate innovation, in and out of the lab, with one AI-powered platform.
+ Manufacturing
+ Drive manufacturing efficiency with one AI platform.
+ Nonprofit
+ Learn how to do more with less while making your nonprofit organization more agile and effective.
+ National Government
+ Deliver secure experiences for civilian, defense, and intelligence IT workflows.
+ Retail
+ Enhance retail experiences with AI-powered insights on a single AI platform.
+ Technology Providers
+ Reimagine your XaaS lifecycle with a single AI platform.
+ Telecom
+ Grow revenue, automate operations, and manage infrastructure on one AI platform.
+ Learning
+ ServiceNow University 
+ Community 
+ Developer Resources 
+ Events 
+ Customer Stories 
+ Workflow: Insight for what matters 
+ ServiceNow University
+ ServiceNow University
+ Discover a playground for learning, designed to help develop the skills you need for an AI-driven world.
+ Start Learning
+ Training & Certification
+ Explore ServiceNow certifications, career journeys, and expert programs—all designed to build your skills and elevate your career.
+ Skill Your Team
+ Upskill your teams with scalable, role-based training designed to help you reach your digital transformation goals faster.
+ Skilling Programs
+ Explore skilling programs at ServiceNow University, including RiseUp and partnerships that develop ServiceNow-skilled talent to meet rising ecosystem demands.
+ Community
+ Community
+ Learn from ServiceNow experts and engage in discussions with industry peers.
+ Visit Community
+ Product hubs
+ Find the resources, tools, and guidance you need for any ServiceNow product.
+ ServiceNow user groups
+ Join a user group in person or online to expand your network and knowledge.
+ Developer forum
+ Connect with other developers to ask questions, offer solutions, and build together.
+ Community events
+ Find live events for the ServiceNow community online or in person near you.
+ Community Central
+ From updates to best practices, find all things community related.
+ Join the community
+ Become a member of our vibrant ServiceNow community.
+ Developer Resources
+ Developer resources
+ Get your team building apps fast with tools and personal developer instances.
+ Explore Resources
+ Learn
+ Browse learning plans and courses that teach you how to build apps to tackle your company's business needs.
+ Reference documentation
+ Find APIs, libraries, and supplemental materials for working with the ServiceNow AI Platform.
+ Guides
+ Read technology overviews and recommendations for innovating on the ServiceNow AI Platform.
+ Connect
+ Meet fellow creators and gain insights from the community.
+ Design
+ Find components, patterns, and resources to help you start designing experiences on the ServiceNow AI Platform.
+ Events
+ Events
+ Join us at an event and learn how the world works with ServiceNow.
+ Find Your Event
+ Knowledge 2027
+ Get ready to unlock what's possible. Stay tuned as registration will open soon. 
+ World Forum 2026
+ Check out 2026 dates and locations, and discover how you can put AI to work in a city near you. 
+ Webinars
+ Broaden your knowledge by registering for live and on demand ServiceNow webinars.
+ Community events
+ Find live events for the ServiceNow community happening near you.
+ Livestream
+ Join live events showcasing product news, customer stories, and expert insights.
+ now[dev]26
+ Build real solutions with the engineers behind the platform.
+ World Forum 2026
+ Put AI to work in a city near you. Explore the latest innovations, hear from industry leaders, and experience AI firsthand at a complimentary World Forum event.
+ Learn More
+ Customer Stories
+ Customer stories
+ Find out how businesses like yours rely on ServiceNow to make the world work.
+ Read Stories
+ AI Agent Stories
+ Learn how ServiceNow customers are putting AI to work.
+ HR Stories
+ See how organizations are improving self-service and delivering outstanding employee experiences.
+ CRM Stories
+ Discover how businesses enable self-service for customers and reduce resolution time.
+ Public Sector/Government Stories
+ Explore ways to streamline operations, engage citizens, and empower employees.
+ Now on Now
+ Hear how ServiceNow uses ServiceNow.
+ Featured customer story
+ For FedEx, 5M ServiceNow workflows a month help get work done.
+ Read story
+ Workflow: Insight for what matters
+ Workflow
+ Proof for what works. Insight for what matters. Ideas for what’s next.
+ View the Latest
+ AI
+ Insights on AI strategy, automation, and the future of intelligent workflows.
+ CRM
+ How AI is changing the way businesses strengthen relationships with customers.
+ News & Events
+ Stay in the loop on announcements and happenings at ServiceNow.
+ People & Culture
+ A look inside ServiceNow's culture, people, and what drives us.
+ All topics
+ The conversations shaping work; walk into every room a step ahead.
+ The CX Shift
+ New research from 34,000 voices reveals a widening gap between what customers want and what they get.
+ Read Report
+ Support
+ Customer Support 
+ Documentation 
+ Best Practices 
+ MyNow 
+ Customer Success 
+ Platform Releases 
+ Customer Support
+ Customer Support
+ Access your instances, manage tasks and explore self-service help all in one place.
+ Community
+ Connect with other customers to share tips, exchange resources, and solve problems together.
+ Get support
+ Discover answers, troubleshoot issues, and get expert help, all in our support center.
+ Documentation
+ Documentation
+ Find answers to your technical questions and learn how to use ServiceNow products.
+ Visit Documentation
+ IT Service Management
+ Deliver IT services to your users all through a single cloud-based platform.
+ Customer Service Management
+ Provide customers the ability to communicate and receive support through multiple channels.
+ IT Operations Management
+ Get visibility into infrastructure and services, prevent outages, and expand operational agility.
+ ServiceNow AI Platform
+ Automate processes and develop, run, and manage applications.
+ What’s new in AI experiences
+ Use AI-based tools to prioritize and automate routine tasks, detect incidents, and surface insights.
+ Start Reading
+ Best Practices
+ Best Practices
+ Accelerate outcomes with expert-curated best practices for the ServiceNow AI Platform.
+ Home
+ ServiceNow AI Platform
+ Automate business processes, streamline app development, and manage digital infrastructure.
+ Customer Service Management
+ Deliver exceptional service, empower customers, and enhance their experience.
+ IT Service Management
+ Streamline IT service delivery, boost productivity, resolve issues, and enhance user satisfaction.
+ Employee Service Management
+ Streamline onboarding, provide HR and IT support, and empower employees with digital workflows.
+ Telecommunications Service Management
+ Unify telecom operations and deliver proactive care with quality and availability for services.
+ Governance, Risk, and Compliance
+ Build an integrated risk program, enhance decision-making, and improve performance with automation.
+ Security Operations
+ Accelerate response and strengthen security posture with SecOps workflows.
+ MyNow
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Learn More
+ Start your day with MyNow.
+ Customer Success
+ Customer Success
+ Increase your ROI and get more value from the ServiceNow platform.
+ ServiceNow Impact™ success plans
+ Receive long-term adoption guidance and support with an Impact success plan tailored to you.
+ Services
+ Implement and optimize ServiceNow with expert help from ServiceNow and our partners.
+ Platform Releases
+ The Australia release is here
+ Our latest release gives you the ability to scale AI safely, responsibly, and with your teams in control.
+ Go to Latest Release
+ Past Releases
+ Zurich
+ Confidently extend AI across your enterprise.
+ Xanadu
+ The biggest ServiceNow AI release yet.
+ Washington D.C.
+ Take work to the next level with smarter, faster, simpler experiences for everyone.
+ Partners
+ Locate the partner you need, or explore the benefits of partnering with ServiceNow.
+ Learn More
+ Find a partner
+ Connect with a ServiceNow partner to reach your business goals.
+ Become a partner
+ Join our partner ecosystem. Choose the partner paths that best fit your expertise and experience.
+ Partner awards
+ Meet the global ServiceNow partners leading the way in innovation and value for our customers.
+ Partner portal
+ Find tasks, alerts, and information you need, all in one place.
+ Partner applications
+ Explore innovative apps that extend and complement the ServiceNow AI Platform.
+ Discover how the world works with ServiceNow
+ Bring AI Agents to every corner of your business.
+ Learn More
+ Careers
+ Make your next career move with the fastest growing enterprise software company.
+ Investors
+ Explore investor news and resources.
+ ServiceNow AI Research
+ Learn how we keep innovation moving forward through our AI research team, labs, and partnerships.
+ Leadership
+ Meet the ServiceNow leadership team.
+ Locations
+ See ServiceNow office locations around the world.
+ Newsroom
+ ServiceNow is making headlines. Find announcements, media kits, and more.
+ Analyst Reports
+ Get expert insights from top industry analysts on ServiceNow.
+ Global impact
+ Join us to foster a more sustainable, fair, and ethical world.
+ Trust and compliance
+ Learn the measures ServiceNow takes to keep your data secure and compliant.
+ ServiceNow Shop
+ The official home for ServiceNow gear. Get the latest styles today.
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ All products and solutions 
+ Put AI to work across your organization. Automate tasks, empower teams, and move your business forward.
+ View Demos
+ Explore Platform
+ Products
+ Featured products 
+ The ServiceNow ® AI Platform is the cloud foundation that all ServiceNow products run on, helping achieve innovative business outcomes across every department.
+ View All Products A-Z 
+ ServiceNow Otto 
+ Turn any request into finished work with ServiceNow Otto™. You ask, and ServiceNow Otto handles it end-to-end.
+ Learn More
+ Autonomous Workforce 
+ Scale your team with AI specialists that have the workflows, governance, and enterprise context to do jobs end-to-end.
+  Learn More
+ ServiceNow EmployeeWorks 
+ This conversational AI experience is the front door for all your employees to search and act across business applications.
+ Learn More
+ Solutions
+ Featured Solutions 
+ ServiceNow unifies processes across multiple departments, making it easy to automate tasks and improve teamwork.
+ View All Products A-Z 
+ CRM 
+ Harness the power of AI to transform customer experiences, service, and sales. 
+  Learn More
+ Human Resources 
+ Promote employee self-service, automate the mundane, and make smarter talent decisions with AI.
+ Learn More
+ IT and Digital Operations 
+ Anticipate needs with efficient IT and digital ops. Run a technology org built for the digital age.
+ Learn More
+ Solutions
+ Check out the ServiceNow solutions that help our customers innovate and thrive.
+ CRM 
+ Harness the power of AI to transform customer experiences, service, and sales. 
+ Risk and Security 
+ Minimize the risk, impact, and cost of securing your business while adding new services, AI, and technologies. 
+ Human Resources 
+ Promote employee self-service, automate the mundane, and make smarter talent decisions with AI.
+ Finance and Supply Chain 
+ Unify people, processes, and systems on a single platform to get work done across the back-office.
+ IT and Digital Operations 
+ Anticipate needs with efficient IT and digital ops. Run a technology org built for the dynamic digital age.
+ App Development 
+ Build custom apps fast while enhancing developer and business expert productivity.
+ Core Business Transformation
+ Unite teams, end silos, and modernize experiences across business operations.
+ Industries
+ Industries
+ See how ServiceNow helps solve common challenges for both private and public organizations.
+ Automotive 
+ Put your automotive operations in overdrive with a single AI platform.
+ Banking
+ Deliver frictionless experiences, speed innovation, and mitigate risk with one AI platform.
+ Consumer Packaged Goods
+ Power your product growth and efficiency with a single AI platform.
+ Government 
+ Deliver secure experiences for civilian, defense, and intelligence IT workflows.
+ Healthcare 
+ Fuel efficiency, reduce costs, and deliver quality care with the AI platform for healthcare.
+ Insurance 
+ Be the trusted carrier of choice with one AI platform.
+ Life Sciences 
+ Bring life-saving drugs to market with one AI platform.
+ Manufacturing
+ Improve manufacturing efficiency and increase resilience on one AI platform.  
+ Nonprofit 
+ Make the work of your nonprofit flow seamlessly and focus on the things that matter most.
+ Retail 
+ Enhance retail experiences with AI-powered insights on a single platform.
+ Technology Providers 
+ Develop innovative solutions with a modern service provider platform.
+ Telecom
+ Grow revenue, automate operations, and manage infrastructure on one AI platform.
+ INTRODUCING
+ The conversational AI service desk
+ Create automations using plain language. Resolve employee requests in Slack, Microsoft Teams, and email. Stand Flow up in a day. Deliver value from day one.
+ Explore Flow
+ All products A-Z
+ A
+ Action Fabric
+ Agent Client Collector
+ Agile Development 
+ AI Search
+ AIOps LEAP
+ APIs and Integration Tools
+ App Engine
+ Application Portfolio Management
+ Armis™ from ServiceNow
+ Asset Management Core
+ Audit Management
+ Automation Center
+ Autonomous Data Analytics
+ Autonomous Workforce
+ B
+ Benchmarks
+ Business Continuity Management
+ Build Agent
+ C
+ Case and Knowledge Management
+ Certificate Management
+ Change Management
+ Cloud Accelerate
+ Cloud Cost Management
+ Cloud Encryption
+ Collaborative Work Management
+ Configuration Management Database (CMDB)
+ Configure, Price, Quote (CPQ)
+ Context Engine
+ Continual Improvement Management
+ Continuous Authorization and Monitoring
+ Contract Management Pro
+ Core Business Suite
+ Customer Service Management
+ D
+ Demand Management
+ DevOps Change Velocity
+ DevOps Insights
+ Digital End-user Experience
+ Digital Portfolio Management 
+ Digital Product Release
+ Discovery
+ Dispatcher Workspace
+ Dynamic Translation 
+ E
+ Employee Journey Management
+ Enterprise Architecture
+ Enterprise Asset Management
+ Enterprise Service Management
+ ESG Management
+ Event Management 
+ F
+ Field Encryption Enterprise
+ Field Service Contractor Management
+ Field Service Management 
+ Field Service Management for Telecommunications 
+ Financial Services Operations for Banking
+ Financial Services Operations for Insurance
+ Firewall Audits and Reporting
+ Flow Designer
+ H
+ Hardware Asset Management
+ Health and Safety
+ Health Log Analytics
+ Healthcare and Life Sciences Service Management 
+ Healthcare Operations
+ HR Service Delivery
+ I
+ Incident Management
+ Innovation Management
+ Integrated Risk Management
+ Integration Hub
+ Inventory Management 
+ IT Asset Management 
+ IT Operations Management
+ IT Service Management
+ K
+ Knowledge Center
+ L
+ Legal Service Delivery
+ M
+ Manufacturing Commercial Operations
+ Metric Intelligence
+ Mobile Agent
+ Mobile App Builder 
+ N
+ Now Mobile
+ O
+ Operational Resilience Management
+ Operational Risk Management
+ Operational Technology Management 
+ Order Management
+ P
+ Performance Analytics
+ Playbooks
+ Policy Compliance Management
+ Predictive AIOps
+ Predictive Intelligence
+ Privacy Management
+ Privacy Management 
+ Problem Management
+ Process Mining
+ Project Portfolio Management
+ Public Sector Digital Services 
+ R
+ RaptorDB
+ Regulatory Change Management 
+ Reporting
+ Request Management
+ Resource Management
+ Retail Operations
+ Retail Service Management
+ Risk Management
+ RPA Hub
+ S
+ SaaS License Management
+ Sales and Order Management
+ Sales and Order Management for Telecommunications
+ Scaled Agile Framework (SAFe) 
+ Schedule Optimization
+ Scenario Planning
+ Security Incident Response
+ Security Operations (SecOps)
+ Security Posture Control
+ Service Catalog
+ Service Graph Connectors
+ Service Mapping
+ Service Observability
+ Service Operations Workspace
+ Service Reliability Management
+ ServiceNow AI Agents
+ ServiceNow AI Platform
+ ServiceNow EmployeeWorks
+ ServiceNow Disputes Management, Built with Visa
+ ServiceNow Impact
+ ServiceNow Otto
+ ServiceNow Platform Encryption
+ ServiceNow Sales Automation
+ ServiceNow Security Center
+ ServiceNow Studio
+ ServiceNow Super Intelligence Control Tower
+ ServiceNow Vault
+ ServiceNow Zero Trust Access
+ Software Asset Management
+ Source Control and CI/CD 
+ Strategic Planning
+ Strategic Portfolio Management 
+ Strategic Portfolio Management for Telecommunications
+ Stream Connect for Apache Kafka
+ Synthetic Monitoring
+ T
+ Task Intelligence 
+ Technology Provider Service Management
+ Telecommunications Network Inventory
+ Telecommunications Service Operations Management
+ Telecommunications Service Management
+ Third-party Risk Management
+ Threat Intelligence Security Center
+ U
+ UI Builder
+ V
+ Veza™ from ServiceNow
+ Virtual Agent
+ W
+ Walk-Up Experience
+ Workflow Data Fabric
+ Workplace Maintenance Management 
+ Workplace Service Delivery
+ Workplace Space Management
+ Workspaces
+ Talk with an expert
+ Connect with experts at ServiceNow to help solve your biggest challenges and deliver the business outcomes you need.
+ Get Started 
+ Contact 
+ Demo
+
+[Page: /products/health-log-analytics.html]
+Health Log Analytics - ServiceNow 
+ <!-- -->
+ Skip to Main Content 
+ MyNow 
+ Products 
+ Industries 
+ Learning 
+ Support 
+ Partners 
+ Company 
+ Main menu 
+ Get Started
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Search
+ Clear Search
+ Americas
+ United States - Global 
+ Brasil - Português 
+ Canada - Français 
+ América Latina - Español 
+ Asia, Pacific, and Japan
+ 日本 - 日本語 
+ 한국 - 한국어 
+ Australia/NZ - English 
+ India - English 
+ Europe, Middle East, and Africa
+ United Kingdom - English 
+ DACH - Deutsch 
+ France - Français 
+ Nederland - Nederlands 
+ España - Español 
+ Italia - Italiano 
+ Sales
+ +1 (844) 863-1987
+ Get Started
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Home
+ Products
+ Featured products 
+ ServiceNow AI Platform 
+ Demo Library 
+ Solutions
+ IT 
+ CRM 
+ Security and Risk 
+ Employee Experience 
+ App Development 
+ View All Products
+ Featured products
+ Products
+ Unite people, processes, and systems with AI-powered products for all your workflows.
+ See All Products
+ Featured products
+ AI Agents
+ Take action with autonomous AI agents that work for you.
+ IT Service Management
+ Transform service management for productivity and ROI.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ IT Asset Management
+ Improve technology use and spend over the IT asset lifecycle.
+ Governance, Risk, and Compliance
+ Enable an integrated approach that builds operational resilience and mitigates risk.
+ Security Operations
+ Defend against security threats and attacks.
+ Field Service Management
+ Reduce field service costs and improve efficiency.
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Meet the Autonomous Workforce
+ The Autonomous Workforce is more than just isolated tasks. These AI specialists are assigned to roles, with business context and permissions to handle complex workflows end-to-end.
+ Learn More
+ ServiceNow AI Platform
+ One platform, ready for anything
+ AI, data, and workflows—working together on one platform. Only ServiceNow makes it this simple at scale.
+ Explore AI Platform
+ AI
+ Put AI to work across your business with our single, intelligent platform.
+ Data
+ Power all your workflows, AI, and analytics with real-time access to data from any source.
+ Workflows
+ Automate workflows to lower costs and raise productivity.
+ ServiceNow Otto
+ Explore the AI assistant for work. You ask. Work gets done.
+ RaptorDB
+ Unify data and analytics on the ServiceNow AI Platform for ultra-fast workflow performance at scale.
+ Process Mining
+ See how workflows and AI agents actually execute and improve them right where they run.
+ AI Agents
+ AI Agents Take action with autonomous AI agents that work for you.
+ Super Intelligence Control Tower
+ Connect strategy, governance, management, and performance for all your AI across the enterprise.
+ Security
+ Protect sensitive data and increase security, privacy, and compliance across the enterprise.
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ ServiceNow Store
+ Do more with the ServiceNow AI Platform. Find hundreds of certified, ready to use applications.
+ Responsible AI
+ Rely on ServiceNow for AI that’s human-centered, inclusive, transparent, and accountable. 
+ Demo Library
+ Demo Library
+ Watch and learn. Our product and solutions experts offer demo options for everyone, at every skill level.
+ Explore Demo Library
+ Featured demos
+ Provide better experiences
+ Learn how you can use GenAI to equip customers and employees with self-service for requests. (3:17)
+ Resolve issues faster
+ Find out how your business can reduce manual work and help agents resolve cases faster. (4:08)
+ Create and automate workflows
+ See how to simplify the way workflows are built and custom code is developed. (4:30)
+ Solutions
+ IT
+ IT
+ Anticipate needs with efficient IT and digital operations.
+ Explore Solution
+ Related Products
+ Enterprise Architecture
+ Build a bridge between business processes and IT architecture.
+ Service Operations Workspace
+ Predict, prevent, and resolve incidents proactively from a single workspace.
+ Cloud Governance Suite
+ Automate cloud governance for better compliance, security, and costs.
+ Operational Technology Management
+ Protect your OT environment and improve uptime.
+ IT Asset Management
+ Control costs and minimize risks across the IT asset lifecycle.
+ IT Operations Management
+ Deliver proactive digital operations with AIOps.
+ IT Service Management
+ Transform service management to boost productivity and maximize ROI.
+ ServiceNow Cloud Observability
+ Gain insights to detect and respond to changes in cloud-native apps.
+ Strategic Portfolio Management
+ Gain insights to move from strategy to business outcomes.
+ Digital End-user Experience
+ Improve your employees' endpoint technology experience. 
+ Enterprise Asset Management
+ Streamline how you manage the full lifecycle of complex assets that keep your business running.
+ CRM
+ CRM
+ Deliver a seamless, personalized end-to-end customer experience.
+ Explore Solution
+ Related Products
+ Customer Service Management
+ Empower self-service, boost agent productivity, and speed up resolution.
+ Field Service Management
+ Optimize scheduling, empower technicians, and reduce unneeded visits.
+ Sales CRM
+ Accelerate the lead-to-cash cycle and boost revenue.
+ Configure, Price, Quote
+ Use AI to simplify and accelerate sales across all channels.
+ Sales Automation
+ Automate busywork and close more deals faster.
+ Healthcare and Life Sciences Service Management
+ Create consumer-grade healthcare experiences and improve operational performance.
+ Public Sector Digital Services
+ Modernize and speed up the delivery of government services.
+ Telecommunications Service Management
+ Unlock growth with AI-powered experiences across customer service and network operations.
+ Technology Provider Service Management
+ Promote speed and growth for your XaaS business with AI-powered experiences.
+ Financial Services Operations for Banking
+ Deliver frictionless onboarding and servicing on one AI platform for banking.
+ Financial Services Operations for Insurance
+ Be the insurer of choice with personalized claims and policyholder servicing.
+ Security and Risk
+ Security and Risk
+ Minimize the risk, impact, and cost of securing your business.
+ Explore Solution
+ Related Products
+ Security Operations
+ Mount an effective defense against security threats and attacks.
+ Security Incident Response
+ Respond fast to evolving threats while optimizing security operations.
+ Unified Security Exposure Management
+ Identify, prioritize, and remediate vulnerabilities across the business.
+ Threat Intelligence Security Center
+ Gain advanced threat hunting, modeling, and analysis on the ServiceNow AI Platform.
+ Integrated Risk Management
+ Make risk-informed decisions while improving efficiency and resilience.
+ Third-party Risk Management
+ Reduce third-party risk while improving resilience and compliance.
+ Security Posture Control
+ Manage the security of enterprise assets on premises and in the cloud.
+ Privacy Management
+ Manage data privacy in real time as part of a holistic enterprise risk program.
+ Identity Security
+ Take control of risk across human, non-human, and AI agent identities with Veza from ServiceNow.
+ Employee Experience
+ Employee Experience
+ Automate the busywork, so that you can unleash your talent on the big work.
+ Explore Solution
+ Related Products
+ HR Service Delivery
+ Give employees instant answers, guidance, and fast issue resolution.
+ Talent Development
+ Make AI and skills-driven talent planning and development decisions.
+ Legal Service Delivery
+ Modernize operations to make faster decisions and grow productivity.
+ Workplace Service Delivery
+ Automate desk bookings, manage facilities, and optimize operations.
+ ServiceNow EmployeeWorks
+ The front door for your entire workforce to search and act across systems.
+ Enterprise Service Management
+ Unify IT, HR, and workplace services with AI on one platform
+ Source-to-Pay Operations
+ Automate procurement from conversational intake to paid invoice.
+ Contract Management Pro
+ Contract intake, authoring, and approvals, all in one place.
+ App Development
+ App Development
+ Build custom apps fast while enhancing developer and business expert productivity.
+ Explore Solution
+ Related Products
+ App Engine
+ Build apps that automate manual work and modernize legacy processes.
+ Build Agent
+ Vibe code enterprise apps from the tools you already use, governed and deployed on ServiceNow.
+ View All Products
+ Industries
+ Browse solutions to help you solve the complex business challenges unique to your industry.
+ Learn More
+ Automotive
+ Put your automotive operations in overdrive with a single AI platform.
+ Banking
+ Future-proof your bank with one AI platform.
+ Consumer Goods
+ Power your product growth and efficiency with a single AI platform.
+ Healthcare
+ Fuel efficiency, reduce costs, and deliver quality care with a single AI platform.
+ Insurance
+ Be the trusted carrier of choice with one AI platform.
+ Life Sciences
+ Accelerate innovation, in and out of the lab, with one AI-powered platform.
+ Manufacturing
+ Drive manufacturing efficiency with one AI platform.
+ Nonprofit
+ Learn how to do more with less while making your nonprofit organization more agile and effective.
+ National Government
+ Deliver secure experiences for civilian, defense, and intelligence IT workflows.
+ Retail
+ Enhance retail experiences with AI-powered insights on a single AI platform.
+ Technology Providers
+ Reimagine your XaaS lifecycle with a single AI platform.
+ Telecom
+ Grow revenue, automate operations, and manage infrastructure on one AI platform.
+ Learning
+ ServiceNow University 
+ Community 
+ Developer Resources 
+ Events 
+ Customer Stories 
+ Workflow: Insight for what matters 
+ ServiceNow University
+ ServiceNow University
+ Discover a playground for learning, designed to help develop the skills you need for an AI-driven world.
+ Start Learning
+ Training & Certification
+ Explore ServiceNow certifications, career journeys, and expert programs—all designed to build your skills and elevate your career.
+ Skill Your Team
+ Upskill your teams with scalable, role-based training designed to help you reach your digital transformation goals faster.
+ Skilling Programs
+ Explore skilling programs at ServiceNow University, including RiseUp and partnerships that develop ServiceNow-skilled talent to meet rising ecosystem demands.
+ Community
+ Community
+ Learn from ServiceNow experts and engage in discussions with industry peers.
+ Visit Community
+ Product hubs
+ Find the resources, tools, and guidance you need for any ServiceNow product.
+ ServiceNow user groups
+ Join a user group in person or online to expand your network and knowledge.
+ Developer forum
+ Connect with other developers to ask questions, offer solutions, and build together.
+ Community events
+ Find live events for the ServiceNow community online or in person near you.
+ Community Central
+ From updates to best practices, find all things community related.
+ Join the community
+ Become a member of our vibrant ServiceNow community.
+ Developer Resources
+ Developer resources
+ Get your team building apps fast with tools and personal developer instances.
+ Explore Resources
+ Learn
+ Browse learning plans and courses that teach you how to build apps to tackle your company's business needs.
+ Reference documentation
+ Find APIs, libraries, and supplemental materials for working with the ServiceNow AI Platform.
+ Guides
+ Read technology overviews and recommendations for innovating on the ServiceNow AI Platform.
+ Connect
+ Meet fellow creators and gain insights from the community.
+ Design
+ Find components, patterns, and resources to help you start designing experiences on the ServiceNow AI Platform.
+ Events
+ Events
+ Join us at an event and learn how the world works with ServiceNow.
+ Find Your Event
+ Knowledge 2027
+ Get ready to unlock what's possible. Stay tuned as registration will open soon. 
+ World Forum 2026
+ Check out 2026 dates and locations, and discover how you can put AI to work in a city near you. 
+ Webinars
+ Broaden your knowledge by registering for live and on demand ServiceNow webinars.
+ Community events
+ Find live events for the ServiceNow community happening near you.
+ Livestream
+ Join live events showcasing product news, customer stories, and expert insights.
+ now[dev]26
+ Build real solutions with the engineers behind the platform.
+ World Forum 2026
+ Put AI to work in a city near you. Explore the latest innovations, hear from industry leaders, and experience AI firsthand at a complimentary World Forum event.
+ Learn More
+ Customer Stories
+ Customer stories
+ Find out how businesses like yours rely on ServiceNow to make the world work.
+ Read Stories
+ AI Agent Stories
+ Learn how ServiceNow customers are putting AI to work.
+ HR Stories
+ See how organizations are improving self-service and delivering outstanding employee experiences.
+ CRM Stories
+ Discover how businesses enable self-service for customers and reduce resolution time.
+ Public Sector/Government Stories
+ Explore ways to streamline operations, engage citizens, and empower employees.
+ Now on Now
+ Hear how ServiceNow uses ServiceNow.
+ Featured customer story
+ For FedEx, 5M ServiceNow workflows a month help get work done.
+ Read story
+ Workflow: Insight for what matters
+ Workflow
+ Proof for what works. Insight for what matters. Ideas for what’s next.
+ View the Latest
+ AI
+ Insights on AI strategy, automation, and the future of intelligent workflows.
+ CRM
+ How AI is changing the way businesses strengthen relationships with customers.
+ News & Events
+ Stay in the loop on announcements and happenings at ServiceNow.
+ People & Culture
+ A look inside ServiceNow's culture, people, and what drives us.
+ All topics
+ The conversations shaping work; walk into every room a step ahead.
+ The CX Shift
+ New research from 34,000 voices reveals a widening gap between what customers want and what they get.
+ Read Report
+ Support
+ Customer Support 
+ Documentation 
+ Best Practices 
+ MyNow 
+ Customer Success 
+ Platform Releases 
+ Customer Support
+ Customer Support
+ Access your instances, manage tasks and explore self-service help all in one place.
+ Community
+ Connect with other customers to share tips, exchange resources, and solve problems together.
+ Get support
+ Discover answers, troubleshoot issues, and get expert help, all in our support center.
+ Documentation
+ Documentation
+ Find answers to your technical questions and learn how to use ServiceNow products.
+ Visit Documentation
+ IT Service Management
+ Deliver IT services to your users all through a single cloud-based platform.
+ Customer Service Management
+ Provide customers the ability to communicate and receive support through multiple channels.
+ IT Operations Management
+ Get visibility into infrastructure and services, prevent outages, and expand operational agility.
+ ServiceNow AI Platform
+ Automate processes and develop, run, and manage applications.
+ What’s new in AI experiences
+ Use AI-based tools to prioritize and automate routine tasks, detect incidents, and surface insights.
+ Start Reading
+ Best Practices
+ Best Practices
+ Accelerate outcomes with expert-curated best practices for the ServiceNow AI Platform.
+ Home
+ ServiceNow AI Platform
+ Automate business processes, streamline app development, and manage digital infrastructure.
+ Customer Service Management
+ Deliver exceptional service, empower customers, and enhance their experience.
+ IT Service Management
+ Streamline IT service delivery, boost productivity, resolve issues, and enhance user satisfaction.
+ Employee Service Management
+ Streamline onboarding, provide HR and IT support, and empower employees with digital workflows.
+ Telecommunications Service Management
+ Unify telecom operations and deliver proactive care with quality and availability for services.
+ Governance, Risk, and Compliance
+ Build an integrated risk program, enhance decision-making, and improve performance with automation.
+ Security Operations
+ Accelerate response and strengthen security posture with SecOps workflows.
+ MyNow
+ MyNow
+ Explore MyNow, your personalized experience for quick access to your workflows, to-do lists, and AI guided recommendations.
+ Learn More
+ Start your day with MyNow.
+ Customer Success
+ Customer Success
+ Increase your ROI and get more value from the ServiceNow platform.
+ ServiceNow Impact™ success plans
+ Receive long-term adoption guidance and support with an Impact success plan tailored to you.
+ Services
+ Implement and optimize ServiceNow with expert help from ServiceNow and our partners.
+ Platform Releases
+ The Australia release is here
+ Our latest release gives you the ability to scale AI safely, responsibly, and with your teams in control.
+ Go to Latest Release
+ Past Releases
+ Zurich
+ Confidently extend AI across your enterprise.
+ Xanadu
+ The biggest ServiceNow AI release yet.
+ Washington D.C.
+ Take work to the next level with smarter, faster, simpler experiences for everyone.
+ Partners
+ Locate the partner you need, or explore the benefits of partnering with ServiceNow.
+ Learn More
+ Find a partner
+ Connect with a ServiceNow partner to reach your business goals.
+ Become a partner
+ Join our partner ecosystem. Choose the partner paths that best fit your expertise and experience.
+ Partner awards
+ Meet the global ServiceNow partners leading the way in innovation and value for our customers.
+ Partner portal
+ Find tasks, alerts, and information you need, all in one place.
+ Partner applications
+ Explore innovative apps that extend and complement the ServiceNow AI Platform.
+ Discover how the world works with ServiceNow
+ Bring AI Agents to every corner of your business.
+ Learn More
+ Careers
+ Make your next career move with the fastest growing enterprise software company.
+ Investors
+ Explore investor news and resources.
+ ServiceNow AI Research
+ Learn how we keep innovation moving forward through our AI research team, labs, and partnerships.
+ Leadership
+ Meet the ServiceNow leadership team.
+ Locations
+ See ServiceNow office locations around the world.
+ Newsroom
+ ServiceNow is making headlines. Find announcements, media kits, and more.
+ Analyst Reports
+ Get expert insights from top industry analysts on ServiceNow.
+ Global impact
+ Join us to foster a more sustainable, fair, and ethical world.
+ Trust and compliance
+ Learn the measures ServiceNow takes to keep your data secure and compliant.
+ ServiceNow Shop
+ The official home for ServiceNow gear. Get the latest styles today.
+ Sales
+ +1 (844) 863-1987
+ View a Demo
+ Health Log Analytics 
+ Prevent issues before users are affected. Detect anomalies with help from AI and machine learning.
+ Health Log Analytics 
+ Contact Sales 
+ Benefits
+ Features
+ Resources
+ How to Buy
+ Related Apps
+ Benefits of Health Log Analytics
+ Predict and prevent outages
+ Identify leading indicators of outages using log analytics and create actionable alerts. 
+ Shorten your mean time to repair
+ Receive instant data-driven advice on how to fix an issue and use automation to remediate.
+ Lower your opex
+ Simplify by bringing dozens of screens into one workspace so you can quickly find and fix problems.
+ Preserve existing investments
+ Create visualizations and dashboards for big-picture issues with data from multiple monitoring tools.
+ Features of Health Log Analytics
+ Log analytics 
+ Visualize the performance of your log data and teams. 
+ Alert correlation and noise reduction 
+ Minimize alert noise with AI-enhanced and tag-driven correlation. Apply analysis powered by generative AI. 
+ Anomaly detection 
+  Start tracking meaningful data patterns and identifying anomalies on day one. 
+ Automated remediation
+ Respond automatically to alerts using prebuilt and customized remediation actions.
+ Resources
+ See All Resources
+ Data Sheets 
+ Agent Client Collector
+ Predictive AIOps
+ Now Assist for ITOM 
+ Ebooks
+ Harness AIOps to Improve Predictability and Real-Time Decision Making
+ Deliver Uninterrupted Digital Services at Speed with Predictive AIOps
+ Infographics 
+ Operate High-Performing Services
+ Webinars 
+ Getting Off the AIOps Launch Pad by Eliminating 4 Common Struggles
+ Unlocking AIOps with Generative AI 
+ How to get Health Log Analytics
+ Health Log Analytics is available with IT Operations Management. Predict issues, prevent impact, and automate resolution with AIOps. 
+ Get Product Info
+ View Demo
+ You might also be interested in…
+ Now Assist for ITOM 
+ Prevent issues and triage alerts quickly, with greater accuracy, using generative AI. 
+ Predictive AIOps 
+ Predict and prevent service outages before they impact end users. 
+ Service Operations Workspace
+ Manage incidents proactively with clear visibility when services are at risk.
+ Event Management
+ Reduce event floods from monitoring tools and gain insight into business service health.
+ Service Mapping
+ Map the relationships between IT components and business services in dynamic environments.
+ Discovery
+ Get a holistic view of your operations footprint across on-premises data centers and the cloud.
+ Dig deeper into Health Log Analytics 
+ View Docs
+ Visit Community
+ Get Developer Resources
+ Start Learning
+ Talk to an expert
+ Connect with us to put AI to work and discover how ServiceNow can help you transform your business with modern digital workflows. 
+ Get Started
+ Home 
+ Health Log Analytics 
+ Contact 
+ Demo

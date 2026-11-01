@@ -1,0 +1,2365 @@
+User Management API Documentation 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ Welcome to the documentation center for User Management APIs from Adobe.
+ News
+ Mar 16, 2026 : If you need to resolve a user type to `unknown` rather than one of `Adobe ID`, `Federated ID`, `Enterprise ID`, you can now pass in a header value `X-UMAPI-Usertype-Unknown: true`. This will then ensure that for those users who show as "Not available" can be correctly distinguished, without changing the current expectations of clients.
+ Feb 6, 2026 : The fix from Feb 3 to correctly resolve user type as `unknown` when the account shows as "Not available" in Admin Console has been reverted due to an issue impacting User Sync Tool customers. A new date for this fix will be announced in the near future.
+ Feb 3, 2026 : Deployment scheduled to fix the wrong identity type showing for impacted Business IDs that lost their auth account through permanent removal in the main (domain owning) Organisation. The previous type was showing "adobeID" and now it shows "unknown".
+If an extraction of users in the Admin Console is made, then the resulting csv will show the impacted accounts on the Identity type column the question mark sign, instead of one of the known identity types: Adobe ID, Federated ID, Enterprise ID.
+ October 27, 2025 : As previously notified, UMAPI no longer returns "tags" information for the following APIs:
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ All references to this field have been removed from the relevant documentation.
+ July 23, 2025 : We've been made aware that some customers are receiving group names with a mysterious suffix, such as provisioning . Since these groups or profiles with these names don't exist in Admin Console (they were a historic construct from a previous iteration of the Adobe platform), we will ensure that we fully filter out these mystery group names. APIs that return lists of group names will be changed to return only user group and product profile names that really exist in the org.
+ As a best practice, it is recommended to avoid any logic that expects fixed names.
+ This change will come into effect on August 26 September 23, 2025 October 28, 2025 .
+ May 22, 2025 : With the introduction of the Contract Admin role in 2024, we've been made aware that some customers are not receiving a type value from the Get User Groups and Product Profiles API. To help with consistency, we'll ensure that this scenario results in a type of CONTRACT_ADMIN_GROUP and will enhance the response with a contractName field as below:
+ {
+ "groupId": 555555555,
+ "groupName": "BCDEFA3F5A9DB8F0345B_CONTRACT_GROUP",
+ "adminGroupName": "_admin_BCDEFA3F5A9DB8F0345B_CONTRACT_GROUP",
+ "type": "CONTRACT_ADMIN_GROUP",
+ "contractName": "ETLA - BCDEFA3F5A9DB8F0345B",
+ "memberCount": 1
+ }
+ This change will come into effect on June 3, 2025 .
+ May 9, 2025 : With the introduction of Single App Edition 4, we've been made aware that some customers have both Single App and Single App Edition 4. To help distinguish groups for each Single App using the same infix structure introduced in May 2023, the `productName` field for the profile will be adjusted to return the "parent" product name, as in the below examples:
+ If the parent product is Single App - Enterprise , you will see Photoshop (<keyword1,Single App - Enterprise,keyword2>) 
+ If the parent product is Single App - Edition 4 , you will see Photoshop (<keyword1,Single App - Edition 4,keyword2>) 
+ If you rely on the name of the "product admin group", you will also see a change here.
+ This change will come into effect on June 10, 2025 .
+ April 15, 2025 : As of October 16, 2025 , UMAPI will no longer return "tags" information as documented for the following APIs:
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Note that this data is likely to become stale over the coming months as the attribute is deprecated internally. If you are currently using this information, please get in touch with the developer support team to let us know your use case. Note that as this change is due to the data being retired from the Adobe platform, UMAPI will not be able to offer extensions to this time frame.
+ July 22, 2024 : To provide peace of mind for API integrations, all APIs provided by UMAPI, even those marked as deprecated will continue to be supported for the foreseeable future.
+ If it becomes apparent that any API, deprecated or otherwise, needs to be retired from service or needs updated with a breaking change, Adobe will provide at least 6 (six) months notice of the change, via UMAPI documentation (this site) and via Developer Console banners.
+ We will also endeavour to provide 4 weeks notice of any new fields that are being added to responses in order to give time to prepare. As ever, guidance is to ignore any unrecognised or unknown fields in the UMAPI response. Unless it is documented, it should not be relied upon.
+ Developer support will also work to make customers aware of the upcoming removal of APIs during their regular engagement process.
+ From Jan 16th 2024, a new query parameter excludeGroups will be available in Get Users by Group to exclude the return of other group membership information for each user.
+ Further information and examples can be found within the API documentation.
+ This does not impact existing clients.
+ From July 25th 2023, a new tags property will be returned as part of a user's response in the following APIs:
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Further information can be found within the API documentation. If you ignore unknown fields then you should expect no impact from this change.
+ On May 9th, 2023, the productName will be updated to include a new structure to help distinguish multiple products with the same name. An example of the structure is <Product Name> (<a list of keywords>) . For ETLA customers with a Single App plan (the plan which enables you to choose any one app from a set of available Creative Cloud applications) you may be returned a structure like Photoshop (<keyword1,Single App,keyword2>) where keyword1 and keyword2 could be optional.
+ As a result, any application directly accessing the User Management API which includes logic dependent on fixed product names will need to be updated. If you have not included fixed product names in the code, then this will not impact your connection to the User Management API. If you use the User Sync Tool, you should see no impact.
+ If you rely on the name of the “product admin group” (e.g., _product_admin_<product name> ) you will also be impacted and have to update your scripts.
+ You should avoid any logic that expects fixed group names as these are liable to change without notice. We recommend using the Get Groups and Profiles API to fetch the latest group information.
+ Since May 6th, 2023, User Management API supports OAuth Server-to-Server (S2S) workflows; The JWT one is deprecated and will stop working from the 27th of January 2025. Existing integrations based on this authorization scheme will continue to work as usual until this date. Please migrate your project to use OAuth S2S before 2025. 
+ For User Sync Tool users, please wait for the v2.9.0 release before migrating to OAuth Server-to-Server.
+ On August 8th, 2022, Document Cloud product names will remove the "DC" suffix. For example, "Acrobat Pro DC" will be renamed “Acrobat Pro".
+ As a result, any application directly accessing the User Management API which include logic dependent on the product name will need to be updated. If you have not included the product name in the code, then this will not impact your connection to the User Management API. If you use the User Sync Tool, you should see no impact.
+ Note: the term "DC" included in the name of a Product Profile will not change . If you rely on the name of the “product admin group” (e.g., _admin_<product name> ) you may be impacted and have to update your scripts.
+ As a best practice, it is recommended to avoid any logic that expects fixed product names.
+ Since October 2021, Adobe has added controls to check the running frequency of each UMAPI client instance to prevent running syncs more frequently than the recommended timing of no more than once every 2 hours. Running the calls more frequently can start a new session prior to the completion of the previous session, resulting in syncing delays. When the access limit is reached, further calls fail with the error message ‘429 Too Many Requests’ and a Retry-After header containing the delay required before the next call can be made. Please refer to the _Throttling_ section of each API to determine its limitations.
+ Starting from 20th July 2021, there is an update when retrieving groups for ETLA customers with a Single App plan. When applicable, instead of returning _Single App_ in the productName field it will now be populated with the corresponding product name e.g. _Photoshop_.
+ As a result, any application directly accessing the User Management API which includes logic dependent on the _Single App_ product name will need to be updated. If you have not included the product name in the code, then this will not impact your connection to the User Management API. If you use the User Sync Tool, you should see no impact.
+ As a best practice, it is recommended to avoid any logic that expects fixed product names.
+ Since 27th April 2021, the page size for APIs relating to the retrieval of users has been increased from 1000 to 2000. No changes are required by existing clients.
+ Starting in February 2021, Adobe will add controls to check the running frequency of each User Sync Tool instance to prevent running the tool more frequently than the recommended timing of no more than once every 2 hours. Running the calls more frequently can start a new session prior to the completion of the previous session, resulting in syncing delays. When the access limit is reached, further calls fail with the error message ‘429 Too Many Requests’ and a Retry-After header containing the delay required before the next call can be made. Please refer to the _Throttling_ section of each API to determine its limitations and, if you are leveraging the User Sync Tool, please check their Deployment Best Practices section for scheduling recommendations.
+ Since June 8th 2020, the page size for APIs relating to the retrieval of users has been increased from 400 to 1000. No changes are required by existing clients.
+ Starting March 10th 2020, new property groupId will be returned as part of the response for retrieving groups and products. Clients are not impacted by this change.
+ Since February 11th 2020, the page size for APIs relating to the retrieval of groups has been increased from 200 to 400. No changes are required by existing clients.
+ Starting August 8th 2019, a change is applied to align with the multiple domains per directory model and tightening the security of the create and update APIs.
+ As a result, any application using the create or update API statements using domains for which there's no claim in Admin Console, will start failing.
+ On April 2nd, 2019, Creative Cloud product names will remove the “CC”. For example, “Photoshop CC” will be renamed “Photoshop”.
+ As a result, any application directly accessing the User Management API which include logic dependent on the product name will need to be updated. If you have not included the product name in the code, then this will not impact your connection to the User Management API. If you use the User Sync Tool, you should see no impact.
+ Note: the term “CC” included in the name of a Product Profile will not change . If you rely on the name of the “product admin group” (e.g., _admin_<product name> ) you may be impacted and have to update your scripts.
+ As a best practice, it is recommended to avoid any logic that expects fixed product names.
+</div>
+[Getting Started with User Management](/umapi-documentation/en/getstarted.html)
+[User Management API Overview](/umapi-documentation/en/API_introduction.html)
+[User Management API Reference](/umapi-documentation/en/RefOverview.html)
+[User Management Walkthrough](/umapi-documentation/en/samples/)
+
+[Page: /umapi-documentation/]
+User Management API: Select Language 
+ Select language
+ English 
+ French 
+ German 
+ Japanese
+
+[Page: /umapi-documentation/en/UM_Authentication.html]
+Authentication for API Access 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ To maintain the security of your applications and users, all requests to Adobe I/O APIs must be authenticated and authorized. Before you can access the User Management API, you will need to obtain a set of credentials by creating a new Integration (Project) in the Adobe Developer Console.
+ Using OAuth Server-to-Server credentials
+ One-time Setup
+ To obtain the credentials needed to access the User Management service, create a Project using the Adobe Developer Console .
+ Only members of the organization with SYSTEM ADMIN role can create the Integration for UMAPI. You can use the Adobe Admin Console to grant the administrative privilege to users.
+ Your integration provides an API key that uniquely identifies your client, and other credentials that you need to access the UM API.
+ See User Management Walkthrough. for Python samples that demo the use of User Management API.
+ Authorizing API calls
+ Obtain an access token by calling the Adobe’s IMS endpoint using your Client ID and Client Secret (from the OAuth Server-to-Server enabled project on developer portal), along with the grant type and scope parameters.
+ Sample curl command:
+ curl -L -X POST 'https://ims-na1.adobelogin.com/ims/token/v2?grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&scope=openid,AdobeID,user_management_sdk' 
+ Use the obtained access token in the Authorization header of all your other UMAPI calls along with the x-api-key header:
+ Authorization : Bearer [access token]
+ x-api-key : your Client ID
+ The access token has 24 hours validity.
+ For complete details on OAuth Server-to-Server, see OAuth Server-to-Server credential implementation guide .
+ Here’s the simplified diagram of the OAuth Server-to-Server workflow:
+ Using JWT credentials - DEPRECATED
+ One-time Setup
+ To obtain the credentials you need to access the User Management service, create a Service Account Integration using the Adobe I/O Console .
+ A member of the organization with SYSEM ADMIN rights can create the Integration. You can use the Admin Console to grant administrative privilege to users.
+ You will need to create or purchase a digital signing certification, and use it to sign a JSON Web Token (JWT), which you will use to exchange it for an access token on Adobe IMS side
+ Your integration provides an API key that uniquely identifies your client, and other credentials that you need to access the UM API.
+ For complete details on JWT, see Service Account (JWT) Authentication .
+ Authorizing API calls
+ To establish a secure service-to-service API session, you will create a JSON Web Token (JWT) that encapsulates your client credentials, and sign the JWT with the private key for a public-key certificate associated with the integration.
+ You will exchange the JWT for an access token from the Adobe Identity Management Service (IMS). Every request to an Adobe service must include the access token in the Authorization HTTP header, along with the API Key (client ID) that was generated when you created the integration. Include these headers in all requests:
+ Authorization : A current access token obtained from the login request.
+ x-api-key : The API key for your integration.
+ We recommend that you store your API client credentials and private key with strong protection, but that you do NOT store a JWT or access token. You should create a new JWT for each user-management session, and use it to obtain an access token for that session.
+ To initiate each user-management session, create and send a JSON Web Token to Adobe in an access request. Include your JWT in a POST request to the Adobe Identity Management Service (IMS):
+ https://ims-na1.adobelogin.com/ims/exchange/jwt/
+ Pass the signed, base-64 encoded JWT as the value of the URL-encoded jwt_token parameter in the body of the POST request.
+ The response contains an access token that is valid for 24 hours after it is issued. Pass this token in the Authorization header in all subsequent requests to the User Management API.
+ You can request multiple access tokens. Previous tokens are not invalidated when a new one is issued. You can authorize requests with any valid access token. This allows you to overlap access tokens to ensure your integration is always able to connect to Adobe.
+ For complete details, see Creating a JSON Web Token .
+ For an example of a script that creates a JWT and makes a log-in call, see JWTExchange.py here 
+ Here’s the simplified diagram of the OAuth Server-toServer workflow:
+
+[Page: /umapi-documentation/en/api/ActionsRef.html]
+User Management Action Requests 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ User Management Action API
+ Use an HTTPS POST request to the action API for your organization to create, update, provision, and remove users or user groups, and add or remove administrative privileges for users.
+ https://usermanagement.adobe.io/v2/usermanagement/action/{orgId}
+ The body of this request contains a JSON commands structure that you use to specify which actions to perform
+for which user or user group. This page describes the general usage of the action API. 
+The payload command structure and syntax, and details of all action steps that can be performed are discussed separately.
+ For a detailed description of actions that affect users , see User Action Commands .
+ For a detailed description of actions that affect user groups , see User Group Action Commands .
+ When a request has been understood and at least partially completed, it returns with HTTP status 200.
+ Throttle Limits : Maximum 10 requests per minute per a client. See Throttling Limits for full details.
+ Parameters 
+ Request Body 
+ Responses 
+ Throttling Limits 
+ Parameters 
+ Name 
+ Type 
+ Req? 
+ Description 
+ orgId 
+ path 
+ true 
+ The unique identifier for an organization. This is a string of the form A495E53@AdobeOrg where the prefix before the @ is a hexadecimal number. You can find this value as part of the URL path for the organization in the Admin Console or in the adobe.io console for your User Management integration. 
+ testOnly 
+ query 
+ false 
+ A boolean value indicating whether to run the commands in test mode . If true, parameter syntactic and (limited) semantic checking is done, but the specified operations are not performed, so no user accounts or group memberships are created, changed, or deleted. 
+ X-Api-Key 
+ header 
+ true 
+ The API key specified in the Adobe IO Console for the UMAPI integration used to authorize this session. See the Getting Started documentation for details. The header name is X-Api-Key and this parameter is its value. 
+ Authorization 
+ header 
+ true 
+ The OAuth token generated by the authorization server from the JWT exchange which starts every UMAPI session. (This token usually begins with the letters ‘ey’.) The header name is Authorization , and this parameter, preceded by the word ‘Bearer’ and a space, is its value, as in Authorization: Bearer ey... . 
+ Content-type 
+ header 
+ false 
+ Used to specify the content type of the request data. Must be application/json 
+ X-Request-Id 
+ header 
+ false 
+ An arbitrary string used to identify the corresponding response to a request. If a header with this name is provided in the request, the exact same header will be included in the response to that request. 
+ request 
+ body 
+ true 
+ JSON payload containing a series of commands. See Request Body . 
+ Using Test Mode 
+ Supply the testOnly parameter in the POST request to the Action API in order to test the behavior of the command set.
+POST https://usermanagement.adobe.io/v2/usermanagement/action/{myOrgID}?testOnly=true
+-------------------------- body ----------------------------
+JSON commands
+------------------------- headers --------------------------
+Accept: application/json
+Content-Type: application/json
+x-api-key: {myApiKey}
+Authorization: Bearer {myAccessToken}
+ When you set the testOnly flag in an action call, the user-management service checks all commands for validity but does not make any actual changes in your user data. Use the flag to make sure that you are passing proper values without risk to the integrity of your user data. The response to a test-mode request reports that 0 operations were “completed”. The “completedInTestMode” field reports the number of commands expected to complete without error, subject to limitations.
+ { "result": "partial",
+ "completed" : 0,
+ "completedInTestMode" : 3,
+ "notCompleted" : 1,
+ "errors" : [...]
+ Limitations of Test Mode
+ In normal operation, a command would create a user and then take actions on that user. When you create a user in test mode, the creation operation is not executed. All subsequent actions on that user should then fail. In order to make the test mode useful, it marks as successful any operation that refers to a non-existent user but is otherwise valid.
+ The test behavior generally reflects the normal behavior of a command set, but the need to ignore the non-existent user leads to limitations of the test that you should be aware of. Some sequences of commands that succeed in test mode do not succeed in normal operation. For example, two attempts to create the same users passes test mode, but is otherwise an error.
+ Test Behavior Cases
+ The following table shows the behavior of test mode for particular test cases.
+ Command Types 
+ Test Behavior 
+ Create user 
+ Reports errors in command syntax, organization or user type mismatches, conflicting users. Does not create user. 
+ Update user info 
+ Reports syntax or field errors. Checks user validity, except non-existent user. Does not make any changes to an existing user or report an error for non-existent user. 
+ Add or remove product access 
+ Checks validity of product profile names. Reports error in syntax and limits. Does not make any membership changes for an existing user or report an error for non-existent user. 
+ Remove user 
+ Reports errors in command syntax, organization mismatches. Does not remove an existing user or report an error for non-existent user. 
+ Request Body 
+ The JSON commands structure contained in your POST request specifies a sequence of commands. Each command entry specifies a user or user-group, and a sequence of steps to be performed for that user or user-group.
+ The JSON commands structure allows a maximum of 10 users or user groups to be operated on per request.
+ Responses 
+ Content-Type: application/json 
+ 200: OK 
+ 400: Bad Request 
+ 401: Unauthorized 
+ 403: Forbidden 
+ 429: Too Many Requests 
+ Use only those properties that are documented in the Response Properties section. Additional fields can appear in the response, but should not be relied upon.
+ 200 OK 
+ The request was understood and at least partially completed. The response body returns a more complete description of the result in JSON format.
+If the result status is:
+ success : All the actions were completed. completed field will equal the total of commands processed.
+ partial : Some of the actions failed. completed and notCompleted fields with identify the number of commands that succeeded and failed.
+ error : All the requested actions failed. completed will be 0 and notCompleted will show the number of requests that failed.
+ When the result is partial or error, the errors field lists will include the specific actions that failed with corresponding error information. Warnings can also be returned with details of deprecated commands. Warnings will not cause the command to fail.
+ When using the testOnly parameter, the field completedInTestMode will be populated with the number of successful commands processed. In this scenario the completed field will be 0 as no commands will have been fully processed.
+ Examples
+ Error status:
+ { 
+ "completed" : 0 , 
+ "notCompleted" : 1 , 
+ "completedInTestMode" : 0 , 
+ "errors" : [ 
+ { 
+ "index" : 0 , 
+ "step" : 0 , 
+ "message" : "String too long in command for field: country, max length 2" , 
+ "errorCode" : "error.command.string.too_long" 
+ } 
+ ], 
+ "result" : "error" 
+ } 
+ Partial status:
+ { 
+ "completed" : 5 , 
+ "notCompleted" : 5 , 
+ "completedInTestMode" : 0 , 
+ "errors" : [ 
+ { 
+ "index" : 1 , 
+ "step" : 0 , 
+ "requestID" : "Two2_123456" , 
+ "message" : "User Id does not exist: test@test_fake.us" , 
+ "user" : "test@test_fake.us" , 
+ "errorCode" : "error.user.nonexistent" 
+ }, 
+ { 
+ "index" : 3 , 
+ "step" : 0 , 
+ "requestID" : "Four4_123456" , 
+ "message" : "Group NON_EXISTING_GROUP was not found" , 
+ "user" : "user4@example.com" , 
+ "errorCode" : "error.group.not_found" 
+ }, 
+ { 
+ "index" : 5 , 
+ "step" : 0 , 
+ "requestID" : "Six6_123456" , 
+ "message" : "User Id does not exist: test@test_fake.fake" , 
+ "user" : "test6@test_fake.fake" , 
+ "errorCode" : "error.user.nonexistent" 
+ }, 
+ { 
+ "index" : 7 , 
+ "step" : 0 , 
+ "requestID" : "Eight8_123456" , 
+ "message" : "Changes to users are only allowed in claimed domains." , 
+ "user" : "fake8@faketest.com" , 
+ "errorCode" : "error.domain.trust.nonexistent" 
+ }, 
+ { 
+ "index" : 9 , 
+ "step" : 0 , 
+ "requestID" : "Ten10_123456" , 
+ "message" : "Group NON_EXISTING_GROUP was not found" , 
+ "user" : "user10@example.com" , 
+ "errorCode" : "error.group.not_found" 
+ } 
+ ], 
+ "result" : "partial" , 
+ "warnings" : [ 
+ { 
+ "warningCode" : "warning.command.deprecated" , 
+ "requestID" : "Four4_123456" , 
+ "index" : 3 , 
+ "step" : 0 , 
+ "message" : "'product' command is deprecated. Please use productConfiguration." , 
+ "user" : "user4@example.com" 
+ }, 
+ { 
+ "warningCode" : "warning.command.deprecated" , 
+ "requestID" : "Ten10_123456" , 
+ "index" : 9 , 
+ "step" : 0 , 
+ "message" : "'product' command is deprecated. Please use productConfiguration." , 
+ "user" : "user10@example.com" 
+ } 
+ ] 
+ } 
+ Success status:
+ { 
+ "completed" : 1 , 
+ "notCompleted" : 0 , 
+ "completedInTestMode" : 0 , 
+ "result" : "success" 
+ } 
+ Response Properties
+ message: string 
+Only returned if initial validation of the request fails. It is not populated when a 200 status is returned.
+ { 
+ "result" : "error.organization.invalid_id" , 
+ "message" : "Bad organization Id" 
+ } 
+ result: string , possible values: { "success", "error", "partial", "error.apikey.invalid", "error.command.malformed", "error.organization.invalid", "error.organization.migrating" } 
+The status of the request. This property can be used to manage error handling as the value will either be success or a corresponding error. If the result status is:
+ success : All the actions were completed. completed field will equal the total of commands processed.
+ partial : Some of the actions failed. completed and notCompleted fields with identify the number of commands that succeeded and failed.
+ error : All the requested actions failed. completed will be 0 and notCompleted will show the number of requests that failed.
+ completed: integer 
+The number of user commands that were successful.
+ notCompleted: integer 
+The number of user commands that were unsuccessful. When non-zero the errors field lists the specific actions that failed, with error information.
+ completedInTestMode: integer 
+The number of users that were completed in testOnly mode.
+ errors: 
+An array of errors. Each error entry is an object with the attributes below. This section is ommitted if no errors were generated.
+ index: integer ; The 0-based index of the command entry in the commands structure.
+ step: string ; The 0-based index of the action step within that command entry.
+ message: string ; A description of the error.
+ errorCode: string ; The error type. See Errors for a full list.
+ requestID: string ; A developer-defined ID passed into the request which you can use to match this response to a specific request.
+ user: string ; The user defined in the root of the command entry.
+ warnings: 
+An array of warnings. Each warning entry is an object with the attributes below. This section is ommitted if no warnings were generated.
+ index: integer ; The 0-based index of the command entry in the commands structure.
+ step: string ; The 0-based index of the action step within that command entry.
+ message: string ; A description of the warning.
+ warningCode: string ; The warning type. See Errors for a full list.
+ requestID: string ; A developer-defined ID passed into the request which you can use to match this response to a specific request.
+ user: string ; The user defined in the root of the command entry.
+ Schema Model
+ { 
+ "completed" : 0 , 
+ "completedInTestMode" : 0 , 
+ "errors" : [ 
+ { 
+ "errorCode" : "string" , 
+ "index" : 0 , 
+ "message" : "string" , 
+ "requestID" : "string" , 
+ "step" : 0 , 
+ "user" : "string" 
+ } 
+ ], 
+ "message" : "string" , 
+ "notCompleted" : 0 , 
+ "result" : "string" , 
+ "warnings" : [ 
+ { 
+ "index" : 0 , 
+ "message" : "string" , 
+ "requestID" : "string" , 
+ "step" : 0 , 
+ "user" : "string" , 
+ "warningCode" : "string" 
+ } 
+ ] 
+ } 
+ Responses with Error Status
+ If the response has a status other than 200, the request was not processed. The status code indicates the reason type of error; this section provides some common causes for these errors.
+ 400 Bad Request 
+ Some parameters of the request were not understood by the server or the Service Account Integration certificate has expired.
+ 401 Unauthorized 
+ Possible causes are:
+ Invalid or expired token.
+ Invalid Organization.
+ < HTTP/1.1 401 Unauthorized
+< Content-Type: */*
+< Date: Thu, 22 Jun 2017 09:47:04 GMT
+< WWW-Authenticate: Bearer realm="JIL", error="invalid_token", error_description="The access token is invalid"
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 403 Forbidden 
+ Possible causes are:
+ Missing API key.
+ The organization is currently migrating. Either from DMA or to One Console.
+ API key is not permitted access.
+ < HTTP/1.1 403 Forbidden
+< Date: Thu, 22 Jun 2017 09:41:22 GMT
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ Throttling Limits 
+ To protect the availability of the Adobe back-end user identity systems, the User Management API imposes limits on client access to the data. Limits apply to the number of calls that an individual client can make within a time interval, and global limits apply to access by all clients within the time period. For this API the throttling limits are as follows:
+ Maximum calls per client: 10 requests per a minute 
+ Maximum calls for the application: 100 requests per a minute 
+ When the client or global access limit is reached, further calls fail with HTTP error status 429 Too Many Requests . The Retry-After header is included in the 429 response, and provides the minimum amount of time that the client should wait until retrying. See RFC 7231 for full information.
+ The User Management API recommends limiting your syncs to two hourly intervals and consider scheduling your sync for a time that works best for you, taking into account other timezones and clients. This will help to prevent how often your client is throttled.
+ The following sample shows a 429 response with the Retry-After header detailing the number of seconds to wait before retry:
+ ========================= RESPONSE =========================
+Status code: 429
+-------------------------- header --------------------------
+Content-Type: application/json
+Date: Fri, 19 Jan 2018 10:31:43 GMT
+Retry-After: 38
+Server: APIP
+X-Request-Id: iEUtsLiFgj3R4xsbirAyZlMyaxRTo8Xo
+Content-Length: 54
+Connection: keep-alive
+--------------------------- body ---------------------------
+{
+ "error_code" : "429050",
+ "message" : "Too many requests"
+}
+============================================================
+ Because of the global limits, and because the specific limits may change, you cannot simply limit the rate at which you make your own calls. You must handle rate-limit errors by retrying the failed calls. We recommend an exponential backoff retry technique for handling such errors.
+ Handling error responses
+ When you retry a failed request, the retry can also fail, and can fall back into the retry loop, adding to the system overload. The exponential backoff retry method increases the period between retries, so that the client makes fewer calls while the system is overloaded.
+ To implement an exponential backoff method, you increase the retry interval with each failed request. You should retry sending the request after a certain number of seconds, and increase that interval by a random amount with each attempt. For example, you can double the retry period each time, or escalate it by a power of 2, and then add a small random delay between failures.
+ A small random delay, known as “jitter,” prevents the “herd effect” that can occur if many clients attempt to reconnect to a recovering system at the same time. Without jitter, all of the retries could occur after 20 seconds, then 40 seconds, and so on. With the jitter, different retries occur at slightly different intervals. This allows the system to recover without further overloading it.
+ For an example of how to implement this error-handling method, see “Retrying Requests” in the User Management Walkthrough .
+
+[Page: /umapi-documentation/en/api/ActionsCmds.html]
+User Management Action Commands 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ User Management Action Commands
+ The JSON commands structure contained in your POST request to the action endpoint specifies a sequence of commands. Each command entry specifies a user or a user group and a sequence of steps to be performed for that user or user group.
+ For a given command entry, the API attempts to perform the steps in the order that they appear. However, the order of execution of commands is not always guaranteed. If the same user or user group is listed in more than one command, results could differ depending on the order of command execution. Use the following order as guidance:
+ Creates ( addAdobeId , createEnterpriseID , createFederatedID ).
+ Create a new user group
+ Update an existing user group
+ Delete a user group
+ Updates of users’ information.
+ Removal of entitlements and memberships.
+ Adding of entitlements and memberships
+ Removal of users from an organization
+ Command entries 
+ Each command entry begins with a root command that specifies whether a set of actions applies to an individual user, or to a user group. The JSON commands structure allows a maximum of 10 users or user groups to be operated on per request.
+ Root commands
+ user: string 
+The user field is an email address with a UID and domain component jdoe@example.com . Identity Types explains the different account types available.
+ usergroup: string 
+To create, update or delete a user group , specify createUserGroup , deleteUserGroup , and updateUserGroup actions in the do list for the usergroup . To update the membership list specify add and remove actions in the do list for the usergroup . See User Group Action Commands for details.
+ do: 
+Each root command has a single do entry. Within a command’s do entry, a set of step actions specify what management operations to perform for the root user or user group.
+ Step actions for users
+ This section describes step actions that can be performed for a user . For steps that can be performed for a user group , see User Group Action Commands .
+ The following properties apply to a user :
+ requestID: string 
+Arbitrary string to be returned in the response payload. This is to help identify the response that corresponds to a particular command entry.
+ domain: string 
+ Federated IDs that are not email addresses, must supply the domain the user belongs to in order to identify the user. This is required for all operations; create, update, add, remove, and removeFromOrg.
+The domain field must be at the same level as the user field. The domain field is ignored if the user has an Adobe or Enterprise ID. Identity Types explains the different account types available.
+ useAdobeID: boolean 
+When true, the user ID is interpreted to refer to an existing Adobe ID even if a Enterprise or Federated ID exists with the same name.
+ do: 
+Lists the series of steps to complete for this command entry. For a single user command entry, there can be only one create user operation ( createEnterpriseID , createFederatedID or addAdobeID ) and one delete user operation ( removeFromOrg ).
+ addAdobeID: 
+ Adds a user who has an existing Adobe ID . User-information fields such as firstname and lastname can be included.
+ Previously, when an Adobe ID user was added, the user would receive an email inviting them to join the organization.
+ See user-information for individual field descriptions.
+ { 
+ "addAdobeID" : { 
+ "email" : "string" , 
+ "country" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" , 
+ "option" : "string" 
+ } 
+ } 
+ Usage:
+ [{ 
+ "user" : "jdoe@domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "addAdobeID" : { 
+ "email" : "jdoe@domain1.com" , 
+ "country" : "US" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" , 
+ "option" : "ignoreIfAlreadyExists" 
+ } 
+ }] 
+ }] 
+ createEnterpriseID: 
+ Creates an Enterprise ID . See user-information for individual field descriptions.
+ { 
+ "createEnterpriseID" : { 
+ "email" : "string" , 
+ "country" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" , 
+ "option" : "string" 
+ } 
+ } 
+ Usage:
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "createEnterpriseID" : { 
+ "email" : "jdoe@dclaimed-domain1.com" , 
+ "country" : "US" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" , 
+ "option" : "ignoreIfAlreadyExists" 
+ } 
+ }] 
+ }] 
+ createFederatedID: 
+ Creates a Federated ID . See user-information for individual field descriptions.
+ { 
+ "createFederatedID" : { 
+ "email" : "string" , 
+ "country" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" , 
+ "option" : "string" 
+ } 
+ } 
+ Sample POST body for email based login:
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "createFederatedID" : { 
+ "email" : "jdoe@claimed-domain1.com" , 
+ "country" : "US" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" , 
+ "option" : "ignoreIfAlreadyExists" 
+ } 
+ }] 
+ }] 
+ Sample POST body defining the domain:
+ [{ 
+ "user" : "jdoe" , 
+ "domain" : "claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "createFederatedID" : { 
+ "email" : "jdoe@claimed-domain1.com" , 
+ "country" : "US" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" , 
+ "option" : "ignoreIfAlreadyExists" 
+ } 
+ }] 
+ }] 
+ User Information Fields 
+ firstname: string ; Limited to 250 characters. Required for createEnterpriseID and createFederatedID . Optional for addAdobeID .
+ lastname: string ; Limited to 250 characters. Required for createEnterpriseID and createFederatedID . Optional for addAdobeID .
+ email: string ; A valid email address. Required for createEnterpriseID , addAdobeID and createFederatedID . Limited to 60 characters.
+ country: string ; A valid ISO 2 upper-case characters country code. Optional for createEnterpriseID and addAdobeID . Required for createFederatedID . The country value cannot be updated after it is set.
+ option: string , possible values: {ignoreIfAlreadyExists, updateIfAlreadyExists} ; In addition to the new user’s field values, the parameters can include an option flag that specifies how to perform the create operation when a user with the given ID already exists in the user database. Default behaviour, when this option parameter is not provided, is to return an error. Optional property for createEnterpriseID , createFederatedID , addAdobeID . It only affects first name and last name metadata.
+ ignoreIfAlreadyExists : If the ID already exists, ignore the create step but process any other steps in the command entry for this user.
+ updateIfAlreadyExists : If the ID already exists, perform an update action using the parameters in the create step. After updating all fields present in the step, process any other steps in the command entry for this user.
+ update: 
+ The update action writes new personal information to the user’s account details. You can update Enterprise and Federated IDs that are managed by your organization.
+ Independent Adobe IDs are managed by the individual user and cannot be updated through the User Management API. Attempting to update information for a user who has an Adobe ID will result in an error: error.update.adobeid.no .
+ For Federated IDs, the update request can only change the information that is stored by Adobe. You cannot use the User Management API to change information your organization stores outside of Adobe.
+ Identity Types explains the different account types available. See user-information for individual field descriptions.
+ The parameters of an update step specify the changed fields and their new values. If you do not specify a field, its value remains unchanged.
+ Inside update parameters that need an update should appear.
+ { 
+ "update" : { 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" , 
+ "username" : "string" 
+ } 
+ } 
+ Note: country is not updatable via UMAPI
+ Samples for update use-case scenarios with email based login:
+ Updating user’s Email and Last Name metadata but keeping the domain part constant
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "update" : { 
+ "email" : "jnew@claimed-domain1.com" , 
+ "lastname" : "new" 
+ } 
+ }] 
+ }] 
+ Updating user’s Email metadata but also change the domain part
+ Requirement : used domains should be claimed and added to same Admin Console Directory
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "update" : { 
+ "email" : "jdoe@claimed-domain2.com" 
+ } 
+ }] 
+ }] 
+ Updating user’s Username metadata but use a different domain than the Email for it
+ Requirement : used domains should be claimed and added to same Admin Console Directory
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "update" : { 
+ "username" : "jdoe@claimed-domain2.com" 
+ } 
+ }] 
+ }] 
+ Updating user’s Username and Email metadata using new different domains for each
+ Requirement : used domains should be claimed and added to same Admin Console Directory
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "update" : { 
+ "email" : "canBeNew@claimed-domain2.com" , 
+ "username" : "canBeOther@claimed-domain3.com" , 
+ } 
+ }] 
+ }] 
+ Updating Email Policy
+ For all account types, the email address is used as a case-sensitive unique identifier. You cannot use the update request to change the letter case of the email address , once it has been set. There is an additional username field: for Adobe IDs and Enterprise IDs, the username is always the same as the email address, and the same is true by default for Federated IDs.
+ For Federated IDs, you can update the username field for users whose email address is in your domain. The username value can also be an email address, but you can never use it to identify a user in requests.
+ In case of email based login, if you use an update command to change a user’s Email metadata, the Username metadata is automatically updated to match , provided that all domains being used in the request are claimed.
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "do" : [{ 
+ "update" : { 
+ "email" : "jdoe@claimed-domain2.com" 
+ } 
+ }] 
+ }] 
+ After the above change, user’s Username and Email values in Admin Console will be equal to jdoe@claimed-domain2.com 
+ add: 
+ Adds a user as a member of a group. You can add a maximum of 10 memberships in one command entry. See Add/Remove Attributes section for full details of the group attribute.
+ { 
+ "add" : { 
+ "group" : [ 
+ "group_name" 
+ ] 
+ } 
+ } 
+ Sample JSON body for email based login:
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "add" : { 
+ "group" : [ 
+ "group_name1" , 
+ "group_name2" 
+ ] 
+ } 
+ }] 
+ }] 
+ remove: 
+ Removes the membership of users from groups. You can remove a maximum of 10 memberships in one command entry, unless you use the special “all” parameter to remove all memberships for the user. See Add/Remove attributes section for full details of the group attribute.
+ { 
+ "remove" : { 
+ "group" : [ 
+ "group_name" 
+ ] 
+ } 
+ } 
+ Additionally you can pass the attribute all to remove the user from all groups including product profiles, user-groups, and administrative groups (admin roles):
+ { 
+ "remove" : "all" 
+ } 
+ Sample JSON body for email based login:
+ removing a user’s membership from 2 groups
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "remove" : { 
+ "group" : [ 
+ "group_name1" , 
+ "group_name2" 
+ ] 
+ } 
+ }] 
+ }] 
+ remove the user account from all Groups/PLCs/Admin roles in Admin Console
+ org_admin (System Admin) role can’t be removed via UM API
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "remove" : "all" 
+ }] 
+ }] 
+ Add/Remove Attributes 
+ The following attribute is available in both the add and remove operations for a user:
+ group: A list of product profile groups , user groups , or administrative groups with a maximum of 10 entries.
+ Add or remove membership in user groups and product profiles to control entitlements. Product profiles correspond to specific product access rights, so adding product access for a user is the same as adding that user to the corresponding product profile.
+ Add or remove membership in administrative groups to control administrative rights. There are three groups with fixed names corresponding to administrative roles:
+ Administrators: _org_admin 
+ Support Administrators: _support_admin 
+ Deployment Administrators: _deployment_admin 
+ Please note that you cannot assign or remove the administrative role _org_admin , _compartment_admin or _compartment_viewer using UMAPI.
+ In addition, there are administrative groups for each user group and product profile.
+ An administrative group for a product is named with the prefix _product_admin_ and the product name. For example, _product_admin_Photoshop . You should avoid any logic that expects fixed group names as these are liable to change without notice.
+ An administrative group for a product profile or user group is named with the prefix _admin_ and the product-profile or user-group name. For example, _admin_MarketingProfile or _admin_PhotoshopUserGroup .
+ A developer group for a product profile is named with the prefix _developer_ and the product-profile name. For example _developer_MarketingProfile .
+ Use the group resource to retrieve information about defined groups.
+ removeFromOrg: 
+ Removes the user’s membership in the organization, and optionally from membership in a domain that is linked to the given organization through the trusted-domain relationship. This includes any product configs and user-groups in the organization that they are a member of. There can only be a single removeFromOrg action in a command entry. If present, the removal action will be the last step invoked. If the user is specified by email address, then the domain of the email address specifies the domain of the account.
+ Note that the response always reports a successful result for this action, even if the user did not exist.
+ { 
+ "removeFromOrg" : { 
+ "deleteAccount" : boolean 
+ } 
+ } 
+ deleteAccount: boolean ; If true then if the account is owned by the organization, the account and any of their assets are also deleted. Note that Adobe IDs are never deleted because they are owned by the user, not the organization. The default value is false.
+ Corresponding Admin Console actions:
+ "deleteAccount": false = removing the user from the Users menu
+ "deleteAccount": true = removing the user from the Users menu AND the Directory users menu. Removing users from a directory will permanently delete them and their assets. Use this feature with caution as the user and the assets cannot be recovered afterwards. Full information on removing users from a directory can be found here .
+ Sample JSON body for email based login:
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "action_1" , 
+ "do" : [{ 
+ "removeFromOrg" : { 
+ "deleteAccount" : false 
+ } 
+ }] 
+ }] 
+ User command request body schema for email based login scenario 
+ [{ 
+ "user" : "string" , 
+ "requestID" : "string" , 
+ "useAdobeID" : boolean , 
+ "do" : [ 
+ { 
+ "addAdobeID" : { 
+ "country" : "string" , 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" , 
+ "option" : "string" 
+ } 
+ }, 
+ { 
+ "createEnterpriseID" : { 
+ "country" : "string" , 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" , 
+ "option" : "string" 
+ } 
+ }, 
+ { 
+ "createFederatedID" : { 
+ "country" : "string" , 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" , 
+ "option" : "string" 
+ } 
+ }, 
+ { 
+ "add" : { 
+ "group" : [ 
+ "string" 
+ ] 
+ } 
+ }, 
+ { 
+ "remove" : { 
+ "group" : [ 
+ "string" 
+ ] 
+ } 
+ }, 
+ { 
+ "removeFromOrg" : { 
+ "deleteAccount" : boolean 
+ } 
+ }, 
+ { 
+ "update" : { 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "lastname" : "string" 
+ } 
+ } 
+ ] 
+ }] 
+ Some other action examples
+ Mix of creating a Federated ID and add the user to the Product License Configurations Photoshop - 2Gb and Illustrator - 20Gb actions
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "ed2148" , 
+ "do" : [ 
+ { 
+ "createFederatedID" : { 
+ "email" : "jdoe@claimed-domain1.com" , 
+ "country" : "US" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" 
+ } 
+ }, 
+ { 
+ "add" : { 
+ "group" : [ "Photoshop - 2Gb" , "Illustrator - 20Gb" ] 
+ } 
+ } 
+ ] 
+ }] 
+ Mix of creating a Federated ID and updating the username metadata actions:
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "requestID" : "ed2149" , 
+ "do" : [ 
+ { 
+ "createFederatedID" : { 
+ "email" : "jdoe@claimed-domain1.com" , 
+ "country" : "US" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" 
+ } 
+ }, 
+ { 
+ "update" : { 
+ "username" : "jdoe@claimed-domain2.com" 
+ } 
+ } 
+ ] 
+ }] 
+ Add the Product Owner Admin role for a user:
+ [ 
+ { 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "do" : [{ 
+ "add" : { 
+ "group" : [ "_product_admin_myProduct1Name" ] 
+ } 
+ }] 
+ } 
+ ] 
+ Remove the admin role for the user for a given product profile:
+ [ 
+ { 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "do" : [{ 
+ "remove" : { 
+ "group" : [ "_admin_myProductProfile1Name" ] 
+ } 
+ }] 
+ } 
+ ] 
+ Add the developer role for the user for a given product profile:
+ [{ 
+ "user" : "jdoe@claimed-domain1.com" , 
+ "do" : [{ 
+ "add" : { 
+ "group" : [ "_developer_myProductProfile1Name" ] 
+ } 
+ }] 
+ }]
+
+[Page: /umapi-documentation/en/api/usergroupActionCommands.html]
+User Group Management Action Commands 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ User Group Management Action Commands
+ Each command entry begins with a root command that specifies whether a set of actions applies to an individual user, 
+or to a user group . Use the usergroup root command to manage user groups. You can operate on a maximum of 10 user-groups per request.
+ The do list for a usergroup entry specifies the series of steps to complete for the group. The steps can perform group-management operations (create, delete, update) or membership operations (add and remove members and entitlements). You can add product profiles to a user group, giving all user group members the related entitlements.
+ Management Step Actions for User Groups 
+ To create, update or delete a group, specify createUserGroup , updateUserGroup , or deleteUserGroup steps in the do list for a usergroup entry.
+ To change provisioning through group membership, specify the add and remove steps in the do list for a usergroup entry to update the membership lists for the user group.
+ createUserGroup: 
+ Creates a user group, or updates the description if the named group already exists group. There can be only one create operation for a given usergroup command entry, and it must be the first step.
+ { 
+ "createUserGroup" : { 
+ "name" : "string" , 
+ "description" : "string" , 
+ "option" : "string" 
+ } 
+ } 
+ name: string ; Required. The name of the user group.
+ description: string ; Optinal. The description of the usergroup.
+ option: string , possible values: {ignoreIfAlreadyExists, updateIfAlreadyExists} ; Optional for createUserGroup action. Specifies how to perform the create operation when a user group with the given name already exists in the user database.
+ ignoreIfAlreadyExists : If the user group already exists, ignore the create step but process any other steps in the command entry for this user.
+ updateIfAlreadyExists : If the user group already exists, update the description of the existing group with the provided value (if any), but ignore the name value. After the update, process any other steps in the command entry for this group.
+ updateUserGroup: 
+ Updates the name or description user group. Both fields are optional.
+ See user-group-information for individual field descriptions.
+ { 
+ "updateUserGroup" : { 
+ "name" : "string" , 
+ "description" : "string" 
+ } 
+ } 
+ deleteUserGroup: 
+ Deletes an existing user group. No further steps are performed after deletion.
+ { 
+ "deleteUserGroup" : { 
+ } 
+ } 
+ Adding and removing memberships for a user group 
+ A group has two membership lists: users who are members of the group, and product profiles for which the group has access. In the add and remove actions, supply the user option with a list of users to update the group membership, and the productConfiguration option with a list of product profile names.
+ When you add a user to the group, that user gains entitlement for all member product profiles. 
+When you remove a user from the group, that user loses the associated entitlements (unless they have individual access).
+ When you add a product profile, all of the member users gain the associated entitlements.
+When you remove a product profile, all of the users in the user group lose the associated entitlements (unless they have individual access). Please note that you cannot use the add command if the user-group has more than 200,000 users.
+ When a group has isReadOnly set to true, you cannot add or remove users from the group however you can add or remove product profiles.
+ NOTE: Use the group resource to retrieve information about defined groups.
+ Each step can add or remove up to 10 memberships in one command entry using the user and productConfiguration options. Specify users by email, and product profiles by name.
+ { 
+ "usergroup" : "DevOps" , 
+ "do" : [ 
+ { 
+ "add" : { 
+ "user" : [ 
+ "user1@myCompany.com" 
+ ], 
+ "productConfiguration" : [ 
+ "Profile1_Name" 
+ ], 
+ } 
+ }, 
+ { 
+ "remove" : { 
+ "user" : [ 
+ "user2@myCompany.com" 
+ ], 
+ "productConfiguration" : [ 
+ "Profile2_Name" 
+ ], 
+ } 
+ } 
+ ] 
+ } 
+ Usergroup command request body schema 
+ [ 
+ { 
+ "do" : [ 
+ { 
+ "createUserGroup" : { 
+ "option" : "string" , 
+ "description" : "string" 
+ } 
+ }, 
+ { 
+ "updateUserGroup" : { 
+ "name" : "string" , 
+ "description" : "string" 
+ } 
+ }, 
+ { 
+ "deleteUserGroup" : {} 
+ }, 
+ { 
+ "add" : { 
+ "user" : [ 
+ "string" 
+ ], 
+ "productConfiguration" : [ 
+ "string" 
+ ] 
+ }, 
+ } 
+ { 
+ "remove" : {} 
+ } 
+ ], 
+ "requestID" : "string" , 
+ "usergroup" : "string" 
+ } 
+ ] 
+ User-group action examples
+ Add a product profile and a user to a user group, and remove another product profile and user.
+ { 
+ "usergroup" : "DevOps" , 
+ "do" : [ 
+ { 
+ "add" : { 
+ "user" : [ 
+ "user1@myCompany.com" 
+ ], 
+ "productConfiguration" : [ 
+ "Profile1_Name" 
+ ] 
+ } 
+ }, 
+ { 
+ "remove" : { 
+ "user" : [ 
+ "user2@myCompany.com" 
+ ], 
+ "productConfiguration" : [ 
+ "Profile2_Name" 
+ ] 
+ } 
+ } 
+ ] 
+ } 
+ Update a usergroup’s name and description.
+ { 
+ "usergroup" : "DevOps" , 
+ "do" : [ 
+ { 
+ "updateUserGroup" : { 
+ "description" : "Devops group description" , 
+ "name" : "DevOps Team" 
+ } 
+ } 
+ ] 
+ } 
+ Update a usergroup and add production profile.
+ { 
+ "usergroup" : "DevOps" , 
+ "do" : [ 
+ { 
+ "updateUserGroup" : { 
+ "description" : "Devops group description" , 
+ "name" : "DevOps Team" 
+ } 
+ }, 
+ { 
+ "add" : { 
+ "user" : [ 
+ "user1@myCompany.com" 
+ ] 
+ } 
+ } 
+ ] 
+ } 
+ Delete a usergroup.
+ [ 
+ { 
+ "requestID" : "dsctesting" , 
+ "usergroup" : "DevOps Team" , 
+ "do" : [ 
+ { 
+ "deleteUserGroup" : { 
+ } 
+ } 
+ ] 
+ } 
+ ]
+
+[Page: /umapi-documentation/en/api/user.html]
+User Access APIs 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ User Access APIs 
+ An application can use the User Management API to access Adobe users and manage their identities.
+ Retrieving Users
+ You can list all users, retrieve information for individual users, and list members of user groups and product profile groups.
+ List all users : GET /v2/usermanagement/users/{orgId}/{page} 
+ Get user information : GET /v2/usermanagement/organizations/{orgId}/users/{userString} 
+ Get all member users in a group : GET /v2/usermanagement/users/{orgId}/{page}/{groupName} 
+ User Actions
+ You can create and remove user accounts for your organization, modify a user’s personal information (depending on the account type).
+ Request these user-management actions for your organization using the action API .
+ POST v2/usermanagement/action/{orgId}
+ The commands in the body of your POST request specify action steps to take for a given user .
+ Create or add a user to an organization
+ addAdobeId Create or add an Adobe ID user
+ createEnterpriseID Create an Enterprise ID user
+ createFederatedID Create an Federated ID user.
+ update Update an existing user in an organization
+ remove Remove a user from an organization
+ You can also use action requests to modify users’ memberships and administrative roles. See User Group APIs for details.
+
+[Page: /umapi-documentation/en/api/getUser.html]
+Get User Information 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ Get User Information 
+ GET /v2/usermanagement/organizations/{orgId}/users/{userString}
+ Retrieves the details of a single user within a specified organization, identified by email address or username and domain. Successful queries return a 200 response whose body is a single JSON structure containing the user information.
+ Throttle Limits : Maximum 25 requests per minute per a client. See Throttling Limits for full details.
+ Parameters 
+ Responses 
+ Example Requests 
+ Throttling Limits 
+ Parameters 
+ Name 
+ Type 
+ Req? 
+ Description 
+ orgId 
+ path 
+ true 
+ The unique identifier for an organization. This is a string of the form A495E53@AdobeOrg where the prefix before the @ is a hexadecimal number. You can find this value as part of the URL path for the organization in the Admin Console or in the adobe.io console for your User Management integration. 
+ userString 
+ path 
+ true 
+ For AdobeID , Enterprise and email-federated users this should be the full email address including domain. In all cases the parameter is case-insensitive. Identity Types explains the different account types available. 
+ X-Api-Key 
+ header 
+ true 
+ The API key specified in the Adobe IO Console for the UMAPI integration used to authorize this session. See the Getting Started documentation for details. The header name is X-Api-Key and this parameter is its value. 
+ Authorization 
+ header 
+ true 
+ The OAuth token generated by the authorization server from the JWT exchange which starts every UMAPI session. (This token usually begins with the letters ‘ey’.) The header name is Authorization , and this parameter, preceded by the word ‘Bearer’ and a space, is its value, as in Authorization: Bearer ey... . 
+ domain 
+ query 
+ false 
+ Optional parameter but highly recommended including for all user types. For AdobeID users this would be AdobeID . For Enterprise and email-federated users the domain will either match the email domain or, in the case of multi-domain federations, have any other domain for that directory. 
+ content-type 
+ header 
+ false 
+ Used to specify the content type of the request data. Must be application/json 
+ X-Request-Id 
+ header 
+ false 
+ An arbitrary string used to identify the corresponding response to a request. If a header with this name is provided in the request, the exact same header will be included in the response to that request. 
+ X-UMAPI-Usertype-Unknown 
+ header 
+ false 
+ Set this to true if you need the type field to return unknown 
+ Responses 
+ Content-Type: application/json 
+ 200: OK 
+ 400: Bad Request 
+ 401: Unauthorized 
+ 403: Forbidden 
+ 429: Too Many Requests 
+ Use only those properties that are documented in the Response Properties section. Additional fields can appear in the response, but should not be relied upon.
+ 200 OK 
+ The response body contains the requested user data in JSON format including any of the user’s group membership and admin roles. Fields can be missing if values were never supplied or are not applicable for a particular account type.
+ Identity Types explains the different account types available.
+ Examples
+ Response for an Adobe ID user with System Administrator role: 
+ { 
+ "result" : "success" , 
+ "user" : { 
+ "email" : "jdoe@my-domain.com" , 
+ "status" : "active" , 
+ "username" : "jdoe@my-domain.com" , 
+ "domain" : "my-domain.com" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" , 
+ "country" : "US" , 
+ "type" : "adobeID" , 
+ "groups" : [ 
+ "_org_admin" 
+ ] 
+ } 
+ } 
+ Enterprise User with membership in two user-groups but no administrative roles. If the fields are not populated ( firstname and lastname in this example), they are excluded from the response.
+ { 
+ "result" : "success" , 
+ "user" : { 
+ "email" : "jdoe@my-domain.com" , 
+ "status" : "active" , 
+ "groups" : [ 
+ "UserGroup1" , 
+ "UserGroup2" 
+ ], 
+ "username" : "jdoe@my-domain.com" , 
+ "domain" : "my-domain.com" , 
+ "country" : "JP" , 
+ "type" : "enterpriseID" 
+ } 
+ } 
+ Federated User with no memberships or administrative roles:
+ { 
+ "result" : "success" , 
+ "user" : { 
+ "email" : "jdoe@my-domain.com" , 
+ "status" : "active" , 
+ "username" : "johndoe" , 
+ "domain" : "my-domain.com" , 
+ "firstname" : "John" , 
+ "lastname" : "Doe" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ } 
+ } 
+ Response Properties 
+ result: string , The status of the request. One of success or an error key: { "success", "error", "error.apikey.invalid", "error.user.email.invalid", "error.api.user.not.parent.org", "error.organization.invalid_id" } 
+ message: string An error message, returned only if initial validation of the request fails. It is not populated when a 200 status is returned.
+ { 
+ "result" : "error.organization.invalid_id" , 
+ "message" : "Bad organization Id" 
+ } 
+ user: A user object containing relevant properties. Properties that are not populated are not returned in the response. Some properties are not applicable for particular account types.
+ country: string ; A valid ISO 2-character country code.
+ domain: string ; The user’s domain.
+ email: string ; The user’s email address.
+ firstname: string ; The user’s first name.
+ groups: string[] ; The list of groups in which the user is a current member, including, user groups, product profiles, product admin groups, and group-specific admin groups. Administrative groups are named with a prefix and the group name. For example, _product_admin_Photoshop , _admin_DesignTools , or _developer_Marketing . You should avoid any logic that expects fixed group names as these are liable to change without notice. Organization-wide admin groups are:
+ _org_admin : The user is a System Administrator .
+ _deployment_admin : The user is a Deployment Administrator .
+ _support_admin : The user is a Support Administator .
+ id: string ; The user’s unique identifier.
+ lastname: string ; The user’s last name.
+ status: string ; A user’s status with the organization. Only “active” users are returned by Get User Information and Get Users in Organization . One of the following:
+ “active”: Normal status for a user account in good standing.
+ “disabled”: Disabled temporarily - user is not allowed to login, but is not removed.
+ “locked”: Disabled permanently - user is not allowed to login, but is not removed.
+ “removed”: The user account is being removed.
+ type: string , The user type, one of: { "adobeID", "enterpriseID", "federatedID", "unknown" } . See Identity Types for more information.
+ username: string ; The user’s username (applicable for Enterprise and Federated users). For most Adobe ID users, this value is the same as the email address.
+ adminRoles: string[] ; Deprecated. Administrative roles are reflected in group memberships, returned in the groups field.
+ Schema Model
+ { 
+ "message" : "string" , 
+ "result" : "string" , 
+ "user" : { 
+ "country" : "string" , 
+ "domain" : "string" , 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "groups" : [ 
+ "string" 
+ ], 
+ "id" : "string" , 
+ "lastname" : "string" , 
+ "status" : "string" , 
+ "type" : "string" , 
+ "username" : "string" 
+ } 
+ } 
+ 400 Bad Request 
+ Some parameters of the request were not understood by the server or the Service Account Integration certificate has expired.
+ 401 Unauthorized 
+ Possible causes are:
+ Invalid or expired token.
+ Invalid Organization.
+ < HTTP/1.1 401 Unauthorized
+< Content-Type: */*
+< Date: Thu, 22 Jun 2017 09:47:04 GMT
+< WWW-Authenticate: Bearer realm="JIL", error="invalid_token", error_description="The access token is invalid"
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 403 Forbidden 
+ Possible causes are:
+ Missing API key.
+ The organization is currently migrating. Either from DMA or to One Console.
+ API key is not permitted access.
+ < HTTP/1.1 403 Forbidden
+< Date: Thu, 22 Jun 2017 09:41:22 GMT
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 404 Not Found 
+ The user was not found in the given organization.
+ < HTTP/1.1 404 Not Found
+< Canonical-Resource: /v2/usermanagement/organizations/{orgId}/users/{userstring:.*}
+< Content-Type: application/json
+< X-Request-Id: user-assigned-request-id
+< Connection: keep-alive
+{"result":"error.user.not_found","message":"User not found email@email.com"}
+ Example Requests 
+ Searching by email for AdobeID , Enterprise or email-federated users:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/organizations/12345@AdobeOrg/users/jdoe@example.com \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Searching for AdobeID user with domain:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/organizations/12345@AdobeOrg/users/jdoe@example.com?domain=AdobeID \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Searching for Enterprise or email-federated users with domain parameter included:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/organizations/12345@AdobeOrg/users/jdoe@example.com?domain=example.com \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Note that the authorization directory, which is specified by the “domain” parameter, can contain more than one domain name.
+This means that the “domain” value does not necessarily match the domain portion of user email addresses.
+ Throttling Limits 
+ To protect the availability of the Adobe back-end user identity systems, the User Management API imposes limits on client access to the data. Limits apply to the number of calls that an individual client can make within a time interval, and global limits apply to access by all clients within the time period. For this API the throttling limits are as follows:
+ Maximum calls per client: 25 requests per a minute 
+ Maximum calls for the application: 100 requests per a minute 
+ When the client or global access limit is reached, further calls fail with HTTP error status 429 Too Many Requests . The Retry-After header is included in the 429 response, and provides the minimum amount of time that the client should wait until retrying. See RFC 7231 for full information.
+ The User Management API recommends limiting your syncs to two hourly intervals and consider scheduling your sync for a time that works best for you, taking into account other timezones and clients. This will help to prevent how often your client is throttled.
+ The following sample shows a 429 response with the Retry-After header detailing the number of seconds to wait before retry:
+ ========================= RESPONSE =========================
+Status code: 429
+-------------------------- header --------------------------
+Content-Type: application/json
+Date: Fri, 19 Jan 2018 10:31:43 GMT
+Retry-After: 38
+Server: APIP
+X-Request-Id: iEUtsLiFgj3R4xsbirAyZlMyaxRTo8Xo
+Content-Length: 54
+Connection: keep-alive
+--------------------------- body ---------------------------
+{
+ "error_code" : "429050",
+ "message" : "Too many requests"
+}
+============================================================
+ Because of the global limits, and because the specific limits may change, you cannot simply limit the rate at which you make your own calls. You must handle rate-limit errors by retrying the failed calls. We recommend an exponential backoff retry technique for handling such errors.
+ Handling error responses
+ When you retry a failed request, the retry can also fail, and can fall back into the retry loop, adding to the system overload. The exponential backoff retry method increases the period between retries, so that the client makes fewer calls while the system is overloaded.
+ To implement an exponential backoff method, you increase the retry interval with each failed request. You should retry sending the request after a certain number of seconds, and increase that interval by a random amount with each attempt. For example, you can double the retry period each time, or escalate it by a power of 2, and then add a small random delay between failures.
+ A small random delay, known as “jitter,” prevents the “herd effect” that can occur if many clients attempt to reconnect to a recovering system at the same time. Without jitter, all of the retries could occur after 20 seconds, then 40 seconds, and so on. With the jitter, different retries occur at slightly different intervals. This allows the system to recover without further overloading it.
+ For an example of how to implement this error-handling method, see “Retrying Requests” in the User Management Walkthrough .
+
+[Page: /umapi-documentation/en/api/getUsersWithPage.html]
+Get Users in Organization 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ Get Users in Organization 
+ GET /v2/usermanagement/users/{orgId}/{page}
+ Retrieve a paged list of all users in your organization along with information about them. The number of users returned in each call is subject to change, currently the limit is max 2000 entries/page. You can make multiple paginated calls to retrieve the full list of users. The domain query parameter filters the results to only return users within a specified domain.
+ Throttle Limits : Maximum 25 requests per minute per a client. See Throttling Limits for full details.
+ Parameters 
+ Responses 
+ Example Requests 
+ Throttling Limits 
+ Parameters 
+ Name 
+ Type 
+ Required 
+ Description 
+ orgId 
+ path 
+ true 
+ The unique identifier for an organization. This is a string of the form A495E53@AdobeOrg where the prefix before the @ is a hexadecimal number. You can find this value as part of the URL path for the organization in the Admin Console or in the adobe.io console for your User Management integration. 
+ X-Api-Key 
+ header 
+ true 
+ The API key specified in the Adobe IO Console for the UMAPI integration used to authorize this session. See the Getting Started documentation for details. The header name is X-Api-Key and this parameter is its value. 
+ page 
+ path 
+ true 
+ The 0-based index of the page number being requested. If greater than last page number, returns the last page of users. The page size is variable with the current value returned in the X-Page-Size response header. 
+ Authorization 
+ header 
+ true 
+ The OAuth token generated by the authorization server from the JWT exchange which starts every UMAPI session. (This token usually begins with the letters ‘ey’.) The header name is Authorization , and this parameter, preceded by the word ‘Bearer’ and a space, is its value, as in Authorization: Bearer ey... . 
+ content-type 
+ header 
+ false 
+ Used to specify the content type of the request data. Must be application/json 
+ X-Request-Id 
+ header 
+ false 
+ An arbitrary string used to identify the corresponding response to a request. If a header with this name is provided in the request, the exact same header will be included in the response to that request. 
+ domain 
+ query 
+ false 
+ Retrieves users from a domain linked to an organization through the Trusted Domain relationship. 
+ directOnly 
+ query 
+ false 
+ Controls whether the groups field in the returned user structure contains only those product profiles of which that user is a direct member. If false, returns all groups (user groups, product profiles, and admin groups) containing the user, regardless of whether an entitlement for a particular product profile comes directly (via user assignment) or indirectly (via a user group that contains the user being assigned to the product profile). If true, returns all user groups and admin groups containing the user, but only those product profiles to which the user has been explicitly assigned an entitlement. A user can be both a direct and an indirect member of a product profile. Defaults to true . 
+ X-UMAPI-Usertype-Unknown 
+ header 
+ false 
+ Set this to true if you need the user type field to return unknown 
+ Responses 
+ Content-Type: application/json 
+ 200: OK 
+ 400: Bad Request 
+ 401: Unauthorized 
+ 403: Forbidden 
+ 429: Too Many Requests 
+ Use only those properties that are documented in the Response Properties section. Additional fields can appear in the response, but should not be relied upon.
+ 200 OK 
+ A successful request returns a response body with the requested user data in JSON format. When the response contains the last paged entry, the response includes the field lastPage : true . If the returned page is not the last page, make additional paginated calls to retrieve the full list.
+ Identity Types explains the different account types available.
+ Headers
+ Header 
+ Description 
+ X-Total-Count 
+ The total count of users. Please note that the total number of users objects may not be returned in the response body. For example when fetching users, Technical Accounts will be excluded from the results. 
+ X-Page-Count 
+ The maximum number of pages that could be fetched with the criteria specified. 
+ X-Current-Page 
+ The integer value of the page being returned. 
+ X-Page-Size 
+ The number of entries in the page being returned. 
+ All of the values for the listed headers are strings. 
+ Examples
+ Response returning three users with different group membership and administrative rights: 
+ { 
+ "lastPage" : false , 
+ "result" : "success" , 
+ "users" : [ 
+ { 
+ "email" : "psmith@example.com" , 
+ "status" : "active" , 
+ "username" : "psmith" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ }, 
+ { 
+ "email" : "jane@example.com" , 
+ "status" : "active" , 
+ "groups" : [ 
+ "Marketing Cloud 1" , 
+ "Marketing Cloud 2" , 
+ "Creative Cloud 1" , 
+ "Document Cloud 1" , 
+ "_admin_Document Cloud 1" , 
+ "_admin_Support for AEM Mobile" , 
+ "_admin_Default Support configuration" , 
+ "_admin_Creative Cloud 1" 
+ ], 
+ "username" : "jane" , 
+ "domain" : "example.com" , 
+ "firstname" : "Jane" , 
+ "lastname" : "Doe" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ }, 
+ { 
+ "email" : "joe@example.com" , 
+ "status" : "active" , 
+ "groups" : [ 
+ "Document Cloud 1" , 
+ "Support for AEM Mobile" , 
+ "_admin_Document Cloud 1" , 
+ "_admin_Support for AEM Mobile" , 
+ "_admin_Default Support configuration" , 
+ "_admin_Creative Cloud 1" , 
+ "_deployment_admin" , 
+ "_developer_Document Cloud 1" 
+ ], 
+ "username" : "joe" , 
+ "domain" : "example.com" , 
+ "firstname" : "First" , 
+ "lastname" : "Last" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ } 
+ ] 
+ } 
+ As of October 16, 2025, the tags array will no longer be returned.
+ Response that is the last page: 
+ { 
+ "lastPage" : true , 
+ "result" : "success" , 
+ "users" : [ 
+ { 
+ "email" : "last@example.com" , 
+ "status" : "active" , 
+ "username" : "last" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ } 
+ ] 
+ } 
+ Response Properties 
+ result: string , The status of the request. One of success or an error key: { "success", "error", "error.apikey.invalid", "error.user.email.invalid", "error.api.user.not.parent.org", "error.organization.invalid_id" } 
+ message: string An error message, returned only if initial validation of the request fails. It is not populated when a 200 status is returned.
+ { 
+ "result" : "error.organization.invalid_id" , 
+ "message" : "Bad organization Id" 
+ } 
+ users: Contains a list of User objects. Properties that are not populated are not returned in the response. Some properties are not applicable for particular account types.
+ country: string ; A valid ISO 2-character country code.
+ domain: string ; The user’s domain.
+ email: string ; The user’s email address.
+ firstname: string ; The user’s first name.
+ groups: string[] ; The list of groups in which the user is a current member, including, user groups, product profiles, product admin groups, and group-specific admin groups. Administrative groups are named with a prefix and the group name. For example, _product_admin_Photoshop , _admin_DesignTools , or _developer_Marketing . You should avoid any logic that expects fixed group names as these are liable to change without notice. Organization-wide admin groups are:
+ _org_admin : The user is a System Administrator .
+ _deployment_admin : The user is a Deployment Administrator .
+ _support_admin : The user is a Support Administator .
+ id: string ; The user’s unique identifier.
+ lastname: string ; The user’s last name.
+ status: string ; A user’s status with the organization. Only “active” users are returned by Get User Information and Get Users in Organization . One of the following:
+ “active”: Normal status for a user account in good standing.
+ “disabled”: Disabled temporarily - user is not allowed to login, but is not removed.
+ “locked”: Disabled permanently - user is not allowed to login, but is not removed.
+ “removed”: The user account is being removed.
+ type: string , The user type, one of: { "adobeID", "enterpriseID", "federatedID", "unknown" } . See Identity Types for more information.
+ username: string ; The user’s username (applicable for Enterprise and Federated users). For most Adobe ID users, this value is the same as the email address.
+ adminRoles: string[] ; Deprecated. Administrative roles are reflected in group memberships, returned in the groups field.
+ Schema Model
+ { 
+ "lastPage" : boolean , 
+ "message" : "string" , 
+ "result" : "string" , 
+ "users" : [ 
+ { 
+ "country" : "string" , 
+ "domain" : "string" , 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "groups" : [ 
+ "string" 
+ ], 
+ "id" : "string" , 
+ "lastname" : "string" , 
+ "status" : "string" , 
+ "type" : "string" , 
+ "username" : "string" , 
+ "tags" : [ 
+ "string" 
+ ] 
+ } 
+ ] 
+ } 
+ As of October 16, 2025, the tags array will no longer be returned.
+ 400 Bad Request 
+ Some parameters of the request were not understood by the server or the Service Account Integration certificate has expired.
+ 401 Unauthorized 
+ Possible causes are:
+ Invalid or expired token.
+ Invalid Organization.
+ < HTTP/1.1 401 Unauthorized
+< Content-Type: */*
+< Date: Thu, 22 Jun 2017 09:47:04 GMT
+< WWW-Authenticate: Bearer realm="JIL", error="invalid_token", error_description="The access token is invalid"
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 403 Forbidden 
+ Possible causes are:
+ Missing API key.
+ The organization is currently migrating. Either from DMA or to One Console.
+ API key is not permitted access.
+ < HTTP/1.1 403 Forbidden
+< Date: Thu, 22 Jun 2017 09:41:22 GMT
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 404 Not Found 
+ The domain was not found in the given organization.
+ Example Requests 
+ Retrieve the first page of users:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/users/12345@AdobeOrg/0 \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Retrieve the fifth page of users:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/users/12345@AdobeOrg/4 \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Retrieve the first page of users with domain my-domain.com :
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/users/12345@AdobeOrg/0?domain=my-domain.com \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Retrieve the first page of users including details of all the memberships (direct and indirect) for each user:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/users/12345@AdobeOrg/0?directOnly=false \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Throttling Limits 
+ To protect the availability of the Adobe back-end user identity systems, the User Management API imposes limits on client access to the data. Limits apply to the number of calls that an individual client can make within a time interval, and global limits apply to access by all clients within the time period. For this API the throttling limits are as follows:
+ Maximum calls per client: 25 requests per a minute 
+ Maximum calls for the application: 100 requests per a minute 
+ When the client or global access limit is reached, further calls fail with HTTP error status 429 Too Many Requests . The Retry-After header is included in the 429 response, and provides the minimum amount of time that the client should wait until retrying. See RFC 7231 for full information.
+ The User Management API recommends limiting your syncs to two hourly intervals and consider scheduling your sync for a time that works best for you, taking into account other timezones and clients. This will help to prevent how often your client is throttled.
+ The following sample shows a 429 response with the Retry-After header detailing the number of seconds to wait before retry:
+ ========================= RESPONSE =========================
+Status code: 429
+-------------------------- header --------------------------
+Content-Type: application/json
+Date: Fri, 19 Jan 2018 10:31:43 GMT
+Retry-After: 38
+Server: APIP
+X-Request-Id: iEUtsLiFgj3R4xsbirAyZlMyaxRTo8Xo
+Content-Length: 54
+Connection: keep-alive
+--------------------------- body ---------------------------
+{
+ "error_code" : "429050",
+ "message" : "Too many requests"
+}
+============================================================
+ Because of the global limits, and because the specific limits may change, you cannot simply limit the rate at which you make your own calls. You must handle rate-limit errors by retrying the failed calls. We recommend an exponential backoff retry technique for handling such errors.
+ Handling error responses
+ When you retry a failed request, the retry can also fail, and can fall back into the retry loop, adding to the system overload. The exponential backoff retry method increases the period between retries, so that the client makes fewer calls while the system is overloaded.
+ To implement an exponential backoff method, you increase the retry interval with each failed request. You should retry sending the request after a certain number of seconds, and increase that interval by a random amount with each attempt. For example, you can double the retry period each time, or escalate it by a power of 2, and then add a small random delay between failures.
+ A small random delay, known as “jitter,” prevents the “herd effect” that can occur if many clients attempt to reconnect to a recovering system at the same time. Without jitter, all of the retries could occur after 20 seconds, then 40 seconds, and so on. With the jitter, different retries occur at slightly different intervals. This allows the system to recover without further overloading it.
+ For an example of how to implement this error-handling method, see “Retrying Requests” in the User Management Walkthrough .
+
+[Page: /umapi-documentation/en/api/getUsersByGroup.html]
+Get Users by Group 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ Get Users in a User Group or Product Profile 
+ GET /v2/usermanagement/users/{orgId}/{page}/{groupName}
+ Gets a paged list of users in a specific group of an organization along with information about them. Groups can be named user groups, product profiles, or group-specific administrative groups.
+ For product profiles:
+ Pass the directOnly flag to return only those users who have a direct membership in the product profile.
+ Pass the status parameter to return only those users who have the “active” or “inactive” status in the product profile.
+ Throttle Limits : Maximum 25 requests per minute per a client. See Throttling Limits for full details.
+ Parameters 
+ Responses 
+ Example Requests 
+ Throttling Limits 
+ Parameters 
+ Name 
+ Type 
+ Required 
+ Description 
+ orgId 
+ path 
+ true 
+ The unique identifier for an organization. This is a string of the form A495E53@AdobeOrg where the prefix before the @ is a hexadecimal number. You can find this value as part of the URL path for the organization in the Admin Console or in the adobe.io console for your User Management integration. 
+ groupName 
+ path 
+ true 
+ The user group, product profile name or an administrative group. For an admin group, the name can be one of the fixed groups _org_admin , _deployment_admin , or _support_admin ; or a group-specific admin group. These are identified with a prefix on the group name _admin_groupName , _product_admin_productName , _developer_groupName . If the group exists but the admin group does not, an empty list is returned. 
+ X-Api-Key 
+ header 
+ true 
+ The API key specified in the Adobe IO Console for the UMAPI integration used to authorize this session. See the Getting Started documentation for details. The header name is X-Api-Key and this parameter is its value. 
+ Authorization 
+ header 
+ true 
+ The OAuth token generated by the authorization server from the JWT exchange which starts every UMAPI session. (This token usually begins with the letters ‘ey’.) The header name is Authorization , and this parameter, preceded by the word ‘Bearer’ and a space, is its value, as in Authorization: Bearer ey... . 
+ page 
+ path 
+ false 
+ The 0-based index of the page number being requested. If greater than existing number of pages, returns the last page of users. The page size is variable with the current value returned in the X-Page-Size response header. 
+ content-type 
+ header 
+ false 
+ Used to specify the content type of the request data. Must be application/json 
+ X-Request-Id 
+ header 
+ false 
+ An arbitrary string used to identify the corresponding response to a request. If a header with this name is provided in the request, the exact same header will be included in the response to that request. 
+ directOnly 
+ query 
+ false 
+ Controls whether the groups field in the returned user structure contains only those product profiles of which that user is a direct member. If false, returns all groups (user groups, product profiles, and admin groups) containing the user, regardless of whether an entitlement for a particular product profile comes directly (via user assignment) or indirectly (via a user group that contains the user being assigned to the product profile). If true, returns all user groups and admin groups containing the user, but only those product profiles to which the user has been explicitly assigned an entitlement. A user can be both a direct and an indirect member of a product profile. Defaults to true . 
+ status 
+ query 
+ false 
+ For product profiles only, return only active or inactive members. Pass active to list users that have been provisioned for the product and have an active license. Pass inactive to list users who have been added to the product profile but do not have an active license. When not provided, lists all member users regardless of their entitlement status. 
+ excludeGroups 
+ query 
+ false 
+ Default value is false . When true is passed the response will exclude the groups array from being returned for each individual user. See example . 
+ X-UMAPI-Usertype-Unknown 
+ header 
+ false 
+ Set this to true if you need the user type field to return unknown 
+ Responses 
+ Content-Type: application/json 
+ 200: OK 
+ 400: Bad Request 
+ 401: Unauthorized 
+ 403: Forbidden 
+ 429: Too Many Requests 
+ Use only those properties that are documented in the Response Properties section. Additional fields can appear in the response, but should not be relied upon.
+ 200 OK 
+ A successful request returns a response body with the requested user data in JSON format. When the response contains the last paged entry, the response includes the field lastPage : true . If the returned page is not the last page, make additional paginated calls to retrieve the full list.
+ Identity Types explains the different account types available.
+ Headers
+ Header 
+ Description 
+ X-Total-Count 
+ The total count of users. Please note that the total number of users objects may not be returned in the response body. For example when fetching users, Technical Accounts will be excluded from the results. 
+ X-Page-Count 
+ The maximum number of pages that could be fetched with the criteria specified. 
+ X-Current-Page 
+ The integer value of the page being returned. 
+ X-Page-Size 
+ The number of entries in the page being returned. 
+ All of the values for the listed headers are strings. 
+ Examples
+ Response returning three members of the Document Cloud 1 group, showing their various other group memberships: 
+ { 
+ "lastPage" : false , 
+ "result" : "success" , 
+ "groupName" : "Document Cloud 1" , 
+ "users" : [ 
+ { 
+ "email" : "john@example.com" , 
+ "status" : "active" , 
+ "groups" : [ 
+ "Document Cloud 1" 
+ ], 
+ "username" : "john" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ }, 
+ { 
+ "email" : "jane@example.com" , 
+ "status" : "active" , 
+ "groups" : [ 
+ "Document Cloud 1" , 
+ "Support for AEM Mobile" , 
+ "_admin_Document Cloud 1" , 
+ "_admin_Support for AEM Mobile" , 
+ "_admin_Default Support profile" , 
+ "_admin_Creative Cloud 1" , 
+ "_deployment_admin" , 
+ "_developer_Document Cloud 1" 
+ ], 
+ "username" : "jane" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ }, 
+ { 
+ "email" : "bob@example.com" , 
+ "status" : "active" , 
+ "groups" : [ 
+ "Document Cloud 1" , 
+ "Creative Cloud 1" 
+ ], 
+ "username" : "bob" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ } 
+ ... 
+ ] 
+ } 
+ Response returning three members of the Document Cloud 1 group. The groups array for each user has been excluded in the response as the query parameter excludeGroups=true was included: 
+ { 
+ "lastPage" : false , 
+ "result" : "success" , 
+ "groupName" : "Document Cloud 1" , 
+ "users" : [ 
+ { 
+ "email" : "john@example.com" , 
+ "status" : "active" , 
+ "username" : "john" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ }, 
+ { 
+ "email" : "jane@example.com" , 
+ "status" : "active" , 
+ "username" : "jane" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ }, 
+ { 
+ "email" : "bob@example.com" , 
+ "status" : "active" , 
+ "username" : "bob" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "federatedID" 
+ } 
+ ... 
+ ] 
+ } 
+ Response to request for the last page: 
+ { 
+ "lastPage" : true , 
+ "result" : "success" , 
+ "groupName" : "Document Cloud 1" , 
+ "users" : [ 
+ { 
+ "email" : "jim@example.com" , 
+ "status" : "active" , 
+ "groups" : [ 
+ "Document Cloud 1" 
+ ], 
+ "username" : "jim" , 
+ "domain" : "example.com" , 
+ "country" : "US" , 
+ "type" : "adobeID" 
+ } 
+ ] 
+ } 
+ Response Properties 
+ result: string , The status of the request. One of success or an error key: { "success", "error", "error.apikey.invalid", "error.user.email.invalid", "error.api.user.not.parent.org", "error.organization.invalid_id" } 
+ message: string An error message, returned only if initial validation of the request fails. It is not populated when a 200 status is returned.
+ { 
+ "result" : "error.organization.invalid_id" , 
+ "message" : "Bad organization Id" 
+ } 
+ users: Contains a list of User objects. Properties that are not populated are not returned in the response. Some properties are not applicable for particular account types.
+ country: string ; A valid ISO 2-character country code.
+ domain: string ; The user’s domain.
+ email: string ; The user’s email address.
+ firstname: string ; The user’s first name.
+ groups: string[] ; The list of groups in which the user is a current member, including, user groups, product profiles, product admin groups, and group-specific admin groups. Administrative groups are named with a prefix and the group name. For example, _product_admin_Photoshop , _admin_DesignTools , or _developer_Marketing . You should avoid any logic that expects fixed group names as these are liable to change without notice. Organization-wide admin groups are:
+ _org_admin : The user is a System Administrator .
+ _deployment_admin : The user is a Deployment Administrator .
+ _support_admin : The user is a Support Administator .
+ id: string ; The user’s unique identifier.
+ lastname: string ; The user’s last name.
+ status: string ; A user’s status with the organization. Only “active” users are returned by Get User Information and Get Users in Organization . One of the following:
+ “active”: Normal status for a user account in good standing.
+ “disabled”: Disabled temporarily - user is not allowed to login, but is not removed.
+ “locked”: Disabled permanently - user is not allowed to login, but is not removed.
+ “removed”: The user account is being removed.
+ type: string , The user type, one of: { "adobeID", "enterpriseID", "federatedID", "unknown" } . See Identity Types for more information.
+ username: string ; The user’s username (applicable for Enterprise and Federated users). For most Adobe ID users, this value is the same as the email address.
+ adminRoles: string[] ; Deprecated. Administrative roles are reflected in group memberships, returned in the groups field.
+ Schema Model
+ { 
+ "groupName" : "string" , 
+ "lastPage" : boolean , 
+ "message" : "string" , 
+ "result" : "string" , 
+ "users" : [ 
+ { 
+ "country" : "string" , 
+ "domain" : "string" , 
+ "email" : "string" , 
+ "firstname" : "string" , 
+ "groups" : [ 
+ "string" 
+ ], 
+ "id" : "string" , 
+ "lastname" : "string" , 
+ "status" : "string" , 
+ "type" : "string" , 
+ "username" : "string" 
+ } 
+ ] 
+ } 
+ 400 Bad Request 
+ Some parameters of the request were not understood by the server or the Service Account Integration certificate has expired.
+ 401 Unauthorized 
+ Possible causes are:
+ Invalid or expired token.
+ Invalid Organization.
+ < HTTP/1.1 401 Unauthorized
+< Content-Type: */*
+< Date: Thu, 22 Jun 2017 09:47:04 GMT
+< WWW-Authenticate: Bearer realm="JIL", error="invalid_token", error_description="The access token is invalid"
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 403 Forbidden 
+ Possible causes are:
+ Missing API key.
+ The organization is currently migrating. Either from DMA or to One Console.
+ API key is not permitted access.
+ < HTTP/1.1 403 Forbidden
+< Date: Thu, 22 Jun 2017 09:41:22 GMT
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 404 Not Found 
+ The group was not found in the given organization.
+ < HTTP/1.1 404 Not Found
+< Canonical-Resource: /v2/usermanagement/users/{orgId}/{page}/{groupName}
+{"lastPage":false,"result":"error.group.not_found","message":"Not found: Group 1234"}
+ Example Requests 
+ Retrieve the first page of users for group Photoshop:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/users/12345@AdobeOrg/0/photoshop \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Retrieve the fifth page of users for user group DevOps:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/users/12345@AdobeOrg/4/DevOps \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Retrieve a list of active users using the status parameter. This query will return all direct members that have an active license for Photoshop .
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/users/12345@AdobeOrg/0/photoshop?status=active \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Throttling Limits 
+ To protect the availability of the Adobe back-end user identity systems, the User Management API imposes limits on client access to the data. Limits apply to the number of calls that an individual client can make within a time interval, and global limits apply to access by all clients within the time period. For this API the throttling limits are as follows:
+ Maximum calls per client: 25 requests per a minute 
+ Maximum calls for the application: 100 requests per a minute 
+ When the client or global access limit is reached, further calls fail with HTTP error status 429 Too Many Requests . The Retry-After header is included in the 429 response, and provides the minimum amount of time that the client should wait until retrying. See RFC 7231 for full information.
+ The User Management API recommends limiting your syncs to two hourly intervals and consider scheduling your sync for a time that works best for you, taking into account other timezones and clients. This will help to prevent how often your client is throttled.
+ The following sample shows a 429 response with the Retry-After header detailing the number of seconds to wait before retry:
+ ========================= RESPONSE =========================
+Status code: 429
+-------------------------- header --------------------------
+Content-Type: application/json
+Date: Fri, 19 Jan 2018 10:31:43 GMT
+Retry-After: 38
+Server: APIP
+X-Request-Id: iEUtsLiFgj3R4xsbirAyZlMyaxRTo8Xo
+Content-Length: 54
+Connection: keep-alive
+--------------------------- body ---------------------------
+{
+ "error_code" : "429050",
+ "message" : "Too many requests"
+}
+============================================================
+ Because of the global limits, and because the specific limits may change, you cannot simply limit the rate at which you make your own calls. You must handle rate-limit errors by retrying the failed calls. We recommend an exponential backoff retry technique for handling such errors.
+ Handling error responses
+ When you retry a failed request, the retry can also fail, and can fall back into the retry loop, adding to the system overload. The exponential backoff retry method increases the period between retries, so that the client makes fewer calls while the system is overloaded.
+ To implement an exponential backoff method, you increase the retry interval with each failed request. You should retry sending the request after a certain number of seconds, and increase that interval by a random amount with each attempt. For example, you can double the retry period each time, or escalate it by a power of 2, and then add a small random delay between failures.
+ A small random delay, known as “jitter,” prevents the “herd effect” that can occur if many clients attempt to reconnect to a recovering system at the same time. Without jitter, all of the retries could occur after 20 seconds, then 40 seconds, and so on. With the jitter, different retries occur at slightly different intervals. This allows the system to recover without further overloading it.
+ For an example of how to implement this error-handling method, see “Retrying Requests” in the User Management Walkthrough .
+
+[Page: /umapi-documentation/en/api/group.html]
+Get User Groups and Product Profiles 
+ UMAPI 
+ Getting Started 
+ Authentication 
+ API Overview 
+ Samples 
+ API Reference 
+ User Management Action API 
+ User Action Commands 
+ User Group Action Commands 
+ User Access APIs 
+ Get User Information 
+ Get Users in Organization 
+ Get Users by Group 
+ Get Groups and Profiles 
+ Deprecated APIs 
+ Get All Users 
+ User Group APIs 
+ Get User Groups 
+ Get User Group 
+ Get User Group Users 
+ Product Information APIs 
+ Product APIs 
+ Get All Profiles 
+ Get Product Profile 
+ Get Users in Product Profile 
+ Update Product Profile 
+ Error Conditions 
+ Glossary 
+ Requesting Help 
+ Get User Groups and Product Profiles 
+ GET /v2/usermanagement/groups/{orgId}/{page}
+ Retrieves a paged list of all user groups and product profiles in your organization along with information about them. You can make multiple paginated calls to retrieve the full list.
+ Throttle Limits : Maximum 5 requests per minute per a client. See Throttling Limits for full details.
+ Parameters 
+ Responses 
+ Request Examples 
+ Throttling Limits 
+ Parameters 
+ Name 
+ Type 
+ Required 
+ Description 
+ orgId 
+ path 
+ true 
+ The unique identifier for an organization. This is a string of the form A495E53@AdobeOrg where the prefix before the @ is a hexadecimal number. You can find this value as part of the URL path for the organization in the Admin Console or in the adobe.io console for your User Management integration. 
+ X-Api-Key 
+ header 
+ true 
+ The API key specified in the Adobe IO Console for the UMAPI integration used to authorize this session. See the Getting Started documentation for details. The header name is X-Api-Key and this parameter is its value. 
+ page 
+ path 
+ true 
+ The 0-based index of the page number being requested. If greater than last page number, returns the last page of groups. The page size is variable with the current value returned in the X-Page-Size response header. 
+ Authorization 
+ header 
+ true 
+ The OAuth token generated by the authorization server from the JWT exchange which starts every UMAPI session. (This token usually begins with the letters ‘ey’.) The header name is Authorization , and this parameter, preceded by the word ‘Bearer’ and a space, is its value, as in Authorization: Bearer ey... . 
+ content-type 
+ header 
+ false 
+ Used to specify the content type of the request data. Must be application/json 
+ X-Request-Id 
+ header 
+ false 
+ An arbitrary string used to identify the corresponding response to a request. If a header with this name is provided in the request, the exact same header will be included in the response to that request. 
+ Responses 
+ Content-Type: application/json 
+ 200: OK 
+ 400: Bad Request 
+ 401: Unauthorized 
+ 403: Forbidden 
+ 429: Too Many Requests 
+ Use only those properties that are documented in the Response Properties section. Additional fields can appear in the response, but should not be relied upon.
+ 200 OK 
+ A successful request returns a response body with the requested group data in JSON format. When the response contains the last paged entry, the response includes the field lastPage : true . If the returned page is not the last page, make additional paginated calls to retrieve the full list.
+ Examples
+ Response returning three groups, which is also the last page. 
+ { 
+ "lastPage" : true , 
+ "result" : "success" , 
+ "groups" : [ 
+ { 
+ "type" : "SYSADMIN_GROUP" , 
+ "groupName" : "Administrators" , 
+ "memberCount" : 11 
+ }, 
+ { 
+ "type" : "USER_GROUP" , 
+ "groupName" : "Document Cloud 1" , 
+ "memberCount" : 26 , 
+ "adminGroupName" : "_admin_Document Cloud 1" , 
+ "licenseQuota" : "2" 
+ }, 
+ { 
+ "type" : "PRODUCT_PROFILE" , 
+ "groupName" : "Default Support Profile" , 
+ "memberCount" : 0 , 
+ "productName" : "All Apps plan - 100 GB" , 
+ "licenseQuota" : "8" 
+ }, 
+ { 
+ "type" : "PRODUCT_ADMIN_GROUP" , 
+ "groupName" : "_product_admin_Adobe Document Cloud for business" , 
+ "memberCount" : 2 , 
+ "productProfileName" : "Adobe Document Cloud for business" , 
+ }, 
+ { 
+ "type" : "DEVELOPER_GROUP" , 
+ "groupName" : "_developer_Adobe Document Cloud for business" , 
+ "memberCount" : 5 , 
+ "productProfileName" : "Adobe Document Cloud for business" , 
+ } 
+ ] 
+ } 
+ Response to request for an out-of-bounds page number. 
+ { 
+ "lastPage" : true , 
+ "result" : "Not found" 
+ } 
+ Response Properties
+ A group entry can represent a product profile, a user group, or an administrative group. Different fields are returned for the different types of group. The type field identifies the group type:
+ type: string ; The group type. One of:
+ USER_GROUP
+ PRODUCT_PROFILE
+ SYSADMIN_GROUP
+ DEPLOYMENT_ADMIN_GROUP
+ SUPPORT_ADMIN_GROUP
+ PRODUCT_ADMIN_GROUP
+ PROFILE_ADMIN_GROUP
+ USER_ADMIN_GROUP
+ DEVELOPER_GROUP
+ The following fields are present for all group types:
+ memberCount: integer ; The count of all members of the group.
+ adminGroupName string ; The name of the group that lists the administrators for this user group or product profile. Field absent if there are no administrators for this user group or product profile. The name is in the format _admin_user-group-name or _admin_product-profile-name .
+ groupName: string ; The name of the group (assigned in the Admin Console). There are three administrative groups with fixed names:
+ Administrators: _org_admin 
+ Support Administrators: _support_admin 
+ Deployment Administrators: _deployment_admin 
+ In addition, there are administrative groups for each user group and product profile. There are also developer groups for product profiles.
+These are named with a prefix and the group name. For example,
+ _admin_Marketing Group , _product_admin_Adobe Document Cloud for business or _developer_Marketing Group .
+ groupId: long ; The unique identifier for the group.
+ The following field is returned for groups of type USER_ADMIN_GROUP :
+ userGroupName string ; The name of the user group for which this group grants admin rights.
+ The following field is returned for groups of type PROFILE_ADMIN_GROUP :
+ productProfileName string ; The name of the product profile for which this group grants admin rights.
+ The following fields are returned for groups of type PRODUCT_PROFILE :
+ productName string ; The name of the product associated with this product profile.
+ licenseQuota: string ; The number of user licenses or the amount of resources alloted to this product profile.
+ You should avoid any logic that expects fixed group names as these are liable to change without notice.
+ Schema Model 
+ { 
+ "type" : "string" , 
+ "memberCount" : 0 , 
+ "adminGroupName" : "string" , 
+ "groupName" : "string" , 
+ "userGroupName" : "string" , 
+ "productProfileName" : "string" , 
+ "productName" : "string" , 
+ "licenseQuota" : "string" , 
+ "groupId" : long 
+ } 
+ 400 Bad Request 
+ Some parameters of the request were not understood by the server or the Service Account Integration certificate has expired.
+ 401 Unauthorized 
+ Possible causes are:
+ Invalid or expired token.
+ Invalid Organization.
+ < HTTP/1.1 401 Unauthorized
+< Content-Type: */*
+< Date: Thu, 22 Jun 2017 09:47:04 GMT
+< WWW-Authenticate: Bearer realm="JIL", error="invalid_token", error_description="The access token is invalid"
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ 403 Forbidden 
+ Possible causes are:
+ Missing API key.
+ The organization is currently migrating. Either from DMA or to One Console.
+ API key is not permitted access.
+ < HTTP/1.1 403 Forbidden
+< Date: Thu, 22 Jun 2017 09:41:22 GMT
+< X-Request-Id: user-assigned-request-id
+< Content-Length: 0
+< Connection: keep-alive
+ Example Requests 
+ Retrieve the first page of groups:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/groups/12345@AdobeOrg/0 \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Retrieve the fourth page of groups:
+ curl -X GET https://usermanagement.adobe.io/v2/usermanagement/groups/12345@AdobeOrg/4 \
+ --header 'Authorization: Bearer ey...' \
+ --header 'X-Api-Key: 88ce03094fe74f4d91c2538217d007fe'
+ Throttling 
+ To protect the availability of the Adobe back-end user identity systems, the User Management API imposes limits on client access to the data. Limits apply to the number of calls that an individual client can make within a time interval, and global limits apply to access by all clients within the time period. For this API the throttling limits are as follows:
+ Maximum calls per client: 5 requests per a minute 
+ Maximum calls for the application: 100 requests per a minute 
+ When the client or global access limit is reached, further calls fail with HTTP error status 429 Too Many Requests . The Retry-After header is included in the 429 response, and provides the minimum amount of time that the client should wait until retrying. See RFC 7231 for full information.
+ The User Management API recommends limiting your syncs to two hourly intervals and consider scheduling your sync for a time that works best for you, taking into account other timezones and clients. This will help to prevent how often your client is throttled.
+ The following sample shows a 429 response with the Retry-After header detailing the number of seconds to wait before retry:
+ ========================= RESPONSE =========================
+Status code: 429
+-------------------------- header --------------------------
+Content-Type: application/json
+Date: Fri, 19 Jan 2018 10:31:43 GMT
+Retry-After: 38
+Server: APIP
+X-Request-Id: iEUtsLiFgj3R4xsbirAyZlMyaxRTo8Xo
+Content-Length: 54
+Connection: keep-alive
+--------------------------- body ---------------------------
+{
+ "error_code" : "429050",
+ "message" : "Too many requests"
+}
+============================================================
+ Because of the global limits, and because the specific limits may change, you cannot simply limit the rate at which you make your own calls. You must handle rate-limit errors by retrying the failed calls. We recommend an exponential backoff retry technique for handling such errors.
+ Handling error responses
+ When you retry a failed request, the retry can also fail, and can fall back into the retry loop, adding to the system overload. The exponential backoff retry method increases the period between retries, so that the client makes fewer calls while the system is overloaded.
+ To implement an exponential backoff method, you increase the retry interval with each failed request. You should retry sending the request after a certain number of seconds, and increase that interval by a random amount with each attempt. For example, you can double the retry period each time, or escalate it by a power of 2, and then add a small random delay between failures.
+ A small random delay, known as “jitter,” prevents the “herd effect” that can occur if many clients attempt to reconnect to a recovering system at the same time. Without jitter, all of the retries could occur after 20 seconds, then 40 seconds, and so on. With the jitter, different retries occur at slightly different intervals. This allows the system to recover without further overloading it.
+ For an example of how to implement this error-handling method, see “Retrying Requests” in the User Management Walkthrough .

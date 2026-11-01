@@ -1,0 +1,438 @@
+Settings API | User Provisioning - HubSpot docs 
+ Documentation Index
+ Fetch the complete documentation index at: /docs/llms.txt 
+ Use this file to discover all available pages before exploring further.
+ Skip to main content 
+ Scope requirements
+ Use the user provisioning API to create and manage users in the account, along with their permissions. You can also set user firstName and lastName properties through this API. 
+ To retrieve and update other user information, such as their job title and working hours, use the users API instead. 
+ ​ 
+ Specifying a user 
+ When specifying a user with the userId path parameter, you can either use the user’s ID or the user’s email. Specifying based on the user’s ID is the default behavior but if you want to use the user’s email, you can use the query parameter idProperty to set that. 
+ The following GET request would fetch a user with the email myUser@gmail.com : 
+ https://api.hubspot.com/settings/v3/users/myUser@gmail.com?idProperty=EMAIL 
+ You can set the idProperty query parameter in any endpoint that takes in userId as a path parameter. 
+ ​ 
+ Permission Sets 
+ HubSpot accounts can define permission sets to easily manage multiple users’ permissions at once. Once you’ve created a role and specified certain permissions for it, you can then assign new and existing users the role to grant them the same permissions. Permission sets that have paid seats attached to them can only be modified by applications that have the billing-write scope. 
+ The following is an example of a role definition for a user: 
+ { 
+ "id" : "1234" , 
+ "name" : "a new role" , 
+ "requiresBillingWrite" : false 
+ } 
+ Note that permission sets must be created in the app before attempting to assign them to users. 
+ Last modified on March 31, 2026
+ Was this page helpful?
+ Yes No 
+ Assistant 
+ Responses are generated using AI and may contain mistakes.
+
+[Page: /docs/api-reference/legacy/crm/objects/users/guide]
+Account | Users API - HubSpot docs 
+ Documentation Index
+ Fetch the complete documentation index at: /docs/llms.txt 
+ Use this file to discover all available pages before exploring further.
+ Skip to main content 
+ Scope requirements
+ Use this API to fetch information about users in the account, along with updating their working hours, timezone, additional phone number, and job title properties. This API can be especially useful for syncing HubSpot user data with external workforce management tools. 
+ For example, use these endpoints keep a user’s working hours in sync with an external scheduling system. 
+ Learn more about objects, records, properties, and associations APIs in the Understanding the CRM guide. For more general information about objects and records in HubSpot, learn how to manage your CRM database . 
+ ​ 
+ Retrieve users 
+ Depending on the information you need, there are a few ways to retrieve HubSpot users: 
+ To retrieve all users, make a GET request to /crm/v3/objects/users/ .
+ To retrieve a specific user, make a GET request to the above URL and specify a user ID. For example: crm/v3/objects/users/207838823235 .
+ To retrieve a batch of users by ID, make a POST request to /crm/v3/objects/users/batch/read .
+ To retrieve users that meet a specific set of criteria, you can make a POST request to /crm/v3/objects/users/search and include search filters in the request body. Learn more about searching the CRM .
+ Please note: In a response for the users API, id and hs_object_id are the same and represent a user only in the HubSpot account from which the data was requested. This is different than the id values in the user provisioning API ( hs_internal_user_id ) which refers to a user across all accounts, and in the owners API ( hubspot_owner_id ) which refers to a user as an owner of records. 
+ For example, the following response returns users, their unique identifiers within the selected HubSpot account, and information about when they were created or modified: 
+ { 
+ "results" : [ 
+ { 
+ "id" : "207838823235" , 
+ "properties" : { 
+ "hs_createdate" : "2021-01-10T20:36:06.761Z" , 
+ "hs_lastmodifieddate" : "2023-08-29T18:17:55.697Z" , 
+ "hs_object_id" : "207838823235" 
+ }, 
+ "createdAt" : "2021-01-10T20:36:06.761Z" , 
+ "updatedAt" : "2023-08-29T18:17:55.697Z" , 
+ "archived" : false 
+ }, 
+ { 
+ "id" : "207840253600" , 
+ "properties" : { 
+ "hs_createdate" : "2017-12-22T12:22:12.212Z" , 
+ "hs_lastmodifieddate" : "2023-08-29T18:17:55.697Z" , 
+ "hs_object_id" : "207840253600" 
+ }, 
+ "createdAt" : "2017-12-22T12:22:12.212Z" , 
+ "updatedAt" : "2023-08-29T18:17:55.697Z" , 
+ "archived" : false 
+ } 
+ ] 
+ } 
+ To return specific properties, include a properties query parameter in the request URL along with comma-separated property names. Learn more about user properties below . 
+ For example, making a GET request to the following URL would result in the response below: 
+ crm/v3/objects/users?properties=hs_job_title,hs_additional_phone 
+ { 
+ "results" : [ 
+ { 
+ "id" : "207838823235" , 
+ "properties" : { 
+ "hs_additional_phone" : "+1123456780" , 
+ "hs_createdate" : "2021-01-10T20:36:06.761Z" , 
+ "hs_job_title" : "CEO" , 
+ "hs_lastmodifieddate" : "2023-08-29T18:17:55.697Z" , 
+ "hs_object_id" : "207838823235" 
+ }, 
+ "createdAt" : "2021-01-10T20:36:06.761Z" , 
+ "updatedAt" : "2023-08-29T18:17:55.697Z" , 
+ "archived" : false 
+ }, 
+ { 
+ "id" : "207840253600" , 
+ "properties" : { 
+ "hs_additional_phone" : "+1238675309" , 
+ "hs_createdate" : "2021-01-10T20:36:06.761Z" , 
+ "hs_job_title" : "Vice President" , 
+ "hs_lastmodifieddate" : "2023-08-29T18:17:55.697Z" , 
+ "hs_object_id" : "207838823235" 
+ }, 
+ "createdAt" : "2017-12-22T12:22:12.212Z" , 
+ "updatedAt" : "2023-08-29T18:17:55.697Z" , 
+ "archived" : false 
+ } 
+ ] 
+ } 
+ For the batch read endpoint, you can either retrieve users by their ID or by another unique identifier property by including an idProperty field. 
+ For example, to read a batch of users, your request could look like either of the following: 
+ { 
+ "properties" : [ "hs_job_title" , "hs_additional_phone" ], 
+ "inputs" : [ 
+ { 
+ "id" : "207838823235" 
+ }, 
+ { 
+ "id" : "207840253600" 
+ } 
+ ] 
+ } 
+ { 
+ "properties" : [ "hs_job_title" , "hs_additional_phone" ], 
+ "idProperty" : "externalIdProperty" , 
+ "inputs" : [ 
+ { 
+ "id" : "0001111" 
+ }, 
+ { 
+ "id" : "0001112" 
+ } 
+ ] 
+ } 
+ ​ 
+ Update users 
+ You can update users by ID individually or in batches. 
+ To update an individual user, make a PATCH request to /crm/v3/objects/users/{userId} .
+ To update a batch of users, make a POST request to /crm/v3/objects/users/batch/update , including the user IDs or unique idProperty in the request body as shown in the section above.
+ For each endpoint, you’ll need to include a request body that contains the properties you want to update. 
+ For example, the request body below would update a user’s timezone and working hours: 
+ { 
+ "properties" : { 
+ "hs_standard_time_zone" : "America/Detroit" , 
+ "hs_working_hours" : "[{ \" days \" : \" SATURDAY \" , \" startMinute \" :540, \" endMinute \" :1020},{ \" days \" : \" WEDNESDAY \" , \" startMinute \" :540, \" endMinute \" :1020}]" 
+ } 
+ } 
+ Only some properties can be set through this API. See the properties section below for a list of the available propeties. 
+ ​ 
+ User properties 
+ To retrieve a list of all available user properties, you can use the properties API by making a GET request to crm/v3/properties/user . Learn more about using the properties API . 
+ Below are the user properties that can be set through this API. 
+ Parameter Type Description 
+ hs_additional_phone String The user’s additional phone number. Users can set this in their user preferences . 
+ hs_availability_status String The user’s availability status. The value must be either "available" or "away" . 
+ hs_job_title String The user’s job title. Users can set this in their user preferences . 
+ hs_main_user_language_skill String The user’s main language skill. The value must match an existing language skill. Learn more about formatting language skills below. 
+ hs_out_of_office_hours String The user’s out of office hours. Out of office hours must not overlap. Each out of office hours’ start time must be later than the previous start time. 
+ hs_secondary_user_language_skill String The user’s secondary language skill. The value must match an existing language skill. Learn more about formatting language skills below. 
+ hs_standard_time_zone String The user’s timezone. Timezone values must use standard TZ identifiers , such as "America/New_York" or "Europe/Dublin" . This property must be set before you can set the user’s working hours. 
+ hs_uncategorized_skills String The user’s custom uncategorized skill. This property value must match an existing custom uncatgorized skill in the portal. 
+ hs_working_hours String The user’s working hours. This property value is formatted as stringified JSON. Learn more about formatting for working hours below. 
+ ​ 
+ Working hours 
+ hs_working_hours accepts a stringified JSON value. It consists of an array with an object for each set of working hours. 
+ "[{ \" days \" : \" VALUE \" , \" startMinute \" :number, \" endMinute \" :number}]" 
+ Parameter Type Description 
+ days Stringified JSON The days included in a set of working hours. Values include: MONDAY_TO_FRIDAY 
+ SATURDAY_SUNDAY 
+ EVERY_DAY 
+ MONDAY 
+ TUESDAY 
+ WEDNESDAY 
+ THURSDAY 
+ FRIDAY 
+ SATURDAY 
+ SUNDAY 
+ startMinute Number Working hours start time in minutes. Must be within the range of 0 - 1440 , where 0 represents 12:00AM midnight. For example, a 9:00AM start time would be represented as 540 . 
+ endMinute Number Working hours end time in minutes. Follows the same rules as startMinute .For example, 5:00PM is represented as 1020 . 
+ Please note: 
+ The hs_standard_time_zone property must be set before you can set working hours.
+ Working hours cannot overlap.
+ For example, if a user works Monday through Friday, 9:00AM to 5:00PM, you would format that as follows: 
+ "[{ \" days \" : \" MONDAY_TO_FRIDAY \" , \" startMinute \" :540, \" endMinute \" :1020}]" 
+ If a user works Monday 9:00AM to 5:00PM and Saturday 11:00AM to 2:00PM, the array would contain an object to represent each set of working hours: 
+ "[{ \" days \" : \" MONDAY \" , \" startMinute \" :540, \" endMinute \" :1020},{ \" days \" : \" SATURDAY \" , \" startMinute \" :660, \" endMinute \" :840}]" 
+ ​ 
+ Out of office hours 
+ If a user will be unavailable due to scheduled time off, you can set any periods during which they’ll be out of office using the hs_out_of_office_hours property: 
+ The property accepts an array of date ranges, each specified by a startTimestamp and endTimestamp .
+ The date ranges cannot overlap with one another, and the startTimestamp of each date range must be later than the previous startTimestamp .
+ For example, if you wanted to specify out-of-office hours during October 31st 2024 9:00 AM to 5:00 PM and November 28 2024 9:00 AM to 5:00 PM, you’d specify the following value for the hs_out_of_office_hours property for a user: 
+ "[{ \" startTimestamp \" : 17303796000, \" endTimestamp \" : 17304084000},{ \" startTimestamp \" : 17328024000, \" endTimestamp \" : 17328312000}]" 
+ ​ 
+ Language skills 
+ hs_main_user_language_skill or hs_secondary_user_language_skill must match an existing language skill. The following JSON array lists all valid options for language skill categories: 
+ [ 
+ { 
+ "label" : "Dansk" , 
+ "value" : "da" 
+ }, 
+ { 
+ "label" : "Deutsch" , 
+ "value" : "de" 
+ }, 
+ { 
+ "label" : "English" , 
+ "value" : "en" 
+ }, 
+ { 
+ "label" : "Español" , 
+ "value" : "es" 
+ }, 
+ { 
+ "label" : "Français" , 
+ "value" : "fr" 
+ }, 
+ { 
+ "label" : "Italiano" , 
+ "value" : "it" 
+ }, 
+ { 
+ "label" : "Nederlands" , 
+ "value" : "nl" 
+ }, 
+ { 
+ "label" : "Norsk" , 
+ "value" : "no" 
+ }, 
+ { 
+ "label" : "Polski" , 
+ "value" : "pl" 
+ }, 
+ { 
+ "label" : "Português" , 
+ "value" : "ptbr" 
+ }, 
+ { 
+ "label" : "Suomi" , 
+ "value" : "fi" 
+ }, 
+ { 
+ "label" : "Svenska" , 
+ "value" : "sv" 
+ }, 
+ { 
+ "label" : "中文 - 繁體" , 
+ "value" : "zhtw" 
+ }, 
+ { 
+ "label" : "日本語" , 
+ "value" : "ja" 
+ } 
+ ] 
+ Last modified on September 3, 2026
+ Was this page helpful?
+ Yes No 
+ Assistant 
+ Responses are generated using AI and may contain mistakes.
+
+[Page: /docs/login]
+
+
+[Page: /docs/apps/legacy-apps/overview]
+Legacy apps - HubSpot docs 
+ Documentation Index
+ Fetch the complete documentation index at: /docs/llms.txt 
+ Use this file to discover all available pages before exploring further.
+ Skip to main content 
+ Please note: 
+ Legacy public apps and private apps can no longer be created.
+ Existing legacy apps are still currently supported, but don’t have access to the latest app features.
+ Any app created before the 2025.2 release of the HubSpot developer platform is considered a legacy app. While you can still manage legacy public and private apps, the available features are limited compared to apps created on the latest version of the developer platform . 
+ The articles below provide guidance on legacy apps, but it’s highly recommended that you create apps on the latest version of the developer platform ( 2026.03 ), or migrate an existing legacy app to 2026.03 . 
+ Manage an existing legacy private app 
+ Manage an existing legacy public app 
+ ​ 
+ Access existing legacy apps 
+ To review any previously created legacy private apps or public apps: 
+ In your HubSpot account, navigate to Development .
+ In the left sidebar menu, click Legacy apps .
+ Last modified on October 30, 2026
+ Was this page helpful?
+ Yes No 
+ Assistant 
+ Responses are generated using AI and may contain mistakes.
+
+[Page: /docs/cms/start-building/introduction/overview]
+HubSpot CMS overview - HubSpot docs 
+ Documentation Index
+ Fetch the complete documentation index at: /docs/llms.txt 
+ Use this file to discover all available pages before exploring further.
+ Skip to main content 
+ This section is designed to help you understand key aspects of HubSpot’s CMS and build great websites on it. To get the most out of this, a professional-level understanding of web development basics, including HTML, JavaScript, and CSS, is expected. 
+ ​ 
+ Getting started 
+ If you’re just getting started with developing on HubSpot’s CMS, it’s recommended to begin with the following: 
+ Create a free developer account , then create a test account within it. This will give you a testing environment to build out your CMS assets without impacting a standard HubSpot account. Because you can also build private apps in developer test accounts, along with building public apps in developer accounts, you’ll have one home for both CMS and app development. Alternatively, you can create a CMS developer sandbox account .
+ Follow the CMS quickstart guide to walk through some basics, such as using the CMS theme boilerplate , running commands using the HubSpot CLI, and the relationship between local development and content creation in HubSpot.
+ ​ 
+ Building for content creators 
+ HubSpot’s CMS is designed to help businesses grow their web presence with an emphasis on enabling marketers to create and manage web content. The website’s content, lead collection, and analytics are integrated with the HubSpot CRM , making it easy to create personalized experiences for visitors and integrate those experiences with the rest of the business. 
+ A well-crafted website should be developed in close collaboration with your content creators to understand their needs. To that end, it’s recommended that you preview how the page building experience looks and feels for content creators while you build. This ensures they can work independently with the site as much as possible. 
+ HubSpot takes care of hosting and maintaining your pages, so you don’t have to worry about plugin management, updates, hosting, scaling, or security. The tradeoff is that the system puts a few more restrictions on what you can do compared to self-hosted CMS’s. For example, you can’t alter or extend system fundamentals manually or via plugins, manipulate low-level rendering, or access and alter database content directly. 
+ Developer-built content (e.g., themes , templates , modules , JavaScript, and CSS) is created in a developer file system, while page content (pages, blog posts) is laid out and built in a powerful block-based what you see is what you get (WYSIWYG) editor, and media files (content creator-built images, PDFs, etc.) are stored in a web app-based file manager. 
+ When a page is rendered, HubSpot routes the request to one of many servers based on domain, renders the page on our servers, and caches it to a content delivery network (CDN) if possible. 
+ ​ 
+ Types of content 
+ There are many types of content that you create using HubSpot’s CMS. The user interface for content creators is slightly different depending on content type, which has implications that you as a developer need to be aware of. 
+ ​ 
+ Website pages and landing pages 
+ Website and landing pages are built independent of one another, but all pages are based on templates. For content creators, the process of building a landing page or a website page is nearly identical. The distinction between them is that website pages are made to present information that’s part of your website and designed to be found organically, while a landing page is generally associated with a specific marketing offer or campaign (e.g., linked from a marketing email sent to a specific list of contacts). 
+ In the UI for marketers, the analytics and organization of these page types are also organized separately since landing pages often have specific conversion goals. 
+ ​ 
+ Blogs 
+ HubSpot blogs have two views—one for the listing page and one for the individual post page, then each blog post is populated into each of them. You can set a blog to share the same template for blog posts and listing pages, or have separate templates for the listing page and for blog posts. Blog posts must share the same template. Learn more about blog template markup and how to create and manage blogs in HubSpot . 
+ ​ 
+ Emails 
+ Emails can be built in a few ways in HubSpot: 
+ Classic email: build email templates and modules in a similar way to website and landing pages. You can also build coded email templates to have full control of the markup.
+ Drag and drop emails: build customizable drag and drop email templates that enable content creators to build email layout and content using HubSpot’s drag and drop interface.
+ Please note: building custom email modules and templates requires a Marketing Hub Professional or Enterprise subscription. 
+ ​ 
+ Working with data 
+ In addition to creating page content through the in-app editors or hard-coding in templates, you can also use structured data sources to populate dynamic page content with HubL. You can use the following data sources to populate pages: 
+ HubDB : store data in cells of HubDB tables.
+ CRM records : store data in CRM records, such as contacts, companies, or custom objects.
+ Building dynamic pages using structured content means that you can create, edit, and remove website pages and page content by updating the data sources directly. Similar to a HubSpot blog, a set of dynamic pages will include a single listing page to display the instances of your data source, then a separate page for each individual instance. Using HubL, you can fully configure the data that the pages display. 
+ For example, you can create a HubDB table that stores a row of information for each member of a sales team. Using that HubDB table, HubSpot can then generate a listing page to display key details from each table row (such as a name and image for each sales rep), along with a separate page per sales rep to display more information (such as their bio and phone number). Should a sales rep later be promoted to a different team, you can delete their row from the HubDB table, and HubSpot will automatically delete their detail page and remove them from the listing page. 
+ ​ 
+ Serverless functions 
+ In addition to using CRM records and HubDB data to populate pages, you can use serverless functions to write server-side code that interacts with HubSpot and third-party services through APIs. Serverless Functions are a Content Hub Enterprise feature. 
+ ​ 
+ Developer file system 
+ The core assets—templates, themes , and modules , as well as the JavaScript, CSS files, and images that support them—are created in a developer file system. You can view this file system either in the left panel of the design manager or in folders synchronized locally using the local development tools. Within the file system, assets can refer to each other with absolute or relative paths. 
+ Please note: React-based assets, such as some HubSpot default modules and custom CMS React assets, will not appear in the design manager file system. These assets are intended to only be worked on in your local environment using the HubSpot CLI to fetch and upload. 
+ Behind the scenes, these files are mapped to entries in a database. This is why access to the developer file system is through the HubSpot CLI tools rather than direct SSH or FTP access, and some file system features you may expect, like permissions and symlinks, are not offered in the developer filesystem. 
+ This differs from the approach of traditional CMS’s, but means that broken references between file or syntax errors are caught at publish time rather than at runtime, providing you with extra insulation against accidental failures when live traffic is hitting a website. 
+ Templates in the file system will be automatically detected and will be presented to content creators as they’re making new pages, so the structure of the file system is up to you. There’s no requirement that modules live in a /modules/ folder or JavaScript lives in a /js/ folder. However, it’s recommended to organize your assets in a similar way to the boilerplate example code for the CMS . 
+ Please note: By default, HubSpot automatically minifies JavaScript and CSS included in the design manager to remove unnecessary spaces, line breaks, and comments. This also applies to JavaScript and CSS uploaded to the design manager through the CLI . This means that you should not add already minified code directly to the design manager. Learn more about JavaScript and CSS minification . 
+ ​ 
+ Themes, templates, modules, and fields 
+ Themes , templates , modules , and fields are the most common types of assets you’ll be working with. Using each type of asset effectively gives content creators the freedom to work on websites independently while staying inside defined style and layout guardrails. 
+ Themes are the highest-level container that you can use to package other assets to create a cohesive site. One level down, templates are the files that content creators use for building individual pages, blog posts, emails, and more. Then, modules are elements on the page, such as a pricing card or image gallery. HubSpot provides a set of default web modules you can use out of the box for pages, and a set of default email modules for building emails. 
+ Please note: building custom email modules and templates requires a Marketing Hub Professional or Enterprise subscription. 
+ Themes and modules contain fields, which are settings of specific data types, such as numbers, strings, rich text, and images. You can control how these are used in rendering these objects, as well as how they should be organized and appear in the drag and drop content editor. Content creators can set values for fields in the editor, which are applied to the theme or module at render time. 
+ Learn more in the CMS building blocks overview . 
+ ​ 
+ The HubL Language 
+ The main language that you’ll use to build website assets on HubSpot’s CMS is the HubSpot Markup Language or HubL (pronounced “Hubble”). HubL is HubSpot’s extension of Jinjava , a templating engine based on Jinja . HubL uses a fair amount of markup that is unique to HubSpot and does not support all features of Jinja. It’s executed completely on the server-side when a page is rendered. 
+ HubL has the features you’d expect of a simple templating language like variables , for loops , and if statements , but also supports more complex rendering macros , data fetching, and mapping with tags , functions , and filters . 
+ If you reach the limits of what’s possible with HubL, HubSpot provides APIs for creating more customized solutions. Content Hub Enterprise accounts can use serverless functions , enabling more sophisticated server side programming. 
+ You can refer to the HubL language reference for more details on specific language features. 
+ ​ 
+ Logged in pages 
+ Using the Membership feature of Content Hub Enterprise , you can require your CRM contacts to be logged in to view specific content of your site. Content behind membership pages can be highly personalized to the logged-in contact, and can even render Contacts, Companies, Deals and Products data from the CRM. 
+ ​ 
+ Multi-language support 
+ With HubSpot’s CMS, users can create multi-language variations of their content. This will allow end-users to see content in the language with which they’re most comfortable. In addition, HubSpot provides tools to help developers ensure that the right language is available to the end-user. 
+ Last modified on March 30, 2026
+ Was this page helpful?
+ Yes No 
+ Assistant 
+ Responses are generated using AI and may contain mistakes.
+
+[Page: /docs/api-reference/legacy/overview]
+Legacy API reference - HubSpot docs 
+ Documentation Index
+ Fetch the complete documentation index at: /docs/llms.txt 
+ Use this file to discover all available pages before exploring further.
+ Skip to main content 
+ Please note: the APIs in this section use legacy numeric versioning (v1, v2, v3, v4) and will be deprecated in a future release. For new integrations, use the 2026-03 APIs instead. Migrating to the date-based version path (e.g., /crm/objects/2026-03/contacts ) positions your integration for long-term support as HubSpot moves forward with date-versioned releases. 
+ The Legacy API reference covers HubSpot’s older numeric-versioned endpoints. These APIs span four major version levels — v4, v3, v2, and v1 — each reflecting different generations of the HubSpot platform. Endpoints follow the pattern: 
+ /api-name/v{version}/resource 
+ For example, to retrieve a contact using the v3 CRM objects API: 
+ GET /crm/v3/objects/contacts/{contactId} 
+ ​ 
+ APIs by version 
+ ​ 
+ v4 
+ The v4 endpoints represent HubSpot’s most recent pre-date-versioning APIs, covering associations and automation actions. 
+ CRM Associations v4: ( /crm/v4/associations/ , /crm/v4/objects/{objectType}/{objectId}/associations/ ) create, read, and delete associations between records; configure association labels and types
+ Automation workflow actions v4: ( /automation/v4/actions/ ) define custom workflow actions with input fields, execution callbacks, and action definitions
+ ​ 
+ v3 
+ Most of HubSpot’s core platform APIs are at v3. These include the primary CRM, CMS, automation, and marketing endpoints. 
+ CRM objects v3: ( /crm/v3/objects/{objectType} ) CRUD and batch operations for contacts, companies, deals, tickets, and all other standard and custom CRM objects; includes search, merge, GDPR delete, and schema management
+ CRM associations v3: ( /crm/v3/associations/{fromObjectType}/{toObjectType}/batch/ ) batch read, create, and delete associations
+ CRM properties v3: ( /crm/v3/properties/{objectType} ) create and manage object properties and property groups
+ CRM pipelines v3: ( /crm/v3/pipelines/{objectType} ) manage deal and ticket pipelines and stages
+ CRM imports/exports v3: ( /crm/v3/imports/ , /crm/v3/exports/ ) bulk import and export CRM records
+ CRM lists v3: ( /crm/v3/lists/ ) create and manage contact and company lists
+ CRM extensions v3: ( /crm/v3/extensions/ ) calling extensions and video conferencing integrations
+ Automation workflows v3: ( /automation/v3/workflows/ ) create, retrieve, and delete HubSpot workflows
+ Conversations v3: ( /conversations/v3/ ) manage inboxes, threads, messages, and custom channels
+ CMS v3: ( /cms/v3/ ) blog posts, pages, HubDB, source code, domains, URL mappings, and redirects
+ Marketing events v3: ( /marketing/v3/marketing-events/ ) create and manage marketing event records and attendance
+ Communication preferences v3: ( /communication-preferences/v3/ ) manage subscription definitions and statuses
+ Webhooks v3: ( /webhooks/v3/ ) configure webhook subscriptions and settings
+ Events v3: ( /events/v3/ ) send and manage custom behavioral events
+ Files v3: ( /files/v3/ ) upload, manage, and retrieve files and folders
+ ​ 
+ v2 
+ The v2 APIs are older versions of CRM and CMS endpoints, many of which have v3 replacements. 
+ CRM properties v2: ( /properties/v2/{objectType}/properties ) manage contact, company, and deal properties and property groups
+ CRM companies v2: ( /companies/v2/companies/ ) create, read, update, and delete company records
+ CRM deals v2: (overlaps with v1; some batch update endpoints at deal-level paths)
+ CMS blog posts v2: ( /content/api/v2/blog-posts/ ) manage blog post drafts, versions, and publishing
+ CMS pages v2: ( /content/api/v2/pages/ ) manage website and landing pages
+ CMS blog settings v2: ( /content/api/v2/blogs/ ) read blog configuration
+ CMS site search v2: ( /site-search/v2/ ) search indexed site content and retrieve indexed properties
+ CMS layouts and templates v2: ( /content/api/v2/ ) manage CMS templates and layouts
+ Automation workflows v2: ( /automation/v2/workflows/ ) manage workflow enrollment for contacts
+ Marketing forms v2: ( /forms/v2/forms/ ) create, read, update, and delete HubSpot forms; retrieve field definitions
+ ​ 
+ v1 
+ The v1 APIs are the oldest generation and are primarily legacy contacts, deals, engagements, and account endpoints. 
+ CRM contacts v1: ( /contacts/v1/ ) create, read, update, and delete contacts; manage secondary emails; batch operations; search
+ CRM deals v1: ( /deals/v1/deal/ ) create, read, update, and delete deal records; batch async updates
+ CRM line items v1: ( /crm-objects/v1/objects/line-items/ ) manage line item records and batch operations
+ CRM products v1: ( /crm-objects/v1/objects/products/ ) manage product records
+ CRM tickets v1: ( /crm-objects/v1/objects/tickets/ ) manage ticket records
+ CRM owners v2: ( /owners/v2/owners/ ) retrieve CRM owners
+ CRM pipelines v1: ( /crm-pipelines/v1/pipelines/{objectType} ) manage pipelines and stages
+ CRM lists v1: ( /contacts/v1/lists/ ) create and manage static and dynamic contact lists
+ CRM associations v1: ( /crm-associations/v1/associations/ ) create, read, and delete associations between objects
+ CRM engagements v1: ( /engagements/v1/engagements/ ) create and manage calls, emails, meetings, notes, and tasks as engagement records
+ CRM extensions v1: ( /extensions/sales-objects/v1/ ) configure CRM card object types
+ Account info v1: ( /integrations/v1/me ) retrieve basic information about the authenticated account
+ Communication preferences v1: ( /email/public/v1/subscriptions/ ) read and update email subscription statuses
+ Marketing forms v1: ( /form-integrations/v1/ ) retrieve form submissions and signed file URLs
+ Marketing transactional send v1: ( /email/public/v1/singleEmail/send ) send single transactional emails; manage SMTP API tokens
+ CMS domains v1: ( /cms/v1/domains/ ) list and retrieve CMS domain configurations
+ Reporting v2: ( /analytics/v2/reports/ ) retrieve analytics data for content and events
+ Last modified on March 30, 2026
+ Was this page helpful?
+ Yes No 
+ Assistant 
+ Responses are generated using AI and may contain mistakes.

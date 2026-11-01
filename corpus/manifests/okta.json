@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Okta",
+    "slug": "okta",
+    "apiVersion": "2026.42.1"
+  },
+  "baseUrl": "https://{subdomain}.okta.com",
+  "connectionFields": [
+    {
+      "name": "subdomain",
+      "label": "Okta subdomain (the part before .okta.com)",
+      "example": "acme"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "api_key",
+      "label": "Okta API token (SSWS)",
+      "in": "header",
+      "name": "Authorization",
+      "prefix": "SSWS "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "$",
+    "pagination": {
+      "type": "link_header",
+      "sizeParam": "limit",
+      "pageSize": 200
+    },
+    "requiredScopes": [
+      "okta.users.read"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "profile.email",
+        "fallbackPaths": [
+          "profile.login"
+        ],
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "profile.displayName",
+        "fallbackPaths": [
+          "profile.login"
+        ],
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "status",
+        "fallbackPaths": null,
+        "map": {
+          "active": "active",
+          "deprovisioned": "deleted",
+          "locked_out": "suspended",
+          "password_expired": "active",
+          "provisioned": "pending",
+          "recovery": "active",
+          "staged": "pending",
+          "suspended": "suspended"
+        },
+        "format": null
+      },
+      "role": null,
+      "userType": null,
+      "lastActiveAt": {
+        "path": "lastLogin",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "createdAt": {
+        "path": "created",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "last_activity_field"
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "Pass the API token as the Authorization header value prefixed with SSWS"
+    },
+    {
+      "claim": "users",
+      "quote": "Lists users in your org, with pagination in most cases."
+    },
+    {
+      "claim": "pagination",
+      "quote": "The recommended page limit is now `limit=200`."
+    },
+    {
+      "claim": "users",
+      "quote": "This operation omits users that have a status of `DEPROVISIONED` in the response."
+    }
+  ],
+  "assumptions": [
+    "The source gives the host only as a variable (https://{yourOktaDomain}). I assumed it is a standard https://<subdomain>.okta.com address. Orgs on other Okta domains such as oktapreview.com would need a different base URL.",
+    "I left out OAuth 2.0. The source gives only relative token and authorize paths and doesn't say which grant types service apps can use. Only the API token (SSWS) is listed. Tokens are tied to the admin who created them, so a service-account admin should create it.",
+    "The default users list leaves out DEPROVISIONED users. The source says a filter or search query is needed to include them, but gives no exact syntax. This manifest doesn't fetch them, so licences held by deprovisioned users may be missed.",
+    "Okta pagination is not confirmed in the source. I assumed it uses the standard Link header (rel=next), which the System Log docs mention. The source lists an 'after' query parameter but doesn't describe the paging mechanism for users.",
+    "The users response is a bare JSON array. I used '$' for the records path on the assumption that the runtime treats it as the root of the response.",
+    "lastLogin is the user's last login time. It can be empty for users who never signed in. It reflects Okta sign-ins, not use of individual apps.",
+    "Status mapping is my judgement: LOCKED_OUT is mapped to suspended, PASSWORD_EXPIRED and RECOVERY to active, and PROVISIONED and STAGED to pending.",
+    "User type and role are left empty. profile.userType is a free-text type name, and admin roles need a separate per-user call.",
+    "Rate limits are not stated in the source, so they are left empty.",
+    "Email falls back to profile.login when profile.email is missing, and display name falls back to the same field. This is an assumption."
+  ]
+}

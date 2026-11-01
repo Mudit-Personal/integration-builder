@@ -1,0 +1,43 @@
+:root{
+/* Base — sampled from the Integration Builder flow screens */
+--paper:#f4f4f2;          /* page background */
+--paper-raised:#fbfbf9;   /* side panel, code surface */
+--ink:#141718;            /* primary text, strong rules, dark button */
+--ink-2:#4f545b;          /* secondary text, leads, descriptions */
+--ink-3:#6b7077;          /* mono meta, helper text */
+--ink-4:#7b8086;          /* pending marker, empty checkbox border */
+--line:#dbdcd8;           /* hairline row dividers */
+--line-soft:#e8e8e6;      /* panel divider */
+--blue:#2438e7;           /* the one accent: primary action, active, done */
+--blue-ink:#1f2fc4;       /* hover on blue */
+--blue-tint:#e6e9fc;      /* callout + selected card fill */
+--blue-line:#4c54bf;      /* callout border */
+--disabled:#d9dbd6;       /* disabled button fill */
+--white:#ffffff;
+--hover-wash:rgba(20,23,24,.05); /* hover fill on outlined controls */
+/* Semantic */
+--surface-page:var(--paper);
+--surface-panel:var(--paper-raised);
+--surface-selected:var(--blue-tint);
+--surface-callout:var(--blue-tint);
+--surface-inverse:var(--ink);
+--text-strong:var(--ink);
+--text-body:var(--ink);
+--text-muted:var(--ink-2);
+--text-meta:var(--ink-3);
+--text-accent:var(--blue);
+--text-on-accent:var(--white);
+--text-disabled:var(--ink-3);
+--border-strong:var(--ink);
+--border-hairline:var(--line);
+--border-panel:var(--line-soft);
+--border-callout:var(--blue-line);
+--action-primary:var(--blue);
+--action-primary-hover:var(--blue-ink);
+--action-selected:var(--ink);
+--action-disabled:var(--disabled);
+--status-done:var(--blue);
+--status-pending:var(--ink-4);
+--env-production:var(--blue);
+--env-sandbox:var(--ink-3);
+}

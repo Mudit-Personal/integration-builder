@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "HubSpot",
+    "slug": "hubspot",
+    "apiVersion": "v3"
+  },
+  "baseUrl": "https://api.hubspot.com",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "bearer",
+      "label": "Private app access token",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/crm/v3/objects/users",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "results",
+    "pagination": {
+      "type": "cursor",
+      "cursorPath": "paging.next.after",
+      "cursorParam": "after",
+      "cursorIn": "query",
+      "hasMorePath": null,
+      "sizeParam": "limit",
+      "pageSize": 100
+    },
+    "requiredScopes": [],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": null,
+      "displayName": null,
+      "status": null,
+      "role": null,
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": {
+        "path": "createdAt",
+        "fallbackPaths": [
+          "properties.hs_createdate"
+        ],
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The provided documentation describes no per-user last active or last login field, no audit or activity log, and no per-user usage report."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "users",
+      "quote": "To retrieve all users, make a GET request to /crm/v3/objects/users/"
+    },
+    {
+      "claim": "users",
+      "quote": "Use this API to fetch information about users in the account"
+    }
+  ],
+  "assumptions": [
+    "The source does not describe authentication. I assumed a private app access token sent as a Bearer token in the Authorization header. OAuth was not listed because its URLs are not in the source.",
+    "The source does not describe pagination for the users list. I assumed HubSpot's usual pattern: a 'limit' parameter, an 'after' cursor, and the next cursor at paging.next.after. Page size 100 is a guess.",
+    "The source does not show email, name, status or role fields in the users response, so these are left empty. Users will be identified only by their HubSpot user ID. Email may be available as a user property, but it is not confirmed in the source.",
+    "The user provisioning API (/settings/v3/users) is documented only for looking up a single user, so I used the Users API list endpoint instead. It may not return every user or include deactivated users.",
+    "Archived users are not requested. The source does not say how to include them.",
+    "No usage signal is documented, so usage is marked unavailable.",
+    "Scopes and plan requirements for the users endpoint are not stated in the source.",
+    "Rate limits are not stated in the source."
+  ]
+}

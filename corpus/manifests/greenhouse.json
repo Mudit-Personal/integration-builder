@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Greenhouse Harvest",
+    "slug": "greenhouse-harvest",
+    "apiVersion": "v1"
+  },
+  "baseUrl": "https://harvest.greenhouse.io",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "basic",
+      "label": "Harvest API key (API token as username, blank password)",
+      "usernameLabel": "API token",
+      "passwordLabel": ""
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/v1/users",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "$",
+    "pagination": {
+      "type": "link_header",
+      "sizeParam": "per_page",
+      "pageSize": 500
+    },
+    "requiredScopes": [],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "primary_email_address",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": null,
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The provided documentation shows no per-user last-active or last-login field on the user record, and no account-wide activity log or per-user usage report. The activity feed is per candidate only, and the Audit Log API is listed but not described."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": "X-RateLimit-Remaining",
+    "resetHeader": "X-RateLimit-Reset",
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "Harvest uses Basic Auth over HTTPS for authentication."
+    },
+    {
+      "claim": "pagination",
+      "quote": "API methods that return a collection of results are always paginated."
+    },
+    {
+      "claim": "rate_limit",
+      "quote": "Exceeding the limit will return an HTTP 429 response."
+    },
+    {
+      "claim": "users",
+      "quote": "Added primary_email_address to Users Endpoints"
+    },
+    {
+      "claim": "errors",
+      "quote": "Unauthorized – Ensure you’re using a valid Harvest API key with the correct permissions in the Authorization header (Basic Auth)."
+    }
+  ],
+  "assumptions": [
+    "The documentation provided was cut off before the Users section, so the List Users page (GET /v1/users) was never seen. The path comes from the navigation menu and other URLs, which show a /v1/users/{id} pattern.",
+    "User field names are inferred: id, name and employee_id appear on user objects embedded in other responses, and the change log says primary_email_address was added to the Users endpoints. Please confirm them against the List Users page.",
+    "Status, role and user type are left empty. The source does not show how disabled or enabled users are reported, or whether List Users returns disabled users by default. Disabled users that still hold licences may be missed.",
+    "Page size 500 is the maximum documented for the Candidates and Applications lists. It is assumed to apply to Users as well. Pagination follows the Link response header, as the documentation advises.",
+    "The users list is assumed to be a bare JSON array, so recordsPath is set to $. This is not confirmed.",
+    "The rate limit is stated as a number per 10 seconds, given in the X-RateLimit-Limit header (example: 50). No per-minute figure was set. The format of the X-RateLimit-Reset value is not specified.",
+    "Usage is marked unavailable. A candidate-level last_activity field exists, but it describes candidates, not the people who use Greenhouse.",
+    "The source says the Harvest v1/v2 API is deprecated and will be removed on August 31, 2026, and tells readers to migrate to Harvest v3. That date has passed. The v3 API is not described in this source, so this manifest targets v1, which may no longer work.",
+    "The API key must be granted access to the Users endpoint in Greenhouse's Dev Center, or requests will fail.",
+    "Write endpoints need an On-Behalf-Of header. This manifest only reads, so it does not send that header."
+  ]
+}

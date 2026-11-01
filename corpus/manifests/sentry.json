@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Sentry",
+    "slug": "sentry",
+    "apiVersion": "0"
+  },
+  "baseUrl": "https://{region}.sentry.io",
+  "connectionFields": [
+    {
+      "name": "region",
+      "label": "Sentry region (us or de)",
+      "example": "us"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "bearer",
+      "label": "Sentry auth token",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [
+    {
+      "name": "org",
+      "request": {
+        "method": "GET",
+        "path": "/api/0/organizations/",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "extract": {
+        "org": "0.slug"
+      }
+    }
+  ],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/api/0/organizations/{{context.org}}/members/",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "$",
+    "pagination": {
+      "type": "link_header",
+      "sizeParam": null,
+      "pageSize": null
+    },
+    "requiredScopes": [
+      "member:read"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "email",
+        "fallbackPaths": [
+          "user.email"
+        ],
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "name",
+        "fallbackPaths": [
+          "user.name"
+        ],
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "pending",
+        "fallbackPaths": null,
+        "map": {
+          "true": "pending",
+          "false": "active"
+        },
+        "format": null
+      },
+      "role": {
+        "path": "orgRole",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userType": null,
+      "lastActiveAt": {
+        "path": "user.lastActive",
+        "fallbackPaths": [
+          "user.lastLogin"
+        ],
+        "map": null,
+        "format": "iso8601"
+      },
+      "createdAt": {
+        "path": "dateCreated",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "last_activity_field"
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "users",
+      "quote": "List all organization members. Response includes pending invites that are approved by organization owners or managers but waiting to be accepted by the invitee."
+    },
+    {
+      "claim": "pagination",
+      "quote": "Returns a paginated list of members bound to a organization with a SCIM Users GET Request."
+    },
+    {
+      "claim": "usage",
+      "quote": "\"lastActive\":\"string date-time\""
+    }
+  ],
+  "assumptions": [
+    "The source did not describe how pagination works for the members list. I assumed Sentry's standard Link-header cursor paging, which is not confirmed here.",
+    "The organization is taken as the first one returned by the 'List Your Organizations' call (path 0.slug, since the response is a top-level list). If the token can see several organizations, the wrong one may be picked.",
+    "The region (us or de) must be supplied by the customer as a connection setting.",
+    "The source did not say how to read suspended or deactivated members. Status is only derived from the pending-invite flag (pending or active), so suspended users are not distinguished.",
+    "Last activity comes from the user's lastActive field, falling back to lastLogin. Pending invites have no linked user, so they will have no activity date.",
+    "I assumed the response is a top-level array and used '$' as the records path.",
+    "No rate limit information was given in the source.",
+    "The source said little about auth. I assumed a Sentry auth token sent as a Bearer token with member:read scope. An internal integration token would survive staff leaving better than a user token, but this was not confirmed.",
+    "The organization slug from the first context step is now stored under the name 'org' and used as {{context.org}}; I could not confirm the runtime's exact naming rule for context values."
+  ]
+}

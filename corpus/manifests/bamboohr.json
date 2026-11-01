@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "BambooHR",
+    "slug": "bamboohr",
+    "apiVersion": "v1"
+  },
+  "baseUrl": "https://{companySubDomain}.bamboohr.com/api/v1",
+  "connectionFields": [
+    {
+      "name": "companySubDomain",
+      "label": "BambooHR company subdomain",
+      "example": "acme"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "basic",
+      "label": "API key (use the API key as username)",
+      "usernameLabel": "API key",
+      "passwordLabel": "Password (any value, e.g. x)"
+    }
+  ],
+  "extraHeaders": {
+    "Accept": "application/json"
+  },
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/employees/directory",
+      "query": {
+        "onlyCurrent": "false"
+      },
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "employees",
+    "pagination": {
+      "type": "none"
+    },
+    "requiredScopes": [],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": null,
+      "displayName": {
+        "path": "displayName",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": {
+        "path": "jobTitle",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The provided documentation covers only the employee directory endpoint, which has no last-active or login field and no activity log or per-user usage report is described."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "users",
+      "quote": "Directory fieldset and matching employee records, encoded per the Accept header."
+    },
+    {
+      "claim": "users",
+      "quote": "Set to false to also include employees with a future hire date or future employment-status effective date"
+    },
+    {
+      "claim": "errors",
+      "quote": "The body is empty and the diagnostic reason is carried in the x-bamboohr-error-message header."
+    }
+  ],
+  "assumptions": [
+    "Authentication is not described in the source. HTTP Basic with the API key as username is an assumption based on general BambooHR knowledge, and should be verified.",
+    "The directory endpoint does not return email addresses, status, or user type, so those are left empty. Employee id is used as the identifier. Job title is mapped to role as a rough stand-in.",
+    "The source itself recommends the custom report API for bulk employee data, because the Company Directory can be disabled by each company (a 403 is returned then). That endpoint was not documented here, so this directory endpoint is used.",
+    "Pagination is not mentioned, so the endpoint is assumed to return everything in one response.",
+    "Rate limits are not stated in the source.",
+    "No usage signal (last login or activity log) is documented in the source, so usage is marked unavailable.",
+    "The Accept header is set to application/json, which the source lists as the default."
+  ]
+}

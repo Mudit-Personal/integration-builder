@@ -1,0 +1,2803 @@
+Users 
+ For AI agents: the docs index is at https://developer.monday.com/api-reference/llms.txt. The index for every project on this site is at https://developer.monday.com/llms.txt. Append .md to any documentation page URL to get its markdown version.
+ Every monday.com user belongs to an account or organization and is assigned a role, such as admin, member, viewer, guest, subscriber, board owner, or a custom role. Each user also has a unique profile containing their user details and permissions.
+ Queries
+ Get users
+ Required scope: users:read 
+ Returns an array containing metadata about one or multiple users
+ Can be queried directly at the root or nested within a teams query (returns users from a specific team)
+ GraphQL JavaScript 
+ query {
+ users(limit: 50) {
+ created_at
+ email
+ account {
+ name
+ id
+ }
+ }
+} 
+ const GET_USERS = "query { users (limit: 50) { created_at email account { name id }}}";
+const seamlessApiClient = new SeamlessApiClient("2025-04");
+const response = await seamlessApiClient.request(GET_USERS) 
+ Arguments
+ Argument Type Description Enum Values 
+ emails [String] (2026-04) [String!] (2026-07+) The specific user emails to return. Starting in 2026-07 , array elements must be non-null. 
+ ids [ID!] The unique identifier of the specific users to return. 
+ kind (DEPRECATED) UserKind The kind of users you want to search by. Deprecated in 2026-07 ( @deprecated(reason: "Use user_kind instead.") ). Still accepted at runtime; a removal version has not been announced. all guests non_guests non_pending 
+ limit Int The number of users to get. Starting in 2026-07 , defaults to 200 and has a maximum of 1000 . Queries with no limit returned all users in earlier versions; starting in 2026-07 they return at most 200. 
+ name String A fuzzy search of users by name. 
+ newest_first (DEPRECATED) Boolean Lists the most recently created users at the top. Deprecated in 2026-07 ( @deprecated(reason: "Use sort instead.") ). Still accepted at runtime; a removal version has not been announced. 
+ non_active (DEPRECATED) Boolean Returns the account&#x27;s non-active users. Deprecated in 2026-07 ( @deprecated(reason: "Use status instead.") ). Still accepted at runtime; a removal version has not been announced. 
+ page Int The page number to return. Starts at 1. 
+ sort [UsersSortInput!] Sort users by one or more fields and directions. Replaces newest_first . Only available in versions 2026-07 and later. 
+ status [UserStatus!] Filter users by activation status. Defaults to [ACTIVE, PENDING] when omitted. Replaces non_active . Only available in versions 2026-07 and later. ACTIVE INACTIVE PENDING 
+ user_kind UserKindFilterInput Filter users by kind. Supports individual kinds and kind groups (for example, BASIC = admin + member + guest + view_only). Replaces kind . Only available in versions 2026-07 and later. 
+ visibility String Filter users by visibility. Only available in versions 2026-07 and later. 
+ Fields
+ Field Type Field description Supported Subfields 
+ account Account! The user&#x27;s account. 
+ account_id ID! The unique identifier of the account the user belongs to. Only available in versions 2026-07 and later. 
+ activity_logs UserActivityLogsPage The user&#x27;s activity log events. Returns a paginated list of activity logs with cursor-based pagination. See Activity logs for arguments, field definitions, and rate-limit details. Only available in versions 2026-07 and later. 
+ bb_visitor_id ID! Opaque platform identifier for the user within the account. Only available in versions 2026-07 and later. 
+ became_active_at ISO8601DateTime The date and time when the user became active. Replaces join_date . Only available in versions 2026-07 and later. 
+ birthday Date (2026-04) String (2026-07+) The user&#x27;s date of birth. Returned as YYYY-MM-DD . Starting in 2026-07 , this field is typed as String instead of Date . 
+ country_code String The user&#x27;s country code. 
+ created_at Date (2026-04) ISO8601DateTime! (2026-07+) The user&#x27;s creation date. In 2026-04 and earlier, returned as Date ( YYYY-MM-DD ). Starting in 2026-07 , returned as ISO8601DateTime! (for example, 2023-09-02T13:22:48.000Z ) and non-null. 
+ current_language String The user&#x27;s language. 
+ department Department The department the user is a member of (if any). Returns null if the user is not assigned to a department. Only available in versions 2026-04 and later. 
+ custom_field_metas [CustomFieldMetas] The user profile custom fields metadata. description String 
+editable Boolean 
+field_type String 
+flagged Boolean 
+icon String 
+id String 
+position String 
+title String 
+ custom_field_values [CustomFieldValue] The user profile custom field values. custom_field_meta_id String 
+value String 
+ department Department The department(s) the user is a member of. Only available in versions 2026-04 and later. 
+ email String! The user&#x27;s email. 
+ enabled (DEPRECATED) Boolean! Whether the user is enabled. Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use status ( ACTIVE , INACTIVE ) instead. 
+ greeting String The user&#x27;s greeting. 
+ id ID! The user&#x27;s unique identifier. 
+ invitation_method InvitationMethod! The method by which the user was added to the account. Only available in versions 2026-07 and later. USER SCIM SSO AUTH_DOMAIN FIRST_USER CONSOLIDATION INTERNAL_CREATION UNKNOWN SERVICE_PORTAL_AUTH_DOMAIN SERVICE_PORTAL_USER_INVITATION API_USER_CREATION 
+ is_admin (DEPRECATED) Boolean Whether the user is an admin. Deprecated in 2026-07 and scheduled for removal in 2026-10 . Compare kind == "admin" instead. 
+ is_deleted Boolean! Whether the user has been soft-deleted. Only available in versions 2026-07 and later. 
+ is_email_confirmed Boolean! Whether the user has confirmed their email address. Replaces is_verified . Only available in versions 2026-07 and later. 
+ is_guest (DEPRECATED) Boolean Whether the user is a guest. Deprecated in 2026-07 and scheduled for removal in 2026-10 . Compare kind == "guest" instead. 
+ is_pending (DEPRECATED) Boolean Whether the user hasn&#x27;t confirmed their email yet. Deprecated in 2026-07 and scheduled for removal in 2026-10 . Compare status == PENDING instead. 
+ is_view_only (DEPRECATED) Boolean Whether the user is a viewer. Deprecated in 2026-07 and scheduled for removal in 2026-10 . Compare kind == "view_only" instead. 
+ is_verified (DEPRECATED) Boolean Whether the user verified their email. Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use is_email_confirmed instead. 
+ join_date (DEPRECATED) Date The date the user joined the account. Returned as YYYY-MM-DD . Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use became_active_at instead. 
+ last_activity Date The last date and time the user was active. Returned as YYYY-MM-DDT00:00:00 . 
+ location String The user&#x27;s location. 
+ mobile_phone String The user&#x27;s mobile phone number. 
+ name String! The user&#x27;s name. 
+ out_of_office OutOfOffice The user&#x27;s out-of-office status. active Boolean 
+disable_notifications Boolean 
+end_date Date 
+start_date Date 
+type String 
+ phone String The user&#x27;s phone number. 
+ photo_original (DEPRECATED) String Returns the URL of the user&#x27;s uploaded photo in its original size. Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use photo_url { original } instead. 
+ photo_small (DEPRECATED) String Returns the URL of the user&#x27;s uploaded photo in a small size (150x150 px). Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use photo_url { small } instead. 
+ photo_thumb (DEPRECATED) String Returns the URL of the user&#x27;s uploaded photo in thumbnail size (100x100 px). Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use photo_url { thumb } instead. 
+ photo_thumb_small (DEPRECATED) String Returns the URL of the user&#x27;s uploaded photo in a small thumbnail size (50x50 px). Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use photo_url { thumb_small } instead. 
+ photo_tiny (DEPRECATED) String Returns the URL of the user&#x27;s uploaded photo in tiny size (30x30 px). Deprecated in 2026-07 and scheduled for removal in 2026-10 . Use photo_url { tiny } instead. 
+ photo_url PhotoUrl The URLs for the user&#x27;s profile photo in all available sizes. Replaces the flat photo_* fields. Only available in versions 2026-07 and later. original String 
+small String 
+thumb String 
+thumb_small String 
+tiny String 
+ serial_number Int The user&#x27;s registration sequence number within the account. Only available in versions 2026-07 and later. 
+ sign_up_product_kind (DEPRECATED) String The product the user first signed up to. Deprecated in 2026-07 and scheduled for removal in 2026-10 . No replacement. 
+ status UserStatus! The activation status of the user. Replaces the enabled and is_pending booleans. Only available in versions 2026-07 and later. ACTIVE INACTIVE PENDING 
+ teams [Team] The user&#x27;s teams. 
+ time_zone_identifier String The user&#x27;s timezone identifier. 
+ title String The user&#x27;s title. 
+ url String! The user&#x27;s profile URL. 
+ user_config UserConfig! The user&#x27;s configuration based on their kind (role id, visibility). Requires the users:read scope. Only available in versions 2026-07 and later. kind String! 
+role_id ID! 
+visibility [String!]! 
+ utc_hours_diff Int (2026-04) Float (2026-07+) The user&#x27;s UTC hours difference. Starting in 2026-07 , this field is typed as Float to support fractional timezone offsets (for example, 5.5 ). 
+ Get user configs
+ 🚧 Only available in API versions 2026-07 and later 
+ Required scope: users:read 
+ Returns [UserConfig!]! 
+ Can be queried directly at the root
+ Returns every user config defined for the account, sorted by role_id ascending
+ GraphQL 
+ query {
+ user_configs {
+ kind
+ role_id
+ visibility
+ }
+} 
+ Arguments
+ Argument Type Description 
+ kinds [String] Filter to configs that match these kinds. 
+ visibility String Filter by visibility. 
+ Migration: user entity in 2026-07 and 2026-10 
+ Starting with API version 2026-07 , the User type and Query.users follow the updated schema described in the User entity migration guide . Several legacy fields are deprecated and are scheduled for removal in 2026-10 .
+ Deprecated field Replacement 
+ photo_original , photo_small , photo_thumb , photo_thumb_small , photo_tiny photo_url { original / small / thumb / thumb_small / tiny } 
+ is_admin kind == "admin" 
+ is_guest kind == "guest" 
+ is_view_only kind == "view_only" 
+ is_pending status == PENDING 
+ enabled status == ACTIVE 
+ is_verified is_email_confirmed 
+ join_date became_active_at 
+ encrypt_api_token , sign_up_product_kind Removed without replacement 
+ Query.users(kind:) Query.users(user_kind:) 
+ Query.users(newest_first:) Query.users(sort:) 
+ Query.users(non_active:) Query.users(status:) 
+ Mutations
+ Add users to board
+ Required scope: boards:write 
+ Adds users to a board. Returns [User] .
+ GraphQL 
+ mutation {
+ add_users_to_board(
+ board_id: 1234567890
+ user_ids: [
+ 123456
+ 234567
+ 345678
+ ] 
+ kind: owner
+ ) {
+ id
+ }
+} 
+ Arguments
+ Argument Type Description Enum Values 
+ board_id ID! The board&#x27;s unique identifier. 
+ kind BoardSubscriberKind The user&#x27;s role. owner subscriber 
+ user_ids [ID!]! The users&#x27; unique identifiers. 
+ Add users to team
+ Adds users to a team. Returns ChangeTeamMembershipResult .
+ GraphQL 
+ mutation {
+ add_users_to_team(
+ team_id: 7654321
+ user_ids: [
+ 123456
+ 654321
+ 12345
+ ]
+ ) {
+ successful_users {
+ name
+ email
+ }
+ failed_users {
+ name
+ email
+ }
+ }
+} 
+ Arguments
+ Argument Type Description 
+ team_id ID! The team&#x27;s unique identifier. 
+ user_ids [ID!]! The users&#x27; unique identifiers. 
+ Add users to workspace
+ Required scope: workspaces:write 
+ Adds users to a workspace. Returns [User] .
+ GraphQL JavaScript 
+ mutation {
+ add_users_to_workspace(
+ workspace_id: 1234567
+ user_ids: [
+ 123456
+ 654321
+ 987654
+ ] 
+ kind: subscriber
+ ) {
+ id
+ }
+} 
+ let query = "mutation { add_users_to_workspace (workspace_id: 1234567, user_ids: [123456, 654321, 012345], kind: subscriber) { id } }";
+fetch ("https://api.monday.com/v2", {
+ method: &#x27;post&#x27;,
+ headers: {
+ &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+ &#x27;Authorization&#x27; : &#x27;YOUR_API_KEY_HERE&#x27;
+ },
+ body: JSON.stringify({
+ query : query
+ })
+ })
+ .then(res => res.json())
+ .then(res => console.log(JSON.stringify(res, null, 2))); 
+ Arguments
+ Arguments Type Description Enum Values 
+ kind WorkspaceSubscriberKind The user&#x27;s role. owner subscriber 
+ user_ids [ID!]! The users&#x27; unique identifiers. 
+ workspace_id ID! The workspace&#x27;s unique identifier. 
+ Activate users
+ Activates or reactivates users in a monday.com account. Returns ActivateUsersResult .
+ GraphQL JavaScript 
+ mutation {
+ activate_users(
+ user_ids: [
+ 54321
+ 12345
+ ]
+ ) {
+ activated_users {
+ id
+ name
+ email
+ }
+ errors {
+ user_id
+ code
+ message
+ }
+ }
+} 
+ let query = &#x27;mutation { activate_users (user_ids: [54321, 12345]) { activated_users { id name email } errors { user_id code message }}}&#x27;;
+fetch ("https://api.monday.com/v2", {
+ method: &#x27;post&#x27;,
+ headers: {
+ &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+ &#x27;Authorization&#x27; : &#x27;YOUR_API_KEY_HERE&#x27;
+ },
+ body: JSON.stringify({
+ &#x27;query&#x27; : query
+ })
+ })
+ .then(res => res.json())
+ .then(res => console.log(JSON.stringify(res, null, 2))); 
+ Arguments
+ Argument Type Description 
+ user_ids [ID!]! The users&#x27; unique identifiers. The maximum is 200. 
+ Invite users
+ Invites users to join a monday.com account. They will remain in a pending status until the invitation is accepted. Returns InviteUsersResult .
+ GraphQL JavaScript 
+ mutation {
+ invite_users(
+ emails: [
+ " [email&#160;protected] "
+ " [email&#160;protected] "
+ ]
+ product: crm
+ user_role: VIEW_ONLY
+ ) {
+ errors {
+ message
+ code
+ email
+ }
+ invited_users {
+ name
+ id
+ }
+ }
+} 
+ let query = &#x27;mutation { invite_users (input: ) { deactivated_users { id name }}&#x27;;
+fetch ("https://api.monday.com/v2", {
+ method: &#x27;post&#x27;,
+ headers: {
+ &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+ &#x27;Authorization&#x27; : &#x27;YOUR_API_KEY_HERE&#x27;
+ },
+ body: JSON.stringify({
+ &#x27;query&#x27; : query
+ })
+ })
+ .then(res => res.json())
+ .then(res => console.log(JSON.stringify(res, null, 2))); 
+ Arguments
+ Argument Type Description Enum Values 
+ emails [String!]! The users&#x27; emails. 
+ product Product The product to invite the user to. crm dev forms knowledge service whiteboard workflows work_management 
+ user_role UserRole The invited user&#x27;s new role. GUEST MEMBER VIEW_ONLY 
+ Update multiple users
+ Updates one or multiple users&#x27; attributes. Returns UpdateUserAttributesResult .
+ GraphQL 
+ mutation {
+ update_multiple_users(
+ user_updates: [
+ {
+ user_id: 12345678
+ user_attribute_updates: {
+ birthday: "1985-06-01"
+ email: " [email&#160;protected] "
+ }
+ }
+ {
+ user_id: 87654321
+ user_attribute_updates: {
+ birthday: "1975-01-20"
+ email: " [email&#160;protected] "
+ }
+ }
+ ]
+ ) {
+ updated_users {
+ name
+ birthday
+ email
+ id
+ }
+ errors {
+ message
+ code
+ user_id
+ }
+ }
+} 
+ Arguments
+ Argument Type Description 
+ user_updates [UserUpdateInput!]! The unique identifiers and attributes to update. Updates users&#x27; birthdays, departments, emails, join dates, locations, mobile phone numbers, names, and titles. 
+ Update email domain
+ Updates a user&#x27;s email domain. Returns UpdateEmailDomainResult .
+ GraphQL 
+ mutation {
+ update_email_domain(
+ input: {
+ new_domain: " [email&#160;protected] "
+ user_ids: [
+ 123456
+ 654321
+ ]
+ }
+ ) {
+ updated_users {
+ name
+ is_admin
+ }
+ errors {
+ user_id
+ code
+ message
+ }
+ }
+} 
+ Arguments
+ Argument Type Description 
+ input UpdateEmailDomainAttributesInput! The attributes to update. 
+ Update user&#x27;s role
+ Updates a user&#x27;s role (accepts both custom or default roles). Returns UpdateUsersRoleResult .
+ Please keep the following in mind:
+ You can&#x27;t update yourself
+ Maximum of 200 user IDs per mutation
+ Only admins can use this mutation
+ GraphQL (Default Role) GraphQL (Custom Role) 
+ mutation {
+ update_users_role(
+ user_ids: [
+ 12345
+ 54321
+ ]
+ new_role: ADMIN
+ ) {
+ updated_users {
+ name
+ is_admin
+ }
+ errors {
+ user_id
+ code
+ message
+ }
+ }
+} 
+ mutation {
+ update_users_role(
+ user_ids: [
+ 12345
+ 54321
+ ]
+ role_id: "5"
+ ) {
+ updated_users {
+ name
+ }
+ errors {
+ user_id
+ code
+ message
+ }
+ }
+} 
+ Arguments
+ Argument Type Description Enum Values 
+ new_role BaseRoleName The user&#x27;s updated role. Only used to update default roles, not custom ones (read more here ). ADMIN GUEST MEMBER VIEW_ONLY 
+ role_id ID The custom role&#x27;s unique identifier (found by querying account_roles ). Available only for enterprise customers. 
+ user_ids [ID!]! The users&#x27; unique identifiers. The maximum is 200. 
+ Delete subscribers from a board
+ Deletes subscribers from a board. Returns [User] .
+ GraphQL JavaScript 
+ mutation {
+ delete_subscribers_from_board(
+ board_id: 1234567890
+ user_ids: [
+ 12345678
+ 87654321
+ 56789012
+ ]
+ ) {
+ id
+ }
+} 
+ let query = &#x27;mutation { delete_subscribers_from_board (board_id: 1234567890, user_ids: [12345678, 87654321, 01234567]) { id }}&#x27;;
+fetch ("https://api.monday.com/v2", {
+ method: &#x27;post&#x27;,
+ headers: {
+ &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+ &#x27;Authorization&#x27; : &#x27;YOUR_API_KEY_HERE&#x27;
+ },
+ body: JSON.stringify({
+ &#x27;query&#x27; : query
+ })
+ })
+ .then(res => res.json())
+ .then(res => console.log(JSON.stringify(res, null, 2))); 
+ Arguments
+ Argument Type Description 
+ board_id ID! The board&#x27;s unique identifier. 
+ user_ids [ID!]! The users&#x27; unique identifiers. 
+ Clear users department
+ 🚧 Only available in API versions 2026-04 and later 
+ Clears a user&#x27;s department. Returns ClearUsersDepartmentResult .
+ GraphQL 
+ mutation {
+ clear_users_department(user_ids: [12345, 54321]) {
+ cleared_users { 
+ name
+ id
+ department
+ }
+ }
+} 
+ Arguments
+ Argument Type Description 
+ user_ids [ID!]! The IDs of the users to clear the department of. 
+ Remove users from team
+ Removes users from a team. Returns ChangeTeamMembershipResult .
+ GraphQL JavaScript 
+ mutation {
+ remove_users_from_team(
+ team_id: 7654321
+ user_ids: [
+ 123456
+ 654321
+ 987654
+ ]
+ ) {
+ successful_users {
+ name
+ email 
+ }
+ failed_users {
+ name
+ email
+ }
+ }
+} 
+ let query = "mutation { remove_users_from_team (team_id:7654321, user_ids: [123456, 654321, 012345]) { successful_users { name email } failed_users { name email }}}";
+fetch ("https://api.monday.com/v2", {
+ method: &#x27;post&#x27;,
+ headers: {
+ &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+ &#x27;Authorization&#x27; : &#x27;YOUR_API_KEY_HERE&#x27;
+ },
+ body: JSON.stringify({
+ query : query
+ })
+ })
+ .then(res => res.json())
+ .then(res => console.log(JSON.stringify(res, null, 2))); 
+ Arguments
+ Argument Type Description 
+ team_id ID! The team&#x27;s unique identifier. 
+ user_ids [ID!]! The users&#x27; unique identifiers. 
+ Delete users from workspace
+ Required scope: workspaces:write 
+ Deletes users from a workspace. Returns [User] .
+ GraphQL JavaScript 
+ mutation {
+ delete_users_from_workspace(
+ workspace_id: 1234567
+ user_ids: [
+ 123456
+ 654321
+ 987654
+ ]
+ ) {
+ id
+ }
+} 
+ let query = "mutation { delete_users_from_workspace (workspace_id: 1234567, user_ids: [123456, 654321, 012345]) { id } }";
+fetch ("https://api.monday.com/v2", {
+ method: &#x27;post&#x27;,
+ headers: {
+ &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+ &#x27;Authorization&#x27; : &#x27;YOUR_API_KEY_HERE&#x27;
+ },
+ body: JSON.stringify({
+ query : query
+ })
+ })
+ .then(res => res.json())
+ .then(res => console.log(JSON.stringify(res, null, 2))); 
+ Arguments
+ Arguments Type Description 
+ user_ids [ID!]! The users&#x27; unique identifiers. 
+ workspace_id ID!! The workspace&#x27;s unique identifier. 
+ Deactivate users
+ Deactivates users from a monday.com account. Returns DeactivateUsersResult .
+ Please keep the following in mind:
+ You can&#x27;t deactivate yourself
+ There&#x27;s a maximum of 200 users per mutation
+ Only admins can use this mutation
+ Deactivating a user also deactivates the integrations and automations they&#x27;ve created. Read more about deactivating users here !
+ GraphQL 
+ mutation {
+ deactivate_users(
+ user_ids: [
+ 54321
+ 12345
+ ]
+ ) {
+ deactivated_users {
+ id
+ name
+ }
+ errors {
+ message
+ code
+ user_id
+ }
+ }
+} 
+ Arguments
+ Arguments Type Description 
+ user_ids [ID!]! The unique identifiers of the users to deactivate. The maximum is 200. 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No
+
+[Page: /api-reference/changelog/board-activity-logs-cursor-pagination-and-90-day-limit.md]
+---
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/api-reference/llms.txt
+---
+
+# Board activity logs: cursor pagination and 90-day limit
+
+<HTMLBlock>{`<div style="
+  display: inline-flex;
+  align-items: center;
+  background-color: #6468f8;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+">
+  <span style="margin-right: 6px;">🏷️ API version:</span>
+  <a href="https://developer.monday.com/api-reference/docs/release-notes#2027-01"
+     style="color: #ffffff; text-decoration: underline; font-weight: 600;">
+     2027-01
+  </a>
+</div>`}</HTMLBlock>
+
+**Breaking change.** In API version 2027-01, the `activity_logs` field on `Board` is rebuilt around cursor-based pagination, richer filters and a 90-day window. The field no longer returns a plain list of `ActivityLogType` entries. It now returns a `BoardActivityLogsPage` object that holds the page of entries and a cursor for the next page.
+
+What changed for the `activity_logs` field on the [Board](https://developer.monday.com/api-reference/reference/boards) type:
+
+* **New return shape.** The field returns `BoardActivityLogsPage` with `logs` (a list of `ActivityLog` entries) and `cursor` (pass it back to fetch the next page; it is `null` on the last page). `ActivityLog` entries also expose `correlation_id`, `triggering_flow_id` and `triggering_flow_type`, which group entries that belong to the same logical session or triggering flow, such as an agent run.
+* **Cursor replaces `page`.** The `page` argument is removed. Use the new `cursor` argument instead.
+* **New filters.** `event_types` filters by event type (for example `create_pulse`), `correlation_ids` returns the events that belong to the same logical session, and `search` runs a free-text prefix search over item names.
+* **90-day window.** The `from` argument accepts timestamps up to 90 days in the past. A request for older data returns a validation error.
+* **Argument types changed.** `from` and `to` are now `String` (ISO 8601) instead of `ISO8601DateTime`. `column_ids` and `group_ids` are now `[ID!]` instead of `[String]`.
+* **`limit` default.** The schema no longer declares a default value for `limit`. Its description states a range of 1-1000 and a default of 25.
+
+Example request that reads the first page and the cursor for the next one:
+
+```graphql
+query {
+  boards(ids: [1234567890]) {
+    activity_logs(
+      from: "2027-01-05T00:00:00Z"
+      event_types: ["create_pulse"]
+      limit: 50
+    ) {
+      logs {
+        id
+        event
+        entity
+        user_id
+        created_at
+        data
+      }
+      cursor
+    }
+  }
+}
+```
+
+## Migration notes
+
+If you query `activity_logs` on API version 2027-01, update your requests as follows:
+
+1. Add the new selection structure. Select `logs { ... }` and `cursor` inside `activity_logs { ... }` instead of selecting entry fields directly.
+2. Replace `page` with `cursor`. Send the `cursor` value from the previous response to fetch the next page, and stop when it is `null`.
+3. Declare the `from` and `to` variables as `String` instead of `ISO8601DateTime`, and declare `column_ids` and `group_ids` variables as `[ID!]`.
+4. Keep `from` within the last 90 days. Requests for older data return a validation error.
+5. If you generate types from the schema, regenerate them: the field now returns `BoardActivityLogsPage`.
+
+Earlier API versions are not affected by this change in behavior. Their `activity_logs` field description now warns that the field changes starting from version 2027-01.
+
+[Page: /apps/docs/manage-user-tokens-and-credentials.md]
+---
+updatedAt: 2026-03-13T16:44:05.000Z
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/apps/llms.txt
+---
+
+# Manage user tokens and credentials
+
+Using the **credentials** app feature, you can effortlessly connect to third-party services—minimal coding required!
+
+Whether you're building blocks for monday workflows or integrating external APIs, this feature makes secure, scalable integrations easier than ever. The framework handles authentication flows and credential storage, so you can focus on building flexible, user‑friendly solutions.
+
+# Concepts
+
+The credentials app feature enables secure authentication between monday apps and third-party services, such as Google, Dropbox, or Slack, within **monday workflows**.
+
+It supports both OAuth 2.0 and API Token authentication flows, making it easy to integrate services regardless of the authentication method they support.
+
+Once authenticated, user-specific credentials are securely stored and scoped to the app. These credentials can then be reused across multiple workflow app features, including blocks and custom fields.
+
+## Security
+
+All credentials are handled with strict security controls:
+
+* Secrets are stored in secure storage.
+* Secrets are stored in the same region as the monday.com account region.
+
+> 👍 Authentication types supported
+>
+> * **OAuth 2.0**: Handles redirect flows, token exchange, refresh tokens, and user consent.
+> * **API Token:** Uses a static token for direct API access. Simple and fast to set up, but less secure.
+>
+> ✅ **Best practice:** Prefer OAuth whenever possible for stronger security and better token management.
+
+# Implementation
+
+Building a credentials app feature requires setting up both your monday app and the third‑party service you are integrating with. Since these two systems rely on coordination between your apps, some configurations will need to happen in parallel.
+
+The steps below provide a high‑level overview of the process, with additional details available in the Reference section:
+
+1. Start by creating an app for the third‑party service you want to integrate with. Follow the provided instructions to set up the required settings accurately.
+2. Create an app or open an existing one in the monday.com Developer Center.
+3. Add a *Credentials* app feature. Learn how to create a new app feature [here](https://developer.monday.com/apps/docs/create-an-app#add-app-features).
+
+<Image align="center" alt="alt text" border={true} width="400px" src="https://files.readme.io/a4900c823a6d1c8e4c13ea79a12bd05510c11e31bac923ffef4d76782c37e66a-Screenshot_2025-05-20_at_4.30.10_PM.png" className="border" />
+
+4. After creating your monday app feature, configure your monday app's settings for each of the sections below:
+
+| Section       | Description                                                                                | Notes                                                                                                                                                             |
+| :------------ | :----------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Basic details | Enter a name, description, credential type (OAuth 2.0 or API Token), and default field key | This key will be automatically suggested as the default in the request payload whenever you use or select this credentials app feature within other app features. |
+
+### If you selected OAuth
+
+Continue configuring the following sections in your monday app:
+
+| Section                            | Description                                                                                                                                                            | Notes                                                                                                                                                                                                                                                   |
+| :--------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Parameters                         | Configure your [credential parameters](https://developer.monday.com/apps/docs/manage-user-tokens-and-credentials#configure-credential-parameters) (optional)           | You can read more [here](https://developer.monday.com/apps/docs/manage-user-tokens-and-credentials#/configure-credential-parameters).                                                                                                                   |
+| OAuth 2.0 Redirect URL             | Paste this into your third‑party service app’s redirect settings                                                                                                       | You can read more [here](https://developer.monday.com/apps/docs/manage-user-tokens-and-credentials#redirect-url).                                                                                                                                       |
+| Enter your application credentials | Copy and paste the client ID and client secret from your third‑party service app; select if you want to include the client ID and secret in the request body or header | We recommend keeping the default (header), as most developers won’t need to change it unless a third party specifically requires it.                                                                                                                    |
+| Configure OAuth endpoint           | Configure the authorization URL, scopes, access token request, and refresh token request from your third‑party service app                                             |                                                                                                                                                                                                                                                         |
+| Extra details                      | Provide a URL to your own server to request a unique provider ID                                                                                                       | This endpoint should return a unique provider ID, enabling monday to identify users across different services uniquely. You can read more [here](https://developer.monday.com/apps/docs/manage-user-tokens-and-credentials#provider-unique-identifier). |
+| Retrieve params                    | Configure how to extract values from the access token and OAuth callback responses                                                                                     | These extracted parameters will be included in the request to your unique provider identifier endpoint.                                                                                                                                                 |
+
+### If you selected API Token
+
+The following fields will appear in the configuration panel:
+
+<Table align={["left","left","left"]}>
+  <thead>
+    <tr>
+      <th>
+        Section
+      </th>
+
+      <th>
+        Description
+      </th>
+
+      <th>
+        Notes
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        Parameters
+      </td>
+
+      <td>
+        Configure your API token credential parameters. The following parameters appear by default and are required:
+
+        * API Token
+        * API Token Label
+      </td>
+
+      <td>
+        The API Token and API Token Label parameters can't be deleted, but they can partially be edited. Read more about configuring API Token parameters [here](https://developer.monday.com/apps/docs/manage-user-tokens-and-credentials#/configure-api-token-parameters).
+
+        You can read more about configuring additional parameters [here](https://developer.monday.com/apps/docs/manage-user-tokens-and-credentials#/configure-credential-parameters).
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+5. [Connect](https://developer.monday.com/apps/docs/manage-user-tokens-and-credentials#connect-credentials-app-feature-to-other-app-features) the credentials app feature to your block and custom field app features to use in the workflow builder.
+6. Test your workflow blocks using these [steps](https://developer.monday.com/apps/docs/test-your-blocks-and-fields) (optional, but recommended).
+7. Promote the [draft version to live](https://developer.monday.com/apps/docs/app-versioning#promote-a-draft-version-to-live) to make the feature accessible in the platform.
+8. After successful authentication, the credentials will be stored in monday.
+
+# Reference
+
+## Redirect URL
+
+When configuring your external app, all third‑party services that support OAuth 2.0 will ask for a redirect URL where they will send users after they login.
+
+You can access this in the Developer Center after creating your monday.com credentials app feature. Alternatively, you can use the following [OAuth Redirect URL](https://apps-credentials.monday.com/authorize/oauth2/redirect-uri): `https://apps-credentials.monday.com/authorize/oauth2/redirect-uri`
+
+***
+
+## Provider unique identifier
+
+Some third‑party services use unique identifiers to recognize individual user connections.
+
+> :point\_right: For example: In Gmail, the unique identifier is the user's email address.
+
+Since there's no standard for exposing or retrieving the identifier across different services, you must provide a publicly accessible backend endpoint that we can call to retrieve it. This endpoint should verify the incoming request by checking the `Authorization` header against the application signing secret.
+
+```typescript
+// Example: Verify Authorization header using the jsonwebtoken package
+
+const { authorization } = req.headers;
+
+const signingSecret = process.env.MONDAY_SIGNING_SECRET;
+
+await new Promise((resolve, reject) => {
+   jwt.verify(authorization, signingSecret, (err, decoded) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(decoded);
+      }
+   });
+});
+```
+
+After implementing your endpoint:
+
+1. Navigate to the *Extra details* section of your credentials app feature.
+2. Enter the URL of the endpoint used to retrieve the provider’s unique identifier — e.g., `https://your-server`
+
+This refers to the request monday.com sends to your backend during the OAuth callback phase. After the OAuth flow is complete, we’ll call your provided endpoint to retrieve the provider’s unique identifier for the user's credentials.
+
+We include the user's access token in this request, along with the following payload:
+
+```json Header
+{
+  "token": "abcs1234"
+}
+```
+```json Expected request payload to retrieve provider's unique identifier
+{  
+  "userId": 123, // The ID of the user initiating the request  
+  "accountId": 456, // The ID of the account associated with the request  
+  "appFeatureReferenceId": 789, // The reference ID of your app feature  
+  "callbackRequestedParams": {...}, // Parameters extracted from the OAuth callback  
+  "tokenRequestedParams": {...}, // Parameters extracted from the token response  
+  "userCredentialsParams": {...} // Optional parameters provided by the user  
+}
+```
+
+We automatically enrich the request with the user’s access token, using the key you provided under the `token` key.
+
+<div style={{ backgroundColor: "#fff8e1", borderLeft: "4px solid #fbc02d", padding: "16px 24px", margin: "24px 0", fontSize: "16px", color: "#f9a825", lineHeight: "1.6" }}>
+  🚧 To ensure secure token handling while still allowing you to complete one‑time, token‑authenticated requests, we have the following security measures:
+
+  <ul style={{ marginTop: "10px", paddingLeft: "20px", color: "#333" }}>
+    <li>You cannot initiate requests to retrieve this access token.</li>
+    <li>You are not allowed to store the access token.</li>
+    <li>If you attempt to store it, you will only have access to the raw token string — not identifying metadata or a refresh capability.</li>
+    <li>The token cannot be renewed by your app.</li>
+  </ul>
+</div>
+
+### Expected response
+
+Your server should return the following format:
+
+```json Sample response for provider unique identifier
+{  
+  "providerUniqueIdentifier": "test@monday.com", // a unique token-specific ID  
+  "displayName": "Test Gmail" // the name displayed to the user in the UI  
+}
+```
+
+***
+
+## Configure credential parameters
+
+Some third‑party services require user‑specific information (e.g., subdomain, region, organization ID) before initiating the authentication flow. Using credential parameters, you can collect this information and define extra input fields that appear when a user sets up the integration.
+
+> :point\_right: For example: In Salesforce, we need to know the user's subdomain to be able to interact with the correct API.
+
+### Supported types
+
+Credential parameters support primitive data types: `string`, `boolean`, and `number`.
+
+You can link a parameter to a field type that uses one of these primitive types. Parameters can also reference a primitive field type that includes static options.
+
+### How to configure
+
+1. You can configure credential parameters directly in the Developer Center under your *Credentials* app feature. When adding a parameter, be sure to include:
+
+* **Name:** A short key used to reference the value in API calls
+* **Title:** A user‑facing name that explains what the field is
+* **Type:** Choose from `string`, `number`, or `boolean`
+* **Required:** Mark whether the field is required
+
+2. Once configured, these parameters can be referenced inside the other credential fields through a `{{parameterName}}` syntax.
+
+```json Salesforce subdomain example
+"authorizationUrl": {
+  "type": "url",
+  "value": "https://{{subdomain}}.salesforce.com/oauth2/authorize"
+}
+```
+
+3. When the authorization flow is initiated, we replace the parameters with user‑provided input. That value is also available in the payload of your provider's unique identifier endpoint and other credential‑based requests (e.g., block execution URL, and remote options).
+
+***
+
+## Configure API token parameters
+
+Some third-party services don’t support OAuth and instead require authentication using API tokens. Through API token parameters, you can define the input fields that appear when a user sets up the integration.
+
+### How to configure
+
+You can configure API token parameters directly in the Developer Center under your *Credentials* app feature.
+
+These parameters appear automatically when you select API Token as the credentials type. Some fields are pre-defined and can't be modified, but you can configure the following settings to customize how the token behaves in your app:
+
+* **Parameter Title:** The field title shown to users
+* **Placeholder:** The text displayed inside the input field before the user enters a value
+* **Static Suffix:** The optional text displayed after the input field
+* **Description Text:** Brief additional context or guidance to help users understand what to enter
+* **Link Text:** The label for an optional link (e.g., “Learn more”)
+* **Link URL:** The destination URL opened when a user clicks the link text
+
+These settings control how the API Token field appears in the monday.com UI when users connect your app.
+
+***
+
+## Connect credentials app feature to other app features
+
+You have to connect the credentials app feature to use it in the workflow builder:
+
+### Custom field for monday workflows
+
+1. Open your custom field app feature and navigate to the **Credentials** section.
+2. Click **Add credentials**.
+3. Select the credential from the dropdown and assign a key\*.
+4. Click **Add**.
+
+> * :memo: Note: The key will be used in the payloads of requests made to your service (e.g., for remote options or sub‑fields). It will be accessible under the `credentialsValues` attribute.
+
+### Integration for monday workflows
+
+1. Open your block app feature and navigate to the **Credentials** section.
+2. Click **Add credentials**.
+3. Select the credential from the dropdown and add a title, header (optional), subheader, and key\*.
+4. Click **Add**.
+
+> * :memo: Note: The key will be used in the payloads of requests made to your service (e.g., for subscribe and unsubscribe or run execution). It will be accessible under the `credentialsValues` attribute.
+
+[Page: /api-reference/reference/account-other-types]
+Other types 
+ For AI agents: the docs index is at https://developer.monday.com/api-reference/llms.txt. The index for every project on this site is at https://developer.monday.com/llms.txt. Append .md to any documentation page URL to get its markdown version.
+ The monday.com account APIs enable you to read account data.
+ The type below is used by the account query and is not independently queryable.
+ AccountProduct
+ An object containing the account&#x27;s active products.
+ Field Type Description Enum Values 
+ default_workspace_id ID The default workspace ID for the account product. 
+ id ID The unique identifier of the account product. 
+ kind AccountProductKind The account product. core crm forms marketing project_management service software whiteboard 
+ tier String The account product tier. 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No
+
+[Page: /api-reference/reference/people]
+People 
+ For AI agents: the docs index is at https://developer.monday.com/api-reference/llms.txt. The index for every project on this site is at https://developer.monday.com/llms.txt. Append .md to any documentation page URL to get its markdown version.
+ The people column assigns one or more users or teams to an item. Each entry in the column is a PeopleEntity with an id and a kind ( person , team , or agent ).
+ Via the API, the people column supports read, filter, update, and clear operations.
+ Column Type Implementation Type Supported Operations 
+ people PeopleValue 
+ Read: Yes 
+ Filter: Yes 
+ Update: Yes 
+ Clear: Yes 
+ Queries
+ People columns can be queried through the column_values field on items using an inline fragment on PeopleValue .
+ GraphQL JavaScript 
+ query {
+ items(ids: [1234567890, 9876543210]) {
+ name
+ column_values {
+ ... on PeopleValue {
+ id
+ text
+ persons_and_teams {
+ id
+ kind
+ }
+ value
+ updated_at
+ }
+ }
+ }
+} 
+ const query = `
+ query ($itemIds: [ID!]) {
+ items(ids: $itemIds) {
+ name
+ column_values {
+ ... on PeopleValue {
+ id
+ text
+ persons_and_teams {
+ id
+ kind
+ }
+ value
+ }
+ }
+ }
+ }
+`;
+const variables = { itemIds: [1234567890, 9876543210] };
+const response = await mondayApiClient.request(query, variables); 
+ Fields
+ You can use the following fields to specify what information your PeopleValue implementation will return.
+ Field Description 
+ column Column! The column the value belongs to. 
+ id ID! The column&#x27;s unique identifier. 
+ is_leaf Boolean! Whether the item has no subitems. Returns false for parent items with subitems. 
+ persons_and_teams [PeopleEntity!] The assigned people or teams. Each entity has an id and kind ( person , team , or agent ). 
+ text String The column&#x27;s value as text (comma-separated names). Returns "" if the column has an empty value. 
+ type ColumnType! The column&#x27;s type ( people ). 
+ updated_at Date The column&#x27;s last updated date. 
+ value JSON The column&#x27;s JSON-formatted raw value. Contains personsAndTeams array and changed_at timestamp. 
+ PeopleEntity
+ Each entry in the persons_and_teams array is a PeopleEntity object.
+ Field Type Description 
+ id ID! The unique identifier of the person or team. 
+ kind Kind The type of entity: person or team . 
+ Example response
+ JSON 
+ {
+ "data": {
+ "items": [
+ {
+ "name": "Design homepage",
+ "column_values": [
+ {
+ "id": "people",
+ "text": "Daniel Hai, Roy Mann",
+ "persons_and_teams": [
+ {
+ "id": "48202303",
+ "kind": "person"
+ },
+ {
+ "id": "331",
+ "kind": "person"
+ }
+ ],
+ "value": "{\"changed_at\":\"2026-03-21T09:03:56.017Z\",\"personsAndTeams\":[{\"id\":48202303,\"kind\":\"person\"},{\"id\":331,\"kind\":\"person\"}]}",
+ "updated_at": "2026-03-21T09:03:56+00:00"
+ }
+ ]
+ }
+ ]
+ }
+} 
+ Filter
+ You can filter items by people values using the items_page object. The people column supports the following operators:
+ Operator Compare Value Description 
+ any_of ["person-123456"] or ["assigned_to_me"] or ["person-0"] Returns items assigned to any of the specified people. Use "person-USERID" format for user IDs, "assigned_to_me" for the API caller, or "person-0" for blank values. 
+ not_any_of ["person-123456"] or ["assigned_to_me"] or ["person-0"] Excludes items assigned to any of the specified people. 
+ is_empty [] Returns items with no people assigned. 
+ is_not_empty [] Returns items that have at least one person or team assigned. 
+ contains_text A partial or full name string (e.g., "Daniel" ) Returns items where an assigned person&#x27;s name contains the specified text. 
+ not_contains_text A partial or full name string Excludes items where an assigned person&#x27;s name contains the specified text. 
+ contains_terms One or more keywords (e.g., "Daniel Hai" ) Matches names by keyword(s) in any order. 
+ starts_with A string prefix (e.g., "Dan" ) Returns items where an assigned person&#x27;s name starts with the specified text. 
+ ends_with A string suffix (e.g., "Mann" ) Returns items where an assigned person&#x27;s name ends with the specified text. 
+ 📘 The any_of and not_any_of operators require the "person-USERID" format for user IDs. For example, use "person-48202303" , not "48202303" .
+ Examples
+ Filter by specific person
+ This example returns items assigned to a specific user.
+ GraphQL 
+ query {
+ boards(ids: 1234567890) {
+ items_page(
+ query_params: {
+ rules: [
+ {
+ column_id: "people"
+ compare_value: ["person-48202303"]
+ operator: any_of
+ }
+ ]
+ }
+ ) {
+ items {
+ id
+ name
+ column_values {
+ ... on PeopleValue {
+ text
+ persons_and_teams {
+ id
+ kind
+ }
+ }
+ }
+ }
+ }
+ }
+} 
+ Filter by current API user
+ This example returns items assigned to the user making the API call.
+ GraphQL 
+ query {
+ boards(ids: 1234567890) {
+ items_page(
+ query_params: {
+ rules: [
+ {
+ column_id: "people"
+ compare_value: ["assigned_to_me"]
+ operator: any_of
+ }
+ ]
+ }
+ ) {
+ items {
+ id
+ name
+ }
+ }
+ }
+} 
+ Filter by name text
+ This example returns items where an assigned person&#x27;s name contains "Daniel".
+ GraphQL 
+ query {
+ boards(ids: 1234567890) {
+ items_page(
+ query_params: {
+ rules: [
+ {
+ column_id: "people"
+ compare_value: "Daniel"
+ operator: contains_text
+ }
+ ]
+ }
+ ) {
+ items {
+ id
+ name
+ }
+ }
+ }
+} 
+ Filter by empty people column
+ This example returns items with no people assigned.
+ GraphQL 
+ query {
+ boards(ids: 1234567890) {
+ items_page(
+ query_params: {
+ rules: [
+ {
+ column_id: "people"
+ compare_value: []
+ operator: is_empty
+ }
+ ]
+ }
+ ) {
+ items {
+ id
+ name
+ }
+ }
+ }
+} 
+ Mutations
+ Update value
+ You can update a people column value using change_simple_column_value or change_multiple_column_values . You can send values as simple strings or JSON objects, depending on the mutation you choose.
+ 🚧 Updating a people column replaces all currently assigned people. To add a person without removing existing ones, first read the current value, then send the full list including the new person.
+ change_simple_column_value 
+ Pass a comma-separated list of user IDs as a string in value .
+ GraphQL 
+ mutation {
+ change_simple_column_value(
+ item_id: 9876543210
+ board_id: 1234567890
+ column_id: "people"
+ value: "48202303,331"
+ ) {
+ id
+ }
+} 
+ change_multiple_column_values 
+ Send people and/or team IDs as a JSON object with a personsAndTeams array. Each entry requires an id (integer) and kind ( "person" or "team" ).
+ GraphQL 
+ mutation {
+ change_multiple_column_values(
+ item_id: 9876543210
+ board_id: 1234567890
+ column_values: "{\"people\": {\"personsAndTeams\": [{\"id\": 48202303, \"kind\": \"person\"}, {\"id\": 51166, \"kind\": \"team\"}]}}"
+ ) {
+ id
+ }
+} 
+ Set on item creation
+ You can assign people when creating an item by passing the people column value in the column_values argument.
+ GraphQL 
+ mutation {
+ create_item(
+ board_id: 1234567890
+ item_name: "New task"
+ column_values: "{\"people\": {\"personsAndTeams\": [{\"id\": 48202303, \"kind\": \"person\"}]}}"
+ ) {
+ id
+ name
+ }
+} 
+ Clear
+ You can clear a people column using change_simple_column_value or change_multiple_column_values .
+ change_simple_column_value 
+ Pass an empty string in value .
+ GraphQL 
+ mutation {
+ change_simple_column_value(
+ item_id: 9876543210
+ board_id: 1234567890
+ column_id: "people"
+ value: ""
+ ) {
+ id
+ }
+} 
+ change_multiple_column_values 
+ Pass null in column_values .
+ GraphQL 
+ mutation {
+ change_multiple_column_values(
+ item_id: 9876543210
+ board_id: 1234567890
+ column_values: "{\"people\": null}"
+ ) {
+ id
+ }
+} 
+ Reading column configuration
+ To understand a people column&#x27;s settings, you can query its settings field.
+ 🚧 The settings_str field is deprecated as of API version 2025-10 . Use the typed settings object instead, which returns structured JSON rather than a JSON-encoded string.
+ GraphQL 
+ query {
+ boards(ids: 1234567890) {
+ columns(ids: ["people"]) {
+ id
+ title
+ settings
+ }
+ }
+} 
+ settings response structure
+ The settings field returns a typed JSON object. For people columns, the settings object is typically empty ( {} ) when using default configuration.
+ When settings are customized, the response contains these keys:
+ Key Type Description 
+ hide_footer boolean Whether to hide the footer in the column cell. 
+ max_people_allowed string Maximum number of people allowed ( "0" means unlimited). 
+ Example settings response
+ JSON 
+ {} 
+ 📘 People columns use an empty settings object by default. The max_people_allowed and hide_footer settings only appear when explicitly configured.
+ Get column type schema
+ You can retrieve the JSON schema for the people column&#x27;s settings programmatically using the get_column_type_schema query. This returns the structure, validation rules, and available properties for the column&#x27;s configuration.
+ GraphQL JSON 
+ query {
+ get_column_type_schema(
+ type: people
+ )
+} 
+ {
+ "data": {
+ "get_column_type_schema": {
+ "schema": {
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "type": "object",
+ "properties": {
+ "settings": {
+ "type": "object",
+ "description": "Column specific settings",
+ "properties": {
+ "hide_footer": {
+ "type": "boolean",
+ "description": "Whether to hide the footer"
+ },
+ "max_people_allowed": {
+ "type": "string",
+ "description": "Maximum number of people allowed (0 means unlimited)"
+ }
+ },
+ "additionalProperties": false
+ }
+ }
+ }
+ }
+ }
+} 
+ The response includes property names, types, constraints (such as max lengths and allowed values), and descriptions for each setting. You can use this to validate column settings, dynamically generate UIs, or give context to AI agents. Learn more about the schema response format .
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No
+
+[Page: /api-reference/reference/users-other-types]
+Other types 
+ For AI agents: the docs index is at https://developer.monday.com/api-reference/llms.txt. The index for every project on this site is at https://developer.monday.com/llms.txt. Append .md to any documentation page URL to get its markdown version.
+ The monday.com users APIs enable you to create, read, update, and delete users.
+ The types below are used by the users queries and mutations, and are not independently queryable.
+ InvitationMethod
+ 🚧 Only available in API versions 2026-07 and later 
+ The method by which a user was added to the account. Returned on User.invitation_method .
+ Enum Value Description 
+ USER Invited by another user. 
+ SCIM Provisioned via SCIM. 
+ SSO Added via single sign-on. 
+ AUTH_DOMAIN Added via an authorized domain. 
+ FIRST_USER The first user who created the account. 
+ CONSOLIDATION Added via account consolidation. 
+ INTERNAL_CREATION Created through an internal monday.com process. 
+ UNKNOWN Unknown invitation method. 
+ SERVICE_PORTAL_AUTH_DOMAIN Added via a service portal authorized domain. 
+ SERVICE_PORTAL_USER_INVITATION Invited to the monday service portal by another user. 
+ API_USER_CREATION Created as an API user. 
+ PhotoUrl
+ 🚧 Only available in API versions 2026-07 and later 
+ URLs for a user&#x27;s profile photo in each supported size. Returned on User.photo_url . Replaces the flat photo_* fields.
+ Field Description Notes 
+ original String The photo URL in its original uploaded size. Requires authorization. 
+ small String The photo URL at 150×150 px. 
+ thumb String The photo URL at 100×100 px. 
+ thumb_small String The photo URL at 50×50 px. 
+ tiny String The photo URL at 30×30 px. 
+ UserConfig
+ 🚧 Only available in API versions 2026-07 and later 
+ Per-kind configuration for a user within an account. Accessible via User.user_config (single config for the user) or user_configs (every config defined for the account). Requires the users:read scope.
+ Field Description 
+ kind String! The user kind this config applies to (for example, admin , member , guest , view_only ). 
+ role_id ID! The role ID associated with this config. 
+ visibility [String!]! The visibility settings for this config. 
+ UserKindFilter
+ 🚧 Only available in API versions 2026-07 and later 
+ Used inside UserKindFilterInput on the Query.users user_kind argument. Supports both individual user kinds and kind groups.
+ Enum Value Description 
+ ADMIN An admin user. 
+ MEMBER A member user. 
+ GUEST A guest user. 
+ VIEW_ONLY A view-only user. 
+ AGENT_MEMBER A member user acting as an agent. 
+ PORTAL An external portal user. 
+ BASIC Group: admin, member, guest, and view-only users. 
+ PORTFOLIO_API_USER API user for the Portfolio feature. 
+ NEXUS_API_USER API user for the Nexus feature. 
+ RESOURCE_DIRECTORY_API_USER API user for the Resource Directory feature. 
+ OMNICHANNEL_API_USER API user for the Omnichannel feature. 
+ GOALS_API_USER API user for the Goals feature. 
+ PROJECTS_API_USER API user for the Projects feature. 
+ SPRINT_MANAGEMENT_API_USER API user for the Sprint Management feature. 
+ CRM_COMMERCE_API_USER API user for the CRM Commerce feature. 
+ CAMPAIGNS_API_USER API user for the Campaigns feature. 
+ DATA_RETENTION_API_USER API user for the Data Retention feature. 
+ MONDAY_SERVICE_API_USER API user for the monday service feature. 
+ AI_PLATFORM_AGENT_API_USER API user for the AI Platform Agent feature. 
+ DEPENDENCIES_API_USER API user for the Dependencies feature. 
+ HISTORICAL_TRACKING_BACKFILL_API_USER API user for the historical tracking backfill feature. 
+ CRM_USER_AGENT_MEMBER A CRM user acting as an agent member. Only available in versions 2026-10 and later. 
+ UserKindFilterInput
+ 🚧 Only available in API versions 2026-07 and later 
+ Used on the user_kind argument of Query.users . not_in values are removed from the expanded in set.
+ Field Description 
+ in [UserKindFilter!] Include users matching any of these kinds or kind groups. 
+ not_in [UserKindFilter!] Exclude users matching these kinds or kind groups. 
+ UserStatus
+ 🚧 Only available in API versions 2026-07 and later 
+ The activation status of a user. Returned on User.status and accepted on the status argument of Query.users .
+ Enum Value Description 
+ ACTIVE The user is active. 
+ INACTIVE The user has been deactivated. 
+ PENDING The user has not yet accepted the invitation. 
+ UsersSortField
+ 🚧 Only available in API versions 2026-07 and later 
+ The field used inside UsersSortInput to sort the result of Query.users .
+ Enum Value Description 
+ CREATED_AT Sort by the date the user was created. 
+ UsersSortDirection
+ 🚧 Only available in API versions 2026-07 and later 
+ The sort direction used inside UsersSortInput .
+ Enum Value Description 
+ ASC Sort in ascending order. 
+ DESC Sort in descending order. 
+ UsersSortInput
+ 🚧 Only available in API versions 2026-07 and later 
+ Used on the sort argument of Query.users . Replaces the legacy newest_first boolean.
+ Field Description 
+ field UsersSortField! The field to sort by. 
+ direction UsersSortDirection! The sort direction. 
+ ActivateUsersResult
+ An object containing the result of activating users via the API.
+ Field Type Description Supported Fields 
+ activated_users [User!] The users who were activated. 
+ errors [ActivateUsersError!] The errors that occurred during user activation. Use this field to check for calls that failed. code ActivateUsersErrorCode 
+message String 
+user_id ID 
+ ActivateUsersError
+ An object containing the error that occurred when an activate_users mutation fails.
+ Field Type Description Enum Values 
+ code ActivateUsersErrorCode The error code that occurred. CANNOT_UPDATE_SELF EXCEEDS_BATCH_LIMIT FAILED INVALID_INPUT USER_NOT_FOUND 
+ message String The error message. 
+ user_id ID The unique identifier of the user that caused the error. 
+ ClearUsersDepartmentResult
+ 🚧 Only available in API versions 2026-04 and later 
+ An object containing the result of deactivating users via the API.
+ Field Type Description 
+ cleared_users [User]! Data from the users whose departments were cleared. 
+ DeactivateUsersResult
+ An object containing the result of deactivating users via the API.
+ Field Type Description 
+ deactivated_users [User]! Data from the users who were deactivated. 
+ errors [DeactivateUsersError]! The errors that occurred during deactivation. Use this field to check for calls that failed. 
+ DeactivateUsersError
+ An object containing the error that occurred when an deactivate_users mutation fails.
+ Field Description Enum Values 
+ code DeactivateUsersErrorCode The error code that occurred. CANNOT_UPDATE_SELF EXCEEDS_BATCH_LIMIT FAILED INVALID_INPUT USER_NOT_FOUND 
+ message String The error message. 
+ user_id ID The unique identifier of the user that caused the error. 
+ InviteUsersResult
+ An object containing the result of inviting users via the API.
+ Field Type Description 
+ invited_users [User!] Data from the users who were successfully invited. 
+ errors [InviteUsersError!] The errors that occurred during the invitation process. Use this field to check for calls that failed. 
+ InviteUsersError
+ An object containing the error that occurred when an invite_users mutation fails.
+ Field Type Description Enum Values 
+ code InviteUsersErrorCode The error code that occurred. ERROR 
+ message String The error message. 
+ email ID The email of the user that caused the error. 
+ UpdateEmailDomainAttributesInput
+ An object containing the attributes to update.
+ Field Type Description 
+ new_domain String! The updated email domain. 
+ user_ids [ID!]! The unique identifiers of the users to update. The maximum is 200. 
+ UpdateUserAttributesResult
+ An object containing the result of updating users&#x27; attributes via the API.
+ Field Type Description 
+ errors [UpdateUserAttributesError!] The errors that occurred during user attribute updates. Use this field to check for failed calls. 
+ updated_users [User!] Data from the users who were updated. 
+ UpdateUserAttributesError
+ An object containing the error that occurred when an update_multiple_users mutation fails.
+ Field Type Description Enum Values 
+ code UpdateUserAttributesErrorCode The error code. INVALID_FIELD 
+ message String The error message. 
+ user_id ID The unique identifier of the user that caused the error. 
+ UpdateEmailDomainAttributesInput
+ An object containing the attributes to update through the update_email_domain mutation.
+ Field Type Description 
+ new_domain String! The updated email domain. 
+ user_ids [ID!]! The unique identifiers of the users to update. The maximum is 200. 
+ UpdateUsersEmailDomainResult
+ An object containing the result of updating a user&#x27;s email domain via the API.
+ Field Type Description 
+ errors [UpdateEmailDomainError!] The errors that occurred during the email domain update. Use this field to check for failed calls. 
+ updated_users [User!] Data from the users who were updated. 
+ UpdateEmailDomainError
+ An object containing the error that occurred when an update_email_domain mutation fails.
+ Field Type Description Enum Values 
+ code UpdateEmailDomainErrorCode The error code that occurred. CANNOT_UPDATE_SELF EXCEEDS_BATCH_LIMIT FAILED INVALID_INPUT UPDATE_EMAIL_DOMAIN_ERROR USER_NOT_FOUND 
+ message String The error message. 
+ user_id ID The unique identifier of the user that caused the error. 
+ UpdateUsersRoleResult
+ An object containing the result of updating a user&#x27;s role via the API.
+ Field Type Description 
+ errors [UpdateUsersRoleError!] The errors that occurred while updating the role. Use this field to check for calls that failed. 
+ updated_users [User]! Data from the users who were updated. 
+ UpdateUsersRoleError
+ An object containing the error that occurred when an update_users_role mutation fails.
+ Field Type Description Enum Values 
+ code UpdateUsersRoleErrorCode The error code that occurred. CANNOT_UPDATE_SELF EXCEEDS_BATCH_LIMIT FAILED INVALID_INPUT USER_NOT_FOUND 
+ message String The error message. 
+ user_id ID The unique identifier of the user that caused the error. 
+ UserUpdateInput
+ An object containing the user IDs and attributes to update.
+ Field Type Description 
+ user_attribute_updates UserAttributesInput! The attributes to update. 
+ user_id ID! The unique identifier of the user to update. 
+ UserAttributesInput
+ An object containing the specific attributes to update.
+ Field Type Description 
+ birthday String The user&#x27;s updated birthday. Use YYYY-MM-DD format. 
+ department String The user&#x27;s updated department. 
+ email String The user&#x27;s updated email. 
+ join_date String The user&#x27;s updated join date. Use YYYY-MM-DD format. 
+ location String The user&#x27;s updated location. 
+ mobile_phone String The user&#x27;s updated mobile phone number. 
+ name String The user&#x27;s updated name. 
+ phone String The user&#x27;s updated phone number. 
+ title String The user&#x27;s updated title. 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No
+
+[Page: /api-reference/reference/account-roles]
+Account roles 
+ For AI agents: the docs index is at https://developer.monday.com/api-reference/llms.txt. The index for every project on this site is at https://developer.monday.com/llms.txt. Append .md to any documentation page URL to get its markdown version.
+ When a user joins a monday.com account, they are assigned a role that specifies their permissions and what actions they can perform. All accounts have admin, member, viewer, and guest roles by default; some monday.com plans also allow you to create custom roles.
+ Queries
+ Get account roles
+ Required scope: account:read 
+ Returns an object containing metadata about all user roles in an account (both default and custom)
+ Can only be queried directly at the root; can&#x27;t be nested within another query
+ GraphQL JavaScript 
+ query {
+ account_roles {
+ id
+ name
+ roleType
+ }
+} 
+ import { ApiClient } from "@mondaydotcomorg/api";
+const mondayApiClient = new ApiClient({ token: myToken });
+const query = `query { account_roles { id name roleType } }`;
+const response = await mondayApiClient.request(query); 
+ Fields
+ Fields Type Description 
+ id ID The role&#x27;s unique identifier. 
+ name String The role&#x27;s name. 
+ roleType String The role&#x27;s type. 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No
+
+[Page: /api-reference/reference/account]
+Account 
+ For AI agents: the docs index is at https://developer.monday.com/api-reference/llms.txt. The index for every project on this site is at https://developer.monday.com/llms.txt. Append .md to any documentation page URL to get its markdown version.
+ All monday.com users must either join an existing account or create a new one. At the account level, users can invite other users to join the account, specify their primary platform use, sign up for a plan, and more!
+ Queries
+ Required scope: account:read 
+ Returns an object containing metadata about a specific account
+ Can be queried directly at the root or nested within a me or users query
+ Get account
+ GraphQL JavaScript 
+ query {
+ users {
+ account {
+ id
+ slug
+ tier
+ show_timeline_weekends
+ is_during_trial
+ plan {
+ period
+ }
+ product {
+ kind
+ id
+ tier
+ }
+ }
+ }
+} 
+ import { ApiClient } from "@mondaydotcomorg/api";
+const mondayApiClient = new ApiClient({ token: myToken });
+const query = `query { users { account { id show_timeline_weekends tier slug plan { period }}}}`;
+const response = await mondayApiClient.request(query); 
+ Fields
+ Fields Type Description Enum Values 
+ active_members_count Int The number of active users on the account (includes active users across all products who are not guests or viewers). 
+ country_code String The account&#x27;s two-letter country code in ISO3166 format. The result is based on the location of the account&#x27;s first admin. 
+ created_at Date The account&#x27;s creation date. 
+ first_day_of_the_week FirstDayOfTheWeek! The account&#x27;s first day of the week. monday sunday 
+ id ID! The account&#x27;s unique identifier. 
+ is_during_trial Boolean Whether the account is in a free trial period. 
+ is_trial_expired Boolean Whether the account&#x27;s trial has expired. 
+ logo String The account&#x27;s logo. 
+ name String! The account&#x27;s name. 
+ plan Plan The account&#x27;s payment plan. Returns null for accounts with the multi-product infrastructure. 
+ products [AccountProduct] The account&#x27;s active products. 
+ show_timeline_weekends Boolean! Returns true if weekends appear in the timeline. 
+ sign_up_product_kind String The product the account first signed up for. 
+ slug String! The account&#x27;s slug. 
+ tier String The account&#x27;s tier. 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No 
+ Updated about 2 months ago 
+ Did this page help you? Yes 
+ No
+
+[Page: /api-reference/docs/authentication.md]
+---
+updatedAt: 2026-10-06T13:31:28.000Z
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/api-reference/llms.txt
+---
+
+# Authentication
+
+Learn about monday platform API token permissions, how to access tokens, and how to authenticate requests
+
+The monday.com platform API utilizes **personal V2 API tokens** to authenticate requests and identify the user making the call. These tokens are unique to each user and have no explicit length.
+
+Personal tokens allow you to interact with the API using your own user account. Their permissions mirror what you can do in the monday.com UI, ensuring that API access is consistent with your platform-level permissions.
+
+If you don't have a monday.com account yet, create a free [developer account](https://developer.monday.com/api-reference/docs/developer-sandbox) to get an API token and start testing.
+
+# Token permissions
+
+Personal tokens mirror all permission levels set in the monday.com UI, including [board](https://support.monday.com/hc/en-us/articles/115005315809-Board-permissions), [column](https://support.monday.com/hc/en-us/articles/360011926640-Column-permissions), [item](https://support.monday.com/hc/en-us/articles/360021172320-Item-viewing-permissions-), or [account](https://support.monday.com/hc/en-us/articles/360003457320-Account-permissions) access.
+
+> For example: If you don't have permission to access a certain workspace via the UI, you won't have permission using your personal API token either.
+
+App tokens have an additional [set of permission scopes](https://developer.monday.com/apps/docs/oauth#set-up-permission-scopes) that specify which queries and mutations it can access, while personal tokens have all permission scopes.
+
+# Accessing your token
+
+You can access your API token in two ways, depending on your [user type](https://support.monday.com/hc/en-us/articles/360002144900-User-types-explained).
+
+## In the Developer Center (all users)
+
+All [users with API access](https://developer.monday.com/api-reference/docs/basics#who-can-use-the-api) can follow these steps to access their API token:
+
+1. In your monday.com account, click on your profile picture in the top right corner.
+2. Select **Developers**. This will open the *Developer Center* in another tab.
+3. Click **API token** > **Show**.
+4. Copy your personal token.
+
+<Image align="center" className="border" width="700px" border={true} src="https://files.readme.io/d8a190b958dd51496ca9b1b92de1b660e9ccba227534c642552994b5b3874880-API_Token_in_Developer_Center.png" />
+
+## In the Administration tab (account admins only)
+
+Account admins can use the *Developer Center* steps above or access their token via the *Administration* tab:
+
+1. In your monday.com account, click on your profile picture in the top right corner.
+2. Select **Administration** > **Connections** > **Personal API token**.
+3. Copy your personal token.
+
+<Image align="center" className="border" width="700px" border={true} src="https://files.readme.io/b8eef71025582992cbb2ab39e60a484431e303a7e409f974979468a6fa4596bc-API_Token_-_Admin.png" />
+
+# Making requests with your token
+
+Once you have your token, you can make requests with the API by passing the token in the `Authorization` header.
+
+```curl cURL
+curl -X POST https://api.monday.com/v2 \
+  -H "Authorization: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "query { me { id name } }"}'
+```
+
+# Regenerating a token
+
+API tokens can be regenerated at any time. However, this will immediately invalidate your current token, so be sure to update any integrations using it.
+
+## How to regenerate a token
+
+### In the Developer Center
+
+1. In your monday.com account, click on your profile picture in the top right corner.
+2. Select **Developers**. This will open the *Developer Center* in another tab.
+3. Click **API token** > **Regenerate**.
+
+### In the Administration tab
+
+1. In your monday.com account, click on your profile picture in the top right corner.
+2. Select **Administration** > **Connections** > **Personal API token**.
+3. Click **Regenerate**.
+
+[Page: /api-reference/docs/error-handling.md]
+---
+updatedAt: 2026-09-06T08:31:59.000Z
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/api-reference/llms.txt
+---
+
+# Error handling
+
+If your API request cannot be completed successfully, you will receive an error message.
+
+# Error format
+
+Errors returned by the API have the following characteristics:
+
+* **HTTP status:** Response will be `200 – OK` for application-level errors. Other statuses will be returned for transport-layer errors, such as `500 - Internal server error`, `429 - Too many requests` or `400 - Bad request`
+* **JSON response:** Body will contain an `errors` array with further details about each error
+* **Partial data:** Requests will return partial data, so the `data` object may also contain some information. For example, if you query three fields, you may receive two fields and one error.
+* **`Retry-After` header:** Errors will include the `Retry-After` header to indicate how long you need to wait before making another request
+* **[Rate limit headers](https://developer.monday.com/api-reference/docs/rate-limits#rate-limit-headers):** Every response includes `RateLimit-Policy` and `RateLimit` headers that report the current state of your rate limits, so you can monitor your remaining quota proactively
+* Each API response includes a `request_id` in the extensions object that can be used for troubleshooting.
+
+### Sample format
+
+Here's an example of an application-level error:
+
+```json Error only
+{
+  "data" : [],
+  "errors": [
+    {
+      "message": "User unauthorized to perform action",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": [
+        "me"
+      ],
+      "extensions": {
+        "code": "UserUnauthorizedException",
+        "error_data": {},
+        "status_code": 403
+      }
+    }
+  ],
+  "account_id": 123456
+}
+```
+```json Partial data
+{
+  "data": {
+    "me": {
+      "id": "4012689",
+      "photo_thumb": null
+    },
+    "complexity": {
+      "query": 12
+    }
+  },
+  "errors": [
+    {
+      "message": "Photo unavailable.",
+      "locations": [
+        {
+          "line": 4,
+          "column": 5
+        }
+      ],
+      "path": [
+        "me",
+        "photo_thumb"
+       ],
+      "extensions": {
+        "code": "ASSET_UNAVAILABLE"
+      }
+    }
+  ],
+  "account_id": 18888528
+}
+```
+
+# Errors by status code
+
+## 2xx errors
+
+Errors with a 2xx status code indicate that monday.com is not accepting the requested action due to a platform restriction, limitation, or rule. These errors occur for various reasons, including passing invalid values, missing permissions, or reaching character limits.
+
+Here are **some** of the most common errors:
+
+<Table align={["left","left","left","left"]}>
+  <thead>
+    <tr>
+      <th>
+        Error code
+      </th>
+
+      <th>
+        HTTP status code
+      </th>
+
+      <th>
+        Description
+      </th>
+
+      <th>
+        Resolution
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        `API_TEMPORARILY_BLOCKED`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        There is an issue with the API and usage has temporarily been blocked
+      </td>
+
+      <td>
+        Check the [status page](https://status.monday.com/) for updates and retry your call once the issue has been resolved.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `ColumnValueException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        Incorrect column value formatting
+      </td>
+
+      <td>
+        * Ensure the [column](https://developer.monday.com/api-reference/reference/column-types-reference) is supported by our API and not calculated in the client.
+        * Verify that the column value conforms with each [column's data structure](https://developer.monday.com/api-reference/reference/column-types-reference).
+        * Check that the [connect boards column](https://developer.monday.com/api-reference/reference/connect) you're referencing is connected to a board via the monday.com UI.
+        * For [connect boards columns](https://developer.monday.com/api-reference/reference/connect), use `{"item_ids": ["123"]}` — not `linkedPulseIds` or `linkedPulseId`, which appear in some error payloads but are not valid write keys.
+        * Use [`change_multiple_column_values`](https://developer.monday.com/api-reference/reference/columns#change-multiple-column-values) for connect boards columns, not [`change_column_value`](https://developer.monday.com/api-reference/reference/columns#change-a-column-value).
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `CorrectedValueException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The query is of the wrong type
+      </td>
+
+      <td>
+        If you try to update a column with simple values (`String` values), ensure the column supports this type of value format.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `CreateBoardException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        Error in your create board mutation
+      </td>
+
+      <td>
+        * If you’re creating a board from a template, ensure the template ID is a valid monday template or a board that has template status. To learn more about making a board a template, check out our resource on board templates [here](https://support.monday.com/hc/en-us/articles/360001362625-Does-monday-com-offer-templates-).
+        * If you’re duplicating a board, ensure the board ID exists.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `InvalidArgumentException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The argument being passed in the query is invalid, you've hit a pagination limit, you're querying a subitem board ID, or a board ID is not found
+      </td>
+
+      <td>
+        * Check your argument for typos.
+        * Verify that the argument exists for the object you are querying.
+        * Make your result window smaller.
+        * For [`move_item_to_board`](https://developer.monday.com/api-reference/reference/items#move-item-to-board), ensure `columns_mapping` is an array of `{ source, target }` objects — see the [format reference](https://developer.monday.com/api-reference/reference/items#move-item-to-board).
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `InvalidBoardIdException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The board ID being passed in the query is invalid
+      </td>
+
+      <td>
+        Verify that the board ID exists and that you have access to it. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `InvalidColumnIdException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The column ID being passed in the query is invalid
+      </td>
+
+      <td>
+        Verify that the column ID exists and that you have access to it. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `InvalidUserIdException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The user ID being passed in the query is invalid
+      </td>
+
+      <td>
+        Verify that the user ID exists and that the user is assigned to your board. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `InvalidVersionException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The requested API version is invalid
+      </td>
+
+      <td>
+        Ensure that your request follows the proper [format](https://developer.monday.com/api-reference/docs/api-versioning#selecting-a-version). 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `ItemNameTooLongException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The item name has exceeded the allotted number of characters
+      </td>
+
+      <td>
+        Ensure the item name is 1-255 characters in length. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `ItemsLimitationException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        You have exceeded the limit of 10,000 items per board
+      </td>
+
+      <td>
+        Reduce the number of items on the board. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `missingRequiredPermissions`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The operation has exceeded the OAuth permission scopes granted for the app
+      </td>
+
+      <td>
+        Review your app's [permission scopes](https://developer.monday.com/apps/docs/oauth#permission-scopes) to ensure the correct ones are requested.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `Parse error on...`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        Incorrect query string formatting
+      </td>
+
+      <td>
+        * Verify that all strings are valid in your query. 
+        * Close all parentheses, brackets, and curly brackets. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `ResourceNotFoundException`
+      </td>
+
+      <td>
+        200
+      </td>
+
+      <td>
+        The ID being passed in your query is invalid
+      </td>
+
+      <td>
+        * Verify that the ID of the item, group, or board you're querying exists.
+        * **Column not found:** The column ID may be wrong, or the column was deleted while an automation or integration still references it. Check the board in the UI and update or remove automations that reference the missing column.
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+## 4xx client errors
+
+Errors with a 4xx status code indicate that something went wrong on the client's (your) side. These errors occur for various reasons, including a lack of access to the requested information, excessive use of the API, or providing incorrect input.
+
+Here are **some** of the most common errors:
+
+<Table align={["left","left","left","left"]}>
+  <thead>
+    <tr>
+      <th>
+        Error
+      </th>
+
+      <th>
+        HTTP status code
+      </th>
+
+      <th>
+        Description
+      </th>
+
+      <th>
+        Resolution
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        `Bad request`
+      </td>
+
+      <td>
+        400
+      </td>
+
+      <td>
+        The structure of your query string was passed incorrectly
+      </td>
+
+      <td>
+        * Pass your query string with the `query` key.
+        * Send your request as a POST request with a JSON body. 
+        * Avoid unterminated strings in your query.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `JsonParseException`
+      </td>
+
+      <td>
+        400
+      </td>
+
+      <td>
+        Issues interpreting the provided JSON
+      </td>
+
+      <td>
+        Verify all JSON is valid using a JSON validator (e.g., [JSON lint](https://jsonlint.com/) )
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `Unauthorized`
+      </td>
+
+      <td>
+        401
+      </td>
+
+      <td>
+        You don't have permission to access the data
+      </td>
+
+      <td>
+        * Input a valid API key.
+        * Pass the key in the `Authorization` header. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `Your ip is restricted`
+      </td>
+
+      <td>
+        401
+      </td>
+
+      <td>
+        An account admin has restricted access to the system from specific IP addresses
+      </td>
+
+      <td>
+        Confirm that your IP address is not restricted by your account admin.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `UserUnauthorizedException`
+      </td>
+
+      <td>
+        403
+      </td>
+
+      <td>
+        The user doesn't have the required permission to perform the action in question
+      </td>
+
+      <td>
+        Verify that the user has permission to access or edit the given resource.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `USER_ACCESS_DENIED`
+      </td>
+
+      <td>
+        403
+      </td>
+
+      <td>
+        The user is unauthorized to use the API
+      </td>
+
+      <td>
+        Verify that the user is active, not view-only, and has a confirmed email address.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `ResourceNotFoundException`
+      </td>
+
+      <td>
+        404
+      </td>
+
+      <td>
+        The ID being passed in the query is invalid
+      </td>
+
+      <td>
+        Verify that the ID of the user you are querying exists and is assigned to your board.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `DeleteLastGroupException`
+      </td>
+
+      <td>
+        409
+      </td>
+
+      <td>
+        The last group on a board is being deleted or archived
+      </td>
+
+      <td>
+        Verify that you have at least one group on the board. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `IDEMPOTENCY_CONFLICT`
+      </td>
+
+      <td>
+        409
+      </td>
+
+      <td>
+        A request with this idempotency key is currently being processed
+      </td>
+
+      <td>
+        Retry after the duration specified in the `Retry-After` response header. See <a href="https://developer.monday.com/api-reference/docs/idempotency">Idempotency</a> for details.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `RecordInvalidException`
+      </td>
+
+      <td>
+        422
+      </td>
+
+      <td>
+        Indicates one of the following:
+
+        * A board has exceeded 400 individual subscribers or 100 team subscribers
+        * A user or team has subscribed to more than 10,000 boards
+      </td>
+
+      <td>
+        * Learn how to [optimize board subscribers](tps://support.monday.com/hc/en-us/articles/14667682024594https://support.monday.com/hc/en-us/articles/14667682024594). 
+        * Unsubscribe from, delete, or archive irrelevant boards. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `Resource is currently locked, please try again later`
+      </td>
+
+      <td>
+        423
+      </td>
+
+      <td>
+        The board is temporarily locked because another process is performing a concurrent update (e.g., column update, automation). During this time, write operations are blocked to ensure data consistency.
+      </td>
+
+      <td>
+        * Retry the request after a short delay. 
+        * Avoid concurrent updates to the same board from multiple sources.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `maxConcurrencyExceeded`
+      </td>
+
+      <td>
+        429
+      </td>
+
+      <td>
+        You exceeded the maximum number of queries allowed at once
+      </td>
+
+      <td>
+        * Reduce the number of queries sent at once.
+        * Use a retry mechanism in your code. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `Rate Limit Exceeded`
+      </td>
+
+      <td>
+        429
+      </td>
+
+      <td>
+        You made more than 5,000 requests in one minute
+      </td>
+
+      <td>
+        Reduce the number of requests sent in one minute. 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `COMPLEXITY_BUDGET_EXHAUSTED`
+      </td>
+
+      <td>
+        429
+      </td>
+
+      <td>
+        You have reached the complexity limit
+      </td>
+
+      <td>
+        * Utilize the `limits` and `page` arguments. 
+        * Only request the information you need. 
+        * Read more about [rate limits](https://developer.monday.com/api-reference/docs/rate-limits). 
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        `IP_RATE_LIMIT_EXCEEDED`
+      </td>
+
+      <td>
+        429
+      </td>
+
+      <td>
+        You have reached the [IP limit](https://developer.monday.com/api-reference/docs/rate-limits#ip-limit)
+      </td>
+
+      <td>
+        * Wait for the specified period in the error response before retrying your call. 
+        * Learn about [optimizing your API usage](https://developer.monday.com/api-reference/docs/optimizing-api-usage#optimize-your-calls). 
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+## 5xx server errors
+
+Errors with a 5xx status code indicate that something went wrong on the server's (monday's) side.
+
+Here are **some** of the most common errors:
+
+<Table align={["left","left","left","left"]}>
+  <thead>
+    <tr>
+      <th>
+        Error
+      </th>
+
+      <th>
+        HTTP status code
+      </th>
+
+      <th>
+        Description
+      </th>
+
+      <th>
+        Resolution
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        `Internal Server Error`
+      </td>
+
+      <td>
+        500
+      </td>
+
+      <td>
+        Indicates that something went wrong. Common causes are:
+
+        * Invalid arguments, such as board or item IDs that don't exist
+        * Malformatted JSON column values
+      </td>
+
+      <td>
+        * Retry your request after a short period.
+        * Double-check your request's format. 
+        * Ensure your API token has the right permissions. 
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+> 📘 Join our developer community!
+>
+> We've created a [community](https://developer-community.monday.com/) specifically for our devs where you can search through previous topics to find solutions, ask new questions, hear about new features and updates, and learn tips and tricks from other devs. Come join in on the fun! 😎
+
+[Page: /api-reference/docs/mcp-api-token.md]
+---
+updatedAt: 2026-10-08T12:51:08.000Z
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/api-reference/llms.txt
+---
+
+# Authenticate with an API token
+
+Connect to the monday.com hosted MCP server with a personal API token for personal use, prototyping, and testing
+
+If you're using one of the [compatible MCP clients](https://developer.monday.com/api-reference/docs/compatible-mcp-clients), you don't need a token — add the server URL and authenticate via OAuth when prompted. Use a personal API token when your client **isn't** a compatible MCP client or doesn't support the MCP OAuth flow — for example, custom scripts, homegrown agents, or tools that only support static Bearer tokens.
+
+For personal use, prototyping, and testing, this is the fastest way to connect. No app or registration is needed.
+
+# Get your token
+
+1. Log in to your monday.com account
+2. Click your profile picture in the top-right corner and select **Developers**
+3. Click **My access tokens** in the left menu
+4. Copy your personal access token
+
+# Configure your MCP client
+
+Pass the token as a Bearer token in the `Authorization` header of your MCP requests:
+
+```
+Authorization: Bearer YOUR_API_TOKEN
+```
+
+For MCP clients that support custom headers, the configuration looks like this:
+
+```json
+{
+  "mcpServers": {
+    "monday-mcp": {
+      "url": "https://mcp.monday.com/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Personal tokens mirror your UI permissions, so the MCP server can access everything your user can — and nothing more. This is ideal for individual development, but not for integrations used by other people.
+
+<Callout icon="⚠️" theme="warn">
+  ### Warning
+
+  Never share your API token or commit it to version control. Rotate tokens regularly, and revoke them when they're no longer needed.
+</Callout>
+
+***
+
+**Related resources:**
+
+* [Integrate with the monday MCP server](https://developer.monday.com/api-reference/docs/integrate-with-monday-mcp)
+* [Control MCP access with your own OAuth app](https://developer.monday.com/api-reference/docs/control-mcp-access-with-oauth-app)
+* [Make your integration publicly available (DCR)](https://developer.monday.com/api-reference/docs/mcp-dynamic-client-registration)
+* [Dynamic connectors](https://developer.monday.com/api-reference/docs/mcp-dynamic-connectors)
+* [Authentication](https://developer.monday.com/api-reference/docs/authentication)
+
+[Page: /api-reference/docs/control-mcp-access-with-oauth-app.md]
+---
+updatedAt: 2026-10-08T17:25:18.000Z
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/api-reference/llms.txt
+---
+
+# Control MCP access with your own OAuth app
+
+Replace the hosted MCP connector with your own OAuth app to control who connects, which clients can connect, and which permission scopes the MCP connection can use
+
+By default, connecting an AI assistant (like Claude) to monday.com uses our hosted MCP connector — your users click **Connect**, sign in, and they're done. It's the fastest way to get started, but it's all-or-nothing: once it's enabled, any user who can log in, from any MCP-compatible client, can connect — and the connection inherits that user's full monday.com permissions.
+
+If your organization needs tighter control — for example, allowing only Claude (not other AI tools), limiting access to a specific group of users, or restricting what the MCP connection is allowed to do — you can replace the hosted connector with your own OAuth app. This gives you the same MCP functionality, but with control over who connects, what connects, and which [permission scopes](https://developer.monday.com/apps/docs/oauth#set-up-permission-scopes) apply to the connection.
+
+This is also the right path while you're **developing** a user-facing MCP integration or distributing it privately inside your organization. To let other monday.com accounts connect your client, use [dynamic client registration](https://developer.monday.com/api-reference/docs/mcp-dynamic-client-registration). The customer's admin approves the additional connection and its redirect URIs through [dynamic connectors](https://developer.monday.com/api-reference/docs/mcp-dynamic-connectors).
+
+This guide walks you through the setup. For client-specific walkthroughs, see:
+
+* [Integrating monday MCP with Claude using a Custom App](https://developer.monday.com/api-reference/docs/integrating-monday-mcp-with-claude-custom-app)
+* [Integrating monday MCP with Copilot Studio using a Custom App](https://developer.monday.com/api-reference/docs/integrating-monday-mcp-with-copilot-studio-custom-app)
+
+The same credentials work with other MCP clients that support custom OAuth connectors.
+
+# How it works
+
+Instead of relying on monday.com's shared hosted connector, you:
+
+1. Register your own OAuth app in the monday.com developer platform and get a Client ID and Client Secret
+2. Turn on **New OAuth flow** under **Build → OAuth & Permissions** — required to connect to MCP with a custom app
+3. Turn off the hosted MCP connector for your account
+4. Give the app's credentials only to your approved users, who add monday.com as a custom connector in their AI agent, pointing at the same MCP endpoint
+
+Your app now controls the connection — not the shared hosted integration.
+
+# Why do this
+
+* **Control scopes.** Set the OAuth permission scopes on your app — for example `boards:read` only, or no write access. Those scopes limit what the MCP connection can do, even if the authenticated user has broader permissions in monday.com.
+* **Choose who connects.** Only users you've given your Client ID and Client Secret to can authorize the connection. Everyone else is locked out, even if they're logged in to monday.com.
+* **Choose what connects.** Restrict access to a specific AI client rather than any MCP-compatible tool.
+* **Revoke without disruption.** Remove a single user's access, or rotate your Client Secret to cut off everyone at once — without affecting your other integrations.
+* **Get your own audit trail.** Your app has its own list of authorized users and activity in the developer platform, separate from the shared hosted connector.
+
+<Callout icon="💡" theme="info">
+  **Tradeoff:** Setup takes a few extra steps per user compared to one-click connect, and you're responsible for storing and rotating your Client Secret securely.
+</Callout>
+
+***
+
+# Setup steps
+
+## Step 1: Create your OAuth app in monday.com
+
+The monday MCP server uses the standard **OAuth 2.0 Authorization Code Grant**, with monday.com as the identity provider — the same flow used by all third-party integrations with the platform API.
+
+### Create your app
+
+1. Log in to your monday.com account. Click your profile picture in the top-right corner and select **Developers** to open the Developer Center
+2. Click **+ Create app** in the top-right corner
+3. Enter an **App Name** and **App Slug**, then click **Create app**
+
+### Configure OAuth settings
+
+1. In the left sidebar under **Build**, click **OAuth & Permissions**
+2. Open **New OAuth flow** and switch the toggle **on**. You must turn this on to connect to MCP with a custom app — while the toggle is off, the app cannot authenticate to the MCP server
+3. On the **Scopes** tab, select only the [permission scopes](https://developer.monday.com/apps/docs/oauth#set-up-permission-scopes) your integration needs — these scopes cap what the MCP connection can do, even when the user has broader permissions in monday.com (add all during testing)
+4. Switch to the **Redirect URLs** tab and add your callback URL — the URL where monday.com sends authorization codes — then click **Save**
+
+<Callout icon="🚧" theme="warn">
+  **New OAuth flow must be on.** Find it on your app under **Build → OAuth & Permissions → New OAuth flow**. Switch the toggle on before you connect. A custom app cannot connect to MCP while this toggle is off.
+</Callout>
+
+### Retrieve your credentials
+
+1. Go to **General Settings** in the left sidebar of your app
+2. Scroll down to the **App Credentials** section and copy your **Client ID** and **Client Secret**
+
+<Callout icon="❗️" theme="error">
+  ### NOTE
+
+  Your client secret is a _secret_. Never share it or add it to source code others can access. You can regenerate it from the app's settings if it's ever compromised.
+</Callout>
+
+## Step 2: Turn off the hosted MCP connector
+
+In your monday.com admin settings, disable the built-in hosted MCP connector. This step matters: as long as it's on, users can bypass your app and connect the old way.
+
+## Step 3: Add a custom connector to your agent
+
+Point your AI agent at the monday MCP server using your OAuth app credentials — not the hosted one-click connector.
+
+You can do this in either of two ways:
+
+* **Configure it yourself** — If you're building or hosting your own MCP client, pass the MCP server URL plus your Client ID and Client Secret into your client's OAuth configuration. See [Authorization flow (custom MCP clients)](#authorization-flow-custom-mcp-clients) for how the token handshake works.
+* **Use a product that supports custom MCP connectors** — Tools like Claude, ChatGPT, Copilot, Cursor, and other [compatible MCP clients](https://developer.monday.com/api-reference/docs/compatible-mcp-clients) typically let you add a new MCP connector and supply OAuth credentials. Look for settings such as **Connectors**, **Custom connector**, or **Add MCP server**, then enter:
+  * **MCP server URL:** `https://mcp.monday.com/mcp`
+  * **OAuth Client ID** and **OAuth Client Secret** from Step 1
+
+<Callout icon="⚠️" theme="warn">
+  Only share the URL, Client ID, and Client Secret with users you want to authorize.
+</Callout>
+
+### Example: Claude
+
+For screenshots and step-by-step Claude UI instructions, see [Integrating monday MCP with Claude using a Custom App](https://developer.monday.com/api-reference/docs/integrating-monday-mcp-with-claude-custom-app).
+
+### Example: Copilot Studio
+
+For Copilot Studio MCP tool setup (OAuth URLs, redirect URI, naming rules), see [Integrating monday MCP with Copilot Studio using a Custom App](https://developer.monday.com/api-reference/docs/integrating-monday-mcp-with-copilot-studio-custom-app).
+
+## Step 4: Verify
+
+Have one user complete the OAuth flow and confirm the connection appears under your app (not the hosted connector) in the monday.com developer platform.
+
+***
+
+# Authorization flow (custom MCP clients)
+
+If you're building your own MCP client (rather than using a product's custom connector UI), the authorization flow follows the standard monday.com [OAuth flow](https://developer.monday.com/apps/docs/oauth):
+
+1. Your MCP client redirects the user to `https://auth.monday.com/oauth2/authorize` with your client ID
+2. The user approves the requested permission scopes
+3. Your client exchanges the authorization code for an access token
+4. Include the access token in the `Authorization` header of your MCP requests:
+
+```
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+All MCP tool calls execute in the context of the authenticated user, limited by both that user's platform permissions and the scopes enabled on your OAuth app. The MCP token can't exceed either boundary — it doesn't grant permissions the user lacks, and it can't use permissions the app didn't request.
+
+***
+
+***
+
+# Which approach should you use?
+
+| Approach             | Best when                                                                                                                                               |
+| :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Hosted connector** | You want a fast rollout and any authenticated user, from any AI client, with that user's full permissions, is an acceptable level of access             |
+| **Custom OAuth app** | You need to limit MCP actions with app scopes, name exactly who can connect, restrict it to a specific client, or need independent audit and revocation |
+
+You can use both across your organization — for example, hosted for general workspaces, and a custom app for workspaces with sensitive data.
+
+***
+
+**Related resources:**
+
+* [Integrating monday MCP with Claude using a Custom App](https://developer.monday.com/api-reference/docs/integrating-monday-mcp-with-claude-custom-app)
+* [Integrating monday MCP with Copilot Studio using a Custom App](https://developer.monday.com/api-reference/docs/integrating-monday-mcp-with-copilot-studio-custom-app)
+* [Integrate with the monday MCP server](https://developer.monday.com/api-reference/docs/integrate-with-monday-mcp)
+* [Authenticate with an API token](https://developer.monday.com/api-reference/docs/mcp-api-token)
+* [Make your integration publicly available (DCR)](https://developer.monday.com/api-reference/docs/mcp-dynamic-client-registration)
+* [Dynamic connectors](https://developer.monday.com/api-reference/docs/mcp-dynamic-connectors)
+* [Compatible MCP clients](https://developer.monday.com/api-reference/docs/compatible-mcp-clients)
+* [MCP security overview](https://developer.monday.com/api-reference/docs/monday-mcp-security-overview)
+* [OAuth documentation](https://developer.monday.com/apps/docs/oauth)
+
+[Page: /api-reference/docs/mcp-enterprise-managed-auth.md]
+---
+updatedAt: 2026-10-21T07:23:08.000Z
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/api-reference/llms.txt
+---
+
+# Enterprise managed auth
+
+Let your organization connect an AI client to monday MCP once, through your identity provider, with no per-user OAuth consent.
+
+monday MCP supports enterprise managed auth (EMA), the [Enterprise-Managed Authorization](https://modelcontextprotocol.io/extensions/auth/enterprise-managed-authorization) extension of the MCP specification. With EMA, your organization connects an AI client to monday MCP once, for everyone, and members don't see a monday.com consent screen. When the client needs monday.com, it asks your identity provider (IdP) for a signed identity assertion for the signed-in member. monday.com exchanges that assertion for an access token for the same member.
+
+EMA changes how a connection is approved, not what it can do. Every tool call runs as the member, with their existing monday.com permissions.
+
+# Supported setups
+
+| Identity provider | AI clients | Setup guide                                                                      |
+| :---------------- | :--------- | :------------------------------------------------------------------------------- |
+| Okta              | Claude     | [Set up enterprise managed auth with Okta](https://developer.monday.com/api-reference/docs/mcp-enterprise-managed-auth-okta) |
+
+Other identity providers and AI clients aren't supported yet.
+
+***
+
+# How monday.com trusts an assertion
+
+There is nothing to turn on in monday.com. monday.com accepts an assertion only when it comes from the IdP app that already runs your account's single sign-on (SSO), and only for a member that SSO has linked to that IdP user. An assertion from any other IdP org or app is rejected.
+
+# Requirements
+
+* **Plan and SSO:** an Enterprise plan account that signs in with [SAML single sign-on](https://support.monday.com/hc/en-us/articles/360000460605-SAML-Single-Sign-on-SSO-) through a supported IdP, with the SSO connection active.
+* **Members:** each member is an active monday.com member or admin (not a viewer), has accepted their invitation, and has signed in to monday.com through SSO at least once. The first SSO sign-in links the member's monday.com user to their IdP user. Members created through SCIM are linked only after their first SSO sign-in.
+* **AI client:** a client that supports EMA with your IdP. See [Supported setups](#supported-setups).
+
+# Values for your setup
+
+Every IdP and AI client setup uses these values:
+
+| Setting                                          | Value                                                                                                         |
+| :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------ |
+| Authorization server issuer (assertion audience) | `https://auth.monday.com/mcp`                                                                                 |
+| Resource (MCP server)                            | `https://mcp.monday.com/mcp`                                                                                  |
+| Scopes                                           | All monday.com scopes, or none. EMA grants the full monday.com scope set, so a partial selection is rejected. |
+| Access token lifetime                            | 24 hours. No refresh token is issued; the client gets a new assertion from your IdP instead.                  |
+
+***
+
+# Turn it off
+
+* **For everyone:** turn off EMA for the monday.com connector in your AI client, or remove the connection between the AI client and monday.com in your IdP.
+* **For one member:** unassign the member from the monday.com app or the AI client in your IdP.
+
+These changes stop new connections within a few minutes. An access token that monday.com already issued stays valid until it expires, up to 24 hours.
+
+***
+
+# Troubleshooting
+
+When monday.com rejects a connection, the error description usually says what to fix. These need more context:
+
+| Error description                                                                 | What to do                                                                                                                                                                                                                                               |
+| :-------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `The assertion is invalid`                                                        | Check your IdP configuration against the [values for your setup](#values-for-your-setup), especially the issuer, audience, client ID, and resource. Some IdP setups also report account and member problems with this error. See your IdP's setup guide. |
+| `No monday user with this email is in an account that uses this Okta app for SSO` | Check that the member's email is the same in monday.com and your IdP, and that your account's active SSO connection runs through the IdP app you connected to the AI client.                                                                             |
+| `The user is in more than one monday account that uses this Okta app for SSO`     | Contact monday.com support.                                                                                                                                                                                                                              |
+
+***
+
+**Related resources:**
+
+* [Set up enterprise managed auth with Okta](https://developer.monday.com/api-reference/docs/mcp-enterprise-managed-auth-okta)
+* [Integrate with the monday MCP server](https://developer.monday.com/api-reference/docs/integrate-with-monday-mcp)
+* [Compatible MCP clients](https://developer.monday.com/api-reference/docs/compatible-mcp-clients)
+* [MCP security overview](https://developer.monday.com/api-reference/docs/monday-mcp-security-overview)
+
+[Page: /api-reference/docs/mcp-enterprise-managed-auth-okta.md]
+---
+updatedAt: 2026-10-21T07:23:08.000Z
+agentTools:
+  siteIndex: https://developer.monday.com/llms.txt
+  projectIndex: https://developer.monday.com/api-reference/llms.txt
+---
+
+# Set up enterprise managed auth with Okta
+
+Configure Okta Cross App Access so a supported AI client connects to monday MCP through your Okta single sign-on.
+
+Okta supports [enterprise managed auth](https://developer.monday.com/api-reference/docs/mcp-enterprise-managed-auth) through [Okta Cross App Access (XAA)](https://help.okta.com/oie/en-us/content/topics/apps/apps-cross-app-access.htm). In XAA terms, monday.com is the resource app and the AI client is the AI agent (the requesting app).
+
+# Before you start
+
+* Your monday.com account meets the requirements in [Enterprise managed auth](https://developer.monday.com/api-reference/docs/mcp-enterprise-managed-auth), and its SAML SSO runs through an Okta app. That app is the one you configure below.
+* You have an Okta admin who can manage apps and AI agents, and an admin for your AI client.
+* Your AI client is registered in Okta as an AI agent, and your members sign in to it through Okta. Follow your AI client's documentation and [Configure AI agent-to-app with Cross App Access](https://help.okta.com/oie/en-us/content/topics/apps/apps-manage-cross-app-access.htm).
+
+***
+
+# Step 1: Enable Cross App Access on the monday.com app
+
+You do this once, whichever AI clients you connect.
+
+1. In the Okta Admin Console, go to **Applications and Resources** > **Applications** and open the app that runs your monday.com SSO.
+2. Go to **Machine Assignments** > **Callers**.
+3. Click **Edit** next to **Cross App Access (XAA)**, select **Enable**, and set the fields:
+
+   | Field              | Value                         |
+   | :----------------- | :---------------------------- |
+   | Issuer URL         | `https://auth.monday.com/mcp` |
+   | Audience/tenant ID | `https://auth.monday.com/mcp` |
+   | Scopes             | Leave empty                   |
+
+   If your app is the **monday.com** app from the Okta Integration Network, the issuer and scopes are already set. Keep the defaults.
+4. Click **Save**.
+
+# Step 2: Connect the AI client to monday.com
+
+Repeat this step for each AI client.
+
+1. In the Okta Admin Console, go to **Directory** > **AI Agents** and open the AI agent for your AI client.
+
+2. Go to **Resource connections** and click **Add resource connection**.
+
+3. Set the fields:
+
+   | Field                              | Value                                          |
+   | :--------------------------------- | :--------------------------------------------- |
+   | Application instance               | The monday.com app from Step 1                 |
+   | Client ID registered in monday.com | The AI client's client ID from the table below |
+   | Resource identifier                | `https://mcp.monday.com/mcp`                   |
+   | Scopes                             | **Allow any scope**                            |
+
+4. Click **Add**.
+
+5. Assign the members who should use monday.com in the AI client to both the AI client's app and the monday.com app in Okta.
+
+| AI client | Client ID registered in monday.com                  |
+| :-------- | :-------------------------------------------------- |
+| Claude    | `https://claude.ai/oauth/mcp-oauth-client-metadata` |
+
+# Step 3: Turn on enterprise managed auth in the AI client
+
+An admin of the AI client turns on EMA for the monday.com connector (`https://mcp.monday.com/mcp`). Follow the client's own guide:
+
+| AI client                          | Guide                                                                                                                                                          | monday.com notes                                                                                                            |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| Claude (Team and Enterprise plans) | [Authorize MCP connectors for your entire organization](https://support.claude.com/en/articles/15537633-authorize-mcp-connectors-for-your-entire-organization) | Set up **Managed authorization** on the monday.com connector. On the **Scopes** step, select all monday.com scopes or none. |
+
+Members covered by your Okta assignments can then use monday.com in the AI client after they sign in with SSO. They don't need to connect it themselves.
+
+***
+
+# Turn it off in Okta
+
+* **For one AI client:** on the AI agent's **Resource connections** tab, deactivate or remove the connection to monday.com.
+* **For all AI clients:** disable **Cross App Access (XAA)** on the monday.com app.
+* **For one member:** unassign the member from the monday.com app or the AI client's app.
+
+These changes stop new connections within a few minutes. An access token that monday.com already issued stays valid until it expires, up to 24 hours.
+
+***
+
+# Troubleshooting
+
+For error messages and fixes, see the troubleshooting table in [Enterprise managed auth](https://developer.monday.com/api-reference/docs/mcp-enterprise-managed-auth).
+
+If your Okta org uses a custom domain, `The assertion is invalid` also covers the account and member checks. When you see it, also confirm the monday.com requirements and that your monday.com SSO runs through the same Okta app you connected in Step 2.
+
+***
+
+**Related resources:**
+
+* [Enterprise managed auth](https://developer.monday.com/api-reference/docs/mcp-enterprise-managed-auth)
+* [Configure AI agent-to-app with Cross App Access (Okta)](https://help.okta.com/oie/en-us/content/topics/apps/apps-manage-cross-app-access.htm)
+* [Integrate with the monday MCP server](https://developer.monday.com/api-reference/docs/integrate-with-monday-mcp)

@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Datadog",
+    "slug": "datadog",
+    "apiVersion": "v2"
+  },
+  "baseUrl": "https://{subdomain}.datadoghq.com",
+  "connectionFields": [
+    {
+      "name": "subdomain",
+      "label": "Datadog API subdomain",
+      "example": "api"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "api_key",
+      "label": "Datadog API Key (DD-API-KEY)",
+      "in": "header",
+      "name": "DD-API-KEY",
+      "prefix": ""
+    },
+    {
+      "type": "api_key",
+      "label": "Datadog Application Key (DD-APPLICATION-KEY)",
+      "in": "header",
+      "name": "DD-APPLICATION-KEY",
+      "prefix": ""
+    },
+    {
+      "type": "bearer",
+      "label": "Bearer token",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/api/v2/current_user",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "data.relationships.other_users.data",
+    "pagination": {
+      "type": "none"
+    },
+    "requiredScopes": [],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": null,
+      "displayName": null,
+      "status": null,
+      "role": null,
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The source does not document an organization-wide user listing, so per-user last login cannot be read for every person. The only per-user last_login_time is on the current user record."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "Your Datadog API Key."
+    },
+    {
+      "claim": "users",
+      "quote": "Get the user associated with the current authentication context."
+    },
+    {
+      "claim": "usage",
+      "quote": "last_login_time\":\"string date-time"
+    }
+  ],
+  "assumptions": [
+    "IMPORTANT: The documentation excerpt only showed the 'current user' endpoint, not an endpoint that lists every user in the organization. A full user listing must be confirmed from the full docs and added before this is useful.",
+    "The current user response is a single object, so the list of records is taken from its 'other_users' relationship, which is assumed to list the other people in the organization. It carries only ids, so email, name, status and dates are not available and the caller themself is not included.",
+    "Because only ids are available, last activity cannot be read, so usage is marked unavailable.",
+    "Datadog needs both an API key and an Application key on each request; they are listed as two separate methods but both must be supplied together. The OAuth flow described is implicit grant, which is not supported here.",
+    "The host is fixed to datadoghq.com with a tenant subdomain (typically 'api'); other Datadog sites (such as datadoghq.eu) are not covered and were not confirmed from the source.",
+    "Rate limits, page sizes and plan requirements were not stated in the source, so they are left empty."
+  ]
+}

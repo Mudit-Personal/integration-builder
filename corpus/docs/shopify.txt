@@ -1,0 +1,2642 @@
+staffMembers - GraphQL Admin Skip to main content 
+ Collapse sidebar 
+ Choose a version: unstable 2027-01 release candidate 2026-10 latest 2026-07 2026-04 2026-01 2026-10 latest 
+ Returns a paginated list of Staff Member 
+objects for the shop. Staff members are users who can access the Shopify admin
+to manage store operations.
+ Supports filtering by account type, email, and name, with an option to sort
+results. The query returns a Staff Member Connection 
+for cursor-based
+pagination .
+ after (String)
+ before (String)
+ first (Int)
+ last (Int)
+ query (String)
+ reverse (Boolean)
+ sortKey (StaffMembersSortKeys)
+ Anchor to after after 
+ • String 
+ The elements that come after the specified cursor .
+ Anchor to before before 
+ • String 
+ The elements that come before the specified cursor .
+ Anchor to first first 
+ • Int 
+ The first n elements from the paginated list .
+ Anchor to last last 
+ • Int 
+ The last n elements from the paginated list .
+ Anchor to query query 
+ • String 
+ A filter made up of terms, connectives, modifiers, and comparators.
+You can apply one or more filters to a query. Learn more about Shopify API
+search syntax .
+ Show filters Anchor to account_type 
+ • string 
+ Filter by account type.
+ Valid values:
+ collaborator 
+ collaborator_team_member 
+ invited 
+ regular 
+ requested 
+ restricted 
+ saml 
+ Anchor to created_at 
+ • time 
+ Filter by creation date and time.
+ Example:
+ created_at:>&#x27;2020-10-21T23:39:20Z&#x27; 
+ created_at:<now 
+ created_at:<=&#x27;2024&#x27; 
+ Anchor to email 
+ • string 
+ Filter by email.
+ Anchor to first_name 
+ • string 
+ Filter by first name.
+ Anchor to id 
+ • id 
+ Filter by id range.
+ Example:
+ id:1234 
+ id:>=1234 
+ id:<=1234 
+ Anchor to last_name 
+ • string 
+ Filter by last name.
+ Anchor to reverse reverse 
+ • Boolean Default: false 
+ Reverse the order of the underlying list.
+ Anchor to sortKey sort Key 
+ • Staff Members Sort Keys Default: ID 
+ Sort the underlying list using a key. If your query is slow or returns an
+error, then try specifying a sort key that matches the field used in the search .
+ Show enum values 
+ Was this section helpful? Yes No 
+ Anchor to Possible returns Possible returns
+ edges ([StaffMemberEdge!]!)
+ nodes ([StaffMember!]!)
+ pageInfo (PageInfo!)
+ Anchor to edges edges 
+ • [Staff Member Edge!]! non-null 
+ The connection between the node and its parent. Each edge contains a minimum of the edge&#x27;s cursor and the node.
+ Show fields 
+ Anchor to nodes nodes 
+ • [Staff Member!]! non-null 
+ A list of nodes that are contained in StaffMemberEdge. You can fetch data
+about an individual node, or you can follow the edges to fetch data about a
+collection of related nodes. At each node, you specify the fields that you
+want to retrieve.
+ Show fields 
+ Anchor to pageInfo page Info 
+ • Page Info! non-null 
+ An object that’s used to retrieve cursor
+information about the current page.
+ Show fields 
+ Was this section helpful? Yes No 
+ Examples
+ staffMembers reference
+ 1
+ 2
+ 3
+ 4
+ 5
+ ⌄ 
+ { 
+ staffMembers { 
+ # staffMembers fields 
+ } 
+ }
+
+[Page: /docs/api/usage/pagination-graphql]
+Paginating results with GraphQL Skip to main content 
+ Collapse sidebar 
+ Shopify&#x27;s GraphQL APIs return lists of resources as connections, which you page through with cursors. This applies to the GraphQL Admin API , the Storefront API , and the Customer Account API . The REST Admin API is cursor-based too, but it pages with Link headers: refer to Make paginated requests to the REST Admin API .
+ When you use a connection to retrieve a list of resources, you use arguments to specify the number of results to retrieve. You can select which set of results to retrieve from a connection by using cursor-based pagination.
+ Note
+ You can retrieve up to a maximum of 250 resources. If you need to paginate larger volumes of data, then you can perform a bulk query operation using the GraphQL Admin API.
+ Note : You can retrieve up to a maximum of 250 resources. If you need to paginate larger volumes of data, then you can perform a bulk query operation using the GraphQL Admin API.
+ Anchor to How it works How it works
+ Connections retrieve a list of nodes. A node is an object that has a global ID and is of a type that&#x27;s defined by the schema, such as the Order type. For example, the orders connection finds all the Order nodes connected to the query root. The nodes field is similar to a for-loop because it retrieves the selected fields from each node in the connection.
+ To optimize performance and user experience, you can request only a certain number of nodes at a time. The batch of nodes that is returned is known as a page. The position of each node in the array is indicated by its cursor.
+ To retrieve the next page of nodes, you need to indicate the position of the node the page should start from. You can do so by providing a cursor. You can retrieve cursor information about the current page using the PageInfo object , and use that cursor value in a subsequent query by passing it in a after or before argument.
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ query { 
+ orders ( first : 2 ) { 
+ nodes { 
+ id 
+ name 
+ createdAt 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ { 
+ "data" : { 
+ "orders" : { 
+ "nodes" : [ 
+ { 
+ "id" : "gid://shopify/Order/1" , 
+ "name" : "#1001" , 
+ "createdAt" : "2022-05-12T19:42:48Z" 
+ } , 
+ { 
+ "id" : "gid://shopify/Order/2" , 
+ "name" : "#1002" , 
+ "createdAt" : "2022-05-12T19:45:07Z" 
+ } 
+ ] 
+ } 
+ } 
+ } 
+ Tip
+ You can also retrieve a list of nodes using edges .
+ Tip : You can also retrieve a list of nodes using edges .
+ Anchor to The ,[object Object], object The PageInfo object
+ In the GraphQL Admin API, each connection returns a PageInfo object that assists in cursor-based pagination. The PageInfo object is composed of the following fields:
+ Field Type Description 
+ hasPreviousPage Boolean Whether there are results in the connection before the current page. 
+ hasNextPage Boolean Whether there are results in the connection after the current page. 
+ startCursor string The cursor of the first node in the nodes list. 
+ endCursor string The cursor of the last node in the nodes list. 
+ Note
+ The PageInfo object in the GraphQL Partner API is only composed of the hasNextPage and hasPreviousPage fields.
+ Note : The PageInfo object in the GraphQL Partner API is only composed of the hasNextPage and hasPreviousPage fields.
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ query { 
+ orders ( first : 2 ) { 
+ nodes { 
+ id 
+ name 
+ createdAt 
+ } 
+ pageInfo { 
+ hasPreviousPage 
+ hasNextPage 
+ startCursor 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ { 
+ "data" : { 
+ "orders" : { 
+ "nodes" : [ 
+ { 
+ "id" : "gid://shopify/Order/1" , 
+ "name" : "#1001" , 
+ "createdAt" : "2022-05-12T19:42:48Z" 
+ } , 
+ { 
+ "id" : "gid://shopify/Order/2" , 
+ "name" : "#1002" , 
+ "createdAt" : "2022-05-12T19:45:07Z" 
+ } 
+ ] 
+ "pageInfo" : { 
+ "hasPreviousPage" : false , 
+ "hasNextPage" : true , 
+ "startCursor" : "eyJsYXN0X2lkIjoxNDIzOTgwNTI3NjM4LCJsYXN0X3ZhbHVlIjoiMjAyMC0wMS0yMCAxNDo0ODoxMS4wMDAwMDAifQ==" , 
+ "endCursor" : "eyJsYXN0X2lkIjoyMzIxMjM5MTQ2NTE4LCJsYXN0X3ZhbHVlIjoiMjAyMC0xMi0xNSAyMzowMDo0NS4wMDAwMDAifQ==" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Forward pagination Forward pagination
+ All connections in Shopify&#x27;s APIs provide forward pagination. This is achieved with the following connection variables:
+ Field Type Description 
+ first integer The requested number of nodes for each page. 
+ after string The cursor to retrieve nodes after in the connection. Typically, you should pass the endCursor of the previous page as after . 
+ Anchor to Examples Examples
+ You can include the PageInfo fields in your queries to paginate your results. The following example includes the hasNextPage and endCursor fields, and uses query variables to pass the endCursor value as an argument:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ query ( $numProducts : Int !, $cursor : String ) { 
+ # The `$numProducts` variable is required and is used to specify the number of results to return. The `$cursor` variable isn't required. If the `$cursor` variable is omitted, then the `after` argument is ignored. 
+ products ( first : $numProducts , after : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasNextPage 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : null 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 1 title" 
+ } , 
+ { 
+ "title" : "Product 2 title" 
+ } , 
+ { 
+ "title" : "Product 3 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ // The response indicates that there's a next page and provides the cursor to use as an `after` input for the next page of nodes.
+ "hasNextPage" : true , 
+ "endCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" 
+ } 
+ } 
+ } 
+ } 
+ By using the same query with different variables, you can query for the next page:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( first : $numProducts , after : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasNextPage 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 4 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ // The response indicates that there's no next page. This is the last page of the connection.
+ "hasNextPage" : false , 
+ "endCursor" : "eyJsYXN0X2lkIjo3MjE0Njc0MjgwNTA0LCJsYXN0X3ZhbHVlIjoiNzIxNDY3NDI4MDUwNCJ9" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Backward pagination Backward pagination
+ Some connections in Shopify&#x27;s APIs also provide backward pagination. This is achieved with the following connection variables:
+ Field Type Description 
+ last integer The requested number of nodes for each page. 
+ before string The cursor to retrieve nodes before in the connection. Typically, you should pass the startCursor of the previous page as before . 
+ Anchor to Examples Examples
+ Similar to forward pagination, you can start at the end of the list of nodes, and then query in reverse page order to the beginning. The following example includes the hasPreviousPage and startCursor fields, and uses query variables to pass the startCursor value as an argument:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( last : $numProducts , before : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasPreviousPage 
+ startCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : null 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 2 title" 
+ } , 
+ { 
+ "title" : "Product 3 title" 
+ } , 
+ { 
+ "title" : "Product 4 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ "hasPreviousPage" : true , 
+ "startCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDk4NjE2LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA5ODYxNiJ9" 
+ } 
+ } 
+ } 
+ } 
+ The startCursor field can also be used in the subsequent request as the input before to get the previous page:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( last : $numProducts , before : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasPreviousPage 
+ startCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDk4NjE2LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA5ODYxNiJ9" 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 1 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ "hasPreviousPage" : false , 
+ "startCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDY1ODQ4LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA2NTg0OCJ9" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Connection edges Connection edges
+ In connections, an Edge type describes the connection between the node and its parent. In almost all cases, querying nodes and pageInfo is preferred to querying edges . However, if you want the Edge metadata, then you can query edges instead of nodes . Each Edge contains a minimum of that edge&#x27;s cursor and the node.
+ Anchor to Example Example
+ The following query is equivalent to the forward pagination query . However, it requests a cursor for every edge instead of only the endCursor :
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( first : $numProducts , after : $cursor ) { 
+ edges { 
+ cursor 
+ node { 
+ title 
+ } 
+ } 
+ pageInfo { 
+ hasNextPage 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : null 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ // The PageInfo `endCursor` and the last edge's `cursor` are the same. Also , the `edges [ ] .node` list is the equivalent of the `nodes` list in the forward pagination query.
+ { 
+ "data" : { 
+ "products" : { 
+ "edges" : [ 
+ { 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDY1ODQ4LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA2NTg0OCJ9" , 
+ "node" : { 
+ "title" : "Product 1 title" 
+ } 
+ } , 
+ { 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDk4NjE2LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA5ODYxNiJ9" , 
+ "node" : { 
+ "title" : "Product 2 title" 
+ } 
+ } , 
+ { 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" , 
+ "node" : { 
+ "title" : "Product 3 title" 
+ } 
+ } 
+ ] , 
+ "pageInfo" : { 
+ "hasNextPage" : true , 
+ "endCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Pagination limits Pagination limits
+ Shopify limits pagination of arrays of objects to 25,000 objects. Pagination deep into large arrays is resource intensive and can slow down other requests. To keep all requests performant a limit of 25,000 was put in place that balances performance with practical use-cases.
+ If you need to paginate more than 25,000 items, you should consider adding filters to help buyers narrow their search to a manageable number of items before paging through all results. See how you can add filters to your store .
+ This limit is also enforced on count queries. Counts are accurate up to 25,000 items. For arrays with more items, 25,001 is returned as the count, signaling that there are more than 25,000 items in the array.
+ Anchor to Search performance considerations Search performance considerations
+ Paginating resources using a range search might timeout or return an error if the collection of resources is sufficiently large, and the search field is different from the specified (or default) sort key for the connection you are querying. If your query is slow or returns an error, then try specifying a sort key that matches the field used in the search. For example:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ { 
+ orders ( first : 250 , query : "created_at:>'2020-10-21'" , sortKey : CREATED_AT ) { 
+ edges { 
+ node { 
+ id 
+ } 
+ } 
+ } 
+ } 
+ Was this page helpful? Yes No
+
+[Page: /api/usage/pagination-graphql]
+Paginating results with GraphQL Skip to main content 
+ Collapse sidebar 
+ Shopify&#x27;s GraphQL APIs return lists of resources as connections, which you page through with cursors. This applies to the GraphQL Admin API , the Storefront API , and the Customer Account API . The REST Admin API is cursor-based too, but it pages with Link headers: refer to Make paginated requests to the REST Admin API .
+ When you use a connection to retrieve a list of resources, you use arguments to specify the number of results to retrieve. You can select which set of results to retrieve from a connection by using cursor-based pagination.
+ Note
+ You can retrieve up to a maximum of 250 resources. If you need to paginate larger volumes of data, then you can perform a bulk query operation using the GraphQL Admin API.
+ Note : You can retrieve up to a maximum of 250 resources. If you need to paginate larger volumes of data, then you can perform a bulk query operation using the GraphQL Admin API.
+ Anchor to How it works How it works
+ Connections retrieve a list of nodes. A node is an object that has a global ID and is of a type that&#x27;s defined by the schema, such as the Order type. For example, the orders connection finds all the Order nodes connected to the query root. The nodes field is similar to a for-loop because it retrieves the selected fields from each node in the connection.
+ To optimize performance and user experience, you can request only a certain number of nodes at a time. The batch of nodes that is returned is known as a page. The position of each node in the array is indicated by its cursor.
+ To retrieve the next page of nodes, you need to indicate the position of the node the page should start from. You can do so by providing a cursor. You can retrieve cursor information about the current page using the PageInfo object , and use that cursor value in a subsequent query by passing it in a after or before argument.
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ query { 
+ orders ( first : 2 ) { 
+ nodes { 
+ id 
+ name 
+ createdAt 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ { 
+ "data" : { 
+ "orders" : { 
+ "nodes" : [ 
+ { 
+ "id" : "gid://shopify/Order/1" , 
+ "name" : "#1001" , 
+ "createdAt" : "2022-05-12T19:42:48Z" 
+ } , 
+ { 
+ "id" : "gid://shopify/Order/2" , 
+ "name" : "#1002" , 
+ "createdAt" : "2022-05-12T19:45:07Z" 
+ } 
+ ] 
+ } 
+ } 
+ } 
+ Tip
+ You can also retrieve a list of nodes using edges .
+ Tip : You can also retrieve a list of nodes using edges .
+ Anchor to The ,[object Object], object The PageInfo object
+ In the GraphQL Admin API, each connection returns a PageInfo object that assists in cursor-based pagination. The PageInfo object is composed of the following fields:
+ Field Type Description 
+ hasPreviousPage Boolean Whether there are results in the connection before the current page. 
+ hasNextPage Boolean Whether there are results in the connection after the current page. 
+ startCursor string The cursor of the first node in the nodes list. 
+ endCursor string The cursor of the last node in the nodes list. 
+ Note
+ The PageInfo object in the GraphQL Partner API is only composed of the hasNextPage and hasPreviousPage fields.
+ Note : The PageInfo object in the GraphQL Partner API is only composed of the hasNextPage and hasPreviousPage fields.
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ query { 
+ orders ( first : 2 ) { 
+ nodes { 
+ id 
+ name 
+ createdAt 
+ } 
+ pageInfo { 
+ hasPreviousPage 
+ hasNextPage 
+ startCursor 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ { 
+ "data" : { 
+ "orders" : { 
+ "nodes" : [ 
+ { 
+ "id" : "gid://shopify/Order/1" , 
+ "name" : "#1001" , 
+ "createdAt" : "2022-05-12T19:42:48Z" 
+ } , 
+ { 
+ "id" : "gid://shopify/Order/2" , 
+ "name" : "#1002" , 
+ "createdAt" : "2022-05-12T19:45:07Z" 
+ } 
+ ] 
+ "pageInfo" : { 
+ "hasPreviousPage" : false , 
+ "hasNextPage" : true , 
+ "startCursor" : "eyJsYXN0X2lkIjoxNDIzOTgwNTI3NjM4LCJsYXN0X3ZhbHVlIjoiMjAyMC0wMS0yMCAxNDo0ODoxMS4wMDAwMDAifQ==" , 
+ "endCursor" : "eyJsYXN0X2lkIjoyMzIxMjM5MTQ2NTE4LCJsYXN0X3ZhbHVlIjoiMjAyMC0xMi0xNSAyMzowMDo0NS4wMDAwMDAifQ==" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Forward pagination Forward pagination
+ All connections in Shopify&#x27;s APIs provide forward pagination. This is achieved with the following connection variables:
+ Field Type Description 
+ first integer The requested number of nodes for each page. 
+ after string The cursor to retrieve nodes after in the connection. Typically, you should pass the endCursor of the previous page as after . 
+ Anchor to Examples Examples
+ You can include the PageInfo fields in your queries to paginate your results. The following example includes the hasNextPage and endCursor fields, and uses query variables to pass the endCursor value as an argument:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ query ( $numProducts : Int !, $cursor : String ) { 
+ # The `$numProducts` variable is required and is used to specify the number of results to return. The `$cursor` variable isn't required. If the `$cursor` variable is omitted, then the `after` argument is ignored. 
+ products ( first : $numProducts , after : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasNextPage 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : null 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 1 title" 
+ } , 
+ { 
+ "title" : "Product 2 title" 
+ } , 
+ { 
+ "title" : "Product 3 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ // The response indicates that there's a next page and provides the cursor to use as an `after` input for the next page of nodes.
+ "hasNextPage" : true , 
+ "endCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" 
+ } 
+ } 
+ } 
+ } 
+ By using the same query with different variables, you can query for the next page:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( first : $numProducts , after : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasNextPage 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 4 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ // The response indicates that there's no next page. This is the last page of the connection.
+ "hasNextPage" : false , 
+ "endCursor" : "eyJsYXN0X2lkIjo3MjE0Njc0MjgwNTA0LCJsYXN0X3ZhbHVlIjoiNzIxNDY3NDI4MDUwNCJ9" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Backward pagination Backward pagination
+ Some connections in Shopify&#x27;s APIs also provide backward pagination. This is achieved with the following connection variables:
+ Field Type Description 
+ last integer The requested number of nodes for each page. 
+ before string The cursor to retrieve nodes before in the connection. Typically, you should pass the startCursor of the previous page as before . 
+ Anchor to Examples Examples
+ Similar to forward pagination, you can start at the end of the list of nodes, and then query in reverse page order to the beginning. The following example includes the hasPreviousPage and startCursor fields, and uses query variables to pass the startCursor value as an argument:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( last : $numProducts , before : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasPreviousPage 
+ startCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : null 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 2 title" 
+ } , 
+ { 
+ "title" : "Product 3 title" 
+ } , 
+ { 
+ "title" : "Product 4 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ "hasPreviousPage" : true , 
+ "startCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDk4NjE2LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA5ODYxNiJ9" 
+ } 
+ } 
+ } 
+ } 
+ The startCursor field can also be used in the subsequent request as the input before to get the previous page:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( last : $numProducts , before : $cursor ) { 
+ nodes { 
+ title 
+ } 
+ pageInfo { 
+ hasPreviousPage 
+ startCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDk4NjE2LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA5ODYxNiJ9" 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ 
+ { 
+ "title" : "Product 1 title" 
+ } 
+ ] , 
+ "pageInfo" : { 
+ "hasPreviousPage" : false , 
+ "startCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDY1ODQ4LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA2NTg0OCJ9" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Connection edges Connection edges
+ In connections, an Edge type describes the connection between the node and its parent. In almost all cases, querying nodes and pageInfo is preferred to querying edges . However, if you want the Edge metadata, then you can query edges instead of nodes . Each Edge contains a minimum of that edge&#x27;s cursor and the node.
+ Anchor to Example Example
+ The following query is equivalent to the forward pagination query . However, it requests a cursor for every edge instead of only the endCursor :
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ query ( $numProducts : Int !, $cursor : String ) { 
+ products ( first : $numProducts , after : $cursor ) { 
+ edges { 
+ cursor 
+ node { 
+ title 
+ } 
+ } 
+ pageInfo { 
+ hasNextPage 
+ endCursor 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ { 
+ "numProducts" : 3 , 
+ "cursor" : null 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ // The PageInfo `endCursor` and the last edge's `cursor` are the same. Also , the `edges [ ] .node` list is the equivalent of the `nodes` list in the forward pagination query.
+ { 
+ "data" : { 
+ "products" : { 
+ "edges" : [ 
+ { 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDY1ODQ4LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA2NTg0OCJ9" , 
+ "node" : { 
+ "title" : "Product 1 title" 
+ } 
+ } , 
+ { 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MDk4NjE2LCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDA5ODYxNiJ9" , 
+ "node" : { 
+ "title" : "Product 2 title" 
+ } 
+ } , 
+ { 
+ "cursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" , 
+ "node" : { 
+ "title" : "Product 3 title" 
+ } 
+ } 
+ ] , 
+ "pageInfo" : { 
+ "hasNextPage" : true , 
+ "endCursor" : "eyJsYXN0X2lkIjo3MDE3MjQ0MTY0MTUyLCJsYXN0X3ZhbHVlIjoiNzAxNzI0NDE2NDE1MiJ9" 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Pagination limits Pagination limits
+ Shopify limits pagination of arrays of objects to 25,000 objects. Pagination deep into large arrays is resource intensive and can slow down other requests. To keep all requests performant a limit of 25,000 was put in place that balances performance with practical use-cases.
+ If you need to paginate more than 25,000 items, you should consider adding filters to help buyers narrow their search to a manageable number of items before paging through all results. See how you can add filters to your store .
+ This limit is also enforced on count queries. Counts are accurate up to 25,000 items. For arrays with more items, 25,001 is returned as the count, signaling that there are more than 25,000 items in the array.
+ Anchor to Search performance considerations Search performance considerations
+ Paginating resources using a range search might timeout or return an error if the collection of resources is sufficiently large, and the search field is different from the specified (or default) sort key for the connection you are querying. If your query is slow or returns an error, then try specifying a sort key that matches the field used in the search. For example:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ { 
+ orders ( first : 250 , query : "created_at:>'2020-10-21'" , sortKey : CREATED_AT ) { 
+ edges { 
+ node { 
+ id 
+ } 
+ } 
+ } 
+ } 
+ Was this page helpful? Yes No
+
+[Page: /docs/api/admin-graphql/latest/objects/StaffMember]
+StaffMember - GraphQL Admin Skip to main content 
+ Collapse sidebar 
+ Choose a version: unstable 2027-01 release candidate 2026-10 latest 2026-07 2026-04 2026-01 2026-10 latest 
+ Requires read _users access scope. Also: The app must be a finance embedded app or installed on a Shopify Plus or Advanced store. Contact Shopify Support to enable this scope for your app.
+ A user account that can access the Shopify admin to manage store operations.
+Includes personal information and account status.
+ You can assign staff members to Company Location 
+objects for B2B operations , limiting
+their actions to those locations.
+ Anchor to Fields Fields
+ accountType (AccountType)
+ active (Boolean!)
+ avatar (Image!)
+ email (String!)
+ exists (Boolean!)
+ firstName (String)
+ id (ID!)
+ initials ([String!])
+ isShopOwner (Boolean!)
+ lastName (String)
+ locale (String!)
+ name (String!)
+ phone (String)
+ privateData (StaffMemberPrivateData!)
+ Anchor to accountType account Type 
+ • Account Type 
+ The type of account the staff member has.
+ Show enum values 
+ Anchor to active active 
+ • Boolean! non-null 
+ Whether the staff member is active.
+ Anchor to avatar avatar 
+ • Image! non-null 
+ The image used as the staff member&#x27;s avatar in the Shopify admin.
+ Show fields Arguments
+ Anchor to fallback fallback 
+ • Staff Member Default Image Default: DEFAULT 
+ The default image returned if the staff member has no avatar.
+ Show enum values 
+ Anchor to maxHeight max Height 
+ • Int Deprecated 
+ Anchor to maxWidth max Width 
+ • Int Deprecated 
+ Anchor to email email 
+ • String! non-null 
+ The staff member&#x27;s email address.
+ Anchor to exists exists 
+ • Boolean! non-null 
+ Whether the staff member&#x27;s account exists.
+ Anchor to firstName first Name 
+ • String 
+ The staff member&#x27;s first name.
+ Anchor to id id 
+ • ID! non-null 
+ A globally-unique ID.
+ Anchor to initials initials 
+ • [String!] 
+ The staff member&#x27;s initials, if available.
+ Anchor to isShopOwner is Shop Owner 
+ • Boolean! non-null 
+ Whether the staff member is the shop owner.
+ Anchor to lastName last Name 
+ • String 
+ The staff member&#x27;s last name.
+ Anchor to locale locale 
+ • String! non-null 
+ The staff member&#x27;s preferred locale. Locale values use the format language 
+or language-COUNTRY , where language is a two-letter language code, and
+ COUNTRY is a two-letter country code. For example: en or en-US 
+ Anchor to name name 
+ • String! non-null 
+ The staff member&#x27;s full name.
+ Anchor to phone phone 
+ • String 
+ The staff member&#x27;s phone number.
+ Anchor to privateData private Data 
+ • Staff Member Private Data! non-null 
+ The data used to customize the Shopify admin experience for the staff member.
+ Show fields 
+ Was this section helpful? Yes No 
+ Fields and connections with this object
+ ||- CashActivity . staffMember 
+ {} CashAdjustmentActivity . staffMember 
+ {} CashCountActivity . staffMember 
+ {} CashTrackingAdjustment . staffMember 
+ {} CashTrackingSession . closingStaffMember 
+ {} CashTrackingSession . openingStaffMember 
+ {} CashTransactionActivity . staffMember 
+ {} CommentEvent . author 
+ {} CompanyLocationStaffMemberAssignment . staffMember 
+ {} InventoryAdjustmentGroup . staffMember 
+ {} LineItem . staffMember 
+ {} Metaobject . createdByStaff 
+ {} MetaobjectDefinition . createdByStaff 
+ {} Order . staffMember 
+ {} OrderAgreement . user 
+ {} OrderEditAgreement . user 
+ {} OrderTransaction . user 
+ {} PointOfSaleDevicePaymentSession . closingStaffMember 
+ {} PointOfSaleDevicePaymentSession . openingStaffMember 
+ {} Refund . staffMember 
+ {} RefundAgreement . user 
+ {} Return . staffMember 
+ {} ReturnAgreement . user 
+ ||- SalesAgreement . user 
+ {} Shop . accountOwner 
+ <-> StaffMemberConnection . nodes 
+ {} StaffMemberEdge . node 
+ {} TenderTransaction . user 
+ Show deprecations 
+ Anchor to Queries Queries
+ currentStaffMember (StaffMember)
+ staffMember (StaffMember)
+ staffMembers (StaffMemberConnection)
+ Anchor to currentStaffMember current Staff Member 
+ • query 
+ The staff member making the API request.
+ Show fields 
+ Anchor to staffMember staff Member 
+ • query 
+ Retrieves a staff
+member 
+by ID. If no ID is provided, the query returns the staff member that&#x27;s making
+the request. A staff member is a user who can access the Shopify admin to
+manage store operations.
+ Provides staff member details such as email, name, and shop owner status. When
+querying the current user (with or without an ID), additional private data 
+becomes available.
+ Show fields Arguments
+ Anchor to id id 
+ • ID 
+ The ID of the staff member to return. If no ID is provided, then the staff member making the query (if any) is returned.
+ Anchor to staffMembers staff Members 
+ • query 
+ Returns a paginated list of Staff Member 
+objects for the shop. Staff members are users who can access the Shopify admin
+to manage store operations.
+ Supports filtering by account type, email, and name, with an option to sort
+results. The query returns a Staff Member Connection 
+for cursor-based
+pagination .
+ Show fields Arguments
+ Anchor to after after 
+ • String 
+ The elements that come after the specified cursor .
+ Anchor to before before 
+ • String 
+ The elements that come before the specified cursor .
+ Anchor to first first 
+ • Int 
+ The first n elements from the paginated list .
+ Anchor to last last 
+ • Int 
+ The last n elements from the paginated list .
+ Anchor to query query 
+ • String 
+ A filter made up of terms, connectives, modifiers, and comparators.
+You can apply one or more filters to a query. Learn more about Shopify API
+search syntax .
+ Show filters Anchor to account_type 
+ • string 
+ Filter by account type.
+ Valid values:
+ collaborator 
+ collaborator_team_member 
+ invited 
+ regular 
+ requested 
+ restricted 
+ saml 
+ Anchor to created_at 
+ • time 
+ Filter by creation date and time.
+ Example:
+ created_at:>&#x27;2020-10-21T23:39:20Z&#x27; 
+ created_at:<now 
+ created_at:<=&#x27;2024&#x27; 
+ Anchor to email 
+ • string 
+ Filter by email.
+ Anchor to first_name 
+ • string 
+ Filter by first name.
+ Anchor to id 
+ • id 
+ Filter by id range.
+ Example:
+ id:1234 
+ id:>=1234 
+ id:<=1234 
+ Anchor to last_name 
+ • string 
+ Filter by last name.
+ Anchor to reverse reverse 
+ • Boolean Default: false 
+ Reverse the order of the underlying list.
+ Anchor to sortKey sort Key 
+ • Staff Members Sort Keys Default: ID 
+ Sort the underlying list using a key. If your query is slow or returns an
+error, then try specifying a sort key that matches the field used in the search .
+ Show enum values 
+ Was this section helpful? Yes No 
+ Queried by
+ <?> current Staff Member 
+ <?> staff Member 
+ <?> staff Members 
+ Anchor to Interfaces Interfaces
+ Node
+ Anchor to Node Node 
+ • interface 
+ Was this section helpful? Yes No 
+ Implements
+ ||- Node
+
+[Page: /docs/api/admin-graphql/latest/connections/StaffMemberConnection]
+StaffMemberConnection - GraphQL Admin Skip to main content 
+ Collapse sidebar 
+ Choose a version: unstable 2027-01 release candidate 2026-10 latest 2026-07 2026-04 2026-01 2026-10 latest 
+ An auto-generated type for paginating through multiple StaffMembers.
+ Anchor to Fields with this connection Fields with this connection
+ : deprecated
+ Anchor to Shop.staffMembers Shop . staffMembers 
+ • OBJECT Deprecated 
+ Was this section helpful? Yes No 
+ Anchor to Queries with this connection Queries with this connection
+ staffMembers (StaffMemberConnection)
+ Anchor to staffMembers staff Members 
+ • query 
+ Returns a paginated list of Staff Member 
+objects for the shop. Staff members are users who can access the Shopify admin
+to manage store operations.
+ Supports filtering by account type, email, and name, with an option to sort
+results. The query returns a Staff Member Connection 
+for cursor-based
+pagination .
+ Show fields Arguments
+ Anchor to after after 
+ • String 
+ The elements that come after the specified cursor .
+ Anchor to before before 
+ • String 
+ The elements that come before the specified cursor .
+ Anchor to first first 
+ • Int 
+ The first n elements from the paginated list .
+ Anchor to last last 
+ • Int 
+ The last n elements from the paginated list .
+ Anchor to query query 
+ • String 
+ A filter made up of terms, connectives, modifiers, and comparators.
+You can apply one or more filters to a query. Learn more about Shopify API
+search syntax .
+ Show filters Anchor to account_type 
+ • string 
+ Filter by account type.
+ Valid values:
+ collaborator 
+ collaborator_team_member 
+ invited 
+ regular 
+ requested 
+ restricted 
+ saml 
+ Anchor to created_at 
+ • time 
+ Filter by creation date and time.
+ Example:
+ created_at:>&#x27;2020-10-21T23:39:20Z&#x27; 
+ created_at:<now 
+ created_at:<=&#x27;2024&#x27; 
+ Anchor to email 
+ • string 
+ Filter by email.
+ Anchor to first_name 
+ • string 
+ Filter by first name.
+ Anchor to id 
+ • id 
+ Filter by id range.
+ Example:
+ id:1234 
+ id:>=1234 
+ id:<=1234 
+ Anchor to last_name 
+ • string 
+ Filter by last name.
+ Anchor to reverse reverse 
+ • Boolean Default: false 
+ Reverse the order of the underlying list.
+ Anchor to sortKey sort Key 
+ • Staff Members Sort Keys Default: ID 
+ Sort the underlying list using a key. If your query is slow or returns an
+error, then try specifying a sort key that matches the field used in the search .
+ Show enum values 
+ Was this section helpful? Yes No 
+ Anchor to Possible returns Possible returns
+ edges ([StaffMemberEdge!]!)
+ nodes ([StaffMember!]!)
+ pageInfo (PageInfo!)
+ Anchor to edges edges 
+ • [Staff Member Edge!]! non-null 
+ The connection between the node and its parent. Each edge contains a minimum of the edge&#x27;s cursor and the node.
+ Show fields 
+ Anchor to nodes nodes 
+ • [Staff Member!]! non-null 
+ A list of nodes that are contained in StaffMemberEdge. You can fetch data
+about an individual node, or you can follow the edges to fetch data about a
+collection of related nodes. At each node, you specify the fields that you
+want to retrieve.
+ Show fields 
+ Anchor to pageInfo page Info 
+ • Page Info! non-null 
+ An object that’s used to retrieve cursor
+information about the current page.
+ Show fields 
+ Was this section helpful? Yes No 
+ Show deprecations Queries with this connection
+ <?> staff Members 
+ Possible returns
+ <-> Staff Member Connection . edges 
+ <-> Staff Member Connection . nodes 
+ <-> Staff Member Connection . pageInfo
+
+[Page: /docs/api/admin-graphql/latest/enums/StaffMembersSortKeys]
+StaffMembersSortKeys - GraphQL Admin Skip to main content 
+ Collapse sidebar 
+ Choose a version: unstable 2027-01 release candidate 2026-10 latest 2026-07 2026-04 2026-01 2026-10 latest 
+ The set of valid sort keys for the StaffMembers query.
+ Anchor to Valid values Valid values
+ CREATED_AT
+ EMAIL
+ FIRST_NAME
+ ID
+ LAST_NAME
+ Anchor to CREATED_AT CREATED_ AT 
+ Sort by the created _at value.
+ Anchor to EMAIL EMAIL 
+ Sort by the email value.
+ Anchor to FIRST_NAME FIRST_ NAME 
+ Sort by the first _name value.
+ Anchor to ID ID 
+ Sort by the id value.
+ Anchor to LAST_NAME LAST_ NAME 
+ Sort by the last _name value.
+ Was this section helpful? Yes No 
+ Anchor to Fields Fields
+ Anchor to QueryRoot.staffMembers(sortKey) Query Root . staffMembers ( sortKey ) 
+ • ARGUMENT 
+ The schema&#x27;s entry-point for queries. This acts as the public, top-level API from which all queries must start.
+ Anchor to staffMembers.sortKey staff Members . sortKey 
+ • ARGUMENT 
+ Was this section helpful? Yes No 
+ Arguments with this enum
+ <-| Query Root . staffMembers ( sortKey ) 
+ <-| staff Members . sortKey
+
+[Page: /docs/api/admin-graphql/latest/objects/StaffMemberEdge]
+StaffMemberEdge - GraphQL Admin Skip to main content 
+ Collapse sidebar 
+ Choose a version: unstable 2027-01 release candidate 2026-10 latest 2026-07 2026-04 2026-01 2026-10 latest 
+ An auto-generated type which holds one StaffMember and a cursor during pagination.
+ Anchor to Fields Fields
+ cursor (String!)
+ node (StaffMember!)
+ Anchor to cursor cursor 
+ • String! non-null 
+ The position of each node in an array, used in pagination .
+ Anchor to node node 
+ • Staff Member! non-null 
+ The item at the end of StaffMemberEdge.
+ Show fields 
+ Was this section helpful? Yes No 
+ Connections with this object
+ <-> StaffMemberConnection . edges
+
+[Page: /api/usage/search-syntax]
+Search query syntax Skip to main content 
+ Collapse sidebar 
+ Shopify uses one search query syntax across the platform. The same grammar of terms, connectives, modifiers, and comparators applies wherever you search or filter:
+ GraphQL APIs : the query argument on a connection, for example products(first: 5, query: "created_at:>&#x27;2020-10-21&#x27;") . Supported by the GraphQL Admin API , the Storefront API , and the Customer Account API .
+ REST Admin API : the query parameter on search endpoints, written query=first_name:Bob .
+ Webhook subscriptions : delivery filters use the same grammar to decide whether an event is delivered.
+ The Shopify admin, mobile apps, and customer segments : the search fields merchants use directly.
+ This page defines the grammar. Which fields you can query is defined per resource in each API&#x27;s reference documentation.
+ The grammar tables below write their examples in the parameter form, query=title:red . In a GraphQL request the same string is the value of the query argument, query: "title:red" .
+ Anchor to Search query grammar overview Search query grammar overview
+ A string query is a text search made up of terms, connectives, modifiers, and comparators. The search grammar rules defined here can be built into larger structures as defined by the search query syntax .
+ The search grammar is expressed similarly to EBNF and uses the following baseline terminal symbols:
+ Item Description 
+ whitespace Any sequence of space, tab, or newline characters. 
+ name Any sequence of non-whitespace, non-special characters. For more information, refer to Special characters . 
+ value Any name, or any quoted string (single or double quotes are both permitted). Date values must be a string surrounded by quotes. 
+ Anchor to Query Query
+ 1
+ Query = Term { [ whitespace Connective ] whitespace Term }
+ A query is one or more terms separated by whitespace and optionally by single connectives. A query may have optional leading and trailing whitespace.
+ query=John Smith 
+ Anchor to Connectives Connectives
+ 1
+ Connective = "AND" | "OR"
+ When a connective is not specified between two terms, AND is implied.
+ query=state:enabled OR state:disabled 
+ Anchor to Terms Terms
+ 1
+ Term = [ Modifier ] ( "(" Query ")" | [ name Comparator ] value )
+ A term consists of an optional modifier, followed either by a subquery (enclosed in parentheses) or a value with an optional name-and-comparator.
+ query=-first_name:Bob AND orders_count:>3 orders_count:<=4 
+ Anchor to Modifiers Modifiers
+ 1
+ Modifier = "-" | "NOT" whitespace
+ Supported modifiers are - with no following whitespace, or NOT followed by whitespace. Both mean the same thing.
+ query=-first_name:Bob 
+ query=NOT first_name:Bob 
+ Modifiers apply only to the terms that immediately follow them. You can use a modifier on any term, including a subquery. You can also use multiple modifiers in one query.
+ query=state:enabled NOT first_name:Bob 
+ query=NOT first_name:Bob NOT first_name:Norman 
+ query=state:enabled NOT (first_name:Bob OR first_name:Norman) 
+ Anchor to Comparators Comparators
+ 1
+ Comparator = ":" | ":<" | ":>" | ":<=" | ":>="
+ The following comparators are supported for search queries:
+ : : equality
+ :< : less-than
+ :> : greater-than
+ :<= : less-than-or-equal-to
+ :>= : greater-than-or-equal-to
+ Note
+ Equality ( : ) depends on how a field is indexed.
+ For numeric fields, : represents equality.
+ For tokenized fields, equality exists if the term is found anywhere in the field.
+ For non-tokenized fields, the search query string must match the searched field exactly.
+ Note : Equality ( : ) depends on how a field is indexed.
+ For numeric fields, : represents equality.
+ For tokenized fields, equality exists if the term is found anywhere in the field.
+ For non-tokenized fields, the search query string must match the searched field exactly.
+ Anchor to Special characters Special characters
+ Special characters serve specific functions in search query syntax and need to be escaped with a backslash. For example, : \ ( ) .
+ Names can include the characters - , &#x27; , and " but can&#x27;t start with them. Names can include escaped characters using backslash escaping.
+ Anchor to Search query syntax Search query syntax
+ Shopify search query syntax is based on the defined grammar and enables the following search behavior. The following table describes the different types of search queries and their syntax:
+ Type Description Example syntax Example explained 
+ Field search A search that applies to terms in specific fields. If you specify an invalid field, then the query is ignored and all results are returned. query=first_name:Bob age:27 A search for "Bob" in the first_name field AND "27" in the age field. The value must immediately follow the field with no whitespace. first_name: Bob searches for the terms "first_name" and "Bob". 
+ Default search A case-insensitive search of all the fields in a document. query=Bob Norman 
+ query=title:Bob Norman 
+ A case-insensitive search for both "bob" AND "norman" anywhere in the document. When combined with field search, this becomes "title:bob" AND "norman" anywhere in the document. To send composite terms to a field, wrap them in quotes or give them each a field prefix. 
+ Range search A search that specifies a range of values to search against. Supported operators: > , >= , < and <= . query=orders_count:>16 orders_count:<=30 A search that matches documents where the orders_count field is greater than 16 and less than or equal to 30. Equality ( : ) is specified by orders_count:16 , not orders_count:=16 . orders_count:=16 searches for the term "=16" in the orders_count field. Refer to the range query example for a performance consideration with range searches. 
+ NOT query A search that excludes documents that include the specified value. The NOT operator must be capitalized to execute a NOT query, and only applies to the specified space-separated term or query. - must precede the field, value, or subquery. For example, -field:value -value -(subquery) . query=-bob 
+ query=NOT bob 
+ Searches that exclude documents that include the term "bob". 
+ Boolean operators A search that allow terms to be combined through logic operators. query=bob OR norman AND Shopify 
+ query=bob OR norman Shopify 
+ query=bob OR norman AND Shopify : Searches for documents that must have the term "Shopify" and have at least one of the terms "bob" or "norman".
+ query=bob OR norman Shopify : Equivalent to the query above, since OR has a higher operator precedence than AND.
+ An explicit AND operator isn&#x27;t needed between "bob OR norman" and "Shopify" because the AND is the default boolean operator between terms or queries. 
+ Grouping A search using parentheses to group clauses to form subqueries. query=state:disabled AND ("sale shopper" OR VIP) A search for disabled customers with "sale shopper" or "VIP" tags. 
+ Phrase query A search for a group of words surrounded by double quotes. query=first_name:"Bob Norman" A search for the term "bob" followed immediately by the term "norman" in the first_name field. Phrase queries can be used without the query field. For example, "Bob Norman" . 
+ Prefix query A search that matches documents containing terms that begin with a specified set of characters. Shopify supports * for wildcard matching. query=norm* A search for all the terms that begin with the prefix "norm", such as "norman". 
+ Exists query A search that matches documents with a non-null value in the specified field. Shopify supports * for wildcard matching. query=published_at:* A search for non-null values in the published_at field. The query can be combined with a NOT query to find fields missing a value. For example, -published_at:* . 
+ Note
+ In storefront search (the Storefront API search query and the online store search page), a phrase query without a field name matches only product titles and descriptions. To match an exact phrase in another field, add the field name, for example tag:"summer sale" or vendor:"Blue Harbor" . Field-scoped phrase queries are recommended whenever you know which field contains the phrase.
+ For product results, storefront search tries to match partial words automatically, without * . For example, a search for "espres" can return products that contain "espresso". SKUs match on their first 3 to 15 characters, and barcodes match on their first 3 to 10 characters.
+ Storefront search doesn&#x27;t support range comparators ( :< , :> , :<= , and :>= ). To filter search results by price or availability, use the productFilters argument of the Storefront API search query, or storefront filters in a theme.
+ Note : In storefront search (the Storefront API search query and the online store search page), a phrase query without a field name matches only product titles and descriptions. To match an exact phrase in another field, add the field name, for example tag:"summer sale" or vendor:"Blue Harbor" . Field-scoped phrase queries are recommended whenever you know which field contains the phrase.
+ For product results, storefront search tries to match partial words automatically, without * . For example, a search for "espres" can return products that contain "espresso". SKUs match on their first 3 to 15 characters, and barcodes match on their first 3 to 10 characters.
+ Storefront search doesn&#x27;t support range comparators ( :< , :> , :<= , and :>= ). To filter search results by price or availability, use the productFilters argument of the Storefront API search query, or storefront filters in a theme.
+ Anchor to Examples Examples
+ The following examples send the query string as the query argument in a GraphQL request. The same strings work as a query= parameter on REST Admin API search endpoints, as a webhook delivery filter, and in the admin&#x27;s search fields.
+ Note
+ The examples below use function arguments that don&#x27;t exist for your store. You need to edit the function arguments used in the examples below.
+ Note : The examples below use function arguments that don&#x27;t exist for your store. You need to edit the function arguments used in the examples below.
+ Anchor to Using ,[object Object], in a range query Using created_at in a range query
+ List 5 products that were added to a store after October 21st, 2020.
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ { 
+ products ( first : 5 , query : "created_at:>'2020-10-21T23:39:20Z'" ) { 
+ edges { 
+ node { 
+ id 
+ title 
+ createdAt 
+ } 
+ } 
+ } 
+ } 
+ Tip
+ Searching for resources using a range query might be slow or timeout if the collection of resources is sufficiently large, and the search field is different from the specified (or default) sort key. If your query is slow or returns an error, then try specifying a sort key that matches the field used in the search. For example, query: "created_at:>2020-10-21", sortKey: CREATED_AT .
+ Tip : Searching for resources using a range query might be slow or timeout if the collection of resources is sufficiently large, and the search field is different from the specified (or default) sort key. If your query is slow or returns an error, then try specifying a sort key that matches the field used in the search. For example, query: "created_at:>2020-10-21", sortKey: CREATED_AT .
+ Anchor to Using ,[object Object] Using title 
+ List 5 products with the name "Caramel Apple".
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ { 
+ products ( first : 5 , query : "title:Caramel Apple" ) { 
+ edges { 
+ node { 
+ id 
+ title 
+ createdAt 
+ } 
+ } 
+ } 
+ } 
+ Note
+ query: "title:Caramel Apple" is equivalent to query: "title: \"Caramel Apple\"" (phrase query).
+ Note : query: "title:Caramel Apple" is equivalent to query: "title: \"Caramel Apple\"" (phrase query).
+ List 10 products that include terms that begin with the prefix head , such as headphones .
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ { 
+ shop { 
+ id 
+ name 
+ } 
+ products ( first : 10 , query : "title:head*" ) { 
+ edges { 
+ node { 
+ productType 
+ title 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Using ,[object Object], and a range Using OR and a range
+ List 5 products with the name "Caramel Apple", or products that have an inventory of over 500 items and less than or equal to 1000 items.
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ { 
+ products ( first : 5 , query : "(title:Caramel Apple) OR (inventory_total:>500 inventory_total:<=1000)" ) { 
+ edges { 
+ node { 
+ id 
+ title 
+ createdAt 
+ totalInventory 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Syntax debugging Syntax debugging
+ The GraphQL Admin API provides tools for search syntax validation and debugging. Requests with malformed queries return warnings in the extensions section of the response. This feedback explains how the query was parsed and any incompatibilities encountered:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ { 
+ "data" : { 
+ "products" : { 
+ "nodes" : [ ] 
+ } 
+ } , 
+ "extensions" : { 
+ "search" : [ { 
+ "path" : [ "products" ] , 
+ "query" : "name:blue jeans" , 
+ "parsed" : { 
+ "and" : [ 
+ { "field" : "default" , "match_all" : "jeans" } , 
+ { "field" : "name" , "match_all" : "blue" } 
+ ] 
+ } , 
+ "warnings" : [ { 
+ "field" : "name" , 
+ "message" : "Invalid search field for this query." 
+ } ] 
+ } ] 
+ } 
+ } 
+ Note
+ To receive the search extension for all queries with and without warnings, you can send a Shopify-Search-Query-Debug=1 header to enable it manually.
+ Note : To receive the search extension for all queries with and without warnings, you can send a Shopify-Search-Query-Debug=1 header to enable it manually.
+ Was this page helpful? Yes No
+
+[Page: /docs/api/admin-graphql/2026-10]
+GraphQL Admin API reference Skip to main content 
+ Collapse sidebar 
+ GraphQL Admin API reference
+ The Admin API lets you build apps and integrations that extend and enhance the Shopify admin.
+ This page will help you get up and running with Shopify’s GraphQL API.
+ Install AI Toolkit Ask about this page Copy MD 
+ Choose a version: unstable 2027-01 release candidate 2026-10 latest 2026-07 2026-04 2026-01 2026-10 latest 
+ Anchor to Client libraries Client libraries
+ Use Shopify’s officially supported libraries to build fast, reliable apps with the programming languages and frameworks you already know.
+React Router 
+The official package for React Router applications.
+ Docs 
+ npm package 
+ GitHub repo 
+Node.js 
+The official client library for Node.js apps. No framework dependencies—works with any Node.js app.
+ Docs 
+ npm package 
+ GitHub repo 
+Ruby 
+The official client library for Ruby apps.
+ Docs 
+ Ruby gem 
+ GitHub repo 
+cURL 
+Use the curl utility to make API queries directly from the command line.
+ Direct API Access 
+Make requests to the Admin API directly from your app using the standard web fetch API . Requests are automatically authenticated and fast because Shopify handles them directly.
+ Learn about direct API Access 
+ Configuration guide 
+ Other 
+Need a different language? Check the list of community-supported libraries .
+ 1
+ 2
+ npm install - g @shopify / cli @latest 
+ shopify app init 
+ 1
+ 2
+ 3
+ npm install -- save @ shopify /shopify-api 
+ # or 
+ yarn add @ shopify /shopify-api 
+ 1
+ bundle add shopify_api 
+ 1
+ 2
+ # cURL is often available by default on macOS and Linux. 
+ # See http://curl.se/docs/install.html for more details. 
+ 1
+ 2
+ 3
+ # Enable Direct API access in App Home. 
+ [access.admin] 
+ embedded_app_direct_api_access = true 
+ React Router
+ npm install -g @shopify/cli@latest
+shopify app init 
+ Node.js
+ npm install --save @shopify/shopify-api
+# or
+yarn add @shopify/shopify-api 
+ Ruby
+ bundle add shopify_api 
+ cURL
+ # cURL is often available by default on macOS and Linux.
+# See http://curl.se/docs/install.html for more details. 
+ Direct API Access
+ # Enable Direct API access in App Home.
+[access.admin]
+embedded_app_direct_api_access = true 
+ Anchor to Authentication Authentication
+ Every GraphQL Admin API request carries an access token in the X-Shopify-Access-Token header. For most apps you don&#x27;t fetch or set that token yourself: the Shopify CLI template and Direct API access authenticate each request for you. To set up authentication for your app type, see About app authentication . For the token types and the grants that issue them, see access tokens .
+ The tabs show the same request through Shopify&#x27;s client libraries and as a raw HTTP call.
+ To keep the platform secure, apps need to request specific access scopes during the install process. Only request as much data access as your app needs to work.
+ Learn more about building apps .
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ import { authenticate } from "../shopify.server" ; 
+ export async function loader ( { request } ) { 
+ const { admin } = await authenticate . admin ( request ) ; 
+ const response = await admin . graphql ( 
+ `query { shop { name } }` , 
+ ) ; 
+ } 
+ 1
+ 2
+ const client = new shopify . clients . Graphql ( { session } ) ; 
+ const response = await client . query ( { data : 'query { shop { name } }' } ) ; 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ session = ShopifyAPI::Auth:: Session . new (
+ shop: 'your-development-store.myshopify.com' ,
+ access_token: access_token ,
+ )
+ client = ShopifyAPI::Clients::Graphql::Admin . new (
+ session: session ,
+ )
+ response = client . query ( query: 'query { shop { name } }' )
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ # Replace {SHOPIFY_ACCESS_TOKEN} with your actual access token 
+ curl - X POST \ 
+ https :// { shop }. myshopify . com / admin / api / 2026 - 10 / graphql . json \ 
+ - H 'Content-Type: application/json' \ 
+ - H 'X-Shopify-Access-Token: {SHOPIFY_ACCESS_TOKEN}' \ 
+ - d '{ 
+ "query": "query { shop { name } }" 
+ }' 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ // Authentication is handled automatically! 
+ const response = await fetch ( 'shopify:admin/api/2026-10/graphql.json' , { 
+ method : 'POST' , 
+ body : JSON . stringify ( { 
+ query : `query { shop { name } }` , 
+ } ) , 
+ } ) ; 
+ const { data } = await response . json ( ) ; 
+ console . log ( data ) ; 
+ React Router
+ import { authenticate } from "../shopify.server";
+export async function loader({request}) {
+ const { admin } = await authenticate.admin(request);
+ const response = await admin.graphql(
+ `query { shop { name } }`,
+ );
+} 
+ Node.js
+ const client = new shopify.clients.Graphql({session});
+const response = await client.query({data: &#x27;query { shop { name } }&#x27;}); 
+ Ruby
+ session = ShopifyAPI::Auth::Session.new(
+ shop: &#x27;your-development-store.myshopify.com&#x27;,
+ access_token: access_token,
+)
+client = ShopifyAPI::Clients::Graphql::Admin.new(
+ session: session,
+)
+response = client.query(query: &#x27;query { shop { name } }&#x27;) 
+ cURL
+ # Replace {SHOPIFY_ACCESS_TOKEN} with your actual access token
+ curl -X POST \
+ https://{shop}.myshopify.com/admin/api/2026-10/graphql.json \
+ -H &#x27;Content-Type: application/json&#x27; \
+ -H &#x27;X-Shopify-Access-Token: {SHOPIFY_ACCESS_TOKEN}&#x27; \
+ -d &#x27;{
+ "query": "query { shop { name } }"
+ }&#x27; 
+ Direct API Access
+ // Authentication is handled automatically!
+const response = await fetch(&#x27;shopify:admin/api/2026-10/graphql.json&#x27;, {
+ method: &#x27;POST&#x27;,
+ body: JSON.stringify({
+ query: `query { shop { name } }`,
+ }),
+});
+const { data } = await response.json();
+console.log(data); 
+ Anchor to Endpoints and queries Endpoints and queries
+ GraphQL queries are executed by sending POST HTTP requests to the endpoint:
+ https://{store_name}.myshopify.com/admin/api/2026-10/graphql.json 
+ Queries begin with one of the objects listed under QueryRoot . The QueryRoot is the schema’s entry-point for queries.
+ Queries are equivalent to making a GET request in REST. The example shown is a query to get the ID and title of the first three products.
+ Learn more about API usage .
+ Note
+ Explore and learn Shopify&#x27;s Admin API using GraphiQL Explorer . To build queries and mutations with shop data, install Shopify’s GraphiQL app .
+ Note : Explore and learn Shopify&#x27;s Admin API using GraphiQL Explorer . To build queries and mutations with shop data, install Shopify’s GraphiQL app .
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ import { authenticate } from "../shopify.server" ; 
+ export async function loader ( { request } ) { 
+ const { admin } = await authenticate . admin ( request ) ; 
+ const response = await admin . graphql ( 
+ `#graphql 
+ query getProducts { 
+ products (first: 3) { 
+ edges { 
+ node { 
+ id 
+ title 
+ } 
+ } 
+ } 
+ }` , 
+ ) ; 
+ const json = await response . json ( ) ; 
+ return { products : json ?. data ?. products ?. edges } ; 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ const queryString = `{ 
+ products (first: 3) { 
+ edges { 
+ node { 
+ id 
+ title 
+ } 
+ } 
+ } 
+ }` 
+ // `session` is built as part of the OAuth process 
+ const client = new shopify . clients . Graphql ( { session } ) ; 
+ const products = await client . query ( { 
+ data : queryString , 
+ } ) ; 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ query = <<~GQL 
+ { 
+ products (first: 3) { 
+ edges { 
+ node { 
+ id 
+ title 
+ } 
+ } 
+ } 
+ } 
+ GQL 
+ # session is built as part of the OAuth process 
+ client = ShopifyAPI::Clients::Graphql::Admin . new (
+ session: session 
+ )
+ products = client . query (
+ query: query ,
+ )
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ # Get the ID and title of the three most recently added products 
+ curl - X POST https :// { store_name }. myshopify . com / admin / api / 2026 - 10 / graphql . json \ 
+ - H 'Content-Type: application/json' \ 
+ - H 'X-Shopify-Access-Token: {access_token}' \ 
+ - d '{ 
+ "query": "{ 
+ products(first: 3) { 
+ edges { 
+ node { 
+ id 
+ title 
+ } 
+ } 
+ } 
+ }" 
+ }' 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ const response = await fetch ( 'shopify:admin/api/2026-10/graphql.json' , { 
+ method : 'POST' , 
+ body : JSON . stringify ( { 
+ query : `{ 
+ products(first: 3) { 
+ edges { 
+ node { 
+ id 
+ title 
+ } 
+ } 
+ } 
+ }` , 
+ } ) , 
+ } ) ; 
+ const { data } = await response . json ( ) ; 
+ console . log ( data ) ; 
+ React Router
+ import { authenticate } from "../shopify.server";
+export async function loader({request}) {
+ const { admin } = await authenticate.admin(request);
+ const response = await admin.graphql(
+ `#graphql
+ query getProducts {
+ products (first: 3) {
+ edges {
+ node {
+ id
+ title
+ }
+ }
+ }
+ }`,
+ );
+ const json = await response.json();
+ return { products: json?.data?.products?.edges };
+} 
+ Node.js
+ const queryString = `{
+ products (first: 3) {
+ edges {
+ node {
+ id
+ title
+ }
+ }
+ }
+}`
+// `session` is built as part of the OAuth process
+const client = new shopify.clients.Graphql({session});
+const products = await client.query({
+ data: queryString,
+}); 
+ Ruby
+ query = <<~GQL
+ {
+ products (first: 3) {
+ edges {
+ node {
+ id
+ title
+ }
+ }
+ }
+ }
+GQL
+# session is built as part of the OAuth process
+client = ShopifyAPI::Clients::Graphql::Admin.new(
+ session: session
+)
+products = client.query(
+ query: query,
+) 
+ cURL
+ # Get the ID and title of the three most recently added products
+curl -X POST https://{store_name}.myshopify.com/admin/api/2026-10/graphql.json \
+ -H &#x27;Content-Type: application/json&#x27; \
+ -H &#x27;X-Shopify-Access-Token: {access_token}&#x27; \
+ -d &#x27;{
+ "query": "{
+ products(first: 3) {
+ edges {
+ node {
+ id
+ title
+ }
+ }
+ }
+ }"
+}&#x27; 
+ Direct API Access
+ const response = await fetch(&#x27;shopify:admin/api/2026-10/graphql.json&#x27;, {
+ method: &#x27;POST&#x27;,
+ body: JSON.stringify({
+ query: `{
+ products(first: 3) {
+ edges {
+ node {
+ id
+ title
+ }
+ }
+ }
+ }`,
+ }),
+});
+const { data } = await response.json();
+console.log(data); 
+ Anchor to Versioning Versioning
+ The GraphQL Admin API is versioned . To keep your app stable, make sure that you specify a supported version in the URL.
+ Anchor to Rate limits Rate limits
+ The GraphQL Admin API is rate-limited using calculated query costs, measured in cost points. Each field returned by a query costs a set number of points. The total cost of a query is the maximum of possible fields selected, so more complex queries cost more to run.
+ Learn more about rate limits .
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ { 
+ products ( first : 1 ) { 
+ edges { 
+ node { 
+ title 
+ } 
+ } 
+ } 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ { 
+ "data" : { 
+ "products" : { 
+ "edges" : [ 
+ { 
+ "node" : { 
+ "title" : "Hiking backpack" 
+ } 
+ } 
+ ] 
+ } 
+ } , 
+ "extensions" : { 
+ "cost" : { 
+ "requestedQueryCost" : 3 , 
+ "actualQueryCost" : 3 , 
+ "throttleStatus" : { 
+ "maximumAvailable" : 1000.0 , 
+ "currentlyAvailable" : 997 , 
+ "restoreRate" : 50.0 
+ } 
+ } 
+ } 
+ } 
+ Anchor to Status and error codes Status and error codes
+ All API queries return HTTP status codes that contain more information about the response.
+ Anchor to 200 OK 200 OK
+ GraphQL HTTP status codes are different from REST API status codes. Most importantly, the GraphQL API can return a 200 OK response code in cases that would typically produce 4xx or 5xx errors in REST.
+ Anchor to Error handling Error handling
+ The response for the errors object contains additional detail to help you debug your operation.
+ The response for mutations contains additional detail to help debug your query. To access this, you must request userErrors .
+ Properties
+ errors • array 
+ A list of all errors returned
+ Show error item properties errors[n]. message • string 
+ Contains details about the error(s).
+ errors[n]. extensions • object 
+ Provides more information about the error(s) including properties and metadata.
+ Show extensions properties errors[n]. extensions. code • string 
+ Shows error codes common to Shopify. Additional error codes may also be shown.
+ Show common error codes THROTTLED The client has exceeded the rate limit . Similar to 429 Too Many Requests.
+ ACCESS_ DENIED The client doesn’t have correct authentication credentials. Similar to 401 Unauthorized.
+ SHOP_ INACTIVE The shop is not active. This can happen when stores repeatedly exceed API rate limits or due to fraud risk.
+ INTERNAL_ SERVER_ ERROR Shopify experienced an internal error while processing the request. This error is returned instead of 500 Internal Server Error in most circumstances.
+ Anchor to 4xx and 5xx status codes 4xx and 5xx status codes
+ The 4xx and 5xx errors occur infrequently. They are often related to network communications, your account, or an issue with Shopify’s services.
+ Many errors that would typically return a 4xx or 5xx status code, return an HTTP 200 errors response instead. Refer to the 200 OK section above for details.
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ { 
+ "errors" : [ 
+ { 
+ "message" : "Query cost is 2003 , which exceeds the single query max cost limit ( 1000 ).
+ See https : //shopify.dev/concepts/about-apis/rate-limits for more information on how the
+ cost of a query is calculated.
+ To query larger amounts of data with fewer limits , bulk operations should be used instead.
+ See https : //shopify.dev/tutorials/perform-bulk-operations-with-admin-api for usage details.
+ " , 
+ "extensions" : { 
+ "code" : "MAX_COST_EXCEEDED" , 
+ "cost" : 2003 , 
+ "maxCost" : 1000 , 
+ "documentation" : "https://shopify.dev/api/usage/limits#rate-limits" 
+ } 
+ } 
+ ] 
+ } 
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 12
+ { 
+ "errors" : [ 
+ { 
+ "message" : "Internal error. Looks like something went wrong on our end.
+ Request ID : 1 b 355 a 21 -7117 -44 c 5 -8 d 8 b -8948082 f 40 a 8 (include this in support requests)." , 
+ "extensions" : { 
+ "code" : "INTERNAL_SERVER_ERROR" , 
+ "requestId" : "1b355a21-7117-44c5-8d8b-8948082f40a8" 
+ } 
+ } 
+ ] 
+ } 
+ Throttled
+ {
+"errors": [
+ {
+ "message": "Query cost is 2003, which exceeds the single query max cost limit (1000).
+See https://shopify.dev/concepts/about-apis/rate-limits for more information on how the
+cost of a query is calculated.
+To query larger amounts of data with fewer limits, bulk operations should be used instead.
+See https://shopify.dev/tutorials/perform-bulk-operations-with-admin-api for usage details.
+",
+ "extensions": {
+ "code": "MAX_COST_EXCEEDED",
+ "cost": 2003,
+ "maxCost": 1000,
+ "documentation": "https://shopify.dev/api/usage/limits#rate-limits"
+ }
+ }
+]
+} 
+ Internal
+ {
+"errors": [
+ {
+ "message": "Internal error. Looks like something went wrong on our end.
+Request ID: 1b355a21-7117-44c5-8d8b-8948082f40a8 (include this in support requests).",
+ "extensions": {
+ "code": "INTERNAL_SERVER_ERROR",
+ "requestId": "1b355a21-7117-44c5-8d8b-8948082f40a8"
+ }
+ }
+]
+} 
+ Anchor to 4xx and 5xx status codes 4xx and 5xx status codes
+ The 4xx and 5xx errors occur infrequently. They are often related to network communications, your account, or an issue with Shopify’s services.
+ Many errors that would typically return a 4xx or 5xx status code, return an HTTP 200 errors response instead. Refer to the 200 OK section above for details.
+ Anchor to [object Object] 400 Bad Request 
+ The server will not process the request.
+ Anchor to [object Object] 402 Payment Required 
+ The shop is frozen. The shop owner will need to pay the outstanding balance to unfreeze the shop.
+ Anchor to [object Object] 403 Forbidden 
+ The shop is forbidden. Returned if the store has been marked as fraudulent.
+ Anchor to [object Object] 404 Not Found 
+ The resource isn’t available. This is often caused by querying for something that’s been deleted.
+ Anchor to [object Object] 423 Locked 
+ The shop isn’t available. This can happen when stores repeatedly exceed API rate limits or due to fraud risk.
+ Anchor to [object Object] 5xx Errors 
+ An internal error occurred in Shopify. Check out the Shopify status page for more information.
+ Info
+ Didn’t find the status code you’re looking for? View the complete list of
+ API status response and error codes .
+ Info : Didn’t find the status code you’re looking for? View the complete list of
+ API status response and error codes .
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ HTTP/1.1 400 Bad Request
+ {
+ "errors": {
+ "query": "Required parameter missing or invalid"
+ }
+ }
+ 1
+ 2
+ 3
+ 4
+ HTTP/1.1 402 Payment Required
+ {
+ "errors": "This shop's plan does not have access to this feature"
+ }
+ 1
+ 2
+ 3
+ 4
+ HTTP/1.1 403 Access Denied
+ {
+ "errors": "User does not have access"
+ }
+ 1
+ 2
+ 3
+ 4
+ HTTP/1.1 404 Not Found
+ {
+ "errors": "Not Found"
+ }
+ 1
+ 2
+ 3
+ 4
+ HTTP/1.1 423 Locked
+ {
+ "errors": "This shop is unavailable"
+ }
+ 1
+ 2
+ 3
+ 4
+ HTTP/1.1 500 Internal Server Error
+ {
+ "errors": "An unexpected error occurred"
+ }
+ 400
+ HTTP/1.1 400 Bad Request
+{
+ "errors": {
+ "query": "Required parameter missing or invalid"
+ }
+} 
+ 402
+ HTTP/1.1 402 Payment Required
+{
+ "errors": "This shop&#x27;s plan does not have access to this feature"
+} 
+ 403
+ HTTP/1.1 403 Access Denied
+{
+ "errors": "User does not have access"
+} 
+ 404
+ HTTP/1.1 404 Not Found
+{
+ "errors": "Not Found"
+} 
+ 423
+ HTTP/1.1 423 Locked
+{
+ "errors": "This shop is unavailable"
+} 
+ 500
+ HTTP/1.1 500 Internal Server Error
+{
+ "errors": "An unexpected error occurred"
+} 
+ Was this page helpful? Yes No

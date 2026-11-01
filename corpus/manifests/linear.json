@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Linear",
+    "slug": "linear",
+    "apiVersion": null
+  },
+  "baseUrl": "https://api.linear.app",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "oauth2_client_credentials",
+      "label": "OAuth2 app (client credentials)",
+      "tokenUrl": "https://api.linear.app/oauth/token",
+      "scopes": [
+        "read"
+      ],
+      "clientAuth": "basic"
+    },
+    {
+      "type": "oauth2_authorization_code",
+      "label": "OAuth2 (authorization code)",
+      "authorizeUrl": "https://linear.app/oauth/authorize",
+      "tokenUrl": "https://api.linear.app/oauth/token",
+      "scopes": [
+        "read"
+      ]
+    },
+    {
+      "type": "bearer",
+      "label": "Personal API key",
+      "headerName": "Authorization",
+      "prefix": ""
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "POST",
+      "path": "/graphql",
+      "query": {},
+      "body": {
+        "query": "query Users($after: String) { users(first: 50, after: $after, includeArchived: true) { nodes { id name email } pageInfo { hasNextPage endCursor } } }"
+      },
+      "readOnlyPostReason": "GraphQL only accepts POST for queries; this is a read-only query with no mutation."
+    },
+    "recordsPath": "data.users.nodes",
+    "pagination": {
+      "type": "cursor",
+      "cursorPath": "pageInfo.endCursor",
+      "cursorParam": "after",
+      "cursorIn": "graphql_variable",
+      "hasMorePath": "pageInfo.hasNextPage",
+      "sizeParam": null,
+      "pageSize": 50
+    },
+    "requiredScopes": [
+      "read"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": null,
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "event_log",
+    "request": {
+      "method": "POST",
+      "path": "/graphql",
+      "query": {},
+      "body": {
+        "query": "query Audit($after: String) { auditEntries(first: 250, after: $after) { nodes { id type createdAt actor { id email } } pageInfo { hasNextPage endCursor } } }"
+      },
+      "readOnlyPostReason": "GraphQL only accepts POST for queries; this is a read-only query with no mutation."
+    },
+    "recordsPath": "data.auditEntries.nodes",
+    "pagination": {
+      "type": "cursor",
+      "cursorPath": "pageInfo.endCursor",
+      "cursorParam": "after",
+      "cursorIn": "graphql_variable",
+      "hasMorePath": "pageInfo.hasNextPage",
+      "sizeParam": null,
+      "pageSize": 250
+    },
+    "requiredScopes": [
+      "admin"
+    ],
+    "planRequirement": "Enterprise",
+    "forEachUser": false,
+    "window": null,
+    "fields": {
+      "userRef": {
+        "path": "actor.email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userRefType": "email",
+      "occurredAt": {
+        "path": "createdAt",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "metric": {
+        "path": "type",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "metricConstant": null,
+      "value": null
+    }
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "The Linear API supports personal API keys and OAuth2 authentication."
+    },
+    {
+      "claim": "auth",
+      "quote": "We support the client_credentials grant type for OAuth2 apps that use tokens for server-to-server communication"
+    },
+    {
+      "claim": "pagination",
+      "quote": "To query the next 10, simply pass the value of pageInfo.endCursor as after parameter for the next request."
+    },
+    {
+      "claim": "users",
+      "quote": "Archived resources are hidden by default from the paginated responses. They can be included by passing optional includeArchived: true as a query parameter for pagination."
+    },
+    {
+      "claim": "users",
+      "quote": "Suspended users lose all access immediately and are removed from your next billing cycle. They remain visible in the members list for historical purposes"
+    },
+    {
+      "claim": "usage",
+      "quote": "auditEntries(first: 250) {"
+    },
+    {
+      "claim": "plan",
+      "quote": "Available to workspaces on our [Enterprise](https://linear.app/pricing) plan"
+    },
+    {
+      "claim": "errors",
+      "quote": "Always check for the errors array before assuming success"
+    }
+  ],
+  "assumptions": [
+    "The docs only show id, name and email on the users list, so status, role, user type, last active and created date are not mapped. Suspended or disabled people may not appear, and the docs do not confirm that includeArchived includes them.",
+    "No per-user last-active field is documented, so usage comes from the audit log, which needs the Enterprise plan and workspace owner access.",
+    "The scope needed for the audit log is not stated; 'admin' is assumed.",
+    "The docs do not state a maximum page size. 50 is the documented default for users and 250 appears in the audit log example, so both are assumed to be safe.",
+    "Audit entries are matched to users by actor email. The email field on actor appears only in the audit log examples.",
+    "Audit log history is limited to 90 days. No date window filter syntax is documented, so none is used.",
+    "Linear returns GraphQL errors in an 'errors' array, even on HTTP 200. This does not fit the error envelope format, so none is set.",
+    "Client credentials tokens only see public teams, which may limit the user list; this is not confirmed.",
+    "No rate limit values or headers are stated in the source.",
+    "Personal API keys are sent in the Authorization header with no prefix. They stop working if the person who created them is suspended."
+  ]
+}

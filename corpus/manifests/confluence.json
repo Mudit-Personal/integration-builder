@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Confluence Cloud",
+    "slug": "confluence-cloud",
+    "apiVersion": "1.0.0"
+  },
+  "baseUrl": "https://{subdomain}.atlassian.net",
+  "connectionFields": [
+    {
+      "name": "subdomain",
+      "label": "Atlassian site subdomain",
+      "example": "your-domain"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "oauth2_authorization_code",
+      "label": "Atlassian OAuth 2.0 (3LO)",
+      "authorizeUrl": "https://auth.atlassian.com/authorize",
+      "tokenUrl": "https://auth.atlassian.com/oauth/token",
+      "scopes": [
+        "read:confluence-user",
+        "read:content-details:confluence",
+        "read:confluence-groups"
+      ]
+    },
+    {
+      "type": "basic",
+      "label": "Basic auth (Atlassian account email and API token)",
+      "usernameLabel": "Account email",
+      "passwordLabel": "API token"
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/wiki/rest/api/search/user",
+      "query": {
+        "cql": "type = user"
+      },
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "results",
+    "pagination": {
+      "type": "offset",
+      "offsetParam": "start",
+      "limitParam": "limit",
+      "pageSize": 100,
+      "totalPath": null,
+      "hasMorePath": null
+    },
+    "requiredScopes": [
+      "read:content-details:confluence"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "user.accountId",
+        "fallbackPaths": [
+          "accountId"
+        ],
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "user.email",
+        "fallbackPaths": [
+          "email"
+        ],
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "user.displayName",
+        "fallbackPaths": [
+          "user.publicName",
+          "displayName"
+        ],
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": null,
+      "userType": {
+        "path": "user.accountType",
+        "fallbackPaths": [
+          "accountType"
+        ],
+        "map": {
+          "atlassian": "member",
+          "app": "service"
+        },
+        "format": null
+      },
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The Confluence Cloud REST API has no per-user last-active or last-login field. The audit log (GET /wiki/rest/api/audit) only records administrative events such as space exports and group changes, and the analytics endpoints only give view counts per page, so neither shows who actually uses the product."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "You can access this resource via basic auth."
+    },
+    {
+      "claim": "users",
+      "quote": "Searches for users using user-specific queries from the"
+    },
+    {
+      "claim": "usage",
+      "quote": "Returns all records in the audit log, optionally for a certain date range."
+    }
+  ],
+  "assumptions": [
+    "Confluence has no admin 'list all users' endpoint in this source. I used the user search (GET /wiki/rest/api/search/user) with the query 'type = user'. The source does not confirm that this exact query returns every user, so it needs testing against a real site.",
+    "The source cuts off the search response, so I assumed each result has the person's details under a 'user' object (user.accountId, user.email and so on). I added the top-level fields as fallbacks.",
+    "The search may leave out deactivated users, and the source does not say how to include them. No status field is available, so status is not mapped.",
+    "Email and display name can be blank when the user's privacy settings hide them.",
+    "The source lists basic auth but does not describe it in detail. I assumed it means an Atlassian account email plus an API token. Basic auth is tied to a person, so it may stop working if that person leaves.",
+    "The listed OAuth 2 scopes are a minimal choice based on the endpoints used. Atlassian may also need an audience or offline_access setting, which the source does not describe.",
+    "The server is declared as your-domain.atlassian.net, so I used a subdomain connection field. Paths start with /wiki.",
+    "The search endpoint's maximum page size is not documented, so I picked 100.",
+    "There is no usable usage signal. The audit log is an event log, but it only covers admin actions, so I marked usage as unavailable instead of reporting misleading data. Reading it also needs the Confluence Administrator permission.",
+    "The rate limits are not stated in the source."
+  ]
+}

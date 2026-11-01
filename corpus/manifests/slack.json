@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Slack",
+    "slug": "slack",
+    "apiVersion": "1.7.0"
+  },
+  "baseUrl": "https://slack.com/api",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "oauth2_authorization_code",
+      "label": "Slack OAuth 2.0",
+      "authorizeUrl": "https://slack.com/oauth/authorize",
+      "tokenUrl": "https://slack.com/api/oauth.access",
+      "scopes": [
+        "users:read",
+        "users:read.email",
+        "admin"
+      ]
+    },
+    {
+      "type": "api_key",
+      "label": "Slack token (query parameter)",
+      "in": "query",
+      "name": "token",
+      "prefix": ""
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/users.list",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "members",
+    "pagination": {
+      "type": "cursor",
+      "cursorPath": "response_metadata.next_cursor",
+      "cursorParam": "cursor",
+      "cursorIn": "query",
+      "hasMorePath": null,
+      "sizeParam": "limit",
+      "pageSize": 200
+    },
+    "requiredScopes": [
+      "users:read",
+      "users:read.email"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "profile.email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "real_name",
+        "fallbackPaths": [
+          "profile.display_name",
+          "name"
+        ],
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "deleted",
+        "fallbackPaths": null,
+        "map": {
+          "true": "deleted",
+          "false": "active"
+        },
+        "format": null
+      },
+      "role": {
+        "path": "is_admin",
+        "fallbackPaths": null,
+        "map": {
+          "true": "admin",
+          "false": "member"
+        },
+        "format": null
+      },
+      "userType": {
+        "path": "is_bot",
+        "fallbackPaths": null,
+        "map": {
+          "true": "service",
+          "false": "member"
+        },
+        "format": null
+      },
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "event_log",
+    "request": {
+      "method": "GET",
+      "path": "/team.accessLogs",
+      "query": {
+        "token": ""
+      },
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "logins",
+    "pagination": {
+      "type": "page_number",
+      "pageParam": "page",
+      "sizeParam": "count",
+      "pageSize": 100,
+      "startAt": 1,
+      "totalPagesPath": "paging.pages",
+      "hasMorePath": null
+    },
+    "requiredScopes": [
+      "admin"
+    ],
+    "planRequirement": null,
+    "forEachUser": false,
+    "window": null,
+    "fields": {
+      "userRef": {
+        "path": "user_id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userRefType": "externalId",
+      "occurredAt": {
+        "path": "date_last",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "epoch_seconds"
+      },
+      "metric": null,
+      "metricConstant": "login",
+      "value": null
+    }
+  },
+  "errorEnvelope": {
+    "successPath": "ok",
+    "successValue": true,
+    "messagePath": "error",
+    "rateLimitedCodes": [
+      "ratelimited"
+    ],
+    "authCodes": [
+      "invalid_auth",
+      "not_authed",
+      "token_revoked",
+      "account_inactive"
+    ]
+  },
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "requiring OAuth 2.0-based user, bot, or workspace tokens"
+    },
+    {
+      "claim": "users",
+      "quote": "Lists all users in a Slack team."
+    },
+    {
+      "claim": "usage",
+      "quote": "Gets the access logs for the current team."
+    }
+  ],
+  "assumptions": [
+    "The source gives no rate limit details, so none are set.",
+    "Slack's error codes (ratelimited, invalid_auth, not_authed, token_revoked, account_inactive) and the 'ok'/'error' response fields are from general Slack knowledge, not this document; the 'ok' field does appear in responses.",
+    "The user list has no per-user last-active field, so login history (team.accessLogs) is used as the activity signal. It needs the 'admin' scope and, as far as I know, a paid Slack plan; the source does not state the plan.",
+    "Access logs give one record per user, device and IP with the last login time, and Slack may limit how far back they go. The source does not say.",
+    "The cursor parameter on users.list and the page/count parameters on team.accessLogs are documented, but maximum page sizes are not. 200 and 100 are my choices.",
+    "Slack tokens can also be sent as a Bearer header, but the source only shows a 'token' query parameter, so that is what the API key method uses.",
+    "Users with 'deleted' true are mapped to deleted. Slack's users.list normally includes deactivated users, but the source does not say so.",
+    "Role is based only on the is_admin flag. Owners and guests are not separately distinguished.",
+    "Pagination for users.list uses response_metadata.next_cursor, taken from the sample response.",
+    "The team.accessLogs call lists 'token' as a required query parameter. It is included with an empty placeholder value, and I am assuming the runtime fills in the real token from the chosen sign-in method."
+  ]
+}

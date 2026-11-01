@@ -1,0 +1,21 @@
+Airtable Web API Your browser version is not supported. Try our desktop apps !
+Alternatively, use the latest version of Chrome , Firefox , Safari, or Edge instead.
+
+[Page: /developers/web/api/introduction.md]
+# API Reference
+
+This is the reference for the Airtable API. Use the sidebar to explore the API and learn about important concepts.
+
+The Airtable API can be used to integrate your data in Airtable with any external system. The API closely follows REST
+semantics, uses JSON to encode objects, and relies on standard HTTP codes to signal operation outcomes.
+
+Official API client:
+
+-   JavaScript: [airtable.js](https://github.com/Airtable/airtable.js) (Node.js + browser)
+
+Community-built API clients:
+
+-   Ruby: [airrecord](https://github.com/sirupsen/airrecord)
+-   .NET: [airtable.net](https://github.com/ngocnicholas/airtable.net)
+-   Python 3: [pyairtable](https://github.com/gtalarico/pyairtable)
+-   Python 2/3: [airtable.py](https://github.com/josephbestjames/airtable.py)

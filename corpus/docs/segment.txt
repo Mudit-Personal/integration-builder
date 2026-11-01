@@ -1,0 +1,1915 @@
+Segment Public API Documentation 
+ Search Guides Introduction 
+ Getting Started Get an API token 
+ Create a test request 
+ Install and use an SDK 
+ Benefits 
+ Migration Differences in operation 
+ Authentication Scope 
+ Permissions and security 
+ Authenticating requests 
+ Error Handling Status codes overview 
+ Response envelopes 
+ Request Validation Authentication validation 
+ Input validation 
+ Rate Limits Rate limit errors 
+ Common rate limit causes 
+ Reducing your call volume 
+ Payload Limits Payload limit error 
+ Pagination Pagination parameters 
+ Versioning Accessing versions 
+ Backwards-incompatible or breaking changes 
+ Engage Activations post
+ Add Activation to Audience 
+ post
+ Add Destination to Audience 
+ get
+ List Destinations from Audience 
+ post
+ Batch Query Activations for Space 
+ get
+ Get Activation from Audience 
+ del
+ Remove Activation from Audience 
+ patch
+ Update Activation for Audience 
+ get
+ List Activations from Audience 
+ get
+ List Supported Destinations from Audience 
+ del
+ Remove Destination from Audience 
+ patch
+ Update Destination for Audience 
+ Audiences post
+ Add Audience Schedule to Audience 
+ get
+ List Audience Schedules from Space And Audience 
+ post
+ Create Audience 
+ get
+ List Audiences 
+ post
+ Create Audience Preview 
+ post
+ Force Execute Audience Run 
+ get
+ Get Audience 
+ del
+ Remove Audience from Space 
+ patch
+ Update Audience for Space 
+ get
+ Get Audience Preview 
+ get
+ Get Audience Schedule from Space And Audience 
+ del
+ Remove Audience Schedule from Audience 
+ patch
+ Update Audience Schedule for Audience 
+ get
+ List Audience Consumers from Space And Audience 
+ Spaces get
+ Get Space 
+ get
+ List Spaces 
+ Connections Warehouses post
+ Add Connection from Source to Warehouse 
+ del
+ Remove Source Connection from Warehouse 
+ post
+ Create Validation in Warehouse 
+ post
+ Create Warehouse 
+ get
+ List Warehouses 
+ del
+ Delete Warehouse 
+ get
+ Get Warehouse 
+ patch
+ Update Warehouse 
+ get
+ Get Connection State from Warehouse 
+ get
+ List Connected Sources from Warehouse 
+ Sources Migrate from the Config API 
+ post
+ Add Labels to Source 
+ put
+ Replace Labels in Source 
+ post
+ Create Source 
+ get
+ List Sources 
+ post
+ Create Write Key for Source 
+ del
+ Delete Source 
+ get
+ Get Source 
+ patch
+ Update Source 
+ get
+ List Connected Destinations from Source 
+ get
+ List Connected Warehouses from Source 
+ get
+ List Schema Settings in Source 
+ patch
+ Update Schema Settings in Source 
+ del
+ Remove Write Key from Source 
+ Reverse ETL Reverse ETL Sync schedule JSON configuration 
+ post
+ Cancel Reverse ETL Sync for Model 
+ post
+ Create Reverse ETL Manual Sync 
+ post
+ Create Reverse Etl Model 
+ get
+ List Reverse Etl Models 
+ del
+ Delete Reverse Etl Model 
+ get
+ Get Reverse Etl Model 
+ patch
+ Update Reverse Etl Model 
+ get
+ Get Reverse ETL Sync Status 
+ get
+ List Reverse ETL Sync Statuses from Model And Subscription Id 
+ Deletion and Suppression Migrate from the Config API 
+ Rate limit headers 
+ post
+ Create Cloud Source Regulation 
+ post
+ Create Source Regulation 
+ get
+ List Regulations from Source 
+ post
+ Create Workspace Regulation 
+ get
+ List Workspace Regulations 
+ get
+ Get Regulation 
+ get
+ List Suppressions 
+ Credentials post
+ Create Credential 
+ get
+ List Credentials 
+ del
+ Delete Credential 
+ get
+ Get Credential 
+ patch
+ Update Credential 
+ get
+ List Credential Consumers 
+ dbt post
+ Create Dbt Model Sync Trigger 
+ Destinations Migrate from the Config API 
+ post
+ Create Destination 
+ get
+ List Destinations 
+ post
+ Create Destination Subscription 
+ get
+ List Subscriptions from Destination 
+ del
+ Delete Destination 
+ get
+ Get Destination 
+ patch
+ Update Destination 
+ get
+ Get Subscription from Destination 
+ del
+ Remove Subscription from Destination 
+ patch
+ Update Subscription for Destination 
+ get
+ List Delivery Metrics Summary from Destination 
+ Destination Filters Use cases 
+ Availability 
+ Types of filters 
+ Filter order 
+ Conditional filters 
+ Universal filters 
+ Limits 
+ API models 
+ Action 
+ Migrate from the Config API 
+ Destination filter model 
+ Action model differences 
+ post
+ Create Filter for Destination 
+ get
+ List Filters from Destination 
+ get
+ Get Filter in Destination 
+ del
+ Remove Filter from Destination 
+ patch
+ Update Filter for Destination 
+ post
+ Preview Destination Filter 
+ Functions Migrate from the Config API 
+ post
+ Create Function 
+ get
+ List Functions 
+ post
+ Create Function Deployment 
+ post
+ Create Insert Function Instance 
+ get
+ List Insert Function Instances 
+ del
+ Delete Function 
+ get
+ Get Function 
+ patch
+ Update Function 
+ del
+ Delete Insert Function Instance 
+ get
+ Get Insert Function Instance 
+ patch
+ Update Insert Function Instance 
+ get
+ Get Function Version 
+ get
+ List Function Versions 
+ post
+ Restore Function Version 
+ Live Plugins post
+ Create Live Plugin 
+ del
+ Delete Live Plugin Code 
+ get
+ Get Latest from Live Plugins 
+ Profiles Sync post
+ Create Profiles Warehouse 
+ get
+ List Profiles Warehouse in Space 
+ get
+ List Selective Syncs from Warehouse And Space 
+ patch
+ Update Selective Sync for Warehouse And Space 
+ del
+ Remove Profiles Warehouse from Space 
+ patch
+ Update Profiles Warehouse for Space Warehouse 
+ Selective Sync get
+ Get Advanced Sync Schedule from Warehouse 
+ put
+ Replace Advanced Sync Schedule for Warehouse 
+ get
+ List Selective Syncs from Warehouse And Source 
+ get
+ List Syncs from Warehouse 
+ get
+ List Syncs from Warehouse And Source 
+ patch
+ Update Selective Sync for Warehouse 
+ Catalog Migrate from the Config API 
+ get
+ Get Destination Metadata 
+ get
+ Get Destinations Catalog 
+ get
+ Get Source Metadata 
+ get
+ Get Sources Catalog 
+ get
+ Get Warehouse Metadata 
+ get
+ Get Warehouses Catalog 
+ Delivery Overview get
+ Get Egress Failed Metrics from Delivery Overview 
+ get
+ Get Egress Success Metrics from Delivery Overview 
+ get
+ Get Filtered At Destination Metrics from Delivery Overview 
+ get
+ Get Filtered At Source Metrics from Delivery Overview 
+ get
+ Get Ingress Failed Metrics from Delivery Overview 
+ get
+ Get Ingress Success Metrics from Delivery Overview 
+ Admin IAM Users post
+ Add Permissions to User 
+ put
+ Replace Permissions for User 
+ post
+ Create Invites 
+ del
+ Delete Invites 
+ get
+ List Invites 
+ del
+ Delete Users 
+ get
+ List Users 
+ get
+ Get User 
+ get
+ List User Groups from User 
+ IAM Groups post
+ Add Permissions to User Group 
+ put
+ Replace Permissions for User Group 
+ post
+ Add Users to User Group 
+ get
+ List Users from User Group 
+ post
+ Create User Group 
+ get
+ List User Groups 
+ del
+ Delete User Group 
+ get
+ Get User Group 
+ patch
+ Update User Group 
+ get
+ List Invites from User Group 
+ del
+ Remove Users from User Group 
+ put
+ Replace Users in User Group 
+ Labels post
+ Create Label 
+ get
+ List Labels 
+ del
+ Delete Label 
+ Audit Trail get
+ List Audit Events 
+ IAM Roles get
+ List Roles 
+ Protocols Tracking Plans Migrate from the Config API 
+ post
+ Add Source to Tracking Plan 
+ get
+ List Sources from Tracking Plan 
+ del
+ Remove Source from Tracking Plan 
+ post
+ Create Tracking Plan 
+ get
+ List Tracking Plans 
+ del
+ Delete Tracking Plan 
+ get
+ Get Tracking Plan 
+ patch
+ Update Tracking Plan 
+ get
+ List Rules from Tracking Plan 
+ del
+ Remove Rules from Tracking Plan 
+ put
+ Replace Rules in Tracking Plan 
+ patch
+ Update Rules in Tracking Plan 
+ Transformations post
+ Create Transformation 
+ get
+ List Transformations 
+ del
+ Delete Transformation 
+ get
+ Get Transformation 
+ patch
+ Update Transformation 
+ Unify Computed Traits post
+ Create Computed Trait 
+ get
+ List Computed Traits 
+ get
+ Get Computed Trait 
+ del
+ Remove Computed Trait from Space 
+ patch
+ Update Computed Trait for Space 
+ Space Filters Availability 
+ Permissions 
+ Types of filters 
+ Conditional filters 
+ Universal filters 
+ Limits 
+ API models 
+ Preview filter 
+ post
+ Create Filter for Space 
+ get
+ List Filters for Space 
+ del
+ Delete Filter By Id 
+ get
+ Get Filter By Id 
+ patch
+ Update Filter By Id 
+ Space Schema API get
+ List Entity Paths 
+ get
+ List Events 
+ get
+ List Properties from Entity 
+ get
+ List Properties from Event 
+ get
+ List Sample Values from Entity Property 
+ get
+ List Sample Values from Event Property 
+ get
+ List Sample Values from Trait 
+ get
+ List Traits 
+ customer-insights post
+ Create Download 
+ General Testing get
+ Echo 
+ Workspaces Migrate from the Config API 
+ get
+ Get Workspace 
+ Usage API Calls get
+ Get Daily Per Source API Calls Usage 
+ get
+ Get Daily Workspace API Calls Usage 
+ Monthly Tracked Users get
+ Get Daily Per Source MTU Usage 
+ get
+ Get Daily Workspace MTU Usage 
+ Monitoring Events get
+ Get Events Volume from Workspace 
+ IAM Users
+ Segment’s access management tools let Workspace owners manage which users can access different parts of their Segment Workspaces.
+ Add Permissions to User
+ Adds a list of access permissions to a user.
+ • When called, this endpoint may generate one or more of the following audit trail events:* Policy Created
+ User Policy Updated
+ The rate limit for this endpoint is 60 requests per minute, which is lower than the default due to access pattern restrictions. Once reached, this endpoint will respond with the 429 HTTP status code with headers indicating the limit parameters. See Rate Limiting for more information.
+ Security token 
+ Request 
+ path Parameters
+ userId required
+ string [ 1 .. 255 ] 
+ Example: sgJDWk3K21k6LE3tLU9nRK 
+ Request Body schema: application/json application/vnd.segment.v1+json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ required
+ permissions required
+ Array of objects ( permissions ) 
+ The permissions to add.
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ post /users/{userId}/permissions 
+ Try it 
+ Request samples 
+ Payload
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ 1 more curl 1 more 
+ application/json application/vnd.segment.v1+json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ Copy 
+ Expand all Collapse all 
+ { "permissions" : [ { "roleId" : "1WDUuRLxv84rrfCNUwvkrRtkxnS" , 
+ "resources" : [ { "id" : "9aQ1Lj62S4bomZKLF4DPqW" , 
+ "type" : "WORKSPACE" 
+ } 
+ ] 
+ } 
+ ] 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "permissions" : [ { "policyId" : "2c0vbJcxowv7x1gyOp45ObHFqoQ" , 
+ "roleName" : "Workspace Owner" , 
+ "roleId" : "1WDUuRLxv84rrfCNUwvkrRtkxnS" , 
+ "subjectId" : "sgJDWk3K21k6LE3tLU9nRK" , 
+ "subjectType" : "user" , 
+ "resources" : [ { "id" : "9aQ1Lj62S4bomZKLF4DPqW" , 
+ "type" : "WORKSPACE" , 
+ "labels" : [ ] 
+ } 
+ ] 
+ } 
+ ] 
+ } 
+ } 
+ Replace Permissions for User
+ Updates the list of access permissions for a user.
+ • When called, this endpoint may generate the Policy Deleted event in the audit trail .
+ The rate limit for this endpoint is 60 requests per minute, which is lower than the default due to access pattern restrictions. Once reached, this endpoint will respond with the 429 HTTP status code with headers indicating the limit parameters. See Rate Limiting for more information.
+ Security token 
+ Request 
+ path Parameters
+ userId required
+ string [ 1 .. 255 ] 
+ Example: sgJDWk3K21k6LE3tLU9nRK 
+ Request Body schema: application/json application/vnd.segment.v1+json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ required
+ permissions required
+ Array of objects ( permissions ) 
+ The permissions to add.
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ put /users/{userId}/permissions 
+ Try it 
+ Request samples 
+ Payload
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ 1 more curl 1 more 
+ application/json application/vnd.segment.v1+json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ Copy 
+ Expand all Collapse all 
+ { "permissions" : [ { "roleId" : "1WDUuRLxv84rrfCNUwvkrRtkxnS" , 
+ "resources" : [ { "id" : "9aQ1Lj62S4bomZKLF4DPqW" , 
+ "type" : "WORKSPACE" 
+ } 
+ ] 
+ } 
+ ] 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "permissions" : [ { "roleId" : "1WDUuRLxv84rrfCNUwvkrRtkxnS" , 
+ "roleName" : "Workspace Owner" , 
+ "resources" : [ { "id" : "9aQ1Lj62S4bomZKLF4DPqW" , 
+ "type" : "WORKSPACE" , 
+ "labels" : [ ] 
+ } 
+ ] 
+ } 
+ ] 
+ } 
+ } 
+ Create Invites
+ Invites a list of users to join a Workspace.
+ • When called, this endpoint may generate one or more of the following audit trail events:* Non-Segment User Invited to Workspace
+ Policy Created
+ New Segment User Invited to Workspace
+ Config API omitted fields:
+ parent 
+ The rate limit for this endpoint is 60 requests per minute, which is lower than the default due to access pattern restrictions. Once reached, this endpoint will respond with the 429 HTTP status code with headers indicating the limit parameters. See Rate Limiting for more information.
+ Security token 
+ Request 
+ Request Body schema: application/json application/vnd.segment.v1+json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ required
+ invites required
+ Array of objects ( invites ) 
+ The list of invites.
+ Responses 
+ 201 Created
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ post /invites 
+ Try it 
+ Request samples 
+ Payload
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ 1 more curl 1 more 
+ application/json application/vnd.segment.v1+json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ Copy 
+ Expand all Collapse all 
+ { "invites" : [ { "email" : "foo@example.com" , 
+ "permissions" : [ { "roleId" : "1WDUuRLxv84rrfCNUwvkrRtkxnS" , 
+ "resources" : [ { "id" : "9aQ1Lj62S4bomZKLF4DPqW" , 
+ "type" : "WORKSPACE" 
+ } 
+ ] 
+ } 
+ ] 
+ } 
+ ] 
+ } 
+ Response samples 
+ 201
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "emails" : [ "foo@example.com" 
+ ] 
+ } 
+ } 
+ Delete Invites
+ Removes a list of invitations to join a Workspace.
+ • When called, this endpoint may generate one or more of the following audit trail events:* Invite Deleted
+ Group Memberships Deleted
+ The rate limit for this endpoint is 60 requests per minute, which is lower than the default due to access pattern restrictions. Once reached, this endpoint will respond with the 429 HTTP status code with headers indicating the limit parameters. See Rate Limiting for more information.
+ Security token 
+ Request 
+ query Parameters
+ emails required
+ Array of strings ( emails ) 
+ The list of emails to delete invites for.
+ This parameter exists in v1.
+ Example: emails=emails.0=foo%40example.com 
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ delete /invites 
+ Try it 
+ Request samples 
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ Copy 
+ import { configureApis , unwrap } from '@segment/public-api-sdk-typescript' 
+const api = configureApis ( '/* Insert your Public API token here */' ) 
+ try { 
+ const result = await unwrap ( api . iamUsers . deleteInvites ( 'emails.0=foo%40example.com' ) ) 
+ console . log ( JSON . stringify ( result ) ) 
+ } catch ( e ) { 
+ console . log ( 'ERROR:' , e ) 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/vnd.segment.v1+json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "status" : "SUCCESS" 
+ } 
+ } 
+ List Invites
+ Returns a list of invitations to join a Workspace.
+ Config API omitted fields:
+ parent 
+ Security token 
+ Request 
+ query Parameters
+ pagination object ( PaginationInput ) 
+ Defines the pagination parameters.
+ This parameter exists in v1.
+ Example: pagination=pagination.count=2 
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ get /invites 
+ Try it 
+ Request samples 
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ Copy 
+ import { configureApis , unwrap } from '@segment/public-api-sdk-typescript' 
+const api = configureApis ( '/* Insert your Public API token here */' ) 
+ try { 
+ const result = await unwrap ( api . iamUsers . listInvites ( ) ) 
+ console . log ( JSON . stringify ( result ) ) 
+ } catch ( e ) { 
+ console . log ( 'ERROR:' , e ) 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/vnd.segment.v1+json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "pagination" : { "current" : "MA==" , 
+ "totalEntries" : 1 
+ } , 
+ "invites" : [ "foo@example.com" 
+ ] 
+ } 
+ } 
+ Delete Users
+ Removes one or multiple users.
+ • When called, this endpoint may generate the Group Memberships Deleted event in the audit trail .
+ The rate limit for this endpoint is 60 requests per minute, which is lower than the default due to access pattern restrictions. Once reached, this endpoint will respond with the 429 HTTP status code with headers indicating the limit parameters. See Rate Limiting for more information.
+ Security token 
+ Request 
+ query Parameters
+ userIds required
+ Array of strings ( userIds ) 
+ The ids of the users to remove.
+ This parameter exists in v1.
+ Example: userIds=userIds.0=dLPzv57d5nRGz8U5iegLKp 
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ delete /users 
+ Try it 
+ Request samples 
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ Copy 
+ import { configureApis , unwrap } from '@segment/public-api-sdk-typescript' 
+const api = configureApis ( '/* Insert your Public API token here */' ) 
+ try { 
+ const result = await unwrap ( api . iamUsers . deleteUsers ( 'userIds.0=dLPzv57d5nRGz8U5iegLKp' ) ) 
+ console . log ( JSON . stringify ( result ) ) 
+ } catch ( e ) { 
+ console . log ( 'ERROR:' , e ) 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/vnd.segment.v1+json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "status" : "SUCCESS" 
+ } 
+ } 
+ List Users
+ Returns a list of users with access to the Workspace.
+ Security token 
+ Request 
+ query Parameters
+ pagination object ( PaginationInput ) 
+ Pagination for users.
+ This parameter exists in v1.
+ Example: pagination=pagination.count=2 
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ get /users 
+ Try it 
+ Request samples 
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ Copy 
+ import { configureApis , unwrap } from '@segment/public-api-sdk-typescript' 
+const api = configureApis ( '/* Insert your Public API token here */' ) 
+ try { 
+ const result = await unwrap ( api . iamUsers . listUsers ( ) ) 
+ console . log ( JSON . stringify ( result ) ) 
+ } catch ( e ) { 
+ console . log ( 'ERROR:' , e ) 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/vnd.segment.v1+json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "users" : [ { "id" : "i2VTJURQprNfqdwjLFPWYx" , 
+ "name" : "Sloth" , 
+ "email" : "sloth@segment.com" 
+ } ,
+ { "id" : "sgJDWk3K21k6LE3tLU9nRK" , 
+ "name" : "" , 
+ "email" : "papi@segment.com" 
+ } 
+ ] , 
+ "pagination" : { "current" : "MA==" , 
+ "totalEntries" : 2 
+ } 
+ } 
+ } 
+ Get User
+ Returns a user given their id.
+ Security token 
+ Request 
+ path Parameters
+ userId required
+ string [ 1 .. 255 ] 
+ Example: sgJDWk3K21k6LE3tLU9nRK 
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ get /users/{userId} 
+ Try it 
+ Request samples 
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ Copy 
+ import { configureApis , unwrap } from '@segment/public-api-sdk-typescript' 
+const api = configureApis ( '/* Insert your Public API token here */' ) 
+ try { 
+ const result = await unwrap ( api . iamUsers . getUser ( 'sgJDWk3K21k6LE3tLU9nRK' ) ) 
+ console . log ( JSON . stringify ( result ) ) 
+ } catch ( e ) { 
+ console . log ( 'ERROR:' , e ) 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/vnd.segment.v1+json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "user" : { "id" : "sgJDWk3K21k6LE3tLU9nRK" , 
+ "name" : "" , 
+ "email" : "papi@segment.com" , 
+ "permissions" : [ { "roleId" : "1WDUuRLxv84rrfCNUwvkrRtkxnS" , 
+ "roleName" : "Workspace Owner" , 
+ "resources" : [ { "id" : "9aQ1Lj62S4bomZKLF4DPqW" , 
+ "type" : "WORKSPACE" , 
+ "labels" : [ ] 
+ } 
+ ] 
+ } 
+ ] 
+ } 
+ } 
+ } 
+ List User Groups from User
+ Returns all groups a user belongs to.
+ Security token 
+ Request 
+ path Parameters
+ userId required
+ string [ 1 .. 255 ] 
+ Example: sgJDWk3K21k6LE3tLU9nRK 
+ query Parameters
+ pagination object ( PaginationInput ) 
+ Pagination for groups.
+ This parameter exists in v1.
+ Example: pagination=pagination.count=2 
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ get /users/{userId}/groups 
+ Try it 
+ Request samples 
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ Copy 
+ import { configureApis , unwrap } from '@segment/public-api-sdk-typescript' 
+const api = configureApis ( '/* Insert your Public API token here */' ) 
+ try { 
+ const result = await unwrap ( api . iamUsers . listUserGroupsFromUser ( 'sgJDWk3K21k6LE3tLU9nRK' ) ) 
+ console . log ( JSON . stringify ( result ) ) 
+ } catch ( e ) { 
+ console . log ( 'ERROR:' , e ) 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/vnd.segment.v1+json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "groups" : [ ] , 
+ "pagination" : { "current" : "MA==" , 
+ "totalEntries" : 0 
+ } 
+ } 
+ } 
+ ➔ Next to IAM Groups
+
+[Page: /tag/Audit-Trail]
+Segment Public API Documentation 
+ Search Guides Introduction 
+ Getting Started Get an API token 
+ Create a test request 
+ Install and use an SDK 
+ Benefits 
+ Migration Differences in operation 
+ Authentication Scope 
+ Permissions and security 
+ Authenticating requests 
+ Error Handling Status codes overview 
+ Response envelopes 
+ Request Validation Authentication validation 
+ Input validation 
+ Rate Limits Rate limit errors 
+ Common rate limit causes 
+ Reducing your call volume 
+ Payload Limits Payload limit error 
+ Pagination Pagination parameters 
+ Versioning Accessing versions 
+ Backwards-incompatible or breaking changes 
+ Engage Activations post
+ Add Activation to Audience 
+ post
+ Add Destination to Audience 
+ get
+ List Destinations from Audience 
+ post
+ Batch Query Activations for Space 
+ get
+ Get Activation from Audience 
+ del
+ Remove Activation from Audience 
+ patch
+ Update Activation for Audience 
+ get
+ List Activations from Audience 
+ get
+ List Supported Destinations from Audience 
+ del
+ Remove Destination from Audience 
+ patch
+ Update Destination for Audience 
+ Audiences post
+ Add Audience Schedule to Audience 
+ get
+ List Audience Schedules from Space And Audience 
+ post
+ Create Audience 
+ get
+ List Audiences 
+ post
+ Create Audience Preview 
+ post
+ Force Execute Audience Run 
+ get
+ Get Audience 
+ del
+ Remove Audience from Space 
+ patch
+ Update Audience for Space 
+ get
+ Get Audience Preview 
+ get
+ Get Audience Schedule from Space And Audience 
+ del
+ Remove Audience Schedule from Audience 
+ patch
+ Update Audience Schedule for Audience 
+ get
+ List Audience Consumers from Space And Audience 
+ Spaces get
+ Get Space 
+ get
+ List Spaces 
+ Connections Warehouses post
+ Add Connection from Source to Warehouse 
+ del
+ Remove Source Connection from Warehouse 
+ post
+ Create Validation in Warehouse 
+ post
+ Create Warehouse 
+ get
+ List Warehouses 
+ del
+ Delete Warehouse 
+ get
+ Get Warehouse 
+ patch
+ Update Warehouse 
+ get
+ Get Connection State from Warehouse 
+ get
+ List Connected Sources from Warehouse 
+ Sources Migrate from the Config API 
+ post
+ Add Labels to Source 
+ put
+ Replace Labels in Source 
+ post
+ Create Source 
+ get
+ List Sources 
+ post
+ Create Write Key for Source 
+ del
+ Delete Source 
+ get
+ Get Source 
+ patch
+ Update Source 
+ get
+ List Connected Destinations from Source 
+ get
+ List Connected Warehouses from Source 
+ get
+ List Schema Settings in Source 
+ patch
+ Update Schema Settings in Source 
+ del
+ Remove Write Key from Source 
+ Reverse ETL Reverse ETL Sync schedule JSON configuration 
+ post
+ Cancel Reverse ETL Sync for Model 
+ post
+ Create Reverse ETL Manual Sync 
+ post
+ Create Reverse Etl Model 
+ get
+ List Reverse Etl Models 
+ del
+ Delete Reverse Etl Model 
+ get
+ Get Reverse Etl Model 
+ patch
+ Update Reverse Etl Model 
+ get
+ Get Reverse ETL Sync Status 
+ get
+ List Reverse ETL Sync Statuses from Model And Subscription Id 
+ Deletion and Suppression Migrate from the Config API 
+ Rate limit headers 
+ post
+ Create Cloud Source Regulation 
+ post
+ Create Source Regulation 
+ get
+ List Regulations from Source 
+ post
+ Create Workspace Regulation 
+ get
+ List Workspace Regulations 
+ get
+ Get Regulation 
+ get
+ List Suppressions 
+ Credentials post
+ Create Credential 
+ get
+ List Credentials 
+ del
+ Delete Credential 
+ get
+ Get Credential 
+ patch
+ Update Credential 
+ get
+ List Credential Consumers 
+ dbt post
+ Create Dbt Model Sync Trigger 
+ Destinations Migrate from the Config API 
+ post
+ Create Destination 
+ get
+ List Destinations 
+ post
+ Create Destination Subscription 
+ get
+ List Subscriptions from Destination 
+ del
+ Delete Destination 
+ get
+ Get Destination 
+ patch
+ Update Destination 
+ get
+ Get Subscription from Destination 
+ del
+ Remove Subscription from Destination 
+ patch
+ Update Subscription for Destination 
+ get
+ List Delivery Metrics Summary from Destination 
+ Destination Filters Use cases 
+ Availability 
+ Types of filters 
+ Filter order 
+ Conditional filters 
+ Universal filters 
+ Limits 
+ API models 
+ Action 
+ Migrate from the Config API 
+ Destination filter model 
+ Action model differences 
+ post
+ Create Filter for Destination 
+ get
+ List Filters from Destination 
+ get
+ Get Filter in Destination 
+ del
+ Remove Filter from Destination 
+ patch
+ Update Filter for Destination 
+ post
+ Preview Destination Filter 
+ Functions Migrate from the Config API 
+ post
+ Create Function 
+ get
+ List Functions 
+ post
+ Create Function Deployment 
+ post
+ Create Insert Function Instance 
+ get
+ List Insert Function Instances 
+ del
+ Delete Function 
+ get
+ Get Function 
+ patch
+ Update Function 
+ del
+ Delete Insert Function Instance 
+ get
+ Get Insert Function Instance 
+ patch
+ Update Insert Function Instance 
+ get
+ Get Function Version 
+ get
+ List Function Versions 
+ post
+ Restore Function Version 
+ Live Plugins post
+ Create Live Plugin 
+ del
+ Delete Live Plugin Code 
+ get
+ Get Latest from Live Plugins 
+ Profiles Sync post
+ Create Profiles Warehouse 
+ get
+ List Profiles Warehouse in Space 
+ get
+ List Selective Syncs from Warehouse And Space 
+ patch
+ Update Selective Sync for Warehouse And Space 
+ del
+ Remove Profiles Warehouse from Space 
+ patch
+ Update Profiles Warehouse for Space Warehouse 
+ Selective Sync get
+ Get Advanced Sync Schedule from Warehouse 
+ put
+ Replace Advanced Sync Schedule for Warehouse 
+ get
+ List Selective Syncs from Warehouse And Source 
+ get
+ List Syncs from Warehouse 
+ get
+ List Syncs from Warehouse And Source 
+ patch
+ Update Selective Sync for Warehouse 
+ Catalog Migrate from the Config API 
+ get
+ Get Destination Metadata 
+ get
+ Get Destinations Catalog 
+ get
+ Get Source Metadata 
+ get
+ Get Sources Catalog 
+ get
+ Get Warehouse Metadata 
+ get
+ Get Warehouses Catalog 
+ Delivery Overview get
+ Get Egress Failed Metrics from Delivery Overview 
+ get
+ Get Egress Success Metrics from Delivery Overview 
+ get
+ Get Filtered At Destination Metrics from Delivery Overview 
+ get
+ Get Filtered At Source Metrics from Delivery Overview 
+ get
+ Get Ingress Failed Metrics from Delivery Overview 
+ get
+ Get Ingress Success Metrics from Delivery Overview 
+ Admin IAM Users post
+ Add Permissions to User 
+ put
+ Replace Permissions for User 
+ post
+ Create Invites 
+ del
+ Delete Invites 
+ get
+ List Invites 
+ del
+ Delete Users 
+ get
+ List Users 
+ get
+ Get User 
+ get
+ List User Groups from User 
+ IAM Groups post
+ Add Permissions to User Group 
+ put
+ Replace Permissions for User Group 
+ post
+ Add Users to User Group 
+ get
+ List Users from User Group 
+ post
+ Create User Group 
+ get
+ List User Groups 
+ del
+ Delete User Group 
+ get
+ Get User Group 
+ patch
+ Update User Group 
+ get
+ List Invites from User Group 
+ del
+ Remove Users from User Group 
+ put
+ Replace Users in User Group 
+ Labels post
+ Create Label 
+ get
+ List Labels 
+ del
+ Delete Label 
+ Audit Trail get
+ List Audit Events 
+ IAM Roles get
+ List Roles 
+ Protocols Tracking Plans Migrate from the Config API 
+ post
+ Add Source to Tracking Plan 
+ get
+ List Sources from Tracking Plan 
+ del
+ Remove Source from Tracking Plan 
+ post
+ Create Tracking Plan 
+ get
+ List Tracking Plans 
+ del
+ Delete Tracking Plan 
+ get
+ Get Tracking Plan 
+ patch
+ Update Tracking Plan 
+ get
+ List Rules from Tracking Plan 
+ del
+ Remove Rules from Tracking Plan 
+ put
+ Replace Rules in Tracking Plan 
+ patch
+ Update Rules in Tracking Plan 
+ Transformations post
+ Create Transformation 
+ get
+ List Transformations 
+ del
+ Delete Transformation 
+ get
+ Get Transformation 
+ patch
+ Update Transformation 
+ Unify Computed Traits post
+ Create Computed Trait 
+ get
+ List Computed Traits 
+ get
+ Get Computed Trait 
+ del
+ Remove Computed Trait from Space 
+ patch
+ Update Computed Trait for Space 
+ Space Filters Availability 
+ Permissions 
+ Types of filters 
+ Conditional filters 
+ Universal filters 
+ Limits 
+ API models 
+ Preview filter 
+ post
+ Create Filter for Space 
+ get
+ List Filters for Space 
+ del
+ Delete Filter By Id 
+ get
+ Get Filter By Id 
+ patch
+ Update Filter By Id 
+ Space Schema API get
+ List Entity Paths 
+ get
+ List Events 
+ get
+ List Properties from Entity 
+ get
+ List Properties from Event 
+ get
+ List Sample Values from Entity Property 
+ get
+ List Sample Values from Event Property 
+ get
+ List Sample Values from Trait 
+ get
+ List Traits 
+ customer-insights post
+ Create Download 
+ General Testing get
+ Echo 
+ Workspaces Migrate from the Config API 
+ get
+ Get Workspace 
+ Usage API Calls get
+ Get Daily Per Source API Calls Usage 
+ get
+ Get Daily Workspace API Calls Usage 
+ Monthly Tracked Users get
+ Get Daily Per Source MTU Usage 
+ get
+ Get Daily Workspace MTU Usage 
+ Monitoring Events get
+ Get Events Volume from Workspace 
+ Audit Trail
+ Segment offers an in-app 90 day Audit Trail for Business Tier accounts.
+ The Segment Public API lets you automate consuming these Audit Trail events.
+ List Audit Events
+ Returns a list of Audit Trail events.
+ Security token 
+ Request 
+ query Parameters
+ startTime string ( startTime ) 
+ Filter response to events that happened after this time.
+ This parameter exists in v1.
+ endTime string ( endTime ) 
+ Filter response to events that happened before this time.
+Defaults to the current time, or the end time from the pagination cursor.
+ This parameter exists in v1.
+ resourceId string ( resourceId ) 
+ Filter response to events that affect a specific resource, for example, a single Source.
+ This parameter exists in v1.
+ Example: resourceId=9aQ1Lj62S4bomZKLF4DPqW 
+ resourceType string ( resourceType ) 
+ Filter response to events that affect a specific type, for example, Sources, Warehouses, and Tracking Plans.
+ This parameter exists in v1.
+ pagination object ( PaginationInput ) 
+ Defines the pagination parameters.
+ This parameter exists in v1.
+ Example: pagination=pagination.count=2 
+ Responses 
+ 200 OK
+ 404 Resource not found
+ 422 Validation failure
+ 429 Too many requests
+ get /audit-events 
+ Try it 
+ Request samples 
+ TypeScript
+ Java
+ Python
+ Go
+ curl
+ Copy 
+ import { configureApis , unwrap } from '@segment/public-api-sdk-typescript' 
+const api = configureApis ( '/* Insert your Public API token here */' ) 
+ try { 
+ const result = await unwrap ( api . auditTrail . listAuditEvents ( ) ) 
+ console . log ( JSON . stringify ( result ) ) 
+ } catch ( e ) { 
+ console . log ( 'ERROR:' , e ) 
+ } 
+ Response samples 
+ 200
+ 404
+ 422
+ 429
+ application/vnd.segment.v1+json application/json application/vnd.segment.v1beta+json application/vnd.segment.v1alpha+json application/vnd.segment.v1+json 
+ Copy 
+ Expand all Collapse all 
+ { "data" : { "events" : [ { "id" : "events/145876976" , 
+ "timestamp" : "2022-03-04T21:29:22Z" , 
+ "type" : "Source Function Deleted" , 
+ "actor" : "public-api-token/TJ7z8cg6" , 
+ "resourceId" : "8AWE8yZRdy" , 
+ "resourceType" : "function" , 
+ "resourceName" : "Foo Func 543" 
+ } ,
+ { "id" : "events/145876978" , 
+ "timestamp" : "2022-03-04T21:29:22Z" , 
+ "type" : "Source Function Modified" , 
+ "actor" : "public-api-token/TJ7z8cg6" , 
+ "resourceId" : "sfnc_tFXvS0Rs6T" , 
+ "resourceType" : "function" , 
+ "resourceName" : "displayName" 
+ } 
+ ] , 
+ "pagination" : { "current" : "eyJwYWdlVG9rZW4iOiJNUT09IiwiZW5kVGltZSI6IjIwMjQtMDItMDdUMDA6MDQ6MDQuMjY2WiJ9" , 
+ "next" : "eyJwYWdlVG9rZW4iOiJNZz09IiwiZW5kVGltZSI6IjIwMjQtMDItMDdUMDA6MDQ6MDQuMjY2WiJ9" 
+ } 
+ } 
+ } 
+ ➔ Next to IAM Roles
+
+[Page: /tag/Introduction]
+Segment Public API Documentation 
+ Search Guides Introduction 
+ Getting Started Get an API token 
+ Create a test request 
+ Install and use an SDK 
+ Benefits 
+ Migration Differences in operation 
+ Authentication Scope 
+ Permissions and security 
+ Authenticating requests 
+ Error Handling Status codes overview 
+ Response envelopes 
+ Request Validation Authentication validation 
+ Input validation 
+ Rate Limits Rate limit errors 
+ Common rate limit causes 
+ Reducing your call volume 
+ Payload Limits Payload limit error 
+ Pagination Pagination parameters 
+ Versioning Accessing versions 
+ Backwards-incompatible or breaking changes 
+ Engage Activations post
+ Add Activation to Audience 
+ post
+ Add Destination to Audience 
+ get
+ List Destinations from Audience 
+ post
+ Batch Query Activations for Space 
+ get
+ Get Activation from Audience 
+ del
+ Remove Activation from Audience 
+ patch
+ Update Activation for Audience 
+ get
+ List Activations from Audience 
+ get
+ List Supported Destinations from Audience 
+ del
+ Remove Destination from Audience 
+ patch
+ Update Destination for Audience 
+ Audiences post
+ Add Audience Schedule to Audience 
+ get
+ List Audience Schedules from Space And Audience 
+ post
+ Create Audience 
+ get
+ List Audiences 
+ post
+ Create Audience Preview 
+ post
+ Force Execute Audience Run 
+ get
+ Get Audience 
+ del
+ Remove Audience from Space 
+ patch
+ Update Audience for Space 
+ get
+ Get Audience Preview 
+ get
+ Get Audience Schedule from Space And Audience 
+ del
+ Remove Audience Schedule from Audience 
+ patch
+ Update Audience Schedule for Audience 
+ get
+ List Audience Consumers from Space And Audience 
+ Spaces get
+ Get Space 
+ get
+ List Spaces 
+ Connections Warehouses post
+ Add Connection from Source to Warehouse 
+ del
+ Remove Source Connection from Warehouse 
+ post
+ Create Validation in Warehouse 
+ post
+ Create Warehouse 
+ get
+ List Warehouses 
+ del
+ Delete Warehouse 
+ get
+ Get Warehouse 
+ patch
+ Update Warehouse 
+ get
+ Get Connection State from Warehouse 
+ get
+ List Connected Sources from Warehouse 
+ Sources Migrate from the Config API 
+ post
+ Add Labels to Source 
+ put
+ Replace Labels in Source 
+ post
+ Create Source 
+ get
+ List Sources 
+ post
+ Create Write Key for Source 
+ del
+ Delete Source 
+ get
+ Get Source 
+ patch
+ Update Source 
+ get
+ List Connected Destinations from Source 
+ get
+ List Connected Warehouses from Source 
+ get
+ List Schema Settings in Source 
+ patch
+ Update Schema Settings in Source 
+ del
+ Remove Write Key from Source 
+ Reverse ETL Reverse ETL Sync schedule JSON configuration 
+ post
+ Cancel Reverse ETL Sync for Model 
+ post
+ Create Reverse ETL Manual Sync 
+ post
+ Create Reverse Etl Model 
+ get
+ List Reverse Etl Models 
+ del
+ Delete Reverse Etl Model 
+ get
+ Get Reverse Etl Model 
+ patch
+ Update Reverse Etl Model 
+ get
+ Get Reverse ETL Sync Status 
+ get
+ List Reverse ETL Sync Statuses from Model And Subscription Id 
+ Deletion and Suppression Migrate from the Config API 
+ Rate limit headers 
+ post
+ Create Cloud Source Regulation 
+ post
+ Create Source Regulation 
+ get
+ List Regulations from Source 
+ post
+ Create Workspace Regulation 
+ get
+ List Workspace Regulations 
+ get
+ Get Regulation 
+ get
+ List Suppressions 
+ Credentials post
+ Create Credential 
+ get
+ List Credentials 
+ del
+ Delete Credential 
+ get
+ Get Credential 
+ patch
+ Update Credential 
+ get
+ List Credential Consumers 
+ dbt post
+ Create Dbt Model Sync Trigger 
+ Destinations Migrate from the Config API 
+ post
+ Create Destination 
+ get
+ List Destinations 
+ post
+ Create Destination Subscription 
+ get
+ List Subscriptions from Destination 
+ del
+ Delete Destination 
+ get
+ Get Destination 
+ patch
+ Update Destination 
+ get
+ Get Subscription from Destination 
+ del
+ Remove Subscription from Destination 
+ patch
+ Update Subscription for Destination 
+ get
+ List Delivery Metrics Summary from Destination 
+ Destination Filters Use cases 
+ Availability 
+ Types of filters 
+ Filter order 
+ Conditional filters 
+ Universal filters 
+ Limits 
+ API models 
+ Action 
+ Migrate from the Config API 
+ Destination filter model 
+ Action model differences 
+ post
+ Create Filter for Destination 
+ get
+ List Filters from Destination 
+ get
+ Get Filter in Destination 
+ del
+ Remove Filter from Destination 
+ patch
+ Update Filter for Destination 
+ post
+ Preview Destination Filter 
+ Functions Migrate from the Config API 
+ post
+ Create Function 
+ get
+ List Functions 
+ post
+ Create Function Deployment 
+ post
+ Create Insert Function Instance 
+ get
+ List Insert Function Instances 
+ del
+ Delete Function 
+ get
+ Get Function 
+ patch
+ Update Function 
+ del
+ Delete Insert Function Instance 
+ get
+ Get Insert Function Instance 
+ patch
+ Update Insert Function Instance 
+ get
+ Get Function Version 
+ get
+ List Function Versions 
+ post
+ Restore Function Version 
+ Live Plugins post
+ Create Live Plugin 
+ del
+ Delete Live Plugin Code 
+ get
+ Get Latest from Live Plugins 
+ Profiles Sync post
+ Create Profiles Warehouse 
+ get
+ List Profiles Warehouse in Space 
+ get
+ List Selective Syncs from Warehouse And Space 
+ patch
+ Update Selective Sync for Warehouse And Space 
+ del
+ Remove Profiles Warehouse from Space 
+ patch
+ Update Profiles Warehouse for Space Warehouse 
+ Selective Sync get
+ Get Advanced Sync Schedule from Warehouse 
+ put
+ Replace Advanced Sync Schedule for Warehouse 
+ get
+ List Selective Syncs from Warehouse And Source 
+ get
+ List Syncs from Warehouse 
+ get
+ List Syncs from Warehouse And Source 
+ patch
+ Update Selective Sync for Warehouse 
+ Catalog Migrate from the Config API 
+ get
+ Get Destination Metadata 
+ get
+ Get Destinations Catalog 
+ get
+ Get Source Metadata 
+ get
+ Get Sources Catalog 
+ get
+ Get Warehouse Metadata 
+ get
+ Get Warehouses Catalog 
+ Delivery Overview get
+ Get Egress Failed Metrics from Delivery Overview 
+ get
+ Get Egress Success Metrics from Delivery Overview 
+ get
+ Get Filtered At Destination Metrics from Delivery Overview 
+ get
+ Get Filtered At Source Metrics from Delivery Overview 
+ get
+ Get Ingress Failed Metrics from Delivery Overview 
+ get
+ Get Ingress Success Metrics from Delivery Overview 
+ Admin IAM Users post
+ Add Permissions to User 
+ put
+ Replace Permissions for User 
+ post
+ Create Invites 
+ del
+ Delete Invites 
+ get
+ List Invites 
+ del
+ Delete Users 
+ get
+ List Users 
+ get
+ Get User 
+ get
+ List User Groups from User 
+ IAM Groups post
+ Add Permissions to User Group 
+ put
+ Replace Permissions for User Group 
+ post
+ Add Users to User Group 
+ get
+ List Users from User Group 
+ post
+ Create User Group 
+ get
+ List User Groups 
+ del
+ Delete User Group 
+ get
+ Get User Group 
+ patch
+ Update User Group 
+ get
+ List Invites from User Group 
+ del
+ Remove Users from User Group 
+ put
+ Replace Users in User Group 
+ Labels post
+ Create Label 
+ get
+ List Labels 
+ del
+ Delete Label 
+ Audit Trail get
+ List Audit Events 
+ IAM Roles get
+ List Roles 
+ Protocols Tracking Plans Migrate from the Config API 
+ post
+ Add Source to Tracking Plan 
+ get
+ List Sources from Tracking Plan 
+ del
+ Remove Source from Tracking Plan 
+ post
+ Create Tracking Plan 
+ get
+ List Tracking Plans 
+ del
+ Delete Tracking Plan 
+ get
+ Get Tracking Plan 
+ patch
+ Update Tracking Plan 
+ get
+ List Rules from Tracking Plan 
+ del
+ Remove Rules from Tracking Plan 
+ put
+ Replace Rules in Tracking Plan 
+ patch
+ Update Rules in Tracking Plan 
+ Transformations post
+ Create Transformation 
+ get
+ List Transformations 
+ del
+ Delete Transformation 
+ get
+ Get Transformation 
+ patch
+ Update Transformation 
+ Unify Computed Traits post
+ Create Computed Trait 
+ get
+ List Computed Traits 
+ get
+ Get Computed Trait 
+ del
+ Remove Computed Trait from Space 
+ patch
+ Update Computed Trait for Space 
+ Space Filters Availability 
+ Permissions 
+ Types of filters 
+ Conditional filters 
+ Universal filters 
+ Limits 
+ API models 
+ Preview filter 
+ post
+ Create Filter for Space 
+ get
+ List Filters for Space 
+ del
+ Delete Filter By Id 
+ get
+ Get Filter By Id 
+ patch
+ Update Filter By Id 
+ Space Schema API get
+ List Entity Paths 
+ get
+ List Events 
+ get
+ List Properties from Entity 
+ get
+ List Properties from Event 
+ get
+ List Sample Values from Entity Property 
+ get
+ List Sample Values from Event Property 
+ get
+ List Sample Values from Trait 
+ get
+ List Traits 
+ customer-insights post
+ Create Download 
+ General Testing get
+ Echo 
+ Workspaces Migrate from the Config API 
+ get
+ Get Workspace 
+ Usage API Calls get
+ Get Daily Per Source API Calls Usage 
+ get
+ Get Daily Workspace API Calls Usage 
+ Monthly Tracked Users get
+ Get Daily Per Source MTU Usage 
+ get
+ Get Daily Workspace MTU Usage 
+ Monitoring Events get
+ Get Events Volume from Workspace 
+ Introduction
+ The Segment Public API helps you manage your Segment Workspaces and its resources. You can use the API to perform CRUD (create, read, update, delete) operations at no extra charge. This includes working with resources such as Sources, Destinations, Warehouses, Tracking Plans, and the Segment Destinations and Sources Catalogs.
+ All CRUD endpoints in the API follow REST conventions and use standard HTTP methods. Different URL endpoints represent different resources in a Workspace.
+ See the next sections for more information on how to use the Segment Public API.
+ ➔ Next to Getting Started

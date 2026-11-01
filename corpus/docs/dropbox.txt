@@ -1,0 +1,892 @@
+HTTP - Developers - Dropbox
+
+[Page: /developers/reference/auth-types]
+Authentication Types | Dropbox API Documentation For AI agents: a documentation index is available at the root level at /llms.txt. Append /llms.txt to any URL for a page-level index, or .md for the markdown version of any page.
+ Skip to navigation 
+ On this page
+ User Authentication 
+ Team Authentication 
+ User Authentication via Dropbox-API-Select-User 
+ Admin Authentication via Dropbox-API-Select-Admin 
+ App Authentication 
+ No Authentication 
+ Scroll to top 
+ On this page 
+ This page is for Dropbox API.
+ When making API calls to the Dropbox API, each request requires a certain level of authentication. If you’re using an official Dropbox SDK, it will handle these specifics for you. If you’re using the HTTP endpoints however, you’ll need to implement the right authentication type for each endpoint. The documentation for each endpoint indicates which type is used, which will be one of the following:
+ User Authentication
+ This is the most common authentication type. This type uses an access token for a specific user and app pair, in order to operate on that user’s account, to the extent allowed by that app’s permission. Applications that authorize only scopes for the User API will receive a user access token.
+ Example: 
+ curl -X POST " https://api.dropboxapi.com/2/users/get_current_account " \ 
+ --header " Authorization: Bearer <OAUTH2_ACCESS_TOKEN> " 
+ Team Authentication
+ This type uses an access token for a specific team and app pair, in order to operate on that team, to the extent allowed by that app’s permissions. Applications that authorize team scopes to use the Business API will receive a team access token.
+ Example: 
+ curl -X POST " https://api.dropboxapi.com/2/team/get_info " \ 
+ --header " Authorization: Bearer <OAUTH2_ACCESS_TOKEN> " 
+ Team access tokens can be used for calls requiring User Authentication by including additional HTTP headers. Note that applications using Select-User or Select-Admin headers must have a team_data.member scope applied to the access token. This dependency is enforced in the scoped app’s Permissions page and OAuth flow.
+ User Authentication via Dropbox-API-Select-User
+ This type uses an access token for a specific team and app pair in conjunction with a header specifying the target team_member_id , in order to operate on behalf of the team member, to the extent allowed by that app’s permission. All API calls that support User Authentication support this methodology.
+ Example: 
+ curl -X POST " https://api.dropboxapi.com/2/users/get_current_account " \ 
+ --header " Authorization: Bearer <OAUTH2_ACCESS_TOKEN> " \ 
+ --header " Dropbox-API-Select-User: <TEAM_MEMBER_ID> " 
+ An additional error may occur when using Dropbox-API-Select-User :
+ 401 Member ID doesn’t exist on the team.
+ Admin Authentication via Dropbox-API-Select-Admin
+ This type uses an access token for a specific team and app pair in conjunction with a header specifying the target team_member_id , in order to operate on behalf of the team administrator, to the extent allowed by that app’s permission.
+ When using Admin Authentication, the specified team_member_id must refer to a team administrator. Whereas Dropbox-API-Select-User enables acting on behalf of a team member, Dropbox-API-Select-Admin to enables access to & operations on any team owned content.
+ Specifically, there are two different modes for Dropbox-API-Select-Admin header that calls may support:
+ Whole Team The endpoint can access content of team folders and team spaces as well as the team members’ home namespaces.
+ Team Admin The endpoint can access content of team folders and team spaces but not the team members’ home namespaces.
+ In general, Whole Team is supported by read-only endpoints in order to simplify referring to and traversing team-owned content: a caller can specify an admin, rather than determining the member with access with Dropbox-API-Select-User .
+ Conversely, Team Admin is supported by mutable calls in order to perform particular actions an administrator (rather than user) - which may be a required permission for some operations within team spaces.
+ Not all User Authentication calls support this admin mode; refer to the API documentation of the given method.
+ Example: 
+ curl -X POST " https://api.dropboxapi.com/2/users/get_current_account " \ 
+ --header " Authorization: Bearer <OAUTH2_ACCESS_TOKEN> " \ 
+ --header " Dropbox-API-Select-Admin: <TEAM_MEMBER_ID> " 
+ App Authentication
+ This type can either use the app’s own app key and secret, or an app auth token. This type of authentication doesn’t identify a specific user or team. If using the app key and secret, they are transmitted in place of a username and password using “HTTP basic access authentication”.
+ Example: 
+ When supplying the app key and secret for App Authentication, the app key and secret are given in place of the HTTP username and password, respectively. This can be done either as separate strings, as shown in the first two examples below, or as an base64-encoded Basic authorization string in the Authorization header, as in the third example below.
+ curl -X POST " https://content.dropboxapi.com/2/files/get_thumbnail_v2 " -u " <APP_KEY>:<APP_SECRET> " \ 
+ --header " Dropbox-API-Arg: { \" resource \" : { \" .tag \" : \" link \" , \" url \" : \" https://www.dropbox.com/s/u0bdwmkjmqld9l2/dbx-supporting-distributed-work.gif?dl=0 \" }, \" format \" : \" jpeg \" , \" size \" : \" w64h64 \" , \" mode \" : \" strict \" } " 
+ curl -X POST " https://<APP_KEY>:<APP_SECRET>@content.dropboxapi.com/2/files/get_thumbnail_v2 " \ 
+ --header " Dropbox-API-Arg: { \" resource \" : { \" .tag \" : \" link \" , \" url \" : \" https://www.dropbox.com/s/u0bdwmkjmqld9l2/dbx-supporting-distributed-work.gif?dl=0 \" }, \" format \" : \" jpeg \" , \" size \" : \" w64h64 \" , \" mode \" : \" strict \" } " 
+ curl -X POST " https://content.dropboxapi.com/2/files/get_thumbnail_v2 " \ 
+ --header " Authorization: Basic <base64(APP_KEY:APP_SECRET)> " \ 
+ --header " Dropbox-API-Arg: { \" resource \" : { \" .tag \" : \" link \" , \" url \" : \" https://www.dropbox.com/s/u0bdwmkjmqld9l2/dbx-supporting-distributed-work.gif?dl=0 \" }, \" format \" : \" jpeg \" , \" size \" : \" w64h64 \" , \" mode \" : \" strict \" } " 
+ To produce the encoded string in the last example, you would base64 encode the app key and app secret, separated by a : . For example, if your app key was aaaaaaaaaaaaaaa , and your app secret was bbbbbbbbbbbbbbb , you would base64 encode aaaaaaaaaaaaaaa:bbbbbbbbbbbbbbb , resulting in YWFhYWFhYWFhYWFhYWFhOmJiYmJiYmJiYmJiYmJiYg== .
+ When using an app auth token, it is supplied as a bearer token in an authorization header.
+ curl -X POST " https://content.dropboxapi.com/2/files/get_thumbnail_v2 " \ 
+ --header " Authorization: Bearer <OAUTH2_APP_AUTH_TOKEN> " 
+ --header " Dropbox-API-Arg: { \" resource \" : { \" .tag \" : \" link \" , \" url \" : \" https://www.dropbox.com/s/u0bdwmkjmqld9l2/dbx-supporting-distributed-work.gif?dl=0 \" }, \" format \" : \" jpeg \" , \" size \" : \" w64h64 \" , \" mode \" : \" strict \" } " 
+ No Authentication
+ A small number of API calls do not require authentication, as they require a specific parameter value previously provided by Dropbox, and return limited information.
+ Example: 
+ curl -X POST " https://notify.dropboxapi.com/2/files/list_folder/longpoll " \ 
+ --header " Content-Type: application/json " \ 
+ --data " { \" cursor \" : \" ZtkX9_EHj3x7PMkVuFIhwKYXEpwpLwyxp9vMKomUhllil9q7eWiAu \" , \" timeout \" : 30} " 
+ DesktopMenu) -->
+
+[Page: /basic]
+Dropbox Basic (Free account) - Dropbox 
+ Skip to main content 
+ Get a Dropbox free account
+ Sign up for 2 GB of storage, and start accessing and sharing photos, documents, and other files from any device.
+ Sign up for free 
+ Already have an account? Sign in 
+ Access files anywhere
+ With Dropbox Basic, it’s easy to get to your files from multiple devices—computers, phones, and tablets—for free:
+ Windows and Mac: Install our app, and everything in your account will appear in the Dropbox folder on your computer.
+ Web: Sign in to dropbox.com to access everything you’ve stored on Dropbox from any browser—no software installation required.
+ iOS and Android: Take your files on the go with our mobile app, and preview over 175 file types from anywhere.
+ Free up hard drive space
+ It’s all too easy to fill up your computer’s hard drive space with documents, photos, and videos. With Dropbox, you can easily free up hard drive space by storing your files and folders as online-only. Best of all, you still have access to your files without uninstalling programs, deleting files, or lugging around an external hard drive.
+ Back up files
+ From photos and videos to presentations and tax paperwork, Dropbox Basic helps you keep all your most important—and irreplaceable—files safe:
+ File sync: Back up anything by storing it in the Dropbox folder on your computer. And with our desktop and mobile apps, you can automatically upload photos and videos to Dropbox from your phone, camera, or SD card.
+ File recovery: Accidentally deleted a file from your Dropbox? No problem. You can easily restore anything you’ve deleted in the past 30 days from dropbox.com.
+ Version history: If you ever change your mind, you can roll a file back to any version saved to Dropbox in the past 30 days.
+ Share and collaborate on files
+ Copying files over to a USB stick and “file too big to attach” errors are a thing of the past. Dropbox Basic makes it easy to securely send large files to anyone , and collaborate easily on the files you share.
+ Shared links: Easily create a link for any file in your Dropbox that you can paste into an email, chat, or text. Recipients won’t need a Dropbox account—they can click the link to view and download the file.
+ File previews: Anyone visiting your shared links can preview over 175 file types and add comments—no special software required.
+ Seamless collaboration: It’s hard to keep track of important attachments in a crowded inbox. Dropbox makes it easy to connect and collaborate , whether you’re sharing files with a friend or working with a large team.
+ Choose your billing cycle Billed monthly 
+ Billed yearly 
+ Control your workflow
+ Control your workflow
+ Control your workflow
+ Control your workflow
+ Basic
+ Basic
+ Free 
+ Free 
+ Get started 
+ Plan highlights
+ For 1 person 
+ 2 GB of storage 
+ Automatically back up your computer files 
+ Connect up to 3 devices 
+ Frequently asked questions
+ Is Dropbox Basic right for me? 
+ Dropbox Basic is our entry-level plan, offering 2 GB of space that you can use to store and access your files from multiple devices.
+ How much space does Dropbox Basic include? 
+ You can store 2 GB of files with Dropbox Basic. We also offer paid plans with 2 TB or more of storage.
+ Is Dropbox Basic secure? 
+ The security of your files is our top priority. Dropbox protects files in transit between our apps and our servers, and at rest. We’ve also created a privacy policy that clearly describes when we collect your information and the steps we take to protect it. In addition, we offer tools like two-step verification and an account security page where you can easily monitor linked devices, active web sessions, and third-party apps with access to your account. You can learn more about how we keep your files safe on our Security page .
+ What devices can you use Dropbox on? 
+ The Dropbox desktop app runs on Windows, Mac, and Linux operating systems. Apps are also available for iOS, Android, and Windows mobile devices. And you can transfer and download files from dropbox.com using most modern browsers. For more details, visit our help center article on system requirements .
+ How do I back up important files with Dropbox? 
+ You can easily back up files to Dropbox by installing our desktop and mobile apps, or by signing in to dropbox.com. With our desktop app installed, all you need to do is save files to the Dropbox folder on your computer. In our mobile app, you can upload files from your phone or tablet and use your device’s camera to scan documents to Dropbox. And on the web, you can drag and drop files from your desktop right into your browser to upload them to Dropbox.
+ Can I keep my work and personal files separate? 
+ Yes! Users on our team plans can have both a personal and work Dropbox on any computer, mobile device, and on dropbox.com. This means you can keep your files separate and accessible from anywhere. To learn more, visit our help center article on connecting personal and work Dropbox accounts .
+ Get a Dropbox free account
+ Sign up for free
+
+[Page: /business/trust/privacy/account-protection]
+Account Protection With Dropbox - Dropbox 
+ Skip to main content 
+ Keep your data private
+ Dropbox Business includes tools for admins and end users to further protect their accounts and data. 
+ Here are just a few of the features that give you the control you need to help keep important data where it belongs:
+ Create membership and visibility settings, including view-only permissions for shared folders, as well as passwords and expirations on shared links.
+ Integrate user provisioning methods such as Active Directory and single sign-on.
+ Track and terminate web browser sessions, unlink devices, and view and revoke third-party app access to user accounts.
+ Connect a personal and a work Dropbox to enable a clear separation of business and personal data.
+ Reset passwords for the team or on a per-user basis, track which team members have two-step verification enabled, and ensure it remains enabled.
+ Remotely wipe Dropbox data and local copies of files from both computers and mobile devices, as well as deprovision a user and transfer that user’s account to another user on the team.
+ Learn more about the Dropbox Business tools and features that give administrators control and visibility .
+ We also provide users with tools that, in conjunction with their businesses’ own security policies, help protect their accounts and keep important work data private:
+ Choose strong, unique passwords
+ By creating strong, unique passwords for each website, app, and other online accounts — and guarding them closely — you’ll help keep your Dropbox and other accounts safe.
+ Enable two-step verification
+ This is an optional — but highly recommended — security feature that adds an extra layer of protection to your account. Once two-step verification is enabled, Dropbox will require your password and a six-digit security code sent via text message or a separate authentication app when signing in or linking a new device.
+ Adjust security settings
+ From the Security page , you can easily monitor linked devices, active web sessions, and third-party apps with access to your account. Something doesn’t look right? You can cut off access to any with a click.
+ Monitor account activity
+ From the Events page , up-to-date account activity information is available for shared folders and active sharing links, along with a running log of individual file and folder edits, additions, and deletions. From the Profile page , you can also opt to receive notifications whenever a new device or app is linked to your account.
+ The best sharing and storage solution for your business
+ Try free for 30 days 
+ or purchase now
+
+[Page: /business/upgrade-account]
+Upgrade Account - Dropbox Business 
+ Skip to main content 
+ Everything you need for work, all in one place
+ Finally all your tools, content, and collaborators are accessible from the same place. Dropbox Business is more than secure storage—it&#x27;s a smart, seamless way to optimize your existing workflow.
+ Start your free trial 
+ Cancel anytime 
+ Find the Dropbox Business plan for you
+ Choose your billing cycle Billed monthly 
+ Billed yearly 
+ Best Value 
+ Best Value 
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ Standard
+ Enterprise
+ $15 / user / month 
+ Contact sales for pricing 
+ Try for free 
+ or purchase now 
+ For 1 person or more 
+ Starts at 3 TB for the team 
+ Stay connected across all devices 
+ 180 days to restore deleted files 
+ Transfer files up to 100 GB 
+ Integrate with leading AI tools 
+ Edit PDFs and get signatures 
+ Brand your files to share 
+ Password protect files 
+ Get team folders for organization 
+ Manage team sharing 
+ Create groups and roles 
+ Admin control 
+ Best Value 
+ For companies
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ Advanced
+ Enterprise
+ $24 / user / month 
+ Contact sales for pricing 
+ Try for free 
+ or purchase now 
+ For 3 people or more 
+ Starts at 15 TB for the team 
+ Stay connected across all devices 
+ 1 year to restore deleted files 
+ Transfer files up to 100 GB 
+ Integrate with leading AI tools 
+ Edit PDFs and get signatures 
+ Brand your files to share 
+ Password protect files 
+ Get team folders for organization 
+ Manage team sharing 
+ Create groups and roles 
+ Tiered-admin management 
+ End-to-end encryption 
+ Advanced key management 
+ Compliance tracking 
+ Single sign-on 
+ Best Value 
+ For large organizations
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ Enterprise
+ Enterprise
+ Contact sales for pricing 
+ Contact sales for pricing 
+ Contact us 
+ Customize number of users 
+ Customize storage 
+ Transfer up to 250 GB 
+ Integrate with leading AI tools 
+ Enterprise-grade security 
+ Integrations with best in-class security solutions 
+ Live support from dedicated experts 
+ Get the most out of Dropbox
+ eSign with Dropbox Sign
+ The Essentials bundle provides you with more storage and an easy way to request or add unlimited legally binding eSignatures to documents stored within a seamless Dropbox workflow. 
+ Do less switching between tools
+ Tackle your everyday tasks with one tool. Create, edit, and share cloud content from Google Docs, Sheets, and Slides, Microsoft Office files, and Dropbox Paper right from Dropbox.  
+ Send and track documents
+ With the Standard + DocSend bundle you get real-time analytics, advanced document controls, personalized document spaces, and more. 
+ Collaboration, any time, anywhere
+ Create, edit, and share cloud content from Google Docs, Sheets, Slides, and Microsoft Office files right from Dropbox. Easily access and share your work from any computer, mobile device, or web browser. 
+ Securely send large files
+ Dropbox Transfer is the safe, easy way to deliver final files of any size to colleagues and clients. Set custom passwords and expiration dates to protect your work, and confirm delivery with download notifications. 
+ Get peace of mind
+ A secure, distributed infrastructure —plus admin tools for control and visibility—keep your company’s data safe on Dropbox. 
+ More than 500,000 teams use Dropbox Business
+ “Our team is constantly working across different countries, time zones and offices. A lot of solutions can accommodate that now, but none make it as seamless as Dropbox and Dropbox Paper.”
+ View case studies 
+ Morten Thomsen Global IT Lead 
+ “With Dropbox, educators can collaborate securely with colleagues on any device and platform — across campus and across the world.”
+ Tina Thorstenson CISO 
+ “We’re receiving tons of pictures and are constantly overriding things that couldn’t be managed in email. Dropbox saves us a huge amount of miscommunication by allowing the latest versions of documents to be available to everybody at all times.”
+ Andrew Hall Product Manager 
+ “Hearst has more than 360 businesses. Dropbox makes a significant impact by providing a central hub for our teams to access all of the content they need from anywhere, on any device. It has completely changed the way these teams work.”
+ Nicole D’Antuono VP of Employee Applications 
+ “Our users were accomplishing a lot of great work on Dropbox without any support. Deploying a central account allowed that great work to continue, uninterrupted, in the most secure way possible.”
+ View case studies 
+ Elias Eldayrie Vice President & CIO 
+ “We’ve always been a pioneer in the card industry, and we think of ourselves in the same way in the digital space. Thankfully, we pretty much have three words internally that keep us creating great work: ‘It’s on Dropbox.&#x27;”
+ Chris R. Vaccaro Director, Live Operations & Editor-in-Chief, Mobile 
+ “We’ve always had a global presence, but before Dropbox, we couldn’t be as spread out as we are now. Dropbox makes our employees feel like they’re all in the same office.”
+ Daniel Jiménez Head of Mobile Product & Design 
+ “We strive to create a world-class work environment with the top technologies available. We’ve achieved a return on investment of over 500% with Dropbox, while taking a giant step to modernize our IT strategy and enhance collaboration across our company.”
+ Nichole Boatsman IT Director 
+ 01/08 
+ Bring Dropbox Business to your business
+ Start your free trial
+
+[Page: /features/security/personal]
+Personal Dropbox Account - Best-in-Class Security 
+ Skip to main content 
+ Dropbox Plus
+ Back up everything—with space to spare
+ Have one less thing to worry about. Get tools to help secure all your personal data, and 2,000 GB of encrypted cloud storage—only with Dropbox Plus.
+ Purchase now 
+ Go from idea to done with Dropbox
+ Store and share files. Sign and send documents. All with Dropbox.
+ Choose your billing cycle Billed monthly 
+ Billed yearly 
+ Best Value 
+ For personal use
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ Plus
+ Standard
+ $9.99 / month 
+ $15 / user / month 
+ Buy now 
+ For 1 person 
+ 2 TB of storage 
+ Stay connected across all devices 
+ 30 days to restore deleted files 
+ Transfer files up to 50 GB 
+ Integrate with leading AI tools 
+ Edit PDFs and get signatures 
+ Best Value 
+ Best Value 
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ Standard
+ Standard
+ $15 / user / month 
+ $15 / user / month 
+ Try for free 
+ or purchase now 
+ For 1 person or more 
+ Starts at 3 TB for the team 
+ Stay connected across all devices 
+ 180 days to restore deleted files 
+ Transfer files up to 100 GB 
+ Integrate with leading AI tools 
+ Edit PDFs and get signatures 
+ Brand your files to share 
+ Password protect files 
+ Get team folders for organization 
+ Manage team sharing 
+ Create groups and roles 
+ Admin control 
+ Best Value 
+ For companies
+ For teams and professionals
+ For teams and professionals
+ For teams and professionals
+ Advanced
+ Standard
+ $24 / user / month 
+ $15 / user / month 
+ Try for free 
+ or purchase now 
+ For 3 people or more 
+ Starts at 15 TB for the team 
+ Stay connected across all devices 
+ 1 year to restore deleted files 
+ Transfer files up to 100 GB 
+ Integrate with leading AI tools 
+ Edit PDFs and get signatures 
+ Brand your files to share 
+ Password protect files 
+ Get team folders for organization 
+ Manage team sharing 
+ Create groups and roles 
+ Tiered-admin management 
+ End-to-end encryption 
+ Advanced key management 
+ Compliance tracking 
+ Single sign-on 
+ Connect all your devices
+ Seamlessly sync content between all your devices—even across platforms. Install the Dropbox app on any phone, tablet, or computer to save and access all your files instantly.
+ Sync files and folders 
+ Disaster-proof your data
+ Now you can restore or recover anything in your Dropbox account for up to 30 days. That means all your photos, PDFs, and personal files are safe from unwanted edits, deletions, hackers, and viruses.
+ Lost device? Don’t worry—your data’s safe
+ Misplaced phone? Stolen laptop? With Dropbox, your data is still safe and under your control. You can remotely wipe any device—or sync your files to a new one—in just a few clicks.
+ Remote wipe your device and data 
+ See more features
+ Cloud storage
+ Keep all your files safe with powerful online cloud storage
+ Explore cloud storage 
+ Save space
+ Free up disk space with safe and secure online storage
+ Explore saving space 
+ Send large files
+ Send large files of any type to anybody, worry-free
+ Explore sending large files 
+ File backup
+ Backup your files and protect against data loss simply and securely
+ Explore online backup 
+ Rest easy—all your content is safe in Dropbox
+ Purchase now
+
+[Page: /resources/what-is-2fa]
+What is Two-Factor Authentication (2FA)? - Dropbox 
+ Skip to main content 
+ Back to Secure and protect 
+ What is two-factor authentication or 2FA?
+ 7 min read
+ •
+ Jan 16, 2025
+ Set up 2FA 
+ Learn more 
+ Table of contents
+ Two-factor authentication explained 
+ Why use two-factor authentication? 
+ Beyond two-factor authentication 
+ How to get 2FA with Dropbox 
+ Keep your data safe and benefit from 2FA with Dropbox 
+ When it comes to your organization’s online security, you can’t be too careful. The volume and sophistication of cyber security threats are increasing at a rapid rate, with three in four US companies at risk of a material cyberattack (incidents that have a significant impact on a company&#x27;s financial position). As a result, many companies are casting a critical eye over their current info security practices. 
+ After all, a significant amount of personal, financial, and confidential information is held in your business’s online accounts, and data breaches frequently result in revenue losses. For most organizations, there’s one simple step that can help improve your employees’ cyber security discipline across the board: two-factor authentication (2FA), also referred to as multi-factor authentication (MFA).
+ Two-factor authentication explained
+ Authentication is the process of verifying the identity of a user in order to establish access to a computer system or online account. There are three main “factors” for authentication: 
+ A knowledge factor (something you know, e.g., a password or a PIN).
+ A possession factor (something you have, e.g., a mobile device or an ID card).
+ An inherence factor (something you are, e.g., a fingerprint or your voice).
+ There are also “location factors” and “time factors”, but these are much less common. Two-factor authentication, or 2FA, simply means that your security system uses two of these factors.
+ In other words, two-factor authentication is a second layer of security on top of your password or PIN number. If—after logging in with your password—you’ve ever been asked to enter a numerical code sent to you on your mobile device to prove your identity, you’re already familiar with 2FA. 
+ However, getting a code by text isn’t the only two-factor authentication method. There is a broad range of options, including authenticator apps, push notifications, software tokens, voice-based authentication, and so on. In most cases, however, the extra layer of security is likely to be an SMS text message code.
+ What is an authenticator app?
+ While you’re likely to be familiar with most types of two-factor authentication, such as text messages, voice-based messages, and push notifications, you may be a little less familiar with authenticator apps. In fact, they’re relatively simple. 
+ So, what is an authenticator app? Essentially, it’s an app on your mobile phone that generates digital verification codes which can be used to verify your identity when logging into a website or app. There are many different authenticator apps to choose from, including Google Authenticator App and Duo Mobile —all of which follow roughly the same procedure.
+ Authenticator apps are generally considered to be a slightly more secure form of 2FA than receiving an SMS text message passcode. That’s because, technically speaking, SMS messages aren’t something you have, but something you’re sent. 
+ As such, there’s a small chance that hackers could trick your carrier into porting your mobile phone number into a different device (a type of fraud referred to as a “SIM swap”). Assuming they already have your password, this would enable an attacker to gain access to your account. By contrast, the verification codes for authenticator apps expire very quickly (usually after 20 or 30 seconds) and the code stays entirely within the app.
+ How does two-factor authentication work?
+ Once you’ve set up two-factor authentication on your system—whether you’re using an authenticator app, push notifications, or SMS messages—it’s relatively simple to use. Here’s a step-by-step guide to the 2FA process itself:
+ The user is prompted to log in by the website or app.
+ The user enters their username and password, fulfilling the first security factor.
+ After the site recognizes the user, they’ll be prompted to initiate the second step of the login process. At this stage, the user needs to prove that they have something, like an ID card or a smartphone, fulfilling the second security factor, i.e., “possession”. In most cases, users will be sent a one-time security passcode that they can use to confirm their identity.
+ Finally, the user enters the security key and after the site has authenticated it, they’re granted access.
+ Why use two-factor authentication?
+ The importance of securing your business’s files and content can’t be overestimated. Global cybercrime damages are estimated to reach around $15.63 trillion annually by 2029. The costs associated with cybercrime include the destruction/misuse of data, stolen money, post-attack disruption, the theft of intellectual property, and lost productivity. 
+ You also need to think about the potential expenses associated with restoring hacked data, forensic investigation, and reputational damage.
+ As threats become increasingly sophisticated and the rest of the world implements two-factor authentication as standard, businesses that don’t use 2FA risk leaving themselves vulnerable to predatory hackers. It’s like not wearing a seatbelt because the car has airbags. Technically, you’re protected, but nowhere near as protected as you could be.
+ Why you shouldn’t rely on “strong” passwords
+ When it comes to online security, the most common authentication factor⁠, by far, is the username/password combo. This means that most systems only use single-factor authentication. Although passwords have been the go-to info security standard for decades, there are several reasons why it may finally be time to move beyond passwords altogether:
+ 1. Humans tend to have poor memories
+ Unfortunately, this is a given. Plus in many cases, the passwords we choose are comically easy to guess: “password”, “12345”, “qwerty”, and so on.
+ 2. People have more online accounts than they did when passwords were first introduced
+ This means there’s often simply too many passwords to remember. This can lead to “password recycling”—when the same password is used for multiple accounts, making it easier for hackers to gain access.
+ 3. Some websites use security questions
+ For example, “What’s your mother’s maiden name?” as a kind of second factor. However, with such an abundance of personal information available online, hackers are often able to guess the answers to these relatively basic questions. 
+ It’s important to note that security questions are simply a second knowledge factor, and this practice isn’t “real” 2FA. You’re essentially backing up a password with another password. 
+ Bottom line: Passwords are the lowest form of security, which is why two-factor authentication is increasingly becoming the basic security standard for enterprises.
+ Beyond two-factor authentication
+ The benefits associated with two-factor authentication are significant. But 2FA isn’t the final destination for info security. Far from it. 
+ After all, two-factor authentication isn’t foolproof. If an attacker wanted to gain access to your computer systems, a physical search of your premises could lead them to find an employee ID or discarded storage device containing passwords. 
+ Furthermore, hackers can intercept text messages through phishing emails, potentially enabling them to bypass the second authentication factor. Ultimately, 2FA is only as strong as the weakest element of the security process.
+ Alternatives to two-factor authentication
+ So, what else is out there? Well, 2FA is simply a subset of a much larger concept: multi-factor authentication (MFA).
+ Theoretically, you could have three-factor authentication, four-factor authentication, five-factor authentication, and so on ad infinitum. While ordinary users aren’t likely to ever use anything beyond two-factor authentication, people who work in high-security environments may be required to use something like three-factor authentication (3FA), which typically involves the use of an inherence factor, such as a fingerprint or iris scan.
+ How to get two-factor authentication (2FA) with Dropbox
+ It’s clear that enabling two-factor authentication (2FA) can have serious benefits for your business, but the process of unrolling 2FA across your entire company can be a little daunting. Fortunately, it doesn’t have to be too much of a challenge. 
+ Dropbox offers two-factor authentication and provides the option for admins to require it for the team within the admin console. If you&#x27;re an existing Dropbox user, you can set up 2FA here —whether you&#x27;re an admin, a team member, or an individual user. Admins can also require their team to set up 2FA , right from the admin console.
+ If you set up 2FA, Dropbox will require you to provide a second form of authentication (e.g., a six-digit code via sms or authenticator app, or a security key) whenever logging in to an account or linking a new tablet, computer, or phone.
+ In addition, Dropbox offers a number of password protection features that can help you secure and control your business’s sensitive information, while you can also set expiration dates for shared links and password protect your PDFs and folders.
+ There are other cyber security measures that you can implement with Dropbox to help secure your files even more effectively. Cloud data protection is our top priority, and cloud security is an ideal complement to two-factor authentication. With multiple layers of protection across a distributed cloud infrastructure, you can ensure that all your online files are afforded the same level of protection. Plus, enterprise-grade encrypted cloud storage can be used to comply with most global regulatory standards.
+ Discover powerful, secure cloud storage
+ Access your files any time, sync seamlessly, and enhance security with Dropbox. Say goodbye to hard drive limitations.
+ Try cloud storage 
+ Keep your data safe and benefit from 2FA with Dropbox
+ Relying on a single password as only protection on your files and data leaves you vulnerable to preventable threats. With 2FA, you make it far harder for bad actors to access your content.
+ Whether you’re already a Dropbox user looking for a little extra peace of mind, or you need a cloud storage solution with multiple layers of protection —Dropbox has you covered.
+ Sign up for an account to start benefiting from two-factor authentication today.
+ Explore related resources
+ How to check and improve your password security
+ Safeguard your online accounts with strong passwords. Learn tips for creating secure credentials, managing them efficiently, and preventing unauthorized access in this essential guide.
+ View article 
+ How to create a ZIP file or folder on your Mac or Windows PC
+ Creating ZIP files and folders can save valuable space on your device or in the cloud. Find out how to ZIP files and folders quickly with our complete guide.
+ View article 
+ What is File Transfer Protocol (FTP)?
+ Not sure what FTP is? Find out how it works and explore easier file-sharing alternatives like Dropbox Transfer.
+ View article 
+ Protect your files, folders, and content
+ Keep your data safe
+
+[Page: /templates/bill-of-sale/al]
+User-Friendly Alabama Bill of Sale Template - Dropbox 
+ Skip to main content 
+ Formswift: Save time today with our Alabama bill of sale template
+ Save time with our customizable Alabama bill of sale template. Create a bill of sale in the state of Alabama with ease.
+ Create your document 
+ What is an Alabama bill of sale?
+ An Alabama bill of sale is a legal document that serves as proof of transfer of ownership for various items, such as vehicles, boats, or personal property. It outlines the details of the transaction, including the buyer, seller, purchase price, and item description.
+ Try our template 
+ Most commonly used Alabama bills of sale
+ Alabama motor vehicle bill of sale 
+ You need a motor vehicle bill of sale when buying or selling a vehicle in Alabama. It includes information about the vehicle, such as make, model, year, VIN, and an odometer disclosure statement.
+ Boat bill of sale 
+ If you&#x27;re buying or selling a boat in Alabama, a boat bill of sale is necessary for the purpose of registration. It includes details about the boat, such as hull identification number, make, model, year, length, and any additional equipment or accessories.
+ Personal property bill of sale 
+ Create an Alabama personal property bill of sale when buying or selling personal belongings, such as electronics, furniture, or appliances. It documents the item being sold, its condition, and the agreed-upon purchase price.
+ How to write an Alabama bill of sale
+ Start by collecting all the necessary details about the buyer, seller, and the item being sold. That includes its description, condition, and any applicable identification numbers.
+ Use our customizable Alabama bill of sale form, which ensures you include all the essential information required by law. Fill in the relevant fields accurately.
+ Provide clear and concise descriptions of the item being sold. For example, the make, model, year, color, dimensions, or any other relevant details specific to the transaction.
+ Include any additional terms or conditions agreed upon by the buyer and seller, such as warranties, payment terms, or contingencies.
+ Finally, make sure your document has the correct date of sale, the seller’s signature, and the buyer&#x27;s signature to ensure its valid.
+ Frequently asked questions
+ Is an Alabama bill of sale required for all transactions? 
+ While not legally required for all transactions, an Alabama bill of sale is highly recommended. It serves as proof of ownership transfer and protects both the buyer and seller’s interests.
+ Can I create my own Alabama bill of sale? 
+ Yes, you can create your own Alabama bill of sale. However, it’s important to ensure that you include all the necessary information and adhere to the legal requirements. Using a customizable template can simplify the process.
+ Do I need to notarize an Alabama bill of sale? 
+ Notarization isn’t required for an Alabama bill of sale unless specified by law or for specific transactions, such as motor vehicle sales. However, consulting with a notary public can add an extra layer of authenticity.
+ Can I use a generic bill of sale for Alabama transactions? 
+ While a generic bill of sale may contain some relevant information, we advise you use a specifically tailored Alabama bill of sale template. This will ensure compliance with state laws and requirements.
+ Are there any specific regulations for vehicle bill of sale in Alabama? 
+ Yes, Alabama has specific regulations for vehicle bill of sale. For example, you must disclose accurate odometer readings and provide the vehicle identification number (VIN) on the document.
+ Is an Alabama bill of sale required to register a motor vehicle? 
+ An Alabama bill of sale is required to register a motor vehicle. It serves as proof of ownership transfer and includes important details about the vehicle, such as make, model, and VIN. It’s important to note that a bill of sale is different from your vehicle registration.
+ Is an Alabama bill of sale required to register a boat? 
+ An Alabama bill of sale is generally required to register a boat. It helps establish ownership and provides vital information about the boat, such as hull identification number, make, model, and year.
+ Is an Alabama bill of sale required to register a gun in the state? 
+ No, a firearm bill of sale isn’t required to register a gun in the state. However, it&#x27;s crucial to follow all applicable federal, state, and local laws and regulations regarding the purchase and ownership of firearms.
+ Looking for other Alabama documents?
+ Alabama vehicle bill of sale
+ Create a bill of sale specifically for selling a motor vehicle.
+ View template 
+ Alabama promissory note
+ Set out the terms of a loan, including interest and the repayment schedule.
+ View template 
+ Alabama power of attorney
+ Empower someone you trust to act on your behalf in legal matters.
+ View template 
+ Alabama non-disclosure agreement
+ Protect your business with a binding confidentiality agreement.
+ View template 
+ Alabama lease agreement
+ Protect yourself and your tenant throughout their tenancy.
+ View template 
+ Formswift is not a law firm and does not provide legal advice or representation. Formswift&#x27;s documents are not a substitute for the advice of an attorney. Communications between you and Formswift are governed by the Formswift  Privacy Policy  but are not protected by the attorney-client privilege or as work product. Formswift does not provide advice, opinions, or recommendations about individual&#x27;s legal rights, options, strategies, or the selection of forms. Your use of the Formswift website and forms is governed by the Formswift  Terms of Service .
+ Try creating an Alabama bill of sale
+ Create form
+
+[Page: /templates/bill-of-sale/ar]
+User-Friendly Arkansas Bill of Sale Template - Dropbox 
+ Skip to main content 
+ Formswift: Create an Arkansas bill of sale in minutes with our customizable template
+ Streamline your transactions with our Arkansas bill of sale template. Effortlessly create your bill of sale document, saving you time and ensuring a smooth transfer of ownership in compliance with Arkansas regulations.
+ Create your document 
+ What is an Arkansas bill of sale?
+ An Arkansas bill of sale is a legal document that serves as proof of ownership transfer for various items, such as vehicles, boats, or personal property. It outlines the details of the transaction, the buyer’s name, seller’s name, item description, sale price, and any warranties or conditions.
+ Try our template 
+ Most commonly used Arkansas bill of sale
+ Vehicle bill of sale 
+ This is the most frequently used type of Arkansas bill of sale. The DMV requires it for buying or selling a vehicle, ensuring a smooth transfer of ownership and protecting both parties involved. An Arkansas vehicle bill of sale is important for a vehicle registration application.
+ Boat bill of sale 
+ If you&#x27;re buying or selling a boat in Arkansas, a boat bill of sale is necessary. It documents the transfer of ownership, including details about the vessel, its registration number, hull identification number (HIN), purchase price, and any applicable warranties.
+ General bill of sale 
+ This document can prove the transfer of ownership of any personal property.
+ How to write an Arkansas bill of sale
+ Writing an Arkansas bill of sale is a straightforward process. Simply follow these steps:
+ Collect all the relevant buyer information, seller information, the purchase date, and the item being sold.
+ Include accurate descriptions, such as make, model, odometer readings, vehicle identification number (VIN), or serial numbers.
+ Simplify the process by using our user-friendly Arkansas bill of sale template. It will guide you through each section, ensuring you cover all necessary information.
+ Depending on the type of transaction, you may need to include specific clauses, such as warranty disclaimers or "as-is" statements.
+ Our template provides options to customize your bill of sale to meet your exact needs—from standard information to adding clauses specific to the sale.
+ Frequently asked questions
+ Is an Arkansas bill of sale legally required? 
+ While Arkansas doesn’t mandate a bill of sale for all transactions, it’s highly recommended as it protects both the buyer and seller by documenting the transfer of ownership.
+ Can I create my own Arkansas bill of sale? 
+ Yes, you can create your own Arkansas bill of sale. However, using a professionally designed template ensures accuracy and saves time.
+ Do I need a notary public to sign the bill of sale? 
+ In Arkansas, a notary public&#x27;s signature isn’t mandatory for a bill of sale. However, it’s advisable to have the document notarized to add an extra layer of authenticity.
+ Are digital or electronic signatures accepted? 
+ Yes, Arkansas recognizes digital or electronic signatures as valid for a bill of sale, as long as they meet the requirements outlined in the Electronic Signatures in Global and National Commerce (ESIGN) Act. It can still be prudent to retain a physical copy of the bill of sale.
+ Can I use the same Arkansas bill of sale for different types of transactions? 
+ It’s recommended to use a specific bill of sale tailored to the type of transaction, such as a vehicle bill of sale or boat bill of sale. This ensures all necessary details are covered.
+ Is an Arkansas bill of sale required to register a motor vehicle? 
+ Yes, an Arkansas bill of sale is required to register a motor vehicle.
+ Is an Arkansas bill of sale required to register a boat? 
+ Yes, an Arkansas bill of sale is required to register a boat. Nevertheless, having a boat bill of sale is beneficial as it documents the transaction details and provides evidence of ownership transfer.
+ Is an Arkansas bill of sale required to register a gun in the state? 
+ No, an Arkansas bill of sale isn’t required to register a gun in the state.
+ Looking for other Arkansas documents?
+ Arkansas vehicle bill of sale
+ Create a bill of sale specifically for selling a motor vehicle.
+ View template 
+ Arkansas promissory note
+ Set out the terms of a loan, including interest and the repayment schedule.
+ View template 
+ Arkansas power of attorney
+ Empower someone you trust to act on your behalf in legal matters.
+ View template 
+ Arkansas non-disclosure agreement
+ Protect your business with a binding confidentiality agreement.
+ View template 
+ Arkansas lease agreement
+ Protect yourself and your tenant throughout their tenancy.
+ View template 
+ Formswift is not a law firm and does not provide legal advice or representation. Formswift&#x27;s documents are not a substitute for the advice of an attorney. Communications between you and Formswift are governed by the Formswift  Privacy Policy  but are not protected by the attorney-client privilege or as work product. Formswift does not provide advice, opinions, or recommendations about individual&#x27;s legal rights, options, strategies, or the selection of forms. Your use of the Formswift website and forms is governed by the Formswift  Terms of Service .
+ Try creating an Arkansas bill of sale
+ Create form
+
+[Page: /templates/bill-of-sale/mt]
+User-Friendly Montana Bill of Sale Template - Dropbox 
+ Skip to main content 
+ Formswift: Save time with our Montana bill of sale form
+ Elevate your selling experience with our Montana bill of sale template. Effortlessly create your documents, save time, and ensure a seamless transfer of ownership for your valuable assets in the beautiful state of Montana.
+ Create your document 
+ What is a Montana bill of sale?
+ A Montana bill of sale is a legal document used to record the transfer of ownership of personal property from one party to another within the state of Montana. It serves as proof of the transaction and outlines the terms and conditions agreed upon by both parties.
+ Try our template 
+ Common types of Montana bill of sale
+ Vehicle bill of sale 
+ When transferring a vehicle in Montana, a motor vehicle bill of sale is helpful. It includes details about the vehicle, such as make, model, year, VIN, odometer disclosure statement, and purchase price. It protects parties and is helpful when submitting documents to the DMV.
+ Firearm bill of sale 
+ If you sell or purchase a firearm in Montana, a firearm bill of sale is important. It documents the transfer of ownership and has information about the firearm, buyer, seller, and sale price. This document ensures compliance with state and federal regulations.
+ General bill of sale 
+ This is used for different types of personal property transactions. It covers items like electronics, furniture, appliances, and more. It includes descriptions and details of the property being sold.
+ How to write a Montana bill of sale
+ Writing a Montana bill of sale is a straightforward process with our template. Simply follow these steps to create a valid and comprehensive document:
+ Gather necessary information: Collect all relevant details about the property being sold, including its description, condition, odometer reading, and any warranties or guarantees.
+ Identify the parties involved: Clearly state the full legal names and addresses of both the buyer and the seller. Include their contact information for future reference.
+ Describe the property: Provide a detailed description of the property being sold. Include identifying information, such as make, model, serial number, or any distinguishing features.
+ State the terms and conditions: Clearly outline the terms of the sale, including the agreed-upon purchase price, payment method, and any additional terms, such as warranties or contingencies.
+ Add signatures and notarization: Both the buyer and the seller must sign the Montana bill of sale. A notary may be required for certain transactions.
+ Frequently asked questions
+ Is a Montana bill of sale legally required? 
+ While not mandatory for all transactions, a Montana bill of sale is highly recommended to establish a clear record of the sale and protect the interests of both parties involved.
+ Can I create my own Montana bill of sale? 
+ Yes, you can create your own Montana bill of sale using our customizable template. Simply fill in the required information and tailor it to your specific transaction.
+ Do I need a Montana bill of sale for private sales? 
+ Yes, it’s advisable to have a Montana bill of sale for private sales, as it provides a legal record of the transaction and protects both the buyer and the seller.
+ Can I use a generic bill of sale form for Montana transactions? 
+ While a generic bill of sale form can be used as a starting point, it’s recommended to customize it according to Montana&#x27;s specific legal requirements and include all necessary details.
+ Is a Montana bill of sale necessary for gift transactions? 
+ Even for gift transactions, it’s recommended to have a Montana bill of sale to document the transfer of ownership and avoid potential disputes in the future.
+ Is a Montana bill of sale required to register a motor vehicle? 
+ No, a Montana bill of sale isn’t required to register a motor vehicle, but it’s highly recommended, as it serves as a legal record of the transaction and protects both the buyer and the seller.
+ Is a Montana bill of sale required to register a boat? 
+ Yes, a boat bill of sale is required to register a boat. It’s an essential document that verifies the transfer of ownership and provides important details about the watercraft.
+ Is a Montana bill of sale required to register a gun in the state? 
+ No, a Montana bill of sale isn’t required to register a gun in the state.
+ Looking for other Montana documents?
+ Montana vehicle bill of sale
+ Create a bill of sale specifically for selling a motor vehicle.
+ View template 
+ Montana promissory note
+ Set out the terms of a loan, including interest and the repayment schedule.
+ View template 
+ Montana power of attorney
+ Empower someone you trust to act on your behalf in legal matters.
+ View template 
+ Montana non-disclosure agreement
+ Protect your business with a binding confidentiality agreement.
+ View template 
+ Montana lease agreement
+ Protect yourself and your tenant throughout their tenancy.
+ View template 
+ Formswift is not a law firm and does not provide legal advice or representation. Formswift&#x27;s documents are not a substitute for the advice of an attorney. Communications between you and Formswift are governed by the Formswift Privacy Policy but are not protected by the attorney-client privilege or as work product. Formswift does not provide advice, opinions, or recommendations about individual&#x27;s legal rights, options, strategies, or the selection of forms. Your use of the Formswift website and forms is governed by the Formswift Terms of Service .
+ Try creating a Montana bill of sale
+ Create form
+
+[Page: /templates/bill-of-sale/va]
+User-Friendly Virginia Bill of Sale Template - Dropbox 
+ Skip to main content 
+ Formswift: Get started with our Virginia bill of sale template
+ Streamline your transactions with our Virginia bill of sale template. With its intuitive customization options, you&#x27;ll save time and ensure accurate documentation, making the process effortless.
+ Create your document 
+ What is a Virginia bill of sale?
+ A Virginia bill of sale is a legal document that provides the transfer of ownership for various items, such as vehicles, boats, or personal property.
+ It outlines the details of the sale, including the buyer and seller information, item description, purchase price, and any warranties or conditions.
+ Try our template 
+ Common types of Virginia bill of sale forms
+ Vehicle bill of sale 
+ A motor vehicle bill of sale is required when selling a car, motorcycle, or other motor vehicle in the state of Virginia.
+ Each document includes information such as vehicle details, model year, vehicle identification number, body type, and odometer reading (odometer disclosure statement). This is beneficial for the vehicle registration application process at the Virginia Department of Motor Vehicles (Virginia DMV).
+ Boat bill of sale 
+ Suggested for transferring ownership of a boat or watercraft in the state of Virginia. It includes information about the vessel, including hull identification number, make, model, and year. The bill of sale will be beneficial when completing the boat registration.
+ Firearm bill of sale 
+ When selling or purchasing a firearm privately in Virginia, a firearm bill of sale is important. It includes details of the firearm, such as make, model, serial number, and any additional accessories included in the sale.
+ General bill of sale 
+ This type of bill of sale covers the sale of personal property in private party sales, such as electronics, furniture, appliances, or valuable items that aren&#x27;t classified as vehicles or real estate. It records the description of the item, condition, sale price, and any applicable warranties.
+ How to write a Virginia bill of sale
+ Start by collecting all the necessary details about the item being sold, including its description, unique identifiers (VIN, HIN, etc.), and any relevant documentation.
+ Include the buyer’s and seller’s contact information, as well as their mailing address.
+ Use our customizable Virginia bill of sale template. Simply fill in the required fields, ensuring accuracy and completeness.
+ If there are specific agreements between the buyer and seller, such as warranties, payment terms, or contingencies, include them in the bill of sale.
+ Ensure the vehicle title or item(s) is free of any liens.
+ Finish off by ensuring both the buyer’s and seller’s signatures are on the form, along with the date of sale.
+ Frequently asked questions
+ Is a Virginia bill of sale legally required? 
+ While a Virginia bill of sale isn’t mandatory for all transactions, it’s highly recommended to have one for your own protection and to establish a clear record of the sale.
+ Can I create my own Virginia bill of sale? 
+ Absolutely. With our customizable template, you can easily create your own Virginia bill of sale tailored to your specific needs. Just ensure all the necessary information is included.
+ Are there specific requirements for a Virginia bill of sale? 
+ Virginia does not have any state-specific requirements for a bill of sale. However, it&#x27;s important to provide accurate and detailed information to avoid potential disputes.
+ Do I need a notary public for my Virginia bill of sale? 
+ In most cases, a Virginia bill of sale does not require notarization. However, certain transactions, such as real estate transfers, may require notarization for validity. It&#x27;s always best to consult with legal professionals for specific requirements.
+ Can I use a generic bill of sale form for my Virginia transaction? 
+ While the general bill of sale form may provide a basic framework for private seller sales, it&#x27;s recommended to use a Virginia-specific bill of sale template to ensure compliance with state laws and regulations.
+ Is a Virginia bill of sale required to register a motor vehicle? 
+ Yes, a Virginia bill of sale is required to register a motor vehicle.
+ Is a Virginia bill of sale required to register a boat? 
+ Similarly, a Virginia bill of sale is mandatory for registering a boat.
+ Is a Virginia bill of sale required to register a gun in the state? 
+ A bill of sale isn’t required to register a gun in the state of Virginia.
+ Looking for other Virginia documents?
+ Virginia vehicle bill of sale
+ Create a bill of sale specifically for selling a motor vehicle.
+ View template 
+ Virginia promissory note
+ Set out the terms of a loan, including interest and the repayment schedule.
+ View template 
+ Virginia power of attorney
+ Empower someone you trust to act on your behalf in legal matters.
+ View template 
+ Virginia non-disclosure agreement
+ Protect your business with a binding confidentiality agreement.
+ View template 
+ Virginia lease agreement
+ Protect yourself and your tenant throughout their tenancy.
+ View template 
+ Formswift is not a law firm and does not provide legal advice or representation. Formswift&#x27;s documents are not a substitute for the advice of an attorney. Communications between you and Formswift are governed by the Formswift Privacy Policy but are not protected by the attorney-client privilege or as work product. Formswift does not provide advice, opinions, or recommendations about individual&#x27;s legal rights, options, strategies, or the selection of forms. Your use of the Formswift website and forms is governed by the Formswift Terms of Service .
+ Try creating a Virginia bill of sale
+ Create form
+
+[Page: /templates/lease-agreement/co]
+User-Friendly Colorado Lease Agreement Template - Dropbox 
+ Skip to main content 
+ Formswift: Fill out our user-friendly Colorado lease agreement template in minutes
+ Create a stress-free renting experience with our Colorado lease agreement template. Tailor it to your needs your rental agreement is clear to all parties—saving time and giving you peace of mind.
+ Create your document 
+ What is a Colorado lease agreement?
+ Unlike a rental application, a Colorado lease agreement is a legal contract.
+ It outlines the terms and conditions between a landlord (lessor) and a tenant (lessee) for renting a residential property in Colorado.
+ Try our template 
+ Most commonly used Colorado lease agreements
+ The most commonly used Colorado lease agreement is the standard residential lease agreement.
+ This covers essentials for tenancy such as rent payments, security deposit, utilities, maintenance responsibilities, and lease duration. It provides clarity and protection for both landlords and tenants.
+ How to write a Colorado lease agreement
+ Writing a Colorado lease agreement is easy with our simple, clear template :
+ Include the names of the landlord and tenant(s) involved.
+ Specify the rental property address and description.
+ Clearly state the term of the lease, including the move-in and move-out dates.
+ Define the rent amount, due date, and acceptable payment methods.
+ Outline the security deposit amount and terms for its return.
+ Include provisions for utilities, maintenance, repairs, and property access.
+ Address rules regarding pets, subleasing, and other specific occupancy terms.
+ Review the agreement with all parties involved and sign it.
+ Which disclosures belong in a Colorado lease agreement?
+ To meet federal and state laws, Colorado lease agreements must include:
+ Lead-based paint disclosure for housing built pre-1978
+ Bedbug disclosure of prior infestations
+ Marijuana disclosure for policies on marijuana use
+ Radon gas disclosure on possible risks
+ Crime-free addendum, if local ordinances require
+ What you need to know about Colorado lease agreement deposits
+ Colorado law regulates the handling of security deposits, making sure they handle a tenant’s deposit correctly. As part of this, landlords must:
+ Provide a written receipt for the deposit 
+ Doing so ensures there is a record for all parties—landlord or property manager, and tenant.
+ Hold the deposit in a separate account 
+ Landlords are also not allowed to use it for personal expenses.
+ Return the deposit to the renter within one month after the lease ends 
+ Tenants shouldn’t be left to wait for too long after they leave a property, and this part of Colorado law makes sure the landlord promptly returns any deposit to their former tenants.
+ Provide an itemized list of any deductions 
+ Details any damage beyond normal wear and tear, with costs against each item. These costs are then deducted from a tenant’s deposit before it is returned to them.
+ Be transparent and clear on the deposit’s status 
+ Landlords are required to notify the tenant of the deposit&#x27;s status and reasons for deductions, if applicable.
+ Being clear and transparent makes the whole rental process much easier for both sides, and means there’s less of a reason for problems or disagreements to arise.
+ Frequently asked questions
+ Can I modify the Colorado lease agreement to suit my specific needs? 
+ Yes, our state of Colorado lease agreement is fully customizable, allowing you to tailor it to your unique requirements while adhering to the legal framework.
+ Is a written lease agreement necessary in Colorado? 
+ While landlord-tenant laws allow verbal agreements, a written lease agreement provides clear documentation of the terms and protects both parties in case of disputes.
+ What happens if I break the terms of the Colorado lease agreement? 
+ Breaking the terms of a lease agreement can have legal consequences. It&#x27;s essential to carefully review and abide by the agreement to avoid potential penalties or eviction.
+ How much can a landlord charge for a security deposit in Colorado? 
+ In Colorado, there is no limit to how much landlords can charge as a security deposit. Landlords typically charge up to one month&#x27;s rent as a security deposit, but it may vary in certain circumstances. Refer to local laws and regulations for specific details.
+ Can a landlord increase the rent during the lease term? 
+ In most cases, a Colorado landlord cannot increase the rent during the lease term unless stated otherwise in the lease agreement. Rent increases are typically applicable when renewing the lease.
+ Looking for other Colorado documents?
+ Colorado bill of sale
+ Prepare for selling an item with a clear bill of sale.
+ View template 
+ Colorado vehicle bill of sale
+ Create a bill of sale specifically for selling a motor vehicle.
+ View template 
+ Colorado promissory note
+ Set out the terms of a loan, including interest and the repayment schedule.
+ View template 
+ Colorado power of attorney
+ Empower someone you trust to act on your behalf in legal matters.
+ View template 
+ Colorado non-disclosure agreement
+ Protect your business with a confidentiality agreement.
+ View template 
+ Formswift is not a law firm and does not provide legal advice or representation. Formswift&#x27;s documents are not a substitute for the advice of an attorney. Communications between you and Formswift are governed by the Formswift  Privacy Policy  but are not protected by the attorney-client privilege or as work product. Formswift does not provide advice, opinions, or recommendations about individual&#x27;s legal rights, options, strategies, or the selection of forms. Your use of the Formswift website and forms is governed by the Formswift  Terms of Service .
+ Create, edit, and sign your Colorado lease agreement, all in one place
+ Create form
+
+[Page: /templates/lease-agreement/me]
+User-Friendly Maine Lease Agreement Template - Dropbox 
+ Skip to main content 
+ Formswift: Stay on top of state law with our Maine leasing agreement template
+ Creating a Maine residential lease agreement has never been easier with our customizable template. Streamline the process, save time, and help ensure compliance with our user-friendly solution tailored to meet your specific needs.
+ Create your document 
+ What is a Maine lease agreement?
+ A Maine lease agreement outlines the terms and conditions between a landlord and tenant for renting a real estate property in Maine. Unlike a rental application, it establishes the rights and responsibilities of both property owner and prospective tenant, including rent payment and lease duration.
+ Try our template 
+ Most commonly used Maine lease agreements
+ The most commonly used Maine rental agreement is the standard residential lease agreement. This agreement suits most residential rental properties, including apartments, houses, and condominiums. It covers rent amount, lease term, security deposit, and tenancy rules and regulations.
+ How to write a Maine lease agreement
+ Writing a Maine lease agreement is straightforward with our user-friendly template. Simply fill in the required information, customize the terms, and generate a clear rental contract.
+ Get started 
+ Which disclosures belong in a Maine lease agreement?
+ A Maine lease agreement should include important disclosures to ensure transparency and compliance with state laws. Some of the required disclosures might include:
+ Information on the presence of bedbugs
+ The property smoking policy
+ Radon disclosure
+ Lad-based paint disclosure
+ Security deposit disclosure
+ What you need to know about Maine lease agreement deposits
+ As stated in Maine law, landlords in Maine cannot require a security deposit that exceeds two times the monthly rent.
+ The landlord must return the security deposit within 30 days after the termination of the lease, along with an itemized statement of any deductions.
+ Frequently asked questions
+ Can I make changes to the lease agreement template? 
+ Yes, our Maine lease agreement template is fully customizable. You can modify the terms and conditions to meet your specific requirements while helping to ensure compliance with relevant landlord-tenant laws.
+ Is a written lease agreement required in Maine? 
+ While a written lease agreement isn’t legally required in Maine, having a written agreement provides clarity and protection for both the lessee and the lessor. We highly recommend having a written lease agreement even for a month-to-month lease agreement.
+ Can I terminate a lease agreement early as a Maine landlord? 
+ Terminating a lease agreement or eviction before the agreed-upon term can have legal consequences. It’s essential to review the lease agreement for any early termination clauses and consult with legal advice if you wish to end the lease early.
+ Are landlords required to provide a notice for rent increases in Maine? 
+ Yes, landlords in Maine must provide written notice at least 45 days before increasing the rent for month-to-month tenancies. For fixed-term leases, the rent can’t be increased until the lease term expires.
+ What should I do if there is a dispute with my landlord? 
+ If a dispute arises with your landlord, you should communicate your concerns in writing and try to resolve the issue through negotiation. If the dispute remains unresolved, consider seeking legal advice or contacting the appropriate housing authority in Maine.
+ Looking for other Maine documents?
+ Maine bill of sale
+ Prepare for selling an item with a clear bill of sale.
+ View template 
+ Maine vehicle bill of sale
+ Create a bill of sale specifically for selling a motor vehicle.
+ View template 
+ Maine promissory note
+ Set out the terms of a loan, including interest and the repayment schedule.
+ View template 
+ Maine power of attorney
+ Empower someone you trust to act on your behalf in legal matters.
+ View template 
+ Maine non-disclosure agreement
+ Protect your business with a confidentiality agreement.
+ View template 
+ Formswift is not a law firm and does not provide legal advice or representation. Formswift&#x27;s documents are not a substitute for the advice of an attorney. Communications between you and Formswift are governed by the Formswift  Privacy Policy  but are not protected by the attorney-client privilege or as work product. Formswift does not provide advice, opinions, or recommendations about individual&#x27;s legal rights, options, strategies, or the selection of forms. Your use of the Formswift website and forms is governed by the Formswift  Terms of Service .
+ Create, edit, and sign your Maine lease agreement, all in one place
+ Create form
+
+[Page: /templates/power-of-attorney/de]
+User-Friendly Delaware Power of Attorney Template - Dropbox 
+ Skip to main content 
+ Formswift: Delaware power of attorney template, empowering you to take charge
+ Experience peace of mind and streamline your affairs with our customizable Delaware power of attorney templates. Craft a personalized legal document tailored to your estate planning requirements.
+ Create your document 
+ What is a Delaware power of attorney?
+ A Delaware power of attorney grants authority to a trusted person (the "agent" or "attorney-in-fact") to handle financial, real estate, and health care decisions. They will ensure your wishes are followed if you&#x27;re incapacitated.
+ Get started 
+ Why would you use a Delaware power of attorney?
+ A Delaware power of attorney offers multiple benefits and safeguards for both you and your family members. It serves as a valuable tool for:
+ Peace of mind
+ Crafting a Delaware power of attorney ensures your affairs are handled by someone you trust if you&#x27;re incapacitated.
+ Decision-making continuity
+ Your agent can step in and act on your behalf immediately, negating the need for court intervention.
+ Customization
+ Our Delaware power of attorney forms are fully customizable, enabling you to limit or broaden the agent’s certification of authority and align the document with your needs.
+ Flexibility
+ Decide when your Delaware power of attorney comes into effect. It can start immediately, upon a specific event, or a combination of both.
+ Common types of a Delaware power of attorney
+ In Delaware, there are two commonly used types of power of attorney:
+ General power of attorney 
+ This gives your agent broad powers to manage your financial and legal matters. It takes effect immediately upon signing, preferably in the presence of a notary public, and remains so until it&#x27;s revoked or the principal is incapacitated.
+ Durable power of attorney 
+ This remains effective even in the event of the principal&#x27;s incapacity. It equips your agent with the power to handle financial matters, legal issues, and health care decisions.
+ Which laws relate to a Delaware power of attorney?
+ The power of attorney in Delaware is subject to Delaware law, specifically Title 12, Chapter 49A, which details the prerequisites and regulations for this legal document. It&#x27;s crucial to ensure that your Delaware power of attorney complies with the specific provisions outlined in the state&#x27;s laws.
+ When is a Delaware power of attorney terminated?
+ A Delaware power of attorney can be terminated by:
+ Revocation: If mentally competent, you can revoke your POA at any time.
+ Expiration: You can set an expiration date or event after which it ceases to be valid.
+ Death: A Delaware POA automatically terminates upon your death.
+ Frequently asked questions
+ Can I create a Delaware power of attorney if I have assets or properties in multiple states? 
+ Yes, you can establish a Delaware power of attorney even if you own assets or properties in multiple states. It&#x27;s wise, however, to consult with a law firm or attorney familiar with each state&#x27;s laws to ensure compliance.
+ Can I appoint more than one agent in my Delaware power of attorney? 
+ Yes, you can assign multiple agents in your Delaware power of attorney to act either jointly or severally. It&#x27;s worth considering the dynamics and responsibilities involved before making this decision.
+ Can I change or update my Delaware power of attorney? 
+ Yes, as long as you&#x27;re mentally competent, you can modify or revoke your Delaware power of attorney at any time. Just create a new document reflecting the changes and ensure all relevant parties receive updated copies.
+ Can a Delaware power of attorney be used for healthcare decisions? 
+ Yes, a Delaware power of attorney can include provisions for healthcare decisions. This gives your agent the power to make medical choices on your behalf if you&#x27;re incapacitated and unable to communicate your preferences.
+ Disclaimer: This information is intended for general informational purposes only. It is meant to help you understand the legal framework used for this form. This is not intended to be legal advice and should not be a substitute for professional legal advice. Consult a licensed attorney for legal advice or representation. 
+ Looking for other Delaware documents?
+ Delaware bill of sale
+ Prepare for selling an item with a clear bill of sale.
+ View template 
+ Delaware vehicle bill of sale
+ Create a bill of sale specifically for selling a motor vehicle.
+ View template 
+ Delaware promissory note
+ Set out the terms of a loan, including interest and the repayment schedule.
+ View template 
+ Delaware non-disclosure agreement
+ Protect your business with a formal confidentiality agreement.
+ View template 
+ Delaware lease agreement
+ Protect yourself and your tenant throughout their tenancy.
+ View template 
+ Formswift is not a law firm and does not provide legal advice or representation. Formswift&#x27;s documents are not a substitute for the advice of an attorney. Communications between you and Formswift are governed by the Formswift Privacy Policy but are not protected by the attorney-client privilege or as work product. Formswift does not provide advice, opinions, or recommendations about individual&#x27;s legal rights, options, strategies, or the selection of forms. Your use of the Formswift website and forms is governed by the Formswift Terms of Service .
+ Try creating a Delaware power of attorney form
+ Create form

@@ -1,0 +1,117 @@
+Introduction to REST API | REST API Developer Guide | Salesforce Developers 
+<doc-banner
+ message='The online Trailblazer Community is now read-only. [Read the FAQ] [Get Help] '
+ centered="true"
+ icon-sprite="general"
+ icon-symbol="wrench"
+ icon-size="xsmall"
+ dismiss-storage-key="trailblazer-community-read-only-now"
+> 
+ Introduction to REST API
+ REST API provides you with programmatic access to your data in Salesforce. The flexibility and scalability of REST API make it an excellent choice for integrating Salesforce into your applications and for performing complex operations on a large scale.
+ Use this guide to set up your deployment environment and learn about advanced details regarding data access. However, understanding and using REST API requires basic familiarity with software development, web services, and the Salesforce user interface.
+ If you want to get right to the action, the Quick Start guide covers the basics to get you up and running.
+ If you’re looking for more context about Salesforce APIs, check out the list of links.
+ Salesforce REST API is designed to work with Salesforce objects. See the Object Reference for the Salesforce Platform for an introduction and more information about Salesforce objects.
+ About REST API 
+ REST API is one of several web interfaces that you can use to access your Salesforce data without using the Salesforce user interface. With API access, you can perform operations and integrate Salesforce into your applications as you like.
+ REST API Release Notes 
+ Use the Salesforce Release Notes to learn about the most recent updates and changes to REST API.
+ Supported Editions and Required Permissions 
+ To access your Salesforce org and data using the Salesforce API, you need both an org and a user with API access enabled. There’s more than one Salesforce Edition that supports API access and multiple ways to grant API permission to a user.
+ REST Resources and Requests 
+ REST API is based on the usage of resources—pieces of data in Salesforce, such as records, collections of records, query results, metadata, or API information. Each resource is exposed by a uniform resource identifier (URI) and is accessed by sending HTTP requests to the corresponding URI.
+ REST API Architecture 
+ REST API follows the standard RESTful principles and characteristics.
+ Authorization Through External Client Apps or Connected Apps and OAuth 2.0 
+ For a client application to access REST API resources, it must be authorized as a safe visitor. To implement this authorization, use either an external client app or a connected app and an OAuth 2.0 authorization flow.
+ Headers 
+ REST API supports several standard and custom HTTP headers, including both request headers and response headers.
+ Send REST Requests with cURL 
+ The examples in this guide use the cURL tool to send HTTP requests that access, create, and manipulate resources in Salesforce. If you use a different tool to send requests, you can use the same elements from the cURL examples to send requests.
+ Valid Date and DateTime Formats 
+ Specify the right format for dateTime and date fields.
+ Status Codes and Error Responses 
+ API End-of-Life Policy 
+ See which REST API versions are supported, unsupported, or unavailable.
+ See Also 
+ Trailhead: Lightning Platform API Basics
+
+[Page: /docs/platform/api-rest/guide/intro-oauth-and-connected-apps.html]
+Authorization Through External Client Apps or Connected Apps and OAuth 2.0 | Introduction to REST API | REST API Developer Guide | Salesforce Developers 
+<doc-banner
+ message='The online Trailblazer Community is now read-only. [Read the FAQ] [Get Help] '
+ centered="true"
+ icon-sprite="general"
+ icon-symbol="wrench"
+ icon-size="xsmall"
+ dismiss-storage-key="trailblazer-community-read-only-now"
+> 
+ Authorization Through External Client Apps or Connected Apps and OAuth 2.0
+ For a client application to access REST API resources, it must be authorized as a safe visitor. To implement this authorization, use either an external client app or a connected app and an OAuth 2.0 authorization flow.
+ Creating connected apps is restricted as of Spring ‘26. You can continue to use existing connected apps during and after Spring ‘26. However, we recommend using external client apps instead. If you must continue creating connected apps, contact Salesforce Support.
+ See New connected apps can no longer be created in Spring ‘26 for more details.
+ Both external client apps and connected apps request access to REST API resources on behalf of the client application. For an external client app or connected app to request access, it must be integrated with your org’s REST API using the OAuth 2.0 protocol. OAuth 2.0 is an open protocol that authorizes secure data sharing between applications through the exchange of tokens.
+ For instructions to configure an external client app, see Create an External Client App or Enable OAuth Settings for API Integration in Salesforce Help . For more information about connected apps, see Connected Apps in Salesforce Help .
+ OAuth authorization flows grant a client app restricted access to REST API resources on a resource server. Each OAuth flow offers a different process for approving access to a client application, but in general the flows consist of three main steps.
+ To initiate an authorization flow, a connected app on behalf of a client app requests access to a REST API resource.
+ In response, an authorizing server grants access tokens to the external client app or connected app.
+ A resource server validates these access tokens and approves access to the protected REST API resource.
+ After reviewing and selecting an OAuth authorization flow, apply it to your external client app or connected app. For details about each supported flow, see OAuth Authorization Flows in Salesforce Help .
+ Salesforce offers the following resources to help you navigate connected apps and OAuth:
+ Salesforce Help : External Client Apps 
+ Salesforce Help : Authorize Apps with OAuth 
+ Salesforce Help : OpenID Connect Token Introspection 
+ Trailhead : Build Integrations Using External Client Apps
+
+[Page: /docs/platform/api-rest/guide/errorcodes.html]
+Status Codes and Error Responses | Introduction to REST API | REST API Developer Guide | Salesforce Developers 
+<doc-banner
+ message='The online Trailblazer Community is now read-only. [Read the FAQ] [Get Help] '
+ centered="true"
+ icon-sprite="general"
+ icon-symbol="wrench"
+ icon-size="xsmall"
+ dismiss-storage-key="trailblazer-community-read-only-now"
+> 
+ Status Codes and Error Responses
+ Either when an error occurs or when a response is successful, the response header contains an HTTP code, and the response body usually contains:
+ The HTTP response code
+ The message accompanying the HTTP response code
+ The field or object where the error occurred (if the response returns information about an error)
+ HTTP response code Description 
+ 200 “OK” success code, for GET, HEAD, and some PATCH requests. 
+ 201 “Created” success code, for POST requests and some PATCH requests. 
+ 204 “No Content” success code, for DELETE requests and some PATCH requests. 
+ 300 The value returned when an external ID exists in more than one record. The response body contains the list of matching records. 
+ 304 The request content hasn’t changed since a specified date and time. The date and time is provided in a If-Modified-Since header. See Get Object Metatdata Changes for an example. 
+ 400 The request couldn’t be understood, usually because the JSON or XML body contains an error. 
+ 401 The session ID or OAuth token used has expired or is invalid. The response body contains the message and errorCode . 
+ 403 The request has been refused. Verify that the logged-in user has appropriate permissions. If the error code is REQUEST_LIMIT_EXCEEDED, you’ve exceeded API request limits in your org. 
+ 404 The requested resource couldn’t be found. Check the URI for errors, and verify that there are no sharing issues. 
+ 405 The method specified in the Request-Line isn’t allowed for the resource specified in the URI. 
+ 409 The request couldn’t be completed due to a conflict with the current state of the resource. Check that the API version is compatible with the resource you’re requesting. 
+ 410 The requested resource has been retired or removed. Delete or update any references to the resource. 
+ 412 The request wasn’t executed because one or more of the preconditions that the client specified in the request headers wasn’t satisfied. For example, the request includes an If-Unmodified-Since header, but the data was modified after the specified date. 
+ 414 The length of the URI exceeds the 16,384-byte limit. 
+ 415 The entity in the request is in a format that’s not supported by the specified method. 
+ 420 Salesforce Edge doesn’t have routing information available for this request host. Contact Salesforce Customer Support. 
+ 428 The request wasn’t executed because it wasn’t conditional. Add one of the Conditional Request Headers , such as If-Match , to the request and resubmit it. 
+ 431 The combined length of the URI and headers exceeds the 16,384-byte limit. 
+ 500 An error has occurred within Lightning Platform, so the request couldn’t be completed. Contact Salesforce Customer Support. 
+ 502 Salesforce Edge wasn’t able to communicate successfully with the Salesforce instance. 
+ 503 The server is unavailable to handle the request. Typically this issue occurs if the server is down for maintenance or is overloaded. 
+ Using a non-existent ID in a request using JSON or XML (request_body.json or request_body.xml)
+ Requesting a resource that doesn’t exist, for example, you try to create a record using a misspelled object name
+ For extended error codes, see Core Data Types Used in API Calls .
+
+[Page: /docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_concepts.htm]
+Salesforce Developers 
+<doc-banner
+ message='The online Trailblazer Community is now read-only. [Read the FAQ] [Get Help] '
+ centered="true"
+ icon-sprite="general"
+ icon-symbol="wrench"
+ icon-size="xsmall"
+ dismiss-storage-key="trailblazer-community-read-only-now"
+>

@@ -1,0 +1,17 @@
+:root{
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;--space-16:64px;--space-24:96px;
+--page-pad:32px;          /* split layouts */
+--page-pad-centered:112px;/* single-column screens */
+--header-h:63px;
+--panel-w:540px;          /* right-hand explainer panel */
+--control-h:52px;         /* inputs, primary buttons */
+--chip-h:44px;            /* app chips, toggles */
+--marker:10px;            /* square status bullet */
+--check:16px;             /* checkbox square */
+--rule-strong:1px solid var(--border-strong);
+--rule-hair:1px solid var(--border-hairline);
+--radius:0px;             /* everything is square */
+--shadow:none;
+--ease:cubic-bezier(.2,0,0,1);/* @kind other */
+--dur:120ms;/* @kind other */
+}

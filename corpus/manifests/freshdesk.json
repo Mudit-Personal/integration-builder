@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Freshdesk",
+    "slug": "freshdesk",
+    "apiVersion": "v2"
+  },
+  "baseUrl": "https://{subdomain}.freshdesk.com/api/v2",
+  "connectionFields": [
+    {
+      "name": "subdomain",
+      "label": "Freshdesk subdomain",
+      "example": "thelocker"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "basic",
+      "label": "Freshdesk API key",
+      "usernameLabel": "API key",
+      "passwordLabel": "Any dummy value, e.g. X"
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/agents",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "$",
+    "pagination": {
+      "type": "link_header",
+      "sizeParam": "per_page",
+      "pageSize": 100
+    },
+    "requiredScopes": [],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "contact.email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "contact.name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": null,
+      "userType": null,
+      "lastActiveAt": {
+        "path": "last_active_at",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "createdAt": {
+        "path": "created_at",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "last_activity_field"
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": "X-RateLimit-Remaining",
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "You can use your personal API key to authenticate the request."
+    },
+    {
+      "claim": "pagination",
+      "quote": "The maximum number of objects that can be retrieved per page is 100."
+    },
+    {
+      "claim": "pagination",
+      "quote": "The 'link' header in the response will hold the next page url if exists."
+    },
+    {
+      "claim": "rate_limit",
+      "quote": "The number of requests remaining in the current rate limit window."
+    },
+    {
+      "claim": "users",
+      "quote": "List All Agents"
+    },
+    {
+      "claim": "errors",
+      "quote": "Retry-After"
+    }
+  ],
+  "assumptions": [
+    "The provided documentation was cut off before the Agents section, so the agent list's field names (id, contact.email, contact.name, last_active_at, created_at) come from general knowledge of Freshdesk and are not confirmed from the source.",
+    "The agent list response is assumed to be a plain top-level array of agents; recordsPath '$' stands for that.",
+    "I used the Agents list (/api/v2/agents) as the user list. Contacts (customers) are listed separately at /api/v2/contacts and are not included, since agents hold the licences.",
+    "Agent last_active_at is assumed to be an ISO 8601 timestamp (the docs say all timestamps are UTC in YYYY-MM-DDTHH:MM:SSZ form). Whether it is populated for every agent is unconfirmed.",
+    "No status, role or user type field was confirmed for agents, so those are left empty.",
+    "Whether the agents list includes deactivated agents was not confirmed.",
+    "Listing agents likely requires an admin-level API key; the source says access depends on the key owner's role.",
+    "Authentication uses the API key of a personal agent, so it may stop working if that person leaves or is deactivated. No service-account option appears in the source.",
+    "The rate limit depends on the customer's plan (the source lists several), so no fixed per-minute number is set. No reset-time header is documented; only Retry-After on 429 responses."
+  ]
+}

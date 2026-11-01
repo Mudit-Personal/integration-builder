@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run demo:build",
+  "outputDirectory": "web/dist",
+  "functions": {
+    "api/read.mjs": { "maxDuration": 300 }
+  }
+}

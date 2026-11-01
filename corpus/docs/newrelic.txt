@@ -1,0 +1,1836 @@
+NerdGraph tutorial: Create and manage users | New Relic Documentation / 
+ English Español Français 日本語 한국어 Português 
+ Log in Start now 
+ NerdGraph tutorial: Create and manage users
+ Copy for LLM | View as Markdown 
+ You can use our NerdGraph API to view and manage users. You can add and delete users, edit your users&#x27; email address and user type, and return other types of user information.
+ For how to do this in the UI, see the user management UI docs .
+ Requirements 
+ Some requirements for managing users via NerdGraph:
+ User type : core user or full platform user.
+ Role : To view and make changes to users requires Authentication Domain Manager role.
+ Before you start 
+ Before using NerdGraph to manage users, some important points:
+ Ensure you have a decent understanding of our user management concepts 
+ The NerdGraph explorer has built-in docs that define the fields used in these requests.
+ You can track changes to your New Relic account .
+ Below are some examples of querying user information and making changes to your users.
+ User type fields 
+ The user type values available are:
+ FULL_USER_TIER 
+ CORE_USER_TIER 
+ BASIC_USER_TIER 
+ Query user information 
+ Here&#x27;s an example query to see all the user types in your organization:
+ { 
+ actor { 
+ organization { 
+ userManagement { 
+ types { 
+ displayName 
+ id 
+ } 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Here&#x27;s an example query for getting the last active date and the user type for the users in a specific authentication domain:
+ { 
+ actor { 
+ organization { 
+ userManagement { 
+ authenticationDomains ( id : "AUTHENTICATION_DOMAIN_ID" ) { 
+ authenticationDomains { 
+ users { 
+ users { 
+ id 
+ name 
+ email 
+ lastActive 
+ type { 
+ displayName 
+ id 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Create users 
+ The name field must meet name field validation requirements .
+ Here&#x27;s an example of creating a basic user:
+ mutation { 
+ userManagementCreateUser ( 
+ createUserOptions : { 
+ authenticationDomainId : " AUTHENTICATION_DOMAIN_ID " 
+ email : " EMAIL_OF_USER " 
+ name : " NAME_OF__USER " 
+ userType : BASIC_USER_TIER 
+ } 
+ ) { 
+ createdUser { 
+ authenticationDomainId 
+ email 
+ id 
+ name 
+ type { 
+ displayName 
+ id 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Here&#x27;s an example error response when trying to create a user within an authentication domain not set for manually provisioned users:
+ { 
+ "data" : { 
+ "userManagementCreateUser" : null 
+ } , 
+ "errors" : [ 
+ { 
+ "message" : "This API can only be used to create users within Authentication Domains set for manually provisioned users." 
+ } 
+ ] 
+ } 
+ Copy 
+ Here&#x27;s an example error response when trying to create a user that already exists in an auth domain:
+ { 
+ "data" : { 
+ "userManagementCreateUser" : null 
+ } , 
+ "errors" : [ 
+ { 
+ "message" : "User with email: <USER_EMAIL> and authentication domain: <AUTHENTICATION_DOMAIN_ID> already exists." 
+ } 
+ ] 
+ } 
+ Copy 
+ Update users 
+ Here&#x27;s an example of updating a user&#x27;s user type to be full platform user:
+ mutation { 
+ userManagementUpdateUser ( 
+ updateUserOptions : { id : "ID_OF_USER" , userType : FULL_USER_TIER } 
+ ) { 
+ user { 
+ id 
+ type { 
+ displayName 
+ id 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Here&#x27;s an example of updating a user&#x27;s email address:
+ mutation { 
+ userManagementUpdateUser ( 
+ updateUserOptions : { id : "ID_OF_USER" , email : "EMAIL_OF_USER" } 
+ ) { 
+ user { 
+ id 
+ email 
+ } 
+ } 
+ } 
+ Copy 
+ Add users to groups 
+ For how to manage groups, and add users to groups, see Manage user groups with NerdGraph .
+ Delete users 
+ Here&#x27;s an example of deleting a user:
+ mutation { 
+ userManagementDeleteUser ( deleteUserOptions : { id : "ID_OF_USER" } ) { 
+ deletedUser { 
+ id 
+ } 
+ } 
+ } 
+ Copy 
+ Here&#x27;s an example error response when trying to delete a user in a SCIM-provisioned auth domain:
+ { 
+ "data" : { 
+ "userManagementDeleteuser" : null 
+ } , 
+ "errors" : [ 
+ { 
+ "message" : "This API can only be used to delete users within Authentication Domains set for manually provisioned users." 
+ } 
+ ] 
+ } 
+ Copy 
+ Pagination 
+ By default, the API only returns at most 500 users or 10 authentication domains. If you have more than that, you can use cursors to get the next 500 users or 10 auth domains. This call will return nextCursor , which can be fed into another call, using the cursor input:
+ { 
+ actor { 
+ organization { 
+ userManagement { 
+ authenticationDomains ( id : "AUTHENTICATION_DOMAIN_ID" ) { 
+ authenticationDomains { 
+ users ( cursor : "=abcdEFGH2356X" ) { 
+ nextCursor 
+ totalCount 
+ users { 
+ email 
+ id 
+ lastActive 
+ name 
+ type { 
+ displayName 
+ id 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Here&#x27;s an example of starting a paginated return of all authentication domains for an organization:
+ { 
+ actor { 
+ organization { 
+ userManagement { 
+ authenticationDomains ( cursor : "=123xyzABCx" ) { 
+ nextCursor 
+ totalCount 
+ authenticationDomains { 
+ id 
+ name 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Manage groups 
+ For how to manage groups, and add and remove users from groups, see Manage groups .
+ On this page
+ Was this doc helpful?
+ 😁
+Yes 🙁
+No 
+ Edit this doc
+
+[Page: /docs/accounts/accounts-billing/new-relic-one-user-management/authentication-domains-saml-sso-scim-more.md]
+---
+title: Authentication domains: How your users log in and are managed
+source: https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/authentication-domains-saml-sso-scim-more
+---
+
+To manage their users, New Relic organizations can configure one or more authentication domains, which control how users are added to a New Relic account, how they're authenticated, and more.
+
+## Authentication domains explained [#auth-domain-definition]
+
+An **authentication domain** is a grouping of New Relic users governed by the same user management settings, like [how they're provisioned](#provisioning-users) (added and updated) and [how they're authenticated](#authentication) (logged in).
+
+When you create a New Relic organization, the default authentication settings are:
+
+-   Method of provisioning users: Manual
+    -   Users are added via our [User Management UI](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks/#add-users) or our [Nerdgraph API](https://docs.newrelic.com/docs/apis/nerdgraph/examples/nerdgraph-manage-users/#create-users)
+-   Method of managing user type: Manage with New Relic
+    -   Users' user type is managed by you via our [User Management UI](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks/#edit-user-type) or our [Nerdgraph API](https://docs.newrelic.com/docs/apis/nerdgraph/examples/nerdgraph-manage-users/#update-users)
+-   Method of authenticating users: Username / password
+    -   Users log into New Relic directly using an [email address](https://docs.newrelic.com/docs/accounts/accounts/account-maintenance/account-email-settings/#change-email) and [password](https://docs.newrelic.com/docs/accounts/accounts/account-maintenance/change-passwords-user-preferences/)
+
+Those default settings would be under one authentication domain. If you added an additional authentication domain, you might set it up like this:
+
+-   Method of provisioning users: SCIM
+    -   Users are added and managed via [SCIM provisioning](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/automated-user-provisioning-single-sign/) from a third-party identity provider such as [Okta](https://docs.newrelic.com/docs/okta-scimsso-application-configuration/), [OneLogin](https://docs.newrelic.com/docs/onelogin-scimsso-application-configuration/), [Azure/Entra](https://docs.newrelic.com/docs/azure-scimsso-application-configuration/) or via our [SCIM API](docs/accounts/accounts/automated-user-management/tutorial-manage-users-groups-scim/)
+-   Method of authenticating users: SAML SSO
+    -   Users are logged in using SAML single sign-on (SSO) from an identity provider such as [Okta](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/authentication-domains-saml-sso-scim-more/#Okta), [OneLogin](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/authentication-domains-saml-sso-scim-more/#OneLogin), [Azure/Entra](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/authentication-domains-saml-sso-scim-more/#azure)
+
+When you add users to New Relic, they're always added to a specific authentication domain. Typically organizations have either one or two authentication domains: one with the manual methods and one for the methods associated with an identity provider.
+
+## Requirements [#requirements]
+
+To manage authentication domains:
+
+-   Your organization must be either [Pro or Enterprise edition](https://newrelic.com/pricing) to have editable authentication domains.
+-   To view or edit authentication domains, a user must:
+    -   Have a [user type](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-type) of core user or full platform user.
+    -   Be in a group with the [**Authentication domain** administration setting](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#admin-settings).
+-   SCIM provisioning, also known as automated user management, requires Pro or Enterprise edition. [Learn more about requirements.](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/automated-user-provisioning-single-sign)
+-   SAML SSO requires a [paid edition](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-pricing-billing/new-relic-one-pricing-billing#editions). Our SAML SSO support includes:
+    -   Active Directory Federation Services (ADFS)
+    -   Auth0
+    -   Azure AD (Microsoft Azure Active Directory)
+    -   Google
+    -   Okta
+    -   OneLogin
+    -   Ping Identity
+    -   Salesforce
+    -   Generic support for SSO systems that use SAML 2.0
+
+## Create and configure an authentication domain [#ui]
+
+If you meet the [requirements](#requirements), you can add and manage authentication domains.
+
+To view and configure authentication domains: from the [user menu](https://docs.newrelic.com/docs/accounts/accounts-billing/general-account-settings/intro-account-settings), go to **Administration > Authentication domains**.
+
+If you have existing domains, they'll be in the table. Note that most organizations will have, at most, two or three domains: one with the manual, default settings and one or two for the identity provider-associated settings.
+
+To create a new domain from the authentication domain UI page, click **Create authentication domain**. To manage or delete an authentication domain, select the menu item for each authentication domain.
+
+## Switch to different domains [#switch]
+
+If you have user records in more than one authentication domain, you can [switch between domains](https://docs.newrelic.com/docs/accounts/accounts-billing/account-setup/multiple-logins-found).
+
+## Method of provisioning users: how your users are added and managed [#provisioning-users]
+
+> #### 💡 TIP
+>
+> -   For an introduction to our SAML SSO and SCIM offerings, refer [Get started with SSO and SCIM](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/introduction-saml-scim).
+> -   We recommend that you consider implementing [domain capture](https://docs.newrelic.com/docs/accounts/accounts-billing/account-setup/domain-capture/) that lets you automatically add users to your organization based on their email domain. This prevents users from accidentally signing up for New Relic and creating an unnecessary and unwanted New Relic organization. This feature is available for Pro and Enterprise accounts.
+
+From the [authentication domain UI](#ui), you can set one of two options for the 'Method of provisioning users':
+
+-   **SCIM:** Our automated user management feature allows you to use [SCIM provisioning](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/automated-user-provisioning-single-sign/) from a third-party identity provider.
+-   **Manual:** This means that your users are added manually to New Relic via the [User management UI](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks/#add-users) or our [Nerdgraph API](https://docs.newrelic.com/docs/apis/nerdgraph/examples/nerdgraph-manage-users/#create-users)
+
+Notes on these settings:
+
+-   You can't toggle **Method of provisioning users**. This means if you want to change this for an authentication domain that's already been set up, you'll need to create a new authentication domain.
+-   When you first enable SCIM, the bearer token is generated and only shown once. If you need to view a bearer token later, the only way to do this is to generate a new one, which will invalidate the old one and any integrations using the old token will no longer be able to successfully provision
+
+For how to set up SCIM, see [Automated user management](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/automated-user-provisioning-single-sign).
+
+### Method of managing user type [#user-upgrade]
+
+In the **Authentication Domain UI**, if you've selected SCIM for method of provisioning users, you have two options for how your users' [user type](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-type) is managed:
+
+-   **Manage user type in New Relic**: This is the default option. It allows you to manage your users' user type from New Relic.
+-   **Manage user type with SCIM**: Enabling this means that you can no longer manage user type from New Relic. You'd only be able to change and manage it from your identity provider.
+
+More on these two options:
+
+**Manage user type in New Relic (default)**
+
+The default way to manage your users' user type is from the New Relic UI. This is the option you'd use if you aren't [managing user type via SCIM](#manage-user-type-scim). The management options governed by this include:
+
+-   The ability to change user type in the [User Management UI](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks/#edit-user-type) or our [Nerdgraph API](https://docs.newrelic.com/docs/apis/nerdgraph/examples/nerdgraph-manage-users/#update-users)
+-   The ability to [manage how user type upgrade requests are handled](#other-settings).
+
+**Manage user type with SCIM**
+
+Our [SCIM API](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/tutorial-manage-users-groups-scim#manage-user-type) lets you manage user type from your identity provider instead of in the New Relic user management UI. **When you enable this, you can no longer change or manage your users' user type from New Relic.**
+
+To enable this setting:
+
+1.  Make sure your authentication domain **Method of provisioning user** must have [SCIM enabled](#provisioning-users).
+2.  Follow instructions based on your indentity provider:
+
+-   Okta: Follow the Okta SCIM and SSO application configuration guide [here](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/okta-scimsso-application-configuration).
+
+-   Azure active directory: Refer to the New Relic forum discussion on configuring Azure AD for SCIM with user types [here](https://support.newrelic.com/s/hubtopic/aAX8W0000008d6MWAQ/relic-solution-make-full-core-basic-users-in-azure-active-directory-w-scim).
+
+-   Other identity providers: Use our SCIM API user type specifications to configure your provider to send user type information to New Relic [here](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/tutorial-manage-users-groups-scim/#manage-user-type).
+
+    How users upgrade requests are handled:
+
+-   When you enable **Manage user type with SCIM**, the default option is that users with access limited by user type are shown a message that they need to reach out to their manager or IT department to upgrade and unlock more access.
+
+-   Optionally, you can customize that message and add a link to a customized page. For example, you might add a custom message that explains to contact a specific person or department. Or you might use our [SCIM API specifications](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/tutorial-manage-users-groups-scim/#manage-user-type) to set up an implementation that programmatically handles user upgrade requests and automatically changes your users' type.
+
+## Authentication: how your users log in  [#authentication]
+
+The authentication method is the way in which New Relic users log in to New Relic. All users in an authentication domain have a single authentication method. There are two authentication options:
+
+-   [Username/password](#username-authentication): Your users log in via email and password.
+-   [SAML SSO](#saml): Your users log in via SAML single sign-on (SSO) using your identity provider. To learn how to set that up, keep reading.
+
+### Username/password authentication [#username-authentication]
+
+This is a default authentication method. Users log in using their email address and password. For additional security, you can also enable [Multi-Factor Authentication (MFA)](#mfa).
+
+> #### ⚠️ IMPORTANT
+>
+> To receive the MFA email verification when signing into our mobile app, you must enter your email in the app and then open the login screen in your mobile browser.
+
+### SAML SSO authentication [#saml]
+
+Before enabling SAML SSO using the instructions below, here are some things to understand and consider:
+
+-   Consider reading [an introduction to New Relic SSO and SCIM](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/introduction-saml-scim).
+-   Consider reviewing the [SAML SSO requirements](#requirements).
+-   Consider watching a [video on how to set up SAML SSO](https://www.youtube.com/watch?v=uFjqCQcSo8g).
+-   Note that your SSO-enabled users won't receive email verification notifications from New Relic because the login and password information is handled by your identity provider.
+-   Consult your identity provider service's docs because they may have New Relic-specific instructions.
+
+1.  If you're setting up SCIM provisioning:
+    -   If you use Azure, Okta, or OneLogin, follow these procedures first: [Azure](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/azure-ad-scimsso-application-configuration/) \| [OneLogin](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/onelogin-scimsso-application-configuration/) \| [Okta](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/okta-scimsso-application-configuration/).
+    -   If you use a different identity provider, follow the SAML procedures below and use our [SCIM API](https://docs.newrelic.com/docs/accounts/accounts/automated-user-management/scim-support-automated-user-management/) to enable SCIM.
+
+2.  If you **only** want to enable SAML SSO and not SCIM, and if you use Azure, Okta, or OneLogin, follow these instructions for configuring the relevant app:
+
+    **Azure app**
+
+    Azure AD provides an application gallery, which includes various integrations for Azure AD, including the ones that New Relic offers. Add the New Relic SCIM/SSO application to your list of applications.
+
+    1.  Go to the Azure Active Directory admin center, and sign in if necessary. [aad.portal.azure.com/](https://aad.portal.azure.com/)
+    2.  Click on **All services** in the left hand menu.
+    3.  In the main pane, click on **Enterprise applications**.
+    4.  Click on **+New application**.
+    5.  Find our SCIM/SSO application by entering **New Relic** in the name search box, and click on the application **New Relic by organization** (not **New Relic by account**).
+    6.  Click on **Add**.
+
+    **Okta app**
+
+    Add the New Relic SCIM/SSO application to your Okta applications.
+
+    1.  Go to [okta.com/](https://www.okta.com/) and sign in with an account that has administrator permissions.
+    2.  From the Okta home page, click on **Admin**.
+    3.  From the Okta admin **Dashboard**, choose the **Applications** page.
+    4.  Click **Browse app catalog**, then search and select "New Relic by organization".
+    5.  From the New Relic by Organization page, click on **Add**.
+    6.  From the Add New Relic by Organization page, check the two **Application visibility "Do not display..."** checkboxes and click on **Done**. We will make the application visible later after configuration is complete and provisioning has begun.
+    7.  Open the newly created application in Okta and go to the **Assignments** tab. This is where you can add users and groups for authentication.
+    8.  From there, go to the **Sign On** tab. Under **Advanced Sign-on Settings**, you'll see **Authentication Domain ID**, which you'll need to edit this field in Step 9 of the general instructions below. To the right, click **View SAML setup instructions**. Under **Step 7** of these instructions, you can find the URLs required for Steps 6 and 7 in the general instructions below.
+
+    **OneLogin app**
+
+    Add the New Relic SCIM/SSO application to your OneLogin applications.
+
+    1.  Go to the OneLogin web site and sign in with an account that has administrator permissions.
+    2.  From the OneLogin home page, click on **Administration**.
+    3.  From the OneLogin Administration page, choose the **Applications** menu.
+    4.  From the OneLogin Applications page, click on **Add app**.
+    5.  In the search field on the OneLogin Find Applications page, enter "New Relic by organization" (not "New Relic by account") and then click on the application when it shows in the search results.
+    6.  From the **Add New Relic by organization** page, click on **Save**.
+
+    -   If you're implementing SAML using a different identity provider not mentioned above, you'll need to attempt to integrate using the SAML instructions below. Note that your identity provider must use the SAML 2.0 protocol, and must require signed SAML assertions.
+
+3.  Next, you'll go to our authentication domain UI. From the [user menu](https://docs.newrelic.com/docs/accounts/accounts-billing/general-account-settings/intro-account-settings), click **Administration**, and then click **Authentication domains**. If you don't already have one, [create a new domain](#ui) to be used for your SAML-authenticating users.
+
+4.  Under **Authentication**, click **Configure**. Under **Method of authenticating users**, select **SAML SSO**.
+
+5.  If you're using the Okta, OneLogin, or Azure AD app, you can skip this step. Under **Provided by New Relic**, we have some New Relic-specific information. You'll need to place these in the relevant fields in your identity provider service. If you're not sure where they go, consult your identity provider docs.
+
+6.  Under **Provided by you**, input the **Source of SAML metadata**. This URL is supplied by your identity provider and may be called something else. It should conform to SAML V2.0 metadata standards. If your identity provider **doesn't** support dynamic configuration, you can do this by using **Upload a certificate**. This should be a PEM encoded x509 certificate.
+
+7.  Under **Provided by you**, set the **SSO target URL** supplied by your identity provider. You can find this by going to the **Source of SAML metadata** and finding the POST binding URL. It looks like: `https://newrelic.oktapreview.com/app/newreliclr/1234567890abcdefghij/sso/saml`.
+
+8.  If your identity provider has a redirect URL for logout, enter it in the **Logout redirect URL**; otherwise, leave it blank.
+
+9.  If you're using an identity provider app, you'll need to input the authentication domain ID in the app. That ID is found at the top of New Relic's authentication domain UI page.
+
+10. Optional: In New Relic's authentication domain UI, you can adjust [other settings](#other-settings), like browser session length and user upgrade method. You can adjust these settings at any time.
+
+11. If you're enabling SAML only, you'll need to create groups. (If you enabled SCIM, you've already completed this step.) Groups are what give your users access to New Relic accounts. Without being assigned to groups, your users are provisioned in New Relic but have no access to accounts or roles. To learn how to do this:
+
+-   [Learn how user group access works](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#understand-concepts)
+-   Read the [User management tutorial](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/tutorial-add-new-user-groups-roles-new-relic-one-user-model/).
+
+12. Okta only: Return to Okta's New Relic app and, from the **Add New Relic by organization** page, uncheck the two **Application visibility "Do not display..."** checkboxes and click on **Done**.
+
+To verify it's been set up correctly, see if your users can log in to New Relic via your identity provider and ensure they have access to their accounts.
+
+### Set up MFA [#mfa]
+
+Multi-factor authentication (MFA) adds a layer of security to your data by requiring users in an authentication domain to verify their identity.
+
+When enabled, users receive a verification email each time they log in. During their first MFA-required login, users also receive ten backup codes. These codes are used if they can't access their email. Advise your users to store these codes in a secure location.
+
+To complete MFA verification for the New Relic mobile app, enter your email in the app and then follow the prompt to open the login screen in your mobile browser.
+
+**To enable MFA:**
+
+1.  Go to [one.newrelic.com > Administration > Authentication Domains](https://onenr.io/08jqqPYdvjl)
+2.  Select the required domain.
+3.  Enable the MFA toggle.
+    Once enabled, users in that authentication domain are prompted to verify their email at their next login and all subsequent logins.
+
+> #### ⚠️ IMPORTANT
+>
+> To receive the MFA email verification when signing into our mobile app, you must enter your email in the app and then open the login screen in your mobile browser.
+
+## Other user-related settings [#other-settings]
+
+To manage session-related settings, and whether users can self-upgrade or not:
+
+1.  From the [**User management** UI](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks/#where), select an authentication domain from the switcher.
+2.  Click the gear icon .
+3.  Edit the settings, which are described in more detail below.
+
+### Session-related settings [#session-mgmt]
+
+Session-related settings include:
+
+-   Length of time users can remain logged in
+-   Amount of idle time before a user's session expires ([learn about session limits](https://docs.newrelic.com/docs/accounts/accounts-billing/account-structure/factors-affecting-access-features-data#session-limits))
+
+### User upgrade settings [#user-upgrade-settings]
+
+Settings related to how users upgrade to higher user type include:
+
+-   **Automatic approval**: This allows users to be able to immediately upgrade to a higher user type on their own, without approval. This allows these users to be able to more quickly respond to issues.
+-   **Require review**: With this option, admins (users with the [**Authentication domain** administration setting](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-concepts#admin-settings)) receive an email when a user requests an upgrade, and can approve or deny those requests in the [**User management** UI](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-management-ui-and-tasks#where).
+    -   A user is limited to 6 upgrade requests over a 24-hour sliding window. For example, if you make your 6 upgrade requests between 8am to 10am, then you're required to wait until 8am the next day before making another upgrade request.
+
+
+[Page: /docs/apis/nerdgraph/examples/use-nerdgraph-manage-license-keys-user-keys/]
+NerdGraph tutorial: Manage API keys | New Relic Documentation / 
+ English Español Français 日本語 한국어 Português 
+ Log in Start now 
+ NerdGraph tutorial: Manage API keys
+ Copy for LLM | View as Markdown 
+ This doc contains tutorials on how to use NerdGraph to programmatically manage some New Relic API keys: the license key, the browser key, and the user key . For general information about our keys, see API keys .
+ Overview of feature description 
+ You can use the API keys UI to create and manage keys. Alternatively, you can use NerdGraph &#x27;s ApiAccess field to programmatically create and manage the following types of keys:
+ User keys , required for using NerdGraph
+ Data ingest keys, including:
+ The license key : required for the ingest of most data to New Relic, except for browser monitoring data and mobile monitoring data
+ Browser key : required for the ingest of browser monitoring data
+ One common use case for this feature is the ability to rotate keys for security purposes. Note that you can&#x27;t use this NerdGraph functionality to delete the license key or browser key that was originally created with an account; those original keys can&#x27;t be deleted. You can only create additional license keys and manage the ones you&#x27;ve created.
+ Notes about this functionality:
+ All mutations can accept multiple keys as arguments, and will return details about successful changes and errors. See examples below for details.
+ All mutations (create, update and delete) will result in an NrAuditEvent that can be queried for auditing purposes. For details, see Audit events .
+ Regarding ingest keys: License and Browser keys are categorized by NerdGraph as ingest keys . This is because their main use is to allow data ingest.
+ You can create up to 1,000 keys of each ingest key type, which allows for key rotation.
+ You can&#x27;t manage or delete original account ingest keys but you can contact New Relic support to rotate these; you can only create additional ingest or user keys and manage keys you&#x27;ve created.
+ Before using examples 
+ Things to note before using these example queries:
+ To understand the data structure, we recommend experimenting with queries using the GraphiQL explorer .
+ You can also create, view, and delete user keys using the UI. 
+ Create keys 
+ Tip
+ You can find and generate user keys using the NerdGraph GraphQL explorer , at the top of that interface.
+ To create multiple keys (user key or ingest key) in a single mutation, for multiple accounts and key types. Note that the mutation can return successfully created keys as well as any errors encountered trying to create keys.
+ Example of creating a key:
+ mutation { 
+ apiAccessCreateKeys ( 
+ keys : { 
+ ingest : { 
+ accountId : YOUR_ACCOUNT_ID 
+ ingestType : BROWSER 
+ name : " Browser Key " 
+ notes : " A note. " 
+ owningTeamIds : [ TEAM_ID ] 
+ } 
+ } 
+ ) { 
+ createdKeys { 
+ id 
+ key 
+ obfuscatedKey 
+ name 
+ notes 
+ type 
+ enabled 
+ createdAt 
+ ... on ApiAccessIngestKey { 
+ ingestType 
+ } 
+ } 
+ errors { 
+ message 
+ type 
+ ... on ApiAccessIngestKeyError { 
+ accountId 
+ errorType 
+ ingestType 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Results will vary depending on your data. Use the GraphiQL explorer to experiment with mutations and queries.
+ Here&#x27;s an example of using this query to create a user key :
+ Create a user key 
+ To create a user key , you&#x27;d change the above query slightly, in the keys section:
+ mutation { 
+ apiAccessCreateKeys ( 
+ keys : { user : { accountId : YOUR_ACCOUNT_ID , userId : YOUR_USER_ID } } 
+ ) { 
+ createdKeys { 
+ id 
+ key 
+ name 
+ notes 
+ type 
+ ... on ApiAccessIngestKey { 
+ ingestType 
+ } 
+ } 
+ errors { 
+ message 
+ type 
+ ... on ApiAccessIngestKeyError { 
+ accountId 
+ errorType 
+ ingestType 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Update keys
+ The update mutation takes the key ID, not the key string, to identify keys.
+ mutation { 
+ apiAccessUpdateKeys ( 
+ keys : { 
+ ingest : { 
+ keyId : KEY_ID 
+ name : " Updated name " 
+ notes : " A new note! " 
+ enabled : true 
+ owningTeamIds : [ TEAM_ID ] 
+ } 
+ } 
+ ) { 
+ updatedKeys { 
+ id 
+ key 
+ obfuscatedKey 
+ type 
+ name 
+ notes 
+ enabled 
+ createdAt 
+ } 
+ errors { 
+ message 
+ } 
+ } 
+ } 
+ Copy 
+ Use enabled to activate or deactivate a key without deleting it: enabled: true deactivates the key and enabled: false keeps it active. Use owningTeamIds to assign one or more teams to the key.
+ Results will vary depending on your data. Use the GraphiQL explorer to experiment with mutations and queries.
+ Delete keys 
+ The delete mutation takes the key ID, not the key string, to identify keys. Deleted keys will no longer grant access to New Relic systems and will no longer be returned by queries to the API access GraphQL API.
+ mutation { 
+ apiAccessDeleteKeys ( keys : { ingestKeyIds : INGEST_KEY_ID } ) { 
+ deletedKeys { 
+ id 
+ } 
+ errors { 
+ message 
+ } 
+ } 
+ } 
+ Copy 
+ Results will vary depending on your data. Use the GraphiQL explorer to experiment with mutations and queries.
+ Query keys 
+ You can access ingest and user keys by querying a single key or all keys, scoped to the actor . If querying for a single key, you must provide the key ID and type ( INGEST or USER ). Querying for multiple keys is done via a key search, which uses a mandatory types list and an optional scope to filter results. User keys belonging to other users will be obfuscated in the results.
+ Single key example query:
+ query { 
+ actor { 
+ apiAccess { 
+ key ( id : "INGEST_KEY_ID" , keyType : INGEST ) { 
+ key 
+ name 
+ type 
+ ... on ApiAccessIngestKey { 
+ ingestType 
+ } 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ Key search example query:
+ query { 
+ actor { 
+ apiAccess { 
+ keySearch ( query : { types : INGEST , scope : { ingestTypes : BROWSER } } ) { 
+ keys { 
+ name 
+ key 
+ type 
+ ... on ApiAccessIngestKey { 
+ ingestType 
+ } 
+ } 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ To retrieve the last used timestamp for a user key, use the keyUsage field with the key ID:
+ query { 
+ actor { 
+ apiAccess { 
+ keyUsage ( keyIds : "USER_KEY_ID" ) { 
+ keyId 
+ lastUsedAt 
+ } 
+ } 
+ } 
+ } 
+ Copy 
+ lastUsedAt is available for user keys only. It is not supported for license ingest keys or browser ingest keys. keyUsage returns an array, so you can pass multiple key IDs and use keyId in the response to identify which result belongs to which key.
+ Results will vary depending on your data. Use the GraphiQL explorer to experiment with mutations and queries.
+ On this page
+ Was this doc helpful?
+ 😁
+Yes 🙁
+No 
+ Edit this doc
+
+[Page: /docs/mobile-apps/user-settings-authentication.md]
+---
+title: Authenticate your New Relic mobile app account
+source: https://docs.newrelic.com/docs/mobile-apps/user-settings-authentication
+---
+
+This explains how to authenticate your New Relic mobile app account, and how to add users to or remove them from your mobile device.
+
+## User authentication [#authentication]
+
+Depending on your New Relic account, additional installation or authentication steps may be required when you install the New Relic mobile app.
+
+| **New Relic account**                 | **Additional requirements**                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| New users                             | If you do not already have a New Relic account: - From your desktop web browser, [create a New Relic account](https://newrelic.com/signup). - [Install your application](https://docs.newrelic.com/docs/site/installing-the-agent) with the appropriate New Relic agent. As part of new account setup, you will receive an email with a password reset link. The password reset link expires after 20 minutes for mobile apps.                                                                            |
+| Existing New Relic users              | No additional requirements; your applications, hosts, and key transactions automatically appear after you sign in.                                                                                                                                                                                                                                                                                                                                                                                        |
+| Users with New Relic partner accounts | Depending on the partner, you may need to complete a different [authentication process](https://docs.newrelic.com/docs/ios/ios-with-partners). **Azure Store users:** Due to the deep integration between Azure Storefront and New Relic, Azure Storefront users cannot access their accounts on the New Relic Android or iOS apps.                                                                                                                                                                       |
+| Users with SAML-SSO enabled accounts  | When you sign in to the New Relic mobile app, your session automatically redirects to your web browser. From there you can sign in to your New Relic SAML-SSO account. If you see any errors when using SAML-SSO accounts on your mobile device, verify that you are able to sign in to **[one.newrelic.com](https://one.newrelic.com/all-capabilities)** with a desktop web browser. - If no, contact your administrator. - If yes, get support at [support.newrelic.com](https://support.newrelic.com). |
+
+## User settings [#iphone-settings]
+
+After you sign in, all New Relic accounts and applications associated with the user appear automatically.
+
+**Sign in with additional username**
+
+Follow the procedure for your mobile device.
+
+| **Mobile device** | **To sign in to the app with an additional user name:**                                                                                                                                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Android           | To switch users: - Log out from the Android device: **Main menu > (selected username) > Logout > Confirm**. - Log in with a new account.                                                                                                                             |
+| iPhone            | - From the app menu, select your account name, then select the **Users** menu. - From the **Users** menu, select the plus  icon. - Sign in with the additional username.                                                                                             |
+| iPad              | - To access the **Users** menu: Select the user icon ![icon-ios-app-user](https://docs.newrelic.com/images/mobile-apps_icon_user.webp "icon-ios-app-user") or slide right. - From the **Users** menu, select the plus  icon. - Sign in with the additional username. |
+
+**Switch between accounts**
+
+To switch between accounts associated with your username:
+
+1.  From the **Users** menu, select the user name.
+2.  Select the account name.
+
+**Remove or re-add a user name**
+
+To remove a specific username from this device:
+
+1.  From the **Users** menu, select **Logout**.
+2.  To remove a user from this device, select the user's red minus 
+    icon.
+3.  Select the user's **Log out** icon.
+
+    To add a user again, sign in with that username again.
+
+
+[Page: /docs/mobile-monitoring/new-relic-mobile-apps/mobile-app-features/authentication-partner-saml-sso-accounts.md]
+---
+title: Mobile app authentication for New Relic partners
+source: https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-apps/mobile-app-features/authentication-partner-saml-sso-accounts
+---
+
+> #### ⚠️ IMPORTANT
+>
+> This resource is for New Relic partners. For authentication of users in regular New Relic accounts, see [Authentication](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-user-management/user-authentication-saml-sso-scim-more).
+
+Partner account users typically use SAML-SSO to sign in through your New Relic partner site. You may not have separate passwords or authentication information for your New Relic account.
+
+If you use an email address associated with a New Relic partner account when you first sign in to the New Relic mobile app, New Relic will send you a confirmation email for authentication. Android app users will also see a notification message.
+
+> #### ⚠️ IMPORTANT
+>
+> The authentication email [expires 20 minutes](#email) after it is sent.
+
+## Confirm your email address [#authentication]
+
+To authenticate using a SAML-SSO account provided through a New Relic partner:
+
+1.  From the New Relic mobile app, type your email address associated with the partner account.
+2.  Select **I don't have a password**.
+3.  Retrieve the authentication email from your mobile device within 20 minutes.
+4.  Select the **Authenticate** button (Android users) or email link (Android or iOS users) in the email to log in to New Relic.
+
+You will be redirected to the New Relic mobile app and logged in to your partner account.
+
+## Troubleshoot email problems [#email]
+
+Here are some troubleshooting tips:
+
+-   If you cannot find the authentication message from New Relic in your mobile device's email in-box, check your **Spam** folder.
+-   If you miss the 20-minute deadline, sign in to the New Relic mobile app again, then select the link to resend the authentication email.
+
+
+[Page: /docs/kubernetes-pixie/kubernetes-integration/troubleshooting/common-error-messages/invalid-nr-license.md]
+---
+title: Invalid New Relic license
+source: https://docs.newrelic.com/docs/kubernetes-pixie/kubernetes-integration/troubleshooting/common-error-messages/invalid-nr-license
+---
+
+## Problem
+
+You are getting this error in the logs of the `agent` or `forwarder` containers:
+
+```shell
+  2018-04-09T14:20:17.750893186Z time="2018-04-09T14:20:17Z" level=error 
+  msg="metric sender can't process 0 times" error="InventoryIngest: events
+  were not accepted: 401 401 Unauthorized Invalid license key."
+```
+
+## Solution
+
+Make sure you're using a valid license key.
+
+
+[Page: /docs/triage-inbox/error-impacted.md]
+---
+title: Error scope: Users, sessions, and devices impacted
+source: https://docs.newrelic.com/docs/triage-inbox/error-impacted
+---
+
+New Relic agents automatically capture data about the scope of errors affecting your applications. When you organize by error group, you can see the impact through three key metrics:
+
+-   **Users impacted**: The number of unique users affected by errors
+-   **Sessions impacted**: The number of unique browser sessions affected (fallback for browser entities)
+-   **Devices impacted**: The number of unique mobile devices affected (fallback for mobile entities)
+
+When users impacted data isn't available, New Relic automatically displays the appropriate fallback metric based on your entity type. This helps you prioritize where to focus your debugging efforts by showing you the errors with the highest scope of impact.
+
+![This is an image of the main errors inbox showing users, sessions, and devices impacted](https://docs.newrelic.com/images/errors-inbox_screenshot-full_users-impacted.webp "An image showing how to navigate impact metrics in errors inbox")
+
+Go to **[one.newrelic.com](https://one.newrelic.com) > APM & Services > Errors (errors inbox) > Triage**: You can find impact metrics in the second column of the **Error groups** table, located beneath the **Error count** and **Error rate** time series.
+
+## Fallback impact metrics [#fallback-metrics]
+
+New Relic prioritizes showing the most relevant impact data for your specific application type. When **Users impacted** data isn't available, the system automatically falls back to entity-specific metrics:
+
+-   **Browser entities**: Displays **Sessions impacted** - the number of unique browser sessions affected by errors
+-   **Mobile entities**: Displays **Devices impacted** - the number of unique mobile devices affected by errors
+
+These fallback metrics are automatically collected without requiring additional configuration, unlike Users impacted which may need custom attributes. This ensures you always have visibility into the scope of errors affecting your applications, regardless of your setup.
+
+## Custom attributes to track users impacted  [#custom-attributes]
+
+In some cases, an error event may not have attributes that identify the end user affected by that error event. You can manually add custom attributes so our agents capture user-identifying metadata at the time of ingest.
+
+For cases where you need to add a custom attribute, we recommend reviewing [OpenTelemetry's attribute conventions](https://docs.newrelic.com/docs/more-integrations/open-source-telemetry-integrations/opentelemetry/opentelemetry-introduction) because there are multiple common conventions for naming end user attributes.
+
+For example, [OpenTelemetry standards](https://opentelemetry.io/docs/reference/specification/trace/semantic_conventions/span-general/#general-identity-attributes) uses the following attributes in order of priority:
+
+-   `userId`
+-   `user`
+
+You can review how New Relic processes custom attributes by reading our doc about [collecting custom events](https://docs.newrelic.com/docs/data-apis/custom-data/custom-events/collect-custom-attributes/#enabling-custom).
+
+## Query for impact metrics [#query]
+
+Impact metrics for error groups are recorded as [Metric data types](https://docs.newrelic.com/docs/data-apis/understand-data/metric-data/metric-data-type/) with specific metric names:
+
+**Users impacted**
+
+You can query the number of users impacted using `newrelic.error.group.userImpact` as metric name in NRQL queries:
+
+```sql
+SELECT uniqueCount(newrelic.error.group.userImpact) 
+FROM Metric 
+WHERE metricName='newrelic.error.group.userImpact'
+```
+
+This NRQL query metric captures the approximate number of unique users in the time period selected. Additional attributes provided by the `userImpact` metric which can be used in a `FACET` clause are `error.group.guid`, `entity.guid`.
+
+**Sessions impacted**
+
+You can query the number of sessions impacted using `newrelic.error.group.sessionImpact` as metric name in NRQL queries:
+
+```sql
+SELECT uniqueCount(newrelic.error.group.sessionImpact) 
+FROM Metric 
+WHERE metricName='newrelic.error.group.sessionImpact'
+```
+
+**Devices impacted**
+
+You can query the number of devices impacted using `newrelic.error.group.deviceUuidImpact` as metric name in NRQL queries:
+
+```sql
+SELECT uniqueCount(newrelic.error.group.deviceUuidImpact) 
+FROM Metric 
+WHERE metricName='newrelic.error.group.deviceUuidImpact'
+```
+
+## Alert on impact metrics [#alert]
+
+By creating an [NRQL alert condition](https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-alert-conditions/), developers can trigger alerts when the scope of errors exceeds a threshold. You can create alerts for any of the impact metrics:
+
+-   **Users impacted**: Alert when user impact exceeds your threshold
+-   **Sessions impacted**: Alert when browser session impact exceeds your threshold
+-   **Devices impacted**: Alert when mobile device impact exceeds your threshold
+
+Creating this alert requires determining the [NRQL query](https://docs.newrelic.com/docs/query-your-data/nrql-new-relic-query-language/get-started/introduction-nrql-new-relics-query-language/) which measures the amount of users impacted in a way which best captures your use case.
+
+As an example, the following NRQL query measures the amount of unique users which have been impacted by an [error group](https://docs.newrelic.com/docs/triage-inbox/errors-inbox/#groups) coming from a specific entity:
+
+**Alerts on users impacted**
+
+```sql
+SELECT uniqueCount(newrelic.error.group.userImpact) 
+FROM Metric 
+WHERE metricName='newrelic.error.group.userImpact' 
+AND entity.guid='RXxCUk9XU9182nNEFQUExJQ0FLsU9OfDgzNzgwNw' FACET error.group.guid TIMESERIES
+```
+
+Read more about using the [`uniqueCount()`](https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-nrql-alert-conditions/) function, [how to find the entity GUID](https://docs.newrelic.com/docs/new-relic-solutions/new-relic-one/core-concepts/what-entity-new-relic/#find) for your entities.
+
+Similarly, the following NRQL query measures the total number of users impacted by errors from all entities under the account in the last hour:
+
+```sql
+SELECT count(newrelic.error.group.userImpact) 
+FROM Metric 
+WHERE metricName='newrelic.error.group.userImpact' SINCE 1 hour ago TIMESERIES
+```
+
+**Alerts on sessions impacted**
+
+For browser applications, you can create alerts based on sessions impacted:
+
+```sql
+SELECT uniqueCount(newrelic.error.group.sessionImpact) 
+FROM Metric 
+WHERE metricName='newrelic.error.group.sessionImpact' 
+AND entity.guid='YOUR_BROWSER_ENTITY_GUID' FACET error.group.guid TIMESERIES
+```
+
+**Alerts on devices impacted**
+
+For mobile applications, you can create alerts based on devices impacted:
+
+```sql
+SELECT uniqueCount(newrelic.error.group.deviceUuidImpact) 
+FROM Metric 
+WHERE metricName='newrelic.error.group.deviceUuidImpact' 
+AND entity.guid='YOUR_MOBILE_ENTITY_GUID' FACET error.group.guid TIMESERIES
+```
+
+Once you have decided on a NRQL query, it can be used to create a [NRQL alert condition](https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-nrql-alert-conditions/#create).
+
+To improve the signal to noise ratio of your triggered alerts see [alert creation tips](https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-nrql-alert-conditions/#condition-tips), [how alert thresholds are evaluated](https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-nrql-alert-conditions/#advanced-signal), and [alert condition examples](https://docs.newrelic.com/docs/alerts-applied-intelligence/new-relic-alerts/alert-conditions/create-nrql-alert-conditions/#examples).
+
+## Set users impacted with setUser method [#set-users]
+
+You can use an agent method to identify an end user for the **Users impacted** metric. Sessions and devices impacted are automatically collected without additional configuration. See implementation details for each agent below:
+
+| Agent   | Method to identify an end user                                                                                                                   |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Browser | [`newrelic.setUserId(value: string|null)`](https://docs.newrelic.com/docs/browser/new-relic-browser/browser-apis/setuserid/)                     |
+| Go      | [`txn.SetUserID("example user ID")`](https://docs.newrelic.com/docs/apm/agents/go-agent/api-guides/guide-using-go-agent-api/#user-tracking)      |
+| Java    | [`NewRelic.setUserId(String userId);`](https://docs.newrelic.com/docs/apm/agents/java-agent/attributes/java-agent-attributes/#user-attributes)   |
+| Mobile  | [`setUserId`](https://docs.newrelic.com/docs/data-apis/custom-data/custom-events/report-mobile-monitoring-custom-events-attributes/#track-user)  |
+| .NET    | [`SetUserId`](https://docs.newrelic.com/docs/apm/agents/net-agent/net-agent-api/itransaction/#setuserid)                                         |
+| Node.js | [`setUserID(id)`](https://newrelic.github.io/node-newrelic/API.html#setUserID)                                                                   |
+| PHP     | [`newrelic_set_user_id(string $user_id)`](https://docs.newrelic.com/docs/apm/agents/php-agent/php-agent-api/newrelic_set_user_id/)               |
+| Python  | [`newrelic.agent.set_user_id(user_id)`](https://docs.newrelic.com/docs/apm/agents/python-agent/python-agent-api/setuserid-python-agent-api)      |
+| Ruby    | [`NewRelic::Agent.set_user_id`](https://docs.newrelic.com/docs/apm/agents/ruby-agent/api-guides/sending-handled-errors-new-relic/#user-tracking) |
+
+
+[Page: /docs/apis/nerdgraph/examples/use-nerdgraph-manage-license-keys-user-keys.md]
+---
+title: NerdGraph tutorial: Manage API keys
+source: https://docs.newrelic.com/docs/apis/nerdgraph/examples/use-nerdgraph-manage-license-keys-user-keys
+---
+
+This doc contains tutorials on how to use [NerdGraph](https://docs.newrelic.com/docs/introduction-new-relic-graphql) to programmatically manage some New Relic API keys: the license key, the browser key, and the user key. For general information about our keys, see [API keys](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys).
+
+## Overview of feature description [#terms]
+
+You can use the [API keys UI](https://one.newrelic.com/launcher/api-keys-ui.api-keys-launcher) to create and manage keys. Alternatively, you can use [NerdGraph](https://docs.newrelic.com/docs/introduction-new-relic-graphql)'s `ApiAccess` field to programmatically create and manage the following types of keys:
+
+-   [User keys](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#personal-api-key), required for using NerdGraph
+-   Data ingest keys, including:
+
+    -   The license key: required for the ingest of most data to New Relic, except for browser monitoring data and mobile monitoring data
+    -   [Browser key](https://docs.newrelic.com/docs/browser/new-relic-browser/configuration/copy-browser-monitoring-license-key-app-id): required for the ingest of browser monitoring data
+
+One common use case for this feature is the ability to rotate keys for security purposes. Note that you can't use this NerdGraph functionality to delete the license key or browser key that was originally created with an account; those original keys can't be deleted. You can only create additional license keys and manage the ones you've created.
+
+Notes about this functionality:
+
+-   All mutations can accept multiple keys as arguments, and will return details about successful changes and errors. See examples below for details.
+-   All mutations (create, update and delete) will result in an `NrAuditEvent` that can be queried for auditing purposes. For details, see [Audit events](https://docs.newrelic.com/docs/insights/use-insights-ui/manage-account-data/query-account-audit-logs-nrauditevent).
+-   Regarding ingest keys:
+    -   License and Browser keys are categorized by NerdGraph as **ingest keys**. This is because their main use is to allow data ingest.
+    -   You can create up to 1,000 keys of each ingest key type, which allows for key rotation.
+    -   You can't manage or delete original account ingest keys but you can contact New Relic support to rotate these; you can only create additional ingest or user keys and manage keys you've created.
+
+## Before using examples [#before-examples]
+
+Things to note before using these example queries:
+
+-   To understand the data structure, we recommend experimenting with queries using the [GraphiQL explorer](https://api.newrelic.com/graphiql).
+-   You can also [create, view, and delete user keys using the UI.](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#personal-api-key)
+
+## Create keys
+
+> #### 💡 TIP
+>
+> You can find and generate user keys using the [NerdGraph GraphQL explorer](https://docs.newrelic.com/docs/apis/nerdgraph/get-started/introduction-new-relic-nerdgraph/#explorer), at the top of that interface.
+
+To create multiple keys (user key or ingest key) in a single mutation, for multiple accounts and key types. Note that the mutation can return successfully created keys as well as any errors encountered trying to create keys.
+
+Example of creating a key:
+
+```graphql
+mutation {
+  apiAccessCreateKeys(
+    keys: {
+      ingest: {
+        accountId: YOUR_ACCOUNT_ID
+        ingestType: BROWSER
+        name: "Browser Key"
+        notes: "A note."
+        owningTeamIds: [TEAM_ID]
+      }
+    }
+  ) {
+    createdKeys {
+      id
+      key
+      obfuscatedKey
+      name
+      notes
+      type
+      enabled
+      createdAt
+      ... on ApiAccessIngestKey {
+        ingestType
+      }
+    }
+    errors {
+      message
+      type
+      ... on ApiAccessIngestKeyError {
+        accountId
+        errorType
+        ingestType
+      }
+    }
+  }
+}
+```
+
+Results will vary depending on your data. Use the [GraphiQL explorer](https://api.newrelic.com/graphiql) to experiment with mutations and queries.
+
+Here's an example of using this query to create a [user key](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#user-api-key):
+
+## Create a user key
+
+To create a [user key](https://docs.newrelic.com/docs/apis/get-started/intro-apis/types-new-relic-api-keys#user-api-key), you'd change the above query slightly, in the `keys` section:
+
+````graphql
+mutation {
+  apiAccessCreateKeys(
+    keys: { 
+      user: { 
+        accountId: YOUR_ACCOUNT_ID, 
+        userId: YOUR_USER_ID 
+      }
+    }
+  ) {
+    createdKeys {
+      id
+      key
+      name
+      notes
+      type
+      ... on ApiAccessIngestKey {
+        ingestType
+      }
+    }
+    errors {
+      message
+      type
+      ... on ApiAccessIngestKeyError {
+        accountId
+        errorType
+        ingestType
+      }
+    }
+  }
+}
+```
+
+## Update keys
+
+The update mutation takes the key ID, not the key string, to identify keys.
+
+```graphql
+mutation {
+apiAccessUpdateKeys(
+keys: {
+  ingest: { 
+    keyId: KEY_ID, 
+    name: "Updated name", 
+    notes: "A new note!",
+    enabled: true,
+    owningTeamIds: [TEAM_ID]
+  }
+}
+) {
+updatedKeys {
+  id
+  key
+  obfuscatedKey
+  type
+  name
+  notes
+  enabled
+  createdAt
+}
+errors {
+  message
+}
+}
+}
+````
+
+Use `enabled` to activate or deactivate a key without deleting it: `enabled: true` deactivates the key and `enabled: false` keeps it active. Use `owningTeamIds` to assign one or more teams to the key.
+
+Results will vary depending on your data. Use the [GraphiQL explorer](https://api.newrelic.com/graphiql) to experiment with mutations and queries.
+
+## Delete keys
+
+The delete mutation takes the key ID, not the key string, to identify keys. Deleted keys will no longer grant access to New Relic systems and will no longer be returned by queries to the API access GraphQL API.
+
+```graphql
+mutation {
+  apiAccessDeleteKeys(keys: { ingestKeyIds: INGEST_KEY_ID }) {
+    deletedKeys {
+      id
+    }
+    errors {
+      message
+    }
+  }
+}
+```
+
+Results will vary depending on your data. Use the [GraphiQL explorer](https://api.newrelic.com/graphiql) to experiment with mutations and queries.
+
+## Query keys
+
+You can access ingest and user keys by querying a single key or all keys, scoped to the `actor`. If querying for a single key, you must provide the key ID and type (`INGEST` or `USER`). Querying for multiple keys is done via a key search, which uses a mandatory types list and an optional scope to filter results. User keys belonging to other users will be obfuscated in the results.
+
+Single key example query:
+
+```graphql
+query {
+  actor {
+    apiAccess {
+      key(id: "INGEST_KEY_ID", keyType: INGEST) {
+        key
+        name
+        type
+        ... on ApiAccessIngestKey {
+          ingestType
+        }
+      }
+    }
+  }
+}
+```
+
+Key search example query:
+
+```graphql
+query {
+  actor {
+    apiAccess {
+      keySearch(query: { 
+        types: INGEST, 
+        scope: { 
+          ingestTypes: BROWSER 
+        } 
+      }) {
+        keys {
+          name
+          key
+          type
+          ... on ApiAccessIngestKey {
+            ingestType
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+To retrieve the last used timestamp for a user key, use the `keyUsage` field with the key ID:
+
+```graphql
+query {
+  actor {
+    apiAccess {
+      keyUsage(keyIds: "USER_KEY_ID") {
+        keyId
+        lastUsedAt
+      }
+    }
+  }
+}
+```
+
+`lastUsedAt` is available for user keys only. It is not supported for license ingest keys or browser ingest keys. `keyUsage` returns an array, so you can pass multiple key IDs and use `keyId` in the response to identify which result belongs to which key.
+
+Results will vary depending on your data. Use the [GraphiQL explorer](https://api.newrelic.com/graphiql) to experiment with mutations and queries.
+
+
+[Page: /docs/apis/rest-api-v2/get-started/admin-users-api-key-partnerships.md]
+---
+title: New Relic partnership account authentication
+source: https://docs.newrelic.com/docs/apis/rest-api-v2/get-started/admin-users-api-key-partnerships
+---
+
+This approach adds a new authentication method to the customer-facing [New Relic REST API (v2)](https://api.newrelic.com/) that allows partners (and enterprise-scale customers that use the partnership structure to manage their multiple accounts) to use their partnership credentials to authorize all REST API (v2) calls. It offers no new functionality for non-partner API users.
+
+When calling endpoints in the New Relic REST API (v2) that require the user key, New Relic suggests you use the described [authentication method](https://docs.newrelic.com/docs/apis/rest-api-v2/requirements/admins-api-key-partnerships#Partners).
+
+## Custom headers and API calls [#Partners]
+
+When making API calls, use the following custom headers with your [partner API key](https://docs.newrelic.com/docs/accounts-partnerships/partnerships/partner-api/partner-api-reference#the-api-key), [partner ID](https://docs.newrelic.com/docs/accounts-partnerships/partnerships/partner-api/partner-api-reference#partner-id), and your [account ID](https://docs.newrelic.com/docs/accounts-partnerships/accounts/account-setup/account-id):
+
+-   `X-Api-Key:YOUR_PARTNER_ACCOUNT_API_KEY`
+-   `NewRelic-Partner-Id:YOUR_PARTNER_ID`
+-   `NewRelic-Account-Id:YOUR_CUSTOMERS_ACCOUNT_ID`
+
+Providing authentication to the REST API (v2) in this form allows you to complete any API operation on your customer’s accounts. This bypasses the customer-facing requirement that some API calls require an Admin user’s API key.
+
+This authentication method also works for API endpoints that require only the REST API key. This new authentication method works for all endpoints, not only those that require the Admin User’s API key.
+
+## Known limitations
+
+This partner-only authentication method will only work with the [New Relic REST API (v2)](https://api.newrelic.com/). It **does not** work with the following:
+
+-   [Deployment API](https://docs.newrelic.com/docs/apm/new-relic-apm/maintenance/deployment-notifications#api)
+-   [Infrastructure API for alerts](https://docs.newrelic.com/docs/infrastructure/new-relic-infrastructure/infrastructure-alert-conditions/rest-api-calls-new-relic-infrastructure-alerts)
+-   [Partner API](https://docs.newrelic.com/docs/accounts-partnerships/partnerships/partner-api/partner-api-reference)
+-   [Synthetic monitoring API](https://docs.newrelic.com/docs/apis/synthetics-rest-api/monitor-examples/manage-synthetics-monitors-rest-api)
+
+
+[Page: /docs/data-apis/understand-data/event-data/query-account-audit-logs-nrauditevent/]
+NrAuditEvent: Query account audit logs | New Relic Documentation / 
+ English Español Français 日本語 한국어 Português 
+ Log in Start now 
+ NrAuditEvent: Query account audit logs
+ Copy for LLM | View as Markdown 
+ As an additional security measure for using and managing New Relic, you can use the NrAuditEvent event to view audit logs that show changes in your New Relic organization.
+ What is the NrAuditEvent ? 
+ The NrAuditEvent is created to record some important types of configuration changes you and your users make in your New Relic organization. Data gathered includes the type of account change, what actor made the change, a human-readable description of the action taken, and a timestamp for the change. Reported information includes:
+ Users added or deleted
+ User permission changes
+ Login and logout events
+ Account changes made via API
+ Synthetic monitor changes 
+ Dashboard creation, deletion, updates, and public sharing 
+ Workload configuration changes
+ User, permission, and login events are only written to the parent/reporting account ID of your New Relic organization.
+ To see all the attributes reported by this event, see NrAuditEvent .
+ To be notified about these types of changes, you can use alerts .
+ Caveats and details on using NrAuditEvent 
+ All New Relic accounts can query up to 13 months of account changes.
+ If your New Relic organization and accounts were created using the Partnership API , NrAuditEvent won&#x27;t return information about creating or editing accounts.
+ Audit logging is different than configuring audit mode for an APM agent. APM audit mode records information about all data being transmitted from your app.
+ Example queries 
+ Here are some examples of querying the NrAuditEvent using NRQL .
+ General account changes 
+ What changes have been made to the New Relic account? 
+ To view all changes to your New Relic account for a specific time frame, run this basic NRQL query:
+ SELECT * 
+ FROM NrAuditEvent 
+ SINCE 1 day ago 
+ Copy 
+ What type of account change was made the most? 
+ To query what type of change to the account users was made the most frequently during a specific time frame, include the actionIdentifier attribute in your query. For example:
+ SELECT count ( * ) AS Actions 
+ FROM NrAuditEvent 
+ FACET actionIdentifier 
+ SINCE 1 week ago 
+ Copy 
+ What accounts were added to our organization? 
+ To query for information about created accounts and who created them, you can use something like:
+ SELECT actorEmail , actorId , targetId 
+ FROM NrAuditEvent 
+ WHERE actionIdentifier = &#x27;account.create&#x27; 
+ SINCE 1 month ago 
+ Copy 
+ What users have logged into our organization? 
+ Login events are only written to the parent/reporting account ID of your New Relic organization. To query users who logged into your organization, use a query similar to the following:
+ SELECT actorEmail , actorId 
+ FROM NrAuditEvent 
+ WHERE actionIdentifier = &#x27;user.login&#x27; 
+ SINCE 1 month ago 
+ Copy 
+ What trends appear in account changes? 
+ When you include TIMESERIES in a NRQL query, the results are shown as a line graph. For example:
+ SELECT count ( * ) 
+ FROM NrAuditEvent 
+ TIMESERIES facet actionIdentifier since 1 week ago 
+ Copy 
+ What user management changes have been done? 
+ Query the top-level account in your New Relic organization .
+ To see all the changes made to users, you could use:
+ SELECT * 
+ FROM NrAuditEvent 
+ WHERE targetType = &#x27;user&#x27; 
+ SINCE this month 
+ Copy 
+ If you wanted to narrow that down to see changes to user type , you could use:
+ SELECT * FROM NrAuditEvent 
+ WHERE targetType = &#x27;user&#x27; 
+ AND actionIdentifier IN ( &#x27;user.self_upgrade&#x27; , &#x27;user.change_type&#x27; ) 
+ SINCE this month 
+ Copy 
+ Synthetic monitoring: What changes have been made to a monitor? 
+ To query updates for your synthetic monitors during a specific time frame, include the actionIdentifier attribute in your query. For example:
+ SELECT count ( * ) FROM NrAuditEvent 
+ WHERE actionIdentifier = &#x27;synthetics_monitor.update_script&#x27; 
+ FACET actionIdentifier , description , actorEmail 
+ SINCE 1 week ago LIMIT 1000 
+ Copy 
+ For more information about this synthetic monitoring feature, see synthetic monitoring audit log .
+ Workloads: What changes were made to any workload configuration? 
+ To query what configuration changes were made to any workload, use the query below. The targetId attribute contains the GUID of the workload that was modified, which you can use for searches. Since changes on workloads are often automated, you might want to include the actorType attribute to know if the change was done directly by a user through the UI or through the API.
+ SELECT timestamp , actorEmail , actorType , description , targetId 
+ FROM NrAuditEvent 
+ WHERE targetType = &#x27;workload&#x27; 
+ SINCE 1 week ago LIMIT MAX 
+ Copy 
+ What target types are in my account? 
+ The targetType attribute describes the object that changed, such as account, role, user, alert conditions or notifications, and logs.
+To generate a list of targetType values for your account, run the query below. Note that this query will only show targetTypes that have been touched.
+ SELECT uniques ( targetType ) 
+ FROM NrAuditEvent 
+ SINCE 90 days ago 
+ Copy 
+ Changes made by specific users 
+ What account changes have been made by any user? 
+ To see detailed information about any user who made changes to the account during a specific time frame, include actorType = &#x27;user&#x27; in the query. For example:
+ SELECT actionIdentifier , description , actorEmail , actorId , targetType , targetId 
+ FROM NrAuditEvent 
+ WHERE actorType = &#x27;user&#x27; 
+ SINCE 1 week ago 
+ Copy 
+ What account changes have been made by a specific user? 
+ To query account activities made by a specific person during the selected time frame, you must know their actorId . For example:
+ SELECT actionIdentifier 
+ FROM NrAuditEvent 
+ WHERE actorId = 829034 SINCE 1 week ago 
+ Copy 
+ Who made the most changes to the account? 
+ To identify who ( actorType ) has made the most changes to the account, include the actorEmail attribute in your query. For example:
+ SELECT count ( * ) as Users 
+ FROM NrAuditEvent 
+ WHERE actorType = &#x27;user&#x27; 
+ FACET actorEmail SINCE 1 week ago 
+ Copy 
+ Synthetic monitoring: What monitors were created by a specific user? 
+ To query updates from your synthetic monitors made by a specific user, include the actionIdentifier and actorEmail attribute in your query. For example:
+ SELECT count ( * ) FROM NrAuditEvent 
+ WHERE actionIdentifier = &#x27;synthetics_monitor.update_script&#x27; 
+ FACET actorEmail , actionIdentifier , description 
+ SINCE 1 week ago LIMIT 1000 
+ Copy 
+ Changes made using the API 
+ What account changes have been made using an API key? 
+ To see detailed information about changes to the account that were made using an API key during a specific time frame, include actorType = &#x27;api_key&#x27; in the query. For example:
+ SELECT actionIdentifier , description , targetType , targetId , actorAPIKey , actorId , actorEmail 
+ FROM NrAuditEvent 
+ WHERE actorType = &#x27;api_key&#x27; 
+ SINCE 1 week ago 
+ Copy 
+ On this page
+ Was this doc helpful?
+ 😁
+Yes 🙁
+No 
+ Edit this doc
+
+[Page: /docs/mobile-monitoring/mobile-monitoring-ui/usage-pages/active-users.md]
+---
+title: Active users
+source: https://docs.newrelic.com/docs/mobile-monitoring/mobile-monitoring-ui/usage-pages/active-users
+---
+
+The mobile monitoring capability includes a report tracking the number of devices, sessions or users running your app for each day, week, or month trended over time. To view the report: Go to **[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) > Mobile > (select an app) > Usage > Active users**.
+
+## Active users details [#details]
+
+By default, the charts and tables will display monthly unique devices. Use the dropdowns in the filter bar to change the time window to weekly or daily or to change the metric to sessions or users. Additionally, you can use the version, OS version, device group, or custom filters for further segmentation.
+
+To see the total number of devices, sessions or users for any time period, mouse over the line in the line chart. The current time period's value is a month-to-date, week-to-date or day-to-date value and does not indicate the full month, week, or day's usage.
+
+The active users table displays the chosen time period, as specificed by the filter selected, the unique metric and a comparison to the previous time period. For example, if `Monthly` is selected, the table will show the last 12 months, the unique data for those months, and a percent increase or decrease from the previous month.
+
+![screen active users](https://docs.newrelic.com/images/mobile_screenshot_full-active_users.webp "screen active users")
+
+**[one.newrelic.com > All capabilities](https://one.newrelic.com/all-capabilities) > Mobile > (select an app) > Usage > Active users:** This report provides a line chart and table tracking the number of devices, sessions or users running your app for each month, week or day over the last year.
+
+To drill down into detailed information, click on a row of the table. This will open a stacked view with a detailed line chart for that time period.
+
+## Device tracking [#tracking]
+
+Mobile monitoring does not use hardware identifiers for unique install tracking.
+
+-   On iOS we use the IdentifierForVendor property. (Versions 5.3.4 and lower used the SecureUDID library.)
+-   On Android we generate a unique GUID when the application is installed.
+
+
+[Page: /docs/synthetics/synthetic-monitoring/administration/synthetic-monitoring-audit-log-track-changes-made-users.md]
+---
+title: Tracking your team's use of synthetic monitoring
+source: https://docs.newrelic.com/docs/synthetics/synthetic-monitoring/administration/synthetic-monitoring-audit-log-track-changes-made-users
+---
+
+New Relic lets you see a 13-month history of synthetic monitoring audit events.
+
+## Feature description [#description]
+
+When you take specific actions in synthetic monitoring like creating or editing a monitor, an [`NrAuditEvent`](/attribute-dictionary/?event=NrAuditEvent) is generated. This event includes details about the action taken and which user took that action. This data is stored for 13 months. This historical data may be helpful if you'd like to investigate how a problem with your account was created and who made that change.
+
+Synthetic monitoring's changes tracked include:
+
+-   Monitors
+    -   Creation
+    -   Edits (including location change, mute/unmute, and enable/disable)
+    -   Script creation, edits, validation (including secure credentials used)
+    -   Deletion
+-   Monitor downtimes
+    -   Creation
+    -   Edits
+    -   Deletion
+-   Secure credentials
+    -   Creation
+    -   Edits
+    -   Views
+    -   Deletion
+-   Private locations
+    -   Creation
+    -   Edits (including clearing queues)
+    -   Deletion
+
+For details on how to query this data, see [Query details](#query-changes).
+
+## Query details [#query-changes]
+
+To query changes, [use the query builder](https://docs.newrelic.com/docs/query-your-data/explore-query-data/query-builder/introduction-query-builder) to explore the `NrAuditEvent` and its associated attributes. For an introduction to using the `NrAuditEvent` event, see [Query account audit logs](https://docs.newrelic.com/docs/insights/use-insights-ui/manage-account-data/query-account-audit-logs-nrauditevent).
+
+Supported `actionIdentifier` events currently include:
+
+-   Monitors
+    -   `synthetics_monitor.create`
+    -   `synthetics_monitor.update`
+    -   `synthetics_monitor.create_script`
+    -   `synthetics_monitor.update_script`
+    -   `synthetics_monitor.validate_script`
+    -   `synthetics_monitor.delete`
+-   Monitor downtimes
+    -   `synthetics_monitor_downtime.create`
+    -   `synthetics_monitor_downtime.update`
+    -   `synthetics_monitor_downtime.delete`
+-   Secure credentials
+    -   `synthetics_secure_credential.create`
+    -   `synthetics_secure_credential.update`
+    -   `synthetics_secure_credential.view`
+    -   `synthetics_secure_credential.delete`
+-   Private locations
+    -   `synthetics_private_location.create​`
+    -   `synthetics_private_location.update​`
+    -   `synthetics_private_location.delete`
+
+How the change was made:
+
+-   The `actorAPIKey` attribute indicates if the change was made via the API or by a user via the UI. When this value is null, it's a user update; when not null, it's an API update.
+
+For examples of synthetic monitoring's audit log queries, see:
+
+-   The [example use case](#example-use-case).
+-   The synthetic monitoring specific examples in [Audit query examples](https://docs.newrelic.com/docs/insights/insights-data-sources/default-data/nrauditevent-default-attributes-examples).
+
+## Example use case: Finding changes made by a user [#example-use-case]
+
+Here's an example of using the synthetic monitoring audit log to solve a common problem:
+
+You are a manager at a company that uses synthetic monitoring. A new employee has been playing with your company's accounts to learn how synthetic monitoring works. Unfortunately, this employee was accidentally given full access to the production accounts, instead of the pre-production accounts.
+
+You want to determine what synthetic monitors this employee created, deleted, and updated, so that you will know which monitors need to be fixed. Instead of having to review every monitor in the account, you [open the query builder](https://docs.newrelic.com/docs/query-your-data/explore-query-data/query-builder/introduction-query-builder) and run the following NRQL query of the `NrAuditEvent` event:
+
+```sql
+SELECT count(*) FROM NrAuditEvent
+WHERE actionIdentifier = 'synthetics_monitor.update_script' AND
+actorEmail = 'EMPLOYEE_EMAIL'
+FACET actionIdentifier, description
+SINCE 1 week ago LIMIT 1000
+```
+
+The query will return all the synthetic monitors that the employee has updated, deleted, created, or disabled. One by one, you and the employee review the list and update the edited monitors.
+
+
+[Page: /docs/accounts/accounts/account-maintenance/query-account-audit-logs-nrauditevent.md]
+---
+title: NrAuditEvent: Query account audit logs
+source: https://docs.newrelic.com/docs/accounts/accounts/account-maintenance/query-account-audit-logs-nrauditevent
+---
+
+As an additional security measure for using and managing New Relic, you can use the `NrAuditEvent` event to view audit logs that show changes in your New Relic organization.
+
+## What is the `NrAuditEvent`? [#attributes]
+
+The `NrAuditEvent` is created to record some important types of configuration changes you and your users make in your New Relic organization. Data gathered includes the type of account change, what actor made the change, a human-readable description of the action taken, and a timestamp for the change. Reported information includes:
+
+-   Users added or deleted
+-   User permission changes
+-   Login and logout events
+-   Account changes made via API
+-   [Synthetic monitor changes](https://docs.newrelic.com/docs/synthetics/new-relic-synthetics/administration/audit-synthetics-account-changes)
+-   Dashboard creation, deletion, updates, and [public sharing](https://docs.newrelic.com/docs/query-your-data/explore-query-data/dashboards/share-dashboards-publicly/#audit-trail-dashboard)
+-   Workload configuration changes
+
+User, permission, and login events are only written to the parent/reporting account ID of your New Relic organization.
+
+To see all the attributes reported by this event, see [`NrAuditEvent`](/attribute-dictionary/?event=NrAuditEvent).
+
+To be notified about these types of changes, you can use [alerts](https://docs.newrelic.com/docs/alerts/new-relic-alerts/getting-started/alerting-new-relic).
+
+## Caveats and details on using `NrAuditEvent` [#retention]
+
+All New Relic accounts can query up to 13 months of account changes.
+
+If your New Relic organization and accounts were created using the [Partnership API](https://docs.newrelic.com/docs/new-relic-partnerships/partner-integration-guide/partner-account-maintenance/partner-api), `NrAuditEvent` won't return information about creating or editing accounts.
+
+Audit logging is different than configuring [audit mode](https://docs.newrelic.com/docs/agents/manage-apm-agents/configuration/log-audit-all-data-your-new-relic-agent-transmits) for an APM agent. APM audit mode records information about all data being transmitted from your app.
+
+## Example queries [#default-attributes]
+
+Here are some examples of querying the `NrAuditEvent` using [NRQL](https://docs.newrelic.com/docs/insights/nrql-new-relic-query-language/nrql-resources/nrql-syntax-components-functions#sel-since).
+
+### General account changes [#examples-any]
+
+**What changes have been made to the New Relic account?**
+
+To view all changes to your New Relic account for a specific time frame, run this basic NRQL query:
+
+````sql
+SELECT * 
+FROM NrAuditEvent 
+SINCE 1 day ago
+```
+
+````
+
+**What type of account change was made the most?**
+
+To query what type of change to the account users was made the most frequently during a specific time frame, include the [`actionIdentifier` attribute](#actorIdentifier) in your query. For example:
+
+````sql
+SELECT count(*) AS Actions 
+FROM NrAuditEvent 
+FACET actionIdentifier 
+SINCE 1 week ago
+```
+
+````
+
+**What accounts were added to our organization?**
+
+To query for information about created accounts and who created them, you can use something like:
+
+````sql
+SELECT actorEmail, actorId, targetId 
+FROM NrAuditEvent 
+WHERE actionIdentifier = 'account.create' 
+SINCE 1 month ago
+```
+
+````
+
+**What users have logged into our organization?**
+
+Login events are only written to the parent/reporting account ID of your New Relic organization. To query users who logged into your organization, use a query similar to the following:
+
+````sql
+SELECT actorEmail, actorId 
+FROM NrAuditEvent 
+WHERE actionIdentifier = 'user.login' 
+SINCE 1 month ago
+```
+
+````
+
+**What trends appear in account changes?**
+
+When you include `TIMESERIES` in a NRQL query, the results are shown as a line graph. For example:
+
+````sql
+SELECT count(*) 
+FROM NrAuditEvent 
+TIMESERIES facet actionIdentifier since 1 week ago
+```
+
+````
+
+**What user management changes have been done?**
+
+Query the top-level account in your [New Relic organization](https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-pricing-users/new-relic-account-structure).
+
+To see all the changes made to users, you could use:
+
+````sql
+SELECT * 
+FROM NrAuditEvent 
+WHERE targetType = 'user' 
+SINCE this month
+```
+
+If you wanted to narrow that down to see changes to [user type](/docs/accounts/accounts-billing/new-relic-one-user-management/user-type), you could use:
+
+```sql
+SELECT * FROM NrAuditEvent 
+WHERE targetType = 'user' 
+  AND actionIdentifier IN ('user.self_upgrade', 'user.change_type') 
+SINCE this month
+```
+
+````
+
+**Synthetic monitoring: What changes have been made to a monitor?**
+
+To query updates for your synthetic monitors during a specific time frame, include the [`actionIdentifier`](/attribute-dictionary/?event=NRAuditEvent/actionIdentifier) attribute in your query. For example:
+
+````sql
+SELECT count(*) FROM NrAuditEvent 
+WHERE actionIdentifier = 'synthetics_monitor.update_script' 
+FACET actionIdentifier, description, actorEmail 
+SINCE 1 week ago LIMIT 1000
+```
+
+For more information about this synthetic monitoring feature, see [synthetic monitoring audit log](/docs/synthetics/new-relic-synthetics/administration/audit-synthetics-account-changes).
+
+````
+
+**Workloads: What changes were made to any workload configuration?**
+
+To query what configuration changes were made to any workload, use the query below. The `targetId` attribute contains the GUID of the workload that was modified, which you can use for searches. Since changes on workloads are often automated, you might want to include the `actorType` attribute to know if the change was done directly by a user through the UI or through the API.
+
+````sql
+SELECT timestamp, actorEmail, actorType, description, targetId 
+FROM NrAuditEvent 
+WHERE targetType = 'workload' 
+SINCE 1 week ago LIMIT MAX
+```
+
+````
+
+**What target types are in my account?**
+
+The `targetType` attribute describes the object that changed, such as account, role, user, alert conditions or notifications, and logs.
+To generate a list of `targetType` values for your account, run the query below. Note that this query will only show `targetTypes` that have been touched.
+
+````sql
+SELECT uniques(targetType)
+FROM NrAuditEvent
+SINCE 90 days ago
+```
+
+````
+
+### Changes made by specific users [#examples-who]
+
+**What account changes have been made by any user?**
+
+To see detailed information about any user who made changes to the account during a specific time frame, include [`actorType = 'user'`](#actorType) in the query. For example:
+
+````sql
+SELECT actionIdentifier, description, actorEmail, actorId, targetType, targetId 
+FROM NrAuditEvent 
+WHERE actorType = 'user' 
+SINCE 1 week ago
+```
+
+````
+
+**What account changes have been made by a specific user?**
+
+To query account activities made by a specific person during the selected time frame, you must know their [`actorId`](#actorId). For example:
+
+````sql
+SELECT actionIdentifier 
+FROM NrAuditEvent 
+WHERE actorId = 829034 SINCE 1 week ago
+```
+
+````
+
+**Who made the most changes to the account?**
+
+To identify who ([`actorType`](#actorType)) has made the most changes to the account, include the [`actorEmail` attribute](#actorEmail) in your query. For example:
+
+````sql
+SELECT count(*) as Users 
+FROM NrAuditEvent 
+WHERE actorType = 'user' 
+FACET actorEmail SINCE 1 week ago
+```
+
+````
+
+**Synthetic monitoring: What monitors were created by a specific user?**
+
+To query updates from your synthetic monitors made by a specific user, include the [`actionIdentifier`](/attribute-dictionary/?event=NRAuditEvent&attribute=actionIdentifier) and [`actorEmail`](/attribute-dictionary/?event=NRAuditEvent&attribute=actorEmail) attribute in your query. For example:
+
+````sql
+SELECT count(*) FROM NrAuditEvent 
+WHERE actionIdentifier = 'synthetics_monitor.update_script' 
+FACET actorEmail, actionIdentifier, description 
+SINCE 1 week ago LIMIT 1000
+```
+
+````
+
+### Changes made using the API [#examples-api]
+
+**What account changes have been made using an API key?**
+
+To see detailed information about changes to the account that were made using an API key during a specific time frame, include [`actorType = 'api_key'`](#actorType) in the query. For example:
+
+````sql
+SELECT actionIdentifier, description, targetType, targetId, actorAPIKey, actorId, actorEmail 
+FROM NrAuditEvent 
+WHERE actorType = 'api_key' 
+SINCE 1 week ago
+```
+
+````
+
+
+[Page: /docs/accounts/accounts-billing/new-relic-one-pricing-billing/compute-optimizer.md]
+---
+title: Optimize your compute usage
+source: https://docs.newrelic.com/docs/accounts/accounts-billing/new-relic-one-pricing-billing/compute-optimizer
+---
+
+Compute Optimizer provides actionable insights to help you manage compute spend and implement automated compute controls. This enables you to identify inefficient areas, receive clear recommendations for optimization, and ultimately achieve potential compute savings, improved query efficiency, and a more streamlined New Relic experience.
+
+This tool is designed for two types of users:
+
+-   **Practitioners and dashboard creators:** Users who create dashboards and alert conditions and want to ensure they are optimized and not wasteful
+-   **Admins:** Those responsible for maintaining New Relic costs within their company and ensuring compute usage doesn't exceed budget limits
+
+> #### ⚠️ IMPORTANT
+>
+> Compute Optimizer is available to customers on Legacy Compute (CCU) or Core Compute plans only. It is not available to customers on Data + User + Advanced Compute plans.
+
+## Access Compute Optimizer
+
+You'll find the Compute Optimizer in the Administration panel within New Relic.
+
+1.  Log in to New Relic.
+2.  Click your user name, then select **Administration**.
+3.  Click **Compute Optimizer** to access the dashboard.
+
+## Compute Optimizer
+
+Compute Optimizer includes **Alert Conditions** and **Dashboards** views, allowing you to focus on specific product capabilities. Both views share common functionality:
+
+-   **Time picker:** Filter data based on specific time periods
+-   **Refresh recommendations:** Update the recommendations with the latest data
+-   **Export report:** Download the recommendations for offline analysis
+
+Each view displays different metrics related to compute usage and potential savings (see individual sections below).
+
+Insights are dynamic and filtered by your time picker settings, allowing you to analyze specific time periods.
+
+### Alert Conditions
+
+Alert Conditions help you identify and optimize inefficient alert conditions that are consuming excessive compute resources.
+
+![Image of Compute Optimizer](https://docs.newrelic.com/images/compute_optimize.webp "Compute Optimizer")
+
+#### Dashboard metrics
+
+-   **Inefficient usage:** Shows the total core CCU consumed by alert conditions that have been flagged as inefficient, expressed as a percentage of total alerts CCU
+-   **Potential savings:** Shows the estimated core CCU savings you can achieve, expressed as a percentage of total alerts CCU (excludes recommendations without savings estimates)
+
+#### Search and filter
+
+Use the search bar to find specific alert conditions by name. You can also filter recommendations by:
+
+-   **Component name:** Filter by all available alert conditions or specific ones
+-   **Product capability:** Focus on Alert Conditions specifically
+
+#### Recommendations table
+
+The recommendations table breaks down the identified optimization opportunities for alert conditions:
+
+-   **Component name:** Identifies the specific alert condition that has an optimization opportunity
+-   **Product capability:** Displays "Alert Conditions" for all entries
+-   **CCU usage:** Shows the current compute consumption (measured in core CCU) for each alert condition
+-   **Recommendation:** Offers actionable insights for optimizing your compute. Common recommendations include:
+    -   "Add a `WHERE` clause outside the `SELECT` statement"
+    -   "Consider deleting this alert condition. Merge thresholds and/or keep the condition with smaller LOS"
+    -   "This alert condition has duplicates. Consider deleting the duplicated alert conditions"
+-   **CCU saving estimate:** Quantifies the potential compute reduction (in core CCU) for each individual recommendation
+-   **Reduction estimate:** Shows the percentage of compute that could be saved (for example, "100%", "0%")
+
+#### Taking action
+
+The action menu (three dots) for each recommendation offers additional options, including access to optimized queries when applicable, making it easy to implement the suggested changes directly.
+
+### Dashboards
+
+Dashboards help you identify and optimize dashboard widgets and pages that are consuming excessive compute resources or need performance improvements.
+
+![Image of the Compute Optimizer Dashboards view](https://docs.newrelic.com/images/compute_optimizer_dashboard.webp "Compute Optimizer Dashboards view")
+
+#### Dashboard metrics
+
+-   **Total Usage:** Shows the total core CCU consumed by all dashboards, expressed as a percentage of total dashboard CCU
+-   **Potential savings:** Shows the estimated core CCU savings you can achieve, expressed as a percentage of total dashboard CCU (excludes recommendations without savings estimates)
+
+#### Search and filter
+
+Use the search bar to find specific dashboards, widgets, or pages by name. You can also filter recommendations by:
+
+-   **Dashboard:** Filter by all dashboards or specific ones
+-   **Item:** Filter by all items (widgets and pages) or specific ones
+-   **Recommendation:** Filter by all recommendations or specific recommendation types
+
+#### Grouped view
+
+Dashboards organize recommendations by dashboard, showing the total number of groups and items (for example, "3 groups | 26 items"). Within one dashboard, there can be multiple recommendations. Each dashboard can be expanded to view individual recommendations at three levels:
+
+-   **Dashboard level:** Recommendations that apply to the entire dashboard (for example, reducing the time range for the whole dashboard)
+-   **Page level:** Recommendations for specific pages within the dashboard
+-   **Widget level:** Recommendations for specific widgets within the dashboard (for example, using WHERE filters more effectively in a specific widget)
+
+#### Recommendations table
+
+The recommendations table shows optimization opportunities organized by item:
+
+-   **Item:** Identifies the specific dashboard, page, or widget that has an optimization opportunity. Items are grouped under their parent dashboard name.
+-   **Recommendation:** Offers actionable insights for optimizing your dashboards. Recommendations vary based on the specific inefficiencies detected and may include multiple suggestions per dashboard.
+-   **Usage:** Shows the current compute consumption (measured in core CCU) for each item, with sorting capability
+-   **Estimated savings:** Quantifies the potential core CCU savings and percentage reduction for each recommendation
+
+> #### ⚠️ IMPORTANT
+>
+> A dash (--) in the **Usage** and **Estimated savings** columns indicates that the exact savings amount cannot be calculated. However, implementing these recommendations will still reduce compute consumption.
+
+#### Viewing recommendation details
+
+When you click any recommendation, a side panel opens with:
+
+-   The detailed recommendation text
+-   A link to the affected dashboard
+-   The original query and an optimized query (when applicable), allowing you to copy and implement the optimized version
+
+Use the optimized query to update your dashboard and improve performance.

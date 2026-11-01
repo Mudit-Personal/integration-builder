@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Twilio SendGrid Teammates",
+    "slug": "sendgrid-teammates",
+    "apiVersion": "1.0.0"
+  },
+  "baseUrl": "https://api.sendgrid.com",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "bearer",
+      "label": "SendGrid API key",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/v3/teammates",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "result",
+    "pagination": {
+      "type": "offset",
+      "offsetParam": "offset",
+      "limitParam": "limit",
+      "pageSize": 100,
+      "totalPath": null,
+      "hasMorePath": null
+    },
+    "requiredScopes": [],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "username",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "first_name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": {
+        "path": "user_type",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The Teammates API returns no last-login or last-active field and offers no audit log or per-user usage report."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "The API key must be sent as a bearer token in the Authorization header."
+    },
+    {
+      "claim": "users",
+      "quote": "This endpoint allows you to retrieve a paginated list of all current Teammates."
+    },
+    {
+      "claim": "pagination",
+      "quote": "Use the `offset` query parameter to control the position in the list from which to start retrieving additional items."
+    }
+  ],
+  "assumptions": [
+    "Page size of 100 is a guess; the source does not state a maximum for limit.",
+    "The default US host is used. EU accounts would need https://api.eu.sendgrid.com instead.",
+    "Pending invitations (GET /v3/teammates/pending) are not included, since the runtime handles one user list. They hold no active licence yet.",
+    "The user list has no status field, so status is left unmapped. Teammates are treated as existing accounts.",
+    "Only first_name is used as the display name; last_name cannot be combined.",
+    "No rate limit information was given in the source.",
+    "No last-active, audit log or usage report was found in the source, so usage is unavailable."
+  ]
+}

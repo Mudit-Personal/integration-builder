@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Bitbucket Cloud",
+    "slug": "bitbucket",
+    "apiVersion": "2.0"
+  },
+  "baseUrl": "https://api.bitbucket.org/2.0",
+  "connectionFields": [
+    {
+      "name": "workspace",
+      "label": "Workspace slug",
+      "example": "my-workspace"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "oauth2_authorization_code",
+      "label": "OAuth 2.0",
+      "authorizeUrl": "https://bitbucket.org/site/oauth2/authorize",
+      "tokenUrl": "https://bitbucket.org/site/oauth2/access_token",
+      "scopes": [
+        "account"
+      ]
+    },
+    {
+      "type": "basic",
+      "label": "Username and app password",
+      "usernameLabel": "Username",
+      "passwordLabel": "App password"
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/workspaces/{{connection.workspace}}/permissions",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "values",
+    "pagination": {
+      "type": "next_url",
+      "urlPath": "next",
+      "sizeParam": "pagelen",
+      "pageSize": 100
+    },
+    "requiredScopes": [
+      "account"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "user.uuid",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": null,
+      "displayName": {
+        "path": "user.display_name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": {
+        "path": "permission",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userType": null,
+      "lastActiveAt": {
+        "path": "last_accessed",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "createdAt": {
+        "path": "user.created_on",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "last_activity_field"
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "Basic Auth is available only with username and app password as credentials."
+    },
+    {
+      "claim": "users",
+      "quote": "Returns the list of members in a workspace and their permission levels."
+    },
+    {
+      "claim": "pagination",
+      "quote": "Returns a paginated list of webhooks installed on this workspace."
+    },
+    {
+      "claim": "usage",
+      "quote": "`last_accessed` and `added_"
+    }
+  ],
+  "assumptions": [
+    "The workspace slug is entered as a connection setting rather than discovered automatically.",
+    "The source text is cut off, so the per-member last-accessed field (last_accessed) and the permission (role) field are not confirmed in the response sample. Bitbucket says last_accessed disappears once administration moves to admin.atlassian.com, so last-active data may be empty for those accounts.",
+    "The page size of 100 and the pagelen size parameter are assumptions; the source does not state a maximum.",
+    "Next-page links are assumed to come back in the 'next' field, as shown in the response samples.",
+    "Email addresses and account status are not returned by this endpoint, so they are left empty. Suspended or deactivated members may not be listed.",
+    "OAuth client credentials are not documented, so only the authorization code flow and app passwords are listed. Both are tied to a person, so access may stop if that person leaves.",
+    "Rate limits are not stated in the source."
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Zoom",
+    "slug": "zoom",
+    "apiVersion": "v2"
+  },
+  "baseUrl": "https://api.zoom.us/v2",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "bearer",
+      "label": "Zoom OAuth access token",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [
+    {
+      "name": "division",
+      "request": {
+        "method": "GET",
+        "path": "/divisions",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "extract": {
+        "divisionId": "divisions[0].division_id"
+      }
+    }
+  ],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/divisions/{{context.divisionId}}/users",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "users",
+    "pagination": {
+      "type": "cursor",
+      "cursorPath": "next_page_token",
+      "cursorParam": "next_page_token",
+      "cursorIn": "query",
+      "hasMorePath": null,
+      "sizeParam": "page_size",
+      "pageSize": 30
+    },
+    "requiredScopes": [
+      "division:read:admin"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "user_id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "user_email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "user_display_name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": null,
+      "role": null,
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The provided documentation excerpt shows no per-user last-active field, activity log or per-user usage report. The division user records only contain id, email and display name."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "users",
+      "quote": "List the users of a division under your account."
+    },
+    {
+      "claim": "pagination",
+      "quote": "Use the next page token to paginate through a large set of results."
+    }
+  ],
+  "assumptions": [
+    "The documentation excerpt does not include Zoom's account-wide user listing (the main Users endpoint). I used the division users listing instead, which is the closest account-level list shown.",
+    "The context step takes the first division returned by /divisions and assumes it is the main division holding all users. This is not confirmed; if users sit in other divisions they will be missed.",
+    "Division users carry no status, role, user type, last-active or created fields, so those are left empty. Suspended or deactivated users may not be shown.",
+    "The excerpt cuts off before the authentication section. I assumed a Bearer access token in the Authorization header (Zoom OAuth, ideally a server-to-server app that survives staff leaving). The token URL was not in the source, so no OAuth flow is configured.",
+    "Divisions are marked as not supported in the Gov cluster, so this connector will not work on Gov accounts.",
+    "Division endpoints need the division:read:admin scope. No paid plan requirement is stated for them.",
+    "The maximum page size for divisions was not documented; I used the default of 30.",
+    "Rate limits are given only as labels such as LIGHT, with no numbers, so rate limit values are left empty.",
+    "No usage signal was found, so usage is marked unavailable."
+  ]
+}

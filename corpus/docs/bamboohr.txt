@@ -1,0 +1,135 @@
+Get Employees Directory 
+ For AI agents: the docs index is at https://documentation.bamboohr.com/llms.txt. Append .md to any documentation page URL to get its markdown version.
+ Time Status User Agent 
+ Retrieving recent requests…
+ Loading… 
+ Avoid this common pitfall
+ 🚧 The Company Directory is a feature that can be managed and even disabled by each company in their account settings. Because of this, calling this endpoint may perform differently or not at all (if the feature is disabled) from one company to the next. Instead, we recommend integrators use the request a custom report API to retrieve bulk employee data.
+ Sample Response
+ JSON XML 
+ {
+ "fields": [
+ {
+ "id": "displayName",
+ "type": "text",
+ "name": "Display Name"
+ },
+ {
+ "id": "firstName",
+ "type": "text",
+ "name": "First Name"
+ },
+ {
+ "id": "lastName",
+ "type": "text",
+ "name": "Last Name"
+ },
+ {
+ "id": "gender",
+ "type": "text",
+ "name": "Gender"
+ },
+ {
+ "id": "jobTitle",
+ "type": "list",
+ "name": "Job Title"
+ },
+ {
+ "id": "workPhone",
+ "type": "text",
+ "name": "Work Phone"
+ },
+ {
+ "id": "workPhoneExtension",
+ "type": "text",
+ "name": "Work Extension"
+ },
+ {
+ "id": "skypeUsername",
+ "type": "text",
+ "name": "Skype Username"
+ },
+ {
+ "id": "facebook",
+ "type": "text",
+ "name": "Facebook URL"
+ }
+ ],
+ "employees": [
+ {
+ "id":123,
+ "displayName":"John Doe",
+ "firstName":"John",
+ "lastName":"Doe",
+ "gender":"Male",
+ "jobTitle":"Customer Service Representative",
+ "workPhone":"555-555-5555",
+ "workPhoneExtension":null,
+ "skypeUsername":"JohnDoe",
+ "facebook":"JohnDoeFacebook"
+ }
+ ]
+} 
+ <directory>
+ <fieldset>
+ <field id="displayName">Display name</field>
+ <field id="firstName">First name</field>
+ <field id="lastName">Last name</field>
+ <field id="gender">Gender</field>
+ <field id="jobTitle">Job title</field>
+ <field id="workPhone">Work Phone</field>
+ <field id="workPhoneExtension">Work Extension</field>
+ <field id="skypeUsername">Skype Username</field>
+ <field id="facebook">Facebook URL</field>
+ </fieldset>
+ <employees>
+ <employee id="123">
+ <field id="displayName">John Doe</field>
+ <field id="firstName">John</field>
+ <field id="lastName">Doe</field>
+ <field id="gender">Male</field>
+ <field id="jobTitle">Customer Service Representative</field>
+ <field id="workPhone">555-555-5555</field>
+ <field id="workPhoneExtension"/>
+ <field id="skypeUsername">JohnDoe</field>
+ <field id="facebook">JohnDoeFacebook</field>
+ </employee>
+ </employees>
+</directory> 
+ onlyCurrent boolean
+ Defaults to true
+ When true (the default), only employees whose hire date and employment-status effective date are on or before today are returned. Set to false to also include employees with a future hire date or future employment-status effective date (typically pre-boarding hires). The fieldset is unaffected.
+ true false 
+ AcceptHeaderParameter string
+ enum
+ This endpoint can produce either JSON or XML.
+ application/xml application/json 
+ Allowed: application/xml application/json 
+ accept string
+ enum
+ Defaults to application/json
+ Generated from available response content types
+ application/json application/xml 
+ Allowed: application/json application/xml 
+ 200
+ Directory fieldset and matching employee records, encoded per the Accept header.
+ 401
+ Unauthorized.
+ 403
+ The caller has neither usable Company Directory nor Company Org Chart access, so no directory is available. This can mean the features are disabled company-wide (Settings > Company Directory) or that they are not shared with the caller&#x27;s access level; the response does not distinguish those cases. When both company toggles are off, every caller including administrators receives this response. The body is empty and the diagnostic reason is carried in the x-bamboohr-error-message header.
+ 404
+ The resulting directory is empty for this company configuration and onlyCurrent setting, so no employee records are returned.
+ 500
+ Internal server error.
+ Updated 6 months ago 
+ Shell Node Ruby PHP Python 
+ : 
+ Base URL 
+ https:// companySubDomain .bamboohr.com /api/v1/employees/directory 
+ Loading… 
+ Click Try It! to start a request and see the response here! Or choose an example:
+ application/json
+ 200 
+ */*
+ 403 
+ Updated 6 months ago

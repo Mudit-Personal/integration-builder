@@ -1,0 +1,3504 @@
+Method: users.list | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ Method: users.list 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ Retrieves a paginated list of either deleted users or all users in a domain.
+ HTTP request
+ GET https://admin.googleapis.com/admin/directory/v1/users 
+ The URL uses gRPC Transcoding syntax.
+ Query parameters
+ Parameters 
+ customFieldMask 
+ string 
+ A comma-separated list of schema names. All fields from these schemas are fetched. This should only be set when projection=custom .
+ customer 
+ string 
+ The unique ID for the customer's Google Workspace account. In case of a multi-domain account, to fetch all users for a customer, use this field instead of domain . You can also use the my_customer alias to represent your account's customerId . The customerId is also returned as part of the Users resource. You must provide either the customer or the domain parameter.
+ domain 
+ string 
+ The domain name. Use this field to get users from only one domain. To return all domains for a customer account, use the customer query parameter instead. Either the customer or the domain parameter must be provided.
+ event 
+ enum ( Event ) 
+ Event on which subscription is intended (if subscribing)
+ maxResults 
+ integer 
+ Maximum number of results to return.
+ orderBy 
+ enum ( OrderBy ) 
+ Property to use for sorting results.
+ pageToken 
+ string 
+ Token to specify next page in the list. The page token is only valid for three days.
+ projection 
+ enum ( Projection ) 
+ What subset of fields to fetch for this user.
+ query 
+ string 
+ Query string for searching user fields. For more information on constructing user queries, see Search for Users .
+ showDeleted 
+ string 
+ If set to true , retrieves the list of deleted users. (Default: false )
+ sortOrder 
+ enum ( SortOrder ) 
+ Whether to return results in ascending or descending order, ignoring case.
+ viewType 
+ enum ( ViewType ) 
+ Whether to fetch the administrator-only or domain-wide public view of the user. For more information, see Retrieve a user as a non-administrator .
+ Request body
+ The request body must be empty.
+ Response body
+ If successful, the response body contains data with the following structure:
+ JSON representation 
+ { 
+ "kind" : string , 
+ "trigger_event" : string , 
+ "etag" : string , 
+ "users" : [ 
+ { 
+ object ( User ) 
+ } 
+ ] , 
+ "nextPageToken" : string 
+ } 
+ Fields 
+ kind 
+ string 
+ Kind of resource this is.
+ trigger_event 
+ string 
+ Event that triggered this response (only used in case of Push Response)
+ etag 
+ string 
+ ETag of the resource.
+ users[] 
+ object ( User ) 
+ A list of user objects.
+ nextPageToken 
+ string 
+ Token used to access next page of this result. The page token is only valid for three days.
+ Authorization scopes
+ Requires one of the following OAuth scopes:
+ https://www.googleapis.com/auth/admin.directory.user 
+ https://www.googleapis.com/auth/admin.directory.user.readonly 
+ https://www.googleapis.com/auth/cloud-platform 
+ For more information, see the Authorization guide .
+ Event
+ Type of the Subscription event
+ Enums 
+ ADD 
+ User Created Event 
+ DELETE 
+ User Deleted Event 
+ MAKE_ADMIN 
+ User Admin Status Change Event 
+ UNDELETE 
+ User Undeleted Event 
+ UPDATE 
+ User Updated Event 
+ OrderBy
+ Enums 
+ EMAIL 
+ Primary email of the user. 
+ FAMILY_NAME 
+ User's family name. 
+ GIVEN_NAME 
+ User's given name. 
+ Projection
+ Enums 
+ BASIC 
+ Do not include any custom fields for the user. 
+ CUSTOM 
+ Include custom fields from schemas requested in customFieldMask . 
+ FULL 
+ Include all fields associated with this user. 
+ SortOrder
+ Enums 
+ ASCENDING 
+ Ascending order. 
+ DESCENDING 
+ Descending order. 
+ ViewType
+ Enums 
+ admin_view 
+ Results include both administrator-only and domain-public fields for the user. 
+ domain_public 
+ Results only include fields for the user that are publicly visible to other users in the domain. 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2026-03-10 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-03-10 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/usage/user]
+Reports API: 사용자 사용량 매개변수 | Admin console | Google for Developers 
+ 기본 콘텐츠로 건너뛰기
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ 로그인 
+ Admin console
+ Google은 AI 기술을 사용하여 콘텐츠를 사용자의 기본 언어로 번역합니다. AI 번역에는 오류가 있을 수 있습니다.
+ 홈
+ Google Workspace
+ Admin console
+ 참조
+ 의견 보내기
+ Reports API: 사용자 사용량 매개변수 
+ 컬렉션을 사용해 정리하기
+ 내 환경설정을 기준으로 콘텐츠를 저장하고 분류하세요.
+ 사용자 사용 보고서는 도메인의 특정 사용자에 대한 Google Workspace 서비스 사용 정보를 반환합니다.
+ 이러한 보고서는 특정 사용 정보를 위해 맞춤설정하고 필터링할 수 있습니다.
+ 이 사용 정보는 애플리케이션 유형별로 구성되며, 애플리케이션 유형은 해당 애플리케이션에 특화된 매개변수로 구성됩니다.
+ 사용자 사용 보고서의 애플리케이션 유형은 다음과 같습니다.
+ 계정 
+ Google Chat 
+ 클래스룸 
+ Google Drive/Docs 
+ Gmail 
+ Google+ 
+ 자세한 내용은 개발자 가이드 및 API 참조 를 참고하세요.
+ 의견 보내기
+ 달리 명시되지 않는 한 이 페이지의 콘텐츠에는 Creative Commons Attribution 4.0 라이선스 에 따라 라이선스가 부여되며, 코드 샘플에는 Apache 2.0 라이선스 에 따라 라이선스가 부여됩니다. 자세한 내용은 Google Developers 사이트 정책 을 참조하세요. 자바는 Oracle 및/또는 Oracle 계열사의 등록 상표입니다.
+ 최종 업데이트: 2026-09-13(UTC)
+ 의견을 전달하고 싶나요?
+ [[["이해하기 쉬움","easyToUnderstand","thumb-up"],["문제가 해결됨","solvedMyProblem","thumb-up"],["기타","otherUp","thumb-up"]],[["필요한 정보가 없음","missingTheInformationINeed","thumb-down"],["너무 복잡함/단계 수가 너무 많음","tooComplicatedTooManySteps","thumb-down"],["오래됨","outOfDate","thumb-down"],["번역 문제","translationIssue","thumb-down"],["샘플/코드 문제","samplesCodeIssue","thumb-down"],["기타","otherDown","thumb-down"]],["최종 업데이트: 2026-09-13(UTC)"],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/activity/admin-licenses-settings]
+Admin Audit Activity Events - Licenses Settings | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ Admin Audit Activity Events - Licenses Settings 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ This document lists the events and parameters for
+ Licenses Settings
+ Admin Audit activity events. You can retrieve these events by
+ calling Activities.list() 
+ with applicationName=admin .
+ Licenses Settings
+ Events of this type are returned with type=LICENSES_SETTINGS .
+ App License Policy Setting Changed
+ Licenses enabled or not for a specified group/org unit event name.
+ Event details 
+ Event name 
+ CHROME_APP_LICENSES_ENABLED 
+ Parameters 
+ APPLICATION_ NAME 
+ string 
+ The application's name.
+ CHROME_ LICENSES_ ENABLED 
+ string 
+ Licenses enabled.
+ Possible values:
+ DISABLED Not allowed to perform action.
+ ENABLED Allowed to perform action.
+ INHERITED Value is inherited.
+ DISTRIBUTION_ ENTITY_ NAME 
+ string 
+ The distribution entity value, which can be a group name or an org-unit name.
+ Possible values:
+ ANY A label that targets any distribution.
+ DISTRIBUTION_ ENTITY_ TYPE 
+ string 
+ The distribution entity type, which can be a group or an org-unit.
+ Possible values:
+ GROUP A distribution entity label for a Google group.
+ ORG_UNIT A distribution entity label for an organizational unit.
+ USER A distribution entity label for a user.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHROME_APP_LICENSES_ENABLED &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ App license policy for {APPLICATION_NAME} at {DISTRIBUTION_ENTITY_NAME} {DISTRIBUTION_ENTITY_TYPE} is now {CHROME_LICENSES_ENABLED} 
+ Assign Licenses to All Unassigned Users
+ Event details 
+ Event name 
+ ORG_USERS_LICENSE_ASSIGNMENT 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new license SKU.
+ ORG_ UNIT_ NAME 
+ string 
+ All previously unassigned users in this organizational unit have been assigned this new license.
+ PRODUCT_ NAME 
+ string 
+ The new license for this product name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ORG_USERS_LICENSE_ASSIGNMENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Licenses for {PRODUCT_NAME} product and {NEW_VALUE} sku were assigned to all unassigned users of {ORG_UNIT_NAME} 
+ Assign Licenses to All Users
+ Event details 
+ Event name 
+ ORG_ALL_USERS_LICENSE_ASSIGNMENT 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new license SKU.
+ ORG_ UNIT_ NAME 
+ string 
+ All previously unassigned users in this organizational unit have been assigned this new license.
+ PRODUCT_ NAME 
+ string 
+ The new license for this product name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ORG_ALL_USERS_LICENSE_ASSIGNMENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Licenses for {PRODUCT_NAME} product and {NEW_VALUE} sku were assigned to all users of {ORG_UNIT_NAME} 
+ Assign Suppressed License
+ Event details 
+ Event name 
+ SUPPRESSED_LICENSE_ASSIGNMENT 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= SUPPRESSED_LICENSE_ASSIGNMENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A suppressed license for {PRODUCT_NAME} product and {NEW_VALUE} sku was assigned to the user {USER_EMAIL} 
+ Assign Temporary License
+ Event details 
+ Event name 
+ TEMPORARY_LICENSE_ASSIGNMENT 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= TEMPORARY_LICENSE_ASSIGNMENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A temporary license for {PRODUCT_NAME} product and {NEW_VALUE} sku was assigned to the user {USER_EMAIL} 
+ Assign User License
+ Event details 
+ Event name 
+ USER_LICENSE_ASSIGNMENT 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new license SKU.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The primary email address of the user assigned this license.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USER_LICENSE_ASSIGNMENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A license for {PRODUCT_NAME} product and {NEW_VALUE} sku was assigned to the user {USER_EMAIL} 
+ Auto Assign Licenses
+ Event details 
+ Event name 
+ CHANGE_LICENSE_AUTO_ASSIGN 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new Auto Assign option value.
+ PRODUCT_ NAME 
+ string 
+ The product name.
+ SKU_ NAME 
+ string 
+ The product SKU.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_LICENSE_AUTO_ASSIGN &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ License Auto Assign option changed to {NEW_VALUE} for {PRODUCT_NAME} product and {SKU_NAME} sku 
+ Convert user's Suppressed License to Active
+ Event details 
+ Event name 
+ SUPPRESSED_TO_ASSIGNED_LICENSE_CONVERSION 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= SUPPRESSED_TO_ASSIGNED_LICENSE_CONVERSION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Suppressed license of the user {USER_EMAIL} for {PRODUCT_NAME} product and {NEW_VALUE} sku was converted to Active 
+ Convert user's Temporary License to Active
+ Event details 
+ Event name 
+ TEMPORARY_TO_ASSIGNED_LICENSE_CONVERSION 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= TEMPORARY_TO_ASSIGNED_LICENSE_CONVERSION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Temporary license of the user {USER_EMAIL} for {PRODUCT_NAME} product and {NEW_VALUE} sku was converted to Active 
+ Convert user's Temporary License to Suppressed
+ Event details 
+ Event name 
+ TEMPORARY_TO_SUPPRESSED_LICENSE_CONVERSION 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= TEMPORARY_TO_SUPPRESSED_LICENSE_CONVERSION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Temporary license of the user {USER_EMAIL} for {PRODUCT_NAME} product and {NEW_VALUE} sku was expired and converted to Suppressed 
+ First Temporary or Suppressed License Email Sent
+ Audit log event generated when first temporary or suppressed license email notification is sent to the customer.
+ Event details 
+ Event name 
+ FIRST_TEMPORARY_OR_SUPPRESSED_LICENSE_NOTIFICATION 
+ Parameters 
+ SKU_ NAME 
+ string 
+ The SKU name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= FIRST_TEMPORARY_OR_SUPPRESSED_LICENSE_NOTIFICATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ An email is sent for the creation of first temporary or suppressed license for {SKU_NAME} sku 
+ First Temporary or Suppressed License Email Sent for a User
+ Audit log event generated when first temporary or suppressed license email notification is sent to the reseller.
+ Event details 
+ Event name 
+ RESELLER_FIRST_TEMPORARY_OR_SUPPRESSED_LICENSE_NOTIFICATION 
+ Parameters 
+ DOMAIN_ NAME 
+ string 
+ The primary domain name.
+ SKU_ NAME 
+ string 
+ The SKU name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= RESELLER_FIRST_TEMPORARY_OR_SUPPRESSED_LICENSE_NOTIFICATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ An email is sent as the user {DOMAIN_NAME} has been assigned temporary or suppressed license for {SKU_NAME} sku 
+ Reassign User License
+ Event details 
+ Event name 
+ USER_LICENSE_REASSIGNMENT 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new license SKU.
+ OLD_ VALUE 
+ string 
+ The previous license SKU.
+ PRODUCT_ NAME 
+ string 
+ The license for this product name.
+ USER_ EMAIL 
+ string 
+ The primary email address of the user reassigned the license with a new SKU.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USER_LICENSE_REASSIGNMENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A license for {PRODUCT_NAME} product and {OLD_VALUE} sku was reassigned for user {USER_EMAIL} to new sku {NEW_VALUE} 
+ Revoke Licenses to All Users
+ Event details 
+ Event name 
+ ORG_LICENSE_REVOKE 
+ Parameters 
+ OLD_ VALUE 
+ string 
+ The revoked license's SKU.
+ ORG_ UNIT_ NAME 
+ string 
+ The removed licensed for all users in this organizational unit.
+ PRODUCT_ NAME 
+ string 
+ The revoked license for this product name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ORG_LICENSE_REVOKE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Licenses for {PRODUCT_NAME} product and {OLD_VALUE} sku were removed from assigned users of {ORG_UNIT_NAME} 
+ Revoke Suppressed License
+ Event details 
+ Event name 
+ SUPPRESSED_LICENSE_REVOKE 
+ Parameters 
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= SUPPRESSED_LICENSE_REVOKE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A suppressed license for {PRODUCT_NAME} product and {OLD_VALUE} sku was revoked from the user {USER_EMAIL} 
+ Revoke Temporary License
+ Event details 
+ Event name 
+ TEMPORARY_LICENSE_REVOKE 
+ Parameters 
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= TEMPORARY_LICENSE_REVOKE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A temporary license for {PRODUCT_NAME} product and {OLD_VALUE} sku was revoked from the user {USER_EMAIL} 
+ Revoke User License
+ Event details 
+ Event name 
+ USER_LICENSE_REVOKE 
+ Parameters 
+ OLD_ VALUE 
+ string 
+ The revoked license's SKU.
+ PRODUCT_ NAME 
+ string 
+ The revoked license for this product name.
+ USER_ EMAIL 
+ string 
+ The primary email address of the user whose license has been revoked.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USER_LICENSE_REVOKE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A license for {PRODUCT_NAME} product and {OLD_VALUE} sku was revoked from user {USER_EMAIL} 
+ Temporary Licenses Expiration Email Notification Sent
+ Audit log event generated when temporary licenses expired email notification is sent to the customer.
+ Event details 
+ Event name 
+ TEMPORARY_LICENSES_EXPIRED_NOTIFICATION 
+ Parameters 
+ SKU_ NAME 
+ string 
+ The SKU name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= TEMPORARY_LICENSES_EXPIRED_NOTIFICATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ An email is sent for the expiration of temporary licenses for {SKU_NAME} sku 
+ Temporary Licenses Expiration Email Notification Sent for a User
+ Audit log event generated when temporary licenses expired email notification is sent to the reseller.
+ Event details 
+ Event name 
+ RESELLER_TEMPORARY_LICENSES_EXPIRED_NOTIFICATION 
+ Parameters 
+ DOMAIN_ NAME 
+ string 
+ The primary domain name.
+ SKU_ NAME 
+ string 
+ The SKU name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= RESELLER_TEMPORARY_LICENSES_EXPIRED_NOTIFICATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ An email is sent as the temporary licenses for {SKU_NAME} sku are expired for user {DOMAIN_NAME} 
+ Update Auto Licensing
+ Event details 
+ Event name 
+ UPDATE_DYNAMIC_LICENSE 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ ORG_ UNIT_ NAME 
+ string 
+ The organizational unit (OU) name (path).
+ PRODUCT_ NAME 
+ string 
+ Product Name.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UPDATE_DYNAMIC_LICENSE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Auto Licensing settings for {PRODUCT_NAME} product in {ORG_UNIT_NAME} organization changed from {OLD_VALUE} to {NEW_VALUE} 
+ User license is assigned
+ Short description to indicate user license is assigned.
+ Event details 
+ Event name 
+ CHROME_APP_USER_LICENSE_ASSIGNED 
+ Parameters 
+ APP_ LICENSE 
+ string 
+ Parameter for Chrome App License.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHROME_APP_USER_LICENSE_ASSIGNED &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ License {APP_LICENSE} is assigned to {USER_EMAIL} 
+ User license is revoked
+ Short description to indicate user license is revoked.
+ Event details 
+ Event name 
+ CHROME_APP_USER_LICENSE_REVOKED 
+ Parameters 
+ APP_ LICENSE 
+ string 
+ Parameter for Chrome App License.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHROME_APP_USER_LICENSE_REVOKED &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ License {APP_LICENSE} is revoked for {USER_EMAIL} 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2026-09-03 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-09-03 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/activity/admin-user-settings]
+Admin Audit Activity Events - User Settings | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ Admin Audit Activity Events - User Settings 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ This document lists the events and parameters for
+ User Settings
+ Admin Audit activity events. You can retrieve these events by
+ calling Activities.list() 
+ with applicationName=admin .
+ User Settings
+ Events of this type are returned with type=USER_SETTINGS .
+ 2-step Verification Scratch Codes Deletion
+ Event details 
+ Event name 
+ DELETE_2SV_SCRATCH_CODES 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DELETE_2SV_SCRATCH_CODES &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ 2-step verification scratch codes of the user {USER_EMAIL} deleted 
+ 2-step Verification Scratch Codes Generate
+ Event details 
+ Event name 
+ GENERATE_2SV_SCRATCH_CODES 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= GENERATE_2SV_SCRATCH_CODES &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ New 2-step verification scratch codes generated for the user {USER_EMAIL} 
+ 3-legged OAuth Device Tokens Revoke
+ Event details 
+ Event name 
+ REVOKE_3LO_DEVICE_TOKENS 
+ Parameters 
+ DEVICE_ ID 
+ string 
+ The device's ID.
+ DEVICE_ TYPE 
+ string 
+ The device's type.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REVOKE_3LO_DEVICE_TOKENS &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ 3-legged OAuth tokens issued by user {USER_EMAIL} for the device type {DEVICE_TYPE} and id {DEVICE_ID} were revoked 
+ 3-legged OAuth Token Revoke
+ Event details 
+ Event name 
+ REVOKE_3LO_TOKEN 
+ Parameters 
+ APP_ ID 
+ string 
+ The application ID whose access is managed by the token.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REVOKE_3LO_TOKEN &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ 3-legged OAuth tokens issued by user {USER_EMAIL} for application {APP_ID} were revoked 
+ Accept User Invite
+ Event details 
+ Event name 
+ ACCEPT_USER_INVITATION 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ACCEPT_USER_INVITATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User invitation accepted for user: {USER_EMAIL} 
+ Add Recovery Email
+ Event details 
+ Event name 
+ ADD_RECOVERY_EMAIL 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ADD_RECOVERY_EMAIL &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Recovery email added for {USER_EMAIL} 
+ Add Recovery Phone
+ Event details 
+ Event name 
+ ADD_RECOVERY_PHONE 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ADD_RECOVERY_PHONE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Recovery phone added for {USER_EMAIL} 
+ Admin Privileges Grant
+ Event details 
+ Event name 
+ GRANT_ADMIN_PRIVILEGE 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= GRANT_ADMIN_PRIVILEGE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Admin privileges granted to {USER_EMAIL} 
+ Admin Privileges Revoke
+ Event details 
+ Event name 
+ REVOKE_ADMIN_PRIVILEGE 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REVOKE_ADMIN_PRIVILEGE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Admin privileges revoked from {USER_EMAIL} 
+ Application Specific Password Revoke
+ Event details 
+ Event name 
+ REVOKE_ASP 
+ Parameters 
+ ASP_ ID 
+ string 
+ The application specific password ID.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REVOKE_ASP &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Application specific password with Id {ASP_ID} issued by user {USER_EMAIL} revoked 
+ Automatic Contact Share Change
+ Event details 
+ Event name 
+ TOGGLE_AUTOMATIC_CONTACT_SHARING 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The setting value, either true or false .
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= TOGGLE_AUTOMATIC_CONTACT_SHARING &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Automatic contact sharing for {USER_EMAIL} changed to {NEW_VALUE} 
+ Bulk Upload
+ Event details 
+ Event name 
+ BULK_UPLOAD 
+ Parameters 
+ BULK_ UPLOAD_ FAIL_ USERS_ NUMBER 
+ string 
+ The number of users who did not successfully upload to the domain.
+ BULK_ UPLOAD_ TOTAL_ USERS_ NUMBER 
+ string 
+ The number of total users being uploaded.
+ DOMAIN_ NAME 
+ string 
+ The primary domain name where users are being moved.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= BULK_UPLOAD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {BULK_UPLOAD_TOTAL_USERS_NUMBER} users selected for upload to your organization. {BULK_UPLOAD_FAIL_USERS_NUMBER} out of {BULK_UPLOAD_TOTAL_USERS_NUMBER} users were not uploaded. 
+ Bulk Upload Notification
+ Event details 
+ Event name 
+ BULK_UPLOAD_NOTIFICATION_SENT 
+ Parameters 
+ DOMAIN_ NAME 
+ string 
+ The primary domain name where users were uploaded.
+ USER_ EMAIL 
+ string 
+ The primary email address of user who was sent notification of bulk upload event.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= BULK_UPLOAD_NOTIFICATION_SENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Notification of bulk users upload sent to {USER_EMAIL} 
+ Cancel User Invite
+ Event details 
+ Event name 
+ CANCEL_USER_INVITE 
+ Parameters 
+ DOMAIN_ NAME 
+ string 
+ The primary domain name.
+ USER_ EMAIL 
+ string 
+ The primary email address of the user whose invitation is being cancelled.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CANCEL_USER_INVITE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Invite to {USER_EMAIL} cancelled 
+ Change Custom Attribute
+ Event details 
+ Event name 
+ CHANGE_USER_CUSTOM_FIELD 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ CUSTOM_ FIELD 
+ string 
+ The name of the user's custom field.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_CUSTOM_FIELD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_CUSTOM_FIELD} changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change External Id
+ Event details 
+ Event name 
+ CHANGE_USER_EXTERNAL_ID 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_EXTERNAL_ID &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ External Ids changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change Gender
+ Change here is a verb. The genders will be customizable, so this should be broader than male vs female.
+ Event details 
+ Event name 
+ CHANGE_USER_GENDER 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_GENDER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Gender changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change IM
+ Event details 
+ Event name 
+ CHANGE_USER_IM 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_IM &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ IMs changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change IP Whitelist
+ Event details 
+ Event name 
+ ENABLE_USER_IP_WHITELIST 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ENABLE_USER_IP_WHITELIST &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ IP whitelist changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change Keyword
+ Keywords are used on user profiles to help identify a user in searches. Example: find person with name 'Larry' and school 'Stanford'. 'Change' is a verb.
+ Event details 
+ Event name 
+ CHANGE_USER_KEYWORD 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_KEYWORD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Keywords changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change Language
+ Can be a predefined set of more common languages provided by Google or a custom language. 'Change' here is a verb.
+ Event details 
+ Event name 
+ CHANGE_USER_LANGUAGE 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_LANGUAGE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Languages changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change Location
+ Location is different from address in the following ways: (1) Location can be fuzzy. Example: Near Seattle. (2) Hovercards and other short user summaries display location, not address. 'Change' is a verb.
+ Event details 
+ Event name 
+ CHANGE_USER_LOCATION 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_LOCATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Locations changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change Organization
+ Event details 
+ Event name 
+ CHANGE_USER_ORGANIZATION 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_ORGANIZATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Organizations changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change Phone Numbers
+ Event details 
+ Event name 
+ CHANGE_USER_PHONE_NUMBER 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_PHONE_NUMBER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Phone Numbers changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change Recovery Email
+ Event details 
+ Event name 
+ CHANGE_RECOVERY_EMAIL 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_RECOVERY_EMAIL &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Recovery email changed for {USER_EMAIL} 
+ Change Recovery Phone
+ Event details 
+ Event name 
+ CHANGE_RECOVERY_PHONE 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_RECOVERY_PHONE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Recovery phone changed for {USER_EMAIL} 
+ Change Relation
+ Event details 
+ Event name 
+ CHANGE_USER_RELATION 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_RELATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Relations changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Change User Address
+ Event details 
+ Event name 
+ CHANGE_USER_ADDRESS 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_USER_ADDRESS &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Addresses changed for {USER_EMAIL} from {OLD_VALUE} to {NEW_VALUE} 
+ Create an email monitor
+ Event details 
+ Event name 
+ CREATE_EMAIL_MONITOR 
+ Parameters 
+ BEGIN_ DATE_ TIME 
+ string 
+ The start date and time for the email monitor.
+ EMAIL_ MONITOR_ DEST_ EMAIL 
+ string 
+ The destination address of the email monitor.
+ EMAIL_ MONITOR_ LEVEL_ CHAT 
+ string 
+ The chat email monitor level.
+ EMAIL_ MONITOR_ LEVEL_ DRAFT_ EMAIL 
+ string 
+ The draft email monitor level.
+ EMAIL_ MONITOR_ LEVEL_ INCOMING_ EMAIL 
+ string 
+ The incoming email monitor level.
+ EMAIL_ MONITOR_ LEVEL_ OUTGOING_ EMAIL 
+ string 
+ The outgoing email monitor level.
+ END_ DATE_ TIME 
+ string 
+ The end date and time for the email monitor.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CREATE_EMAIL_MONITOR &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Created an email monitor for {USER_EMAIL} to {EMAIL_MONITOR_DEST_EMAIL} that will expire on {END_DATE_TIME} 
+ Data transfer request created
+ Event details 
+ Event name 
+ CREATE_DATA_TRANSFER_REQUEST 
+ Parameters 
+ APPLICATION_ NAME 
+ string 
+ A comma-separated application names for which data transfer is requested.
+ DESTINATION_ USER_ EMAIL 
+ string 
+ The new owner's primary user email to whom to transfer user data to.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CREATE_DATA_TRANSFER_REQUEST &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Data transfer request created from {USER_EMAIL} to {DESTINATION_USER_EMAIL} for apps {APPLICATION_NAME} 
+ Delegated Admin Privileges Grant
+ Event details 
+ Event name 
+ GRANT_DELEGATED_ADMIN_PRIVILEGES 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new delegated admin privilege.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= GRANT_DELEGATED_ADMIN_PRIVILEGES &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} assigned {NEW_VALUE} admin privileges 
+ Delete account information dump
+ Event details 
+ Event name 
+ DELETE_ACCOUNT_INFO_DUMP 
+ Parameters 
+ REQUEST_ ID 
+ string 
+ The request ID.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DELETE_ACCOUNT_INFO_DUMP &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Deleted account and login information dump for {USER_EMAIL} and request ID {REQUEST_ID} 
+ Delete an email monitor
+ Event details 
+ Event name 
+ DELETE_EMAIL_MONITOR 
+ Parameters 
+ EMAIL_ MONITOR_ DEST_ EMAIL 
+ string 
+ The destination address of the email monitor.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DELETE_EMAIL_MONITOR &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Deleted an email monitor for {USER_EMAIL} to {EMAIL_MONITOR_DEST_EMAIL} 
+ Delete mailbox dump
+ Event details 
+ Event name 
+ DELETE_MAILBOX_DUMP 
+ Parameters 
+ REQUEST_ ID 
+ string 
+ The request ID.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DELETE_MAILBOX_DUMP &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Deleted mailbox dump for {USER_EMAIL} and request ID {REQUEST_ID} 
+ Delete Profile Photo
+ Event details 
+ Event name 
+ DELETE_PROFILE_PHOTO 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DELETE_PROFILE_PHOTO &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Profile photo of {USER_EMAIL} has been deleted 
+ Display Name Added
+ Event details 
+ Event name 
+ ADD_DISPLAY_NAME 
+ Parameters 
+ USER_ DISPLAY_ NAME 
+ string 
+ User display name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ADD_DISPLAY_NAME &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_DISPLAY_NAME} added as a display name of {USER_EMAIL} 
+ Display Name Change
+ Event details 
+ Event name 
+ CHANGE_DISPLAY_NAME 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ OLD_ VALUE 
+ string 
+ The previous SETTING_NAME value that was replaced during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_DISPLAY_NAME &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Display name of {USER_EMAIL} changed from {OLD_VALUE} to {NEW_VALUE} 
+ Display Name Removed
+ Event details 
+ Event name 
+ REMOVE_DISPLAY_NAME 
+ Parameters 
+ USER_ DISPLAY_ NAME 
+ string 
+ User display name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REMOVE_DISPLAY_NAME &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_DISPLAY_NAME} removed as a display name of {USER_EMAIL} 
+ First Name Change
+ Event details 
+ Event name 
+ CHANGE_FIRST_NAME 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The user's new first name.
+ OLD_ VALUE 
+ string 
+ The user's previous first name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_FIRST_NAME &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ First name of {USER_EMAIL} changed from {OLD_VALUE} to {NEW_VALUE} 
+ Gmail Account Reset
+ Event details 
+ Event name 
+ GMAIL_RESET_USER 
+ Parameters 
+ GMAIL_ RESET_ REASON 
+ string 
+ Gmail's reason for resetting the account.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= GMAIL_RESET_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Gmail account of {USER_EMAIL} reset 
+ Last Name Change
+ Event details 
+ Event name 
+ CHANGE_LAST_NAME 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The user's new last name.
+ OLD_ VALUE 
+ string 
+ The user's previous last name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_LAST_NAME &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Last name of {USER_EMAIL} changed from {OLD_VALUE} to {NEW_VALUE} 
+ Mail Routing Destination Creation
+ Event details 
+ Event name 
+ MAIL_ROUTING_DESTINATION_ADDED 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new routing destination.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= MAIL_ROUTING_DESTINATION_ADDED &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User {USER_EMAIL} has received the following individual mail routing destination: {NEW_VALUE} 
+ Mail Routing Destination Deletion
+ Event details 
+ Event name 
+ MAIL_ROUTING_DESTINATION_REMOVED 
+ Parameters 
+ OLD_ VALUE 
+ string 
+ The previous routing destination.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= MAIL_ROUTING_DESTINATION_REMOVED &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User {USER_EMAIL} has had the following individual mail routing destination removed: {OLD_VALUE} 
+ Nickname Creation
+ Event details 
+ Event name 
+ ADD_NICKNAME 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The primary user email.
+ USER_ NICKNAME 
+ string 
+ The user's nickname, also known as alternate email or alias. For Admin console information, see the administration help center .
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ADD_NICKNAME &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_NICKNAME} created as a nickname of {USER_EMAIL} 
+ Nickname Deletion
+ Event details 
+ Event name 
+ REMOVE_NICKNAME 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ USER_ NICKNAME 
+ string 
+ The user's previous nickname.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REMOVE_NICKNAME &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_NICKNAME} deleted as a nickname of {USER_EMAIL} 
+ Passkey revoked
+ Event details 
+ Event name 
+ PASSKEY_REVOKED 
+ Parameters 
+ enrollment_ type 
+ string 
+ Describers whether the passkey was enrolled by user or created automatically.
+ Possible values:
+ automatically_created Passkey enrolled automatically on android device.
+ user_created Passkey enrolled by end user.
+ passkey_ added_ from 
+ string 
+ Location from where the passkey was added.
+ passkey_ added_ on_ timestamp 
+ integer 
+ Timestamp when the passkey was added.
+ passkey_ last_ used_ from 
+ string 
+ Location from where was the passkey last used.
+ passkey_ last_ used_ timestamp 
+ integer 
+ Timestamp when the passkey was last used.
+ platform_ or_ device 
+ string 
+ Platform or device used for creating the passkey.
+ Possible values:
+ apple_icloud_keychain Passkey created using apple icloud keychain.
+ bitwarden Passkey created using bitwarden.
+ chrome_on_mac Passkey created using chrome on mac.
+ chrome_os Passkey created using chrome os.
+ dashlane Passkey created using dashlane.
+ edge_on_mac Passkey created using Edge on Mac.
+ generic_passkey Passkey type generic passkey description.
+ generic_usb_key Passkey created using FIDO2 security key.
+ generic_usb_up_key Passkey created using security key.
+ google_account_passkey_on_android Passkey created using android device.
+ google_password_manager Passkey created using google password manager.
+ keeper Passkey created using keeper.
+ nordpass Passkey created using nordpass.
+ one_password Passkey created using 1Password.
+ samsung_pass Passkey created using Samsung pass.
+ titan_key Passkey created using titan security key.
+ windows_hello Passkey created using windows hello.
+ yubikey Passkey created using yubico security key.
+ supports_ passwordless 
+ boolean 
+ Whether the passkey can be used to skip password.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= PASSKEY_REVOKED &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A passkey enrolled for user {USER_EMAIL} was revoked 
+ Password Change
+ Event details 
+ Event name 
+ CHANGE_PASSWORD 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_PASSWORD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Password changed for {USER_EMAIL} 
+ Password Change on Next Login
+ Event details 
+ Event name 
+ CHANGE_PASSWORD_ON_NEXT_LOGIN 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ Indicates whether the user must change their password on their next login; can be true or false .
+ OLD_ VALUE 
+ string 
+ The previous setting value; can be true or false .
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CHANGE_PASSWORD_ON_NEXT_LOGIN &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Password change requirement for {USER_EMAIL} on next login changed from {OLD_VALUE} to {NEW_VALUE} 
+ Pending Invites List Download
+ Event details 
+ Event name 
+ DOWNLOAD_PENDING_INVITES_LIST 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DOWNLOAD_PENDING_INVITES_LIST &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Pending Invites List was downloaded as a CSV file 
+ Public Key Certificate Status Updated
+ Event details 
+ Event name 
+ UPDATE_PUBLIC_KEY_CERTIFICATE_STATUS 
+ Parameters 
+ PUBLIC_ KEY_ CERTIFICATE_ STATUS 
+ string 
+ Public key certificate status.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ USER_ IMPACTED_ EMAIL 
+ string 
+ User impacted email.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UPDATE_PUBLIC_KEY_CERTIFICATE_STATUS &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Public key certificate status updated to {PUBLIC_KEY_CERTIFICATE_STATUS} for email {USER_IMPACTED_EMAIL} of user {USER_EMAIL} 
+ Public Key Certificate Updated
+ Event details 
+ Event name 
+ UPDATE_PUBLIC_KEY_CERTIFICATE 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ USER_ IMPACTED_ EMAIL 
+ string 
+ User impacted email.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UPDATE_PUBLIC_KEY_CERTIFICATE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Public key certificate updated for {USER_DISPLAY_NAME} email {USER_EMAIL} 
+ Remove Recovery Email
+ Event details 
+ Event name 
+ REMOVE_RECOVERY_EMAIL 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REMOVE_RECOVERY_EMAIL &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Recovery email removed for {USER_EMAIL} 
+ Remove Recovery Phone
+ Event details 
+ Event name 
+ REMOVE_RECOVERY_PHONE 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REMOVE_RECOVERY_PHONE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Recovery phone removed for {USER_EMAIL} 
+ Request account information
+ Event details 
+ Event name 
+ REQUEST_ACCOUNT_INFO 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REQUEST_ACCOUNT_INFO &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Requested account and login information for {USER_EMAIL} 
+ Request mailbox dump
+ Event details 
+ Event name 
+ REQUEST_MAILBOX_DUMP 
+ Parameters 
+ BEGIN_ DATE_ TIME 
+ string 
+ The start date and time for the email monitor.
+ EMAIL_ EXPORT_ INCLUDE_ DELETED 
+ string 
+ Indicates if deleted emails are included in the export.
+ EMAIL_ EXPORT_ PACKAGE_ CONTENT 
+ string 
+ The contents of the mailbox package.
+ END_ DATE_ TIME 
+ string 
+ The end date and time for the email monitor.
+ SEARCH_ QUERY_ FOR_ DUMP 
+ string 
+ The search query used for the dump.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REQUEST_MAILBOX_DUMP &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Requested mailbox dump for {USER_EMAIL} 
+ Resend User Invite
+ Event details 
+ Event name 
+ RESEND_USER_INVITE 
+ Parameters 
+ DOMAIN_ NAME 
+ string 
+ The primary domain name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= RESEND_USER_INVITE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Invite email to {USER_EMAIL} resent 
+ Reset Cookies and Forced Relogin
+ Event details 
+ Event name 
+ RESET_SIGNIN_COOKIES 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= RESET_SIGNIN_COOKIES &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Cookies reset for {USER_EMAIL} and forced re-login 
+ Security Key Registered For User
+ Event details 
+ Event name 
+ SECURITY_KEY_REGISTERED_FOR_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= SECURITY_KEY_REGISTERED_FOR_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Security key registered for {USER_EMAIL} 
+ Security Key Revoke
+ Event details 
+ Event name 
+ REVOKE_SECURITY_KEY 
+ Parameters 
+ enrollment_ type 
+ string 
+ Describers whether the passkey was enrolled by user or created automatically.
+ Possible values:
+ automatically_created Passkey enrolled automatically on android device.
+ user_created Passkey enrolled by end user.
+ passkey_ added_ from 
+ string 
+ Location from where the passkey was added.
+ passkey_ added_ on_ timestamp 
+ integer 
+ Timestamp when the passkey was added.
+ passkey_ last_ used_ from 
+ string 
+ Location from where was the passkey last used.
+ passkey_ last_ used_ timestamp 
+ integer 
+ Timestamp when the passkey was last used.
+ platform_ or_ device 
+ string 
+ Platform or device used for creating the passkey.
+ Possible values:
+ apple_icloud_keychain Passkey created using apple icloud keychain.
+ bitwarden Passkey created using bitwarden.
+ chrome_on_mac Passkey created using chrome on mac.
+ chrome_os Passkey created using chrome os.
+ dashlane Passkey created using dashlane.
+ edge_on_mac Passkey created using Edge on Mac.
+ generic_passkey Passkey type generic passkey description.
+ generic_usb_key Passkey created using FIDO2 security key.
+ generic_usb_up_key Passkey created using security key.
+ google_account_passkey_on_android Passkey created using android device.
+ google_password_manager Passkey created using google password manager.
+ keeper Passkey created using keeper.
+ nordpass Passkey created using nordpass.
+ one_password Passkey created using 1Password.
+ samsung_pass Passkey created using Samsung pass.
+ titan_key Passkey created using titan security key.
+ windows_hello Passkey created using windows hello.
+ yubikey Passkey created using yubico security key.
+ supports_ passwordless 
+ boolean 
+ Whether the passkey can be used to skip password.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= REVOKE_SECURITY_KEY &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A security key enrolled for user {USER_EMAIL} for 2-step verification was revoked 
+ Send User Invite
+ Event details 
+ Event name 
+ USER_INVITE 
+ Parameters 
+ DOMAIN_ NAME 
+ string 
+ The primary domain name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USER_INVITE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} invited to join your organization 
+ Temporary Password Viewed
+ Event details 
+ Event name 
+ VIEW_TEMP_PASSWORD 
+ Parameters 
+ DOMAIN_ NAME 
+ string 
+ The primary domain name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= VIEW_TEMP_PASSWORD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Temporary password for user {USER_EMAIL} viewed by the admin 
+ Turn off 2-step verification
+ Event details 
+ Event name 
+ TURN_OFF_2_STEP_VERIFICATION 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= TURN_OFF_2_STEP_VERIFICATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ 2-step verification has been turned off for the user {USER_EMAIL} 
+ Unblock User Session
+ Event details 
+ Event name 
+ UNBLOCK_USER_SESSION 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UNBLOCK_USER_SESSION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User {USER_EMAIL} unblocked by temporarily disabling login challenge 
+ Unmanaged Users Bulk Upload
+ Event details 
+ Event name 
+ UNMANAGED_USERS_BULK_UPLOAD 
+ Parameters 
+ BULK_ UPLOAD_ FAIL_ USERS_ NUMBER 
+ string 
+ Bulk Upload Failed Users Number.
+ BULK_ UPLOAD_ TOTAL_ USERS_ NUMBER 
+ string 
+ Bulk Upload Total Users Number.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UNMANAGED_USERS_BULK_UPLOAD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A total of {BULK_UPLOAD_TOTAL_USERS_NUMBER} unmanaged users selected for upload. {BULK_UPLOAD_FAIL_USERS_NUMBER} out of {BULK_UPLOAD_TOTAL_USERS_NUMBER} users failed to be uploaded. 
+ Unmanaged Users List Download
+ Event details 
+ Event name 
+ DOWNLOAD_UNMANAGED_USERS_LIST 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DOWNLOAD_UNMANAGED_USERS_LIST &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Unmanaged Users list was downloaded as a CSV file 
+ Update Profile Photo
+ Event details 
+ Event name 
+ UPDATE_PROFILE_PHOTO 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UPDATE_PROFILE_PHOTO &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Profile photo of {USER_EMAIL} has been updated 
+ User Advanced Protection Unenroll
+ Event details 
+ Event name 
+ UNENROLL_USER_FROM_TITANIUM 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UNENROLL_USER_FROM_TITANIUM &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User {USER_EMAIL} unenrolled from Advanced Protection 
+ User Archival
+ Event details 
+ Event name 
+ ARCHIVE_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= ARCHIVE_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} archived 
+ User BirthDate Change
+ Event details 
+ Event name 
+ UPDATE_BIRTHDATE 
+ Parameters 
+ BIRTHDATE 
+ string 
+ The date of the user's birthday.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UPDATE_BIRTHDATE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ The birth date for {USER_EMAIL} changed to {BIRTHDATE} 
+ User created passkey revoked
+ Event details 
+ Event name 
+ USER_CREATED_PASSKEY_REVOKE 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USER_CREATED_PASSKEY_REVOKE &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A user created passkey enrolled for user {USER_EMAIL} was revoked 
+ User Creation
+ Event details 
+ Event name 
+ CREATE_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The new user's primary user email.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= CREATE_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} created 
+ User Deletion
+ Event details 
+ Event name 
+ DELETE_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The deleted user's primary user email.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DELETE_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} deleted 
+ User Downgrade From Google+
+ Event details 
+ Event name 
+ DOWNGRADE_USER_FROM_GPLUS 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DOWNGRADE_USER_FROM_GPLUS &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} was downgraded from Google+ 
+ User Enrolled In 2-Step Verification
+ Event details 
+ Event name 
+ USER_ENROLLED_IN_TWO_STEP_VERIFICATION 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USER_ENROLLED_IN_TWO_STEP_VERIFICATION &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} enrolled in 2-step verification 
+ User List Download
+ Event details 
+ Event name 
+ DOWNLOAD_USERLIST_CSV 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DOWNLOAD_USERLIST_CSV &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User list was downloaded as a CSV file 
+ User List Download
+ Event details 
+ Event name 
+ DOWNLOAD_USERLIST 
+ Parameters 
+ FORMAT 
+ string 
+ Format.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= DOWNLOAD_USERLIST &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User list was downloaded in {FORMAT} 
+ User OrgUnit Change
+ Event details 
+ Event name 
+ MOVE_USER_TO_ORG_UNIT 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The user's new organizational unit.
+ ORG_ UNIT_ NAME 
+ string 
+ The organizational unit (OU) name (path).
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= MOVE_USER_TO_ORG_UNIT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} moved from {ORG_UNIT_NAME} to {NEW_VALUE} 
+ User Put In 2-Step Verification Grace Period
+ Event details 
+ Event name 
+ USER_PUT_IN_TWO_STEP_VERIFICATION_GRACE_PERIOD 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The new SETTING_NAME value that was set during this event.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USER_PUT_IN_TWO_STEP_VERIFICATION_GRACE_PERIOD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ 2-step verification grace period has been enabled on {USER_EMAIL} till {NEW_VALUE} 
+ User Rename
+ Event details 
+ Event name 
+ RENAME_USER 
+ Parameters 
+ NEW_ VALUE 
+ string 
+ The user's new name.
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= RENAME_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} renamed to {NEW_VALUE} 
+ User Strong Auth Unenroll
+ Event details 
+ Event name 
+ UNENROLL_USER_FROM_STRONG_AUTH 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UNENROLL_USER_FROM_STRONG_AUTH &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ User {USER_EMAIL} unenrolled from Strong Auth 
+ User Suspension
+ Event details 
+ Event name 
+ SUSPEND_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= SUSPEND_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} suspended 
+ User Unarchival
+ Event details 
+ Event name 
+ UNARCHIVE_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UNARCHIVE_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} unarchived 
+ User Undeletion
+ Event details 
+ Event name 
+ UNDELETE_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UNDELETE_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} undeleted 
+ User Unsuspension
+ Event details 
+ Event name 
+ UNSUSPEND_USER 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UNSUSPEND_USER &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} unsuspended 
+ User Upgrade To Google+
+ Event details 
+ Event name 
+ UPGRADE_USER_TO_GPLUS 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= UPGRADE_USER_TO_GPLUS &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {USER_EMAIL} was upgraded to Google+ 
+ Users Bulk Upload
+ Event details 
+ Event name 
+ USERS_BULK_UPLOAD 
+ Parameters 
+ BULK_ UPLOAD_ FAIL_ USERS_ NUMBER 
+ string 
+ The number of failures when attempting to bulk upload users.
+ BULK_ UPLOAD_ TOTAL_ USERS_ NUMBER 
+ string 
+ The total number of bulk uploaded users.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USERS_BULK_UPLOAD &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ A total of {BULK_UPLOAD_TOTAL_USERS_NUMBER} users selected for upload. {BULK_UPLOAD_FAIL_USERS_NUMBER} out of {BULK_UPLOAD_TOTAL_USERS_NUMBER} users failed to be uploaded. 
+ Users Bulk Upload Notification
+ Event details 
+ Event name 
+ USERS_BULK_UPLOAD_NOTIFICATION_SENT 
+ Parameters 
+ USER_ EMAIL 
+ string 
+ The user's primary email address.
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / admin ?eventName= USERS_BULK_UPLOAD_NOTIFICATION_SENT &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ Notification of bulk users upload sent to {USER_EMAIL} 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2026-09-03 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-09-03 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/activity/token]
+OAuth Token Audit Activity Events | Admin console | Google for Developers 
+ Langsung ke konten utama
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Masuk 
+ Admin console
+ Google menggunakan teknologi AI untuk menerjemahkan konten ke dalam bahasa pilihan Anda. Terjemahan AI mungkin mengandung kesalahan.
+ Beranda
+ Google Workspace
+ Admin console
+ Referensi
+ Kirim masukan
+ OAuth Token Audit Activity Events 
+ Tetap teratur dengan koleksi
+ Simpan dan kategorikan konten berdasarkan preferensi Anda.
+ Dokumen ini mencantumkan peristiwa dan parameter untuk
+ berbagai jenis
+ peristiwa aktivitas Audit Token OAuth. Anda dapat mengambil peristiwa ini dengan
+ memanggil Activities.list() 
+ dengan applicationName=token .
+ Auth
+ Peristiwa jenis ini ditampilkan dengan type=auth .
+ Aktivitas
+ Aktivitas akses untuk aplikasi.
+ Detail acara 
+ Nama peristiwa 
+ activity 
+ Parameter 
+ api_ name 
+ string 
+ Nama API yang digunakan dalam Aktivitas OAuth.
+ app_ name 
+ string 
+ Aplikasi yang aksesnya telah diberikan atau dicabut.
+ client_ id 
+ string 
+ Client ID yang aksesnya telah diberikan atau dicabut.
+ client_ type 
+ string 
+ Jenis klien.
+ Kemungkinan nilai:
+ CONNECTED_DEVICE Klien perangkat yang terhubung.
+ NATIVE_ANDROID Aplikasi Android.
+ NATIVE_APPLICATION Aplikasi native.
+ NATIVE_CHROME_EXTENSION Aplikasi Chrome.
+ NATIVE_DESKTOP Aplikasi Desktop native.
+ NATIVE_DEVICE Aplikasi native perangkat.
+ NATIVE_IOS Aplikasi iOS.
+ NATIVE_SONY Aplikasi native Sony.
+ NATIVE_UNIVERSAL_WINDOWS_PLATFORM Aplikasi Universal Windows Platform native.
+ TYPE_UNSPECIFIED Jenis klien tidak ditentukan.
+ WEB Aplikasi web.
+ method_ name 
+ string 
+ Nama metode yang digunakan dalam Aktivitas OAuth.
+ num_ response_ bytes 
+ integer 
+ Jumlah byte respons dalam Aktivitas OAuth.
+ product_ bucket 
+ string 
+ Bucket produk aplikasi yang terkait dengan Aktivitas OAuth ini.
+ Kemungkinan nilai:
+ APPS_SCRIPT_API Kategori produk Apps Script API.
+ APPS_SCRIPT_RUNTIME Kategori produk waktu proses Apps Script.
+ CALENDAR Kategori produk Kalender.
+ CLASSROOM Kategori produk Classroom.
+ CLOUD_SEARCH Kategori produk Cloud Search.
+ COMMUNICATIONS Kategori produk Komunikasi.
+ CONTACTS Kategori produk Kontak.
+ DRIVE Kategori produk Drive.
+ GMAIL Kategori produk Gmail.
+ GPLUS Kategori produk G+.
+ GROUPS Kategori produk Grup.
+ GSUITE_ADMIN Kategori produk Admin Google Workspace.
+ IDENTITY Kategori produk Identity.
+ OTHER Kategori produk untuk aplikasi yang tidak digolongkan dalam kategori lainnya.
+ TASKS Kategori produk Tasks.
+ VAULT Kategori produk Vault.
+ Permintaan sampel 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / token ?eventName= activity &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Format pesan Konsol Admin 
+ {app_name} called {method_name} on behalf of {actor} 
+ Izinkan
+ Pengguna mengizinkan akses ke aplikasi untuk datanya.
+ Detail acara 
+ Nama peristiwa 
+ authorize 
+ Parameter 
+ app_ name 
+ string 
+ Aplikasi yang aksesnya telah diberikan atau dicabut.
+ client_ id 
+ string 
+ Client ID yang aksesnya telah diberikan atau dicabut.
+ client_ type 
+ string 
+ Jenis klien.
+ Kemungkinan nilai:
+ CONNECTED_DEVICE Klien perangkat yang terhubung.
+ NATIVE_ANDROID Aplikasi Android.
+ NATIVE_APPLICATION Aplikasi native.
+ NATIVE_CHROME_EXTENSION Aplikasi Chrome.
+ NATIVE_DESKTOP Aplikasi Desktop native.
+ NATIVE_DEVICE Aplikasi native perangkat.
+ NATIVE_IOS Aplikasi iOS.
+ NATIVE_SONY Aplikasi native Sony.
+ NATIVE_UNIVERSAL_WINDOWS_PLATFORM Aplikasi Universal Windows Platform native.
+ TYPE_UNSPECIFIED Jenis klien tidak ditentukan.
+ WEB Aplikasi web.
+ scope 
+ string 
+ Cakupan yang aksesnya diberikan / dicabut.
+ scope_ data 
+ message 
+ Data Cakupan.
+ Permintaan sampel 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / token ?eventName= authorize &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Format pesan Konsol Admin 
+ {actor} authorized access to {app_name} for {scope} scopes 
+ Tolak
+ Akses ditolak untuk aplikasi.
+ Detail acara 
+ Nama peristiwa 
+ deny 
+ Parameter 
+ app_ name 
+ string 
+ Aplikasi yang aksesnya telah diberikan atau dicabut.
+ client_ id 
+ string 
+ Client ID yang aksesnya telah diberikan atau dicabut.
+ client_ type 
+ string 
+ Jenis klien.
+ Kemungkinan nilai:
+ CONNECTED_DEVICE Klien perangkat yang terhubung.
+ NATIVE_ANDROID Aplikasi Android.
+ NATIVE_APPLICATION Aplikasi native.
+ NATIVE_CHROME_EXTENSION Aplikasi Chrome.
+ NATIVE_DESKTOP Aplikasi Desktop native.
+ NATIVE_DEVICE Aplikasi native perangkat.
+ NATIVE_IOS Aplikasi iOS.
+ NATIVE_SONY Aplikasi native Sony.
+ NATIVE_UNIVERSAL_WINDOWS_PLATFORM Aplikasi Universal Windows Platform native.
+ TYPE_UNSPECIFIED Jenis klien tidak ditentukan.
+ WEB Aplikasi web.
+ rejection_ type 
+ string 
+ Jenis penolakan.
+ Kemungkinan nilai:
+ CAA_FOR_OIDC_BLOCK Aplikasi diblokir oleh CAA untuk OIDC.
+ EDU_UNDERAGE_BLOCK Aplikasi tidak dikonfigurasi untuk pengguna EDU di bawah umur.
+ EXPLICIT_ADMIN_BLOCK Aplikasi secara eksplisit diblokir oleh admin.
+ SCOPE_BLOCK Aplikasi mencoba mengakses layanan yang dibatasi.
+ scope 
+ string 
+ Cakupan yang aksesnya diberikan / dicabut.
+ scope_ data 
+ message 
+ Data Cakupan.
+ Permintaan sampel 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / token ?eventName= deny &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Format pesan Konsol Admin 
+ {actor} access request to {app_name} for {scope} scopes is denied due to {rejection_type} 
+ Permintaan
+ Akses diminta untuk aplikasi.
+ Detail acara 
+ Nama peristiwa 
+ request 
+ Parameter 
+ app_ name 
+ string 
+ Aplikasi yang aksesnya telah diberikan atau dicabut.
+ app_ request_ info 
+ string 
+ Info permintaan aplikasi.
+ Nilai yang mungkin:
+ APP_REQUEST_TYPE_DELEGATED Info cakupan permintaan aplikasi yang didelegasikan, tidak ditampilkan.
+ APP_REQUEST_TYPE_INDIVIDUAL Info cakupan permintaan aplikasi individual.
+ client_ id 
+ string 
+ Client ID yang aksesnya telah diberikan atau dicabut.
+ client_ type 
+ string 
+ Jenis klien.
+ Kemungkinan nilai:
+ CONNECTED_DEVICE Klien perangkat yang terhubung.
+ NATIVE_ANDROID Aplikasi Android.
+ NATIVE_APPLICATION Aplikasi native.
+ NATIVE_CHROME_EXTENSION Aplikasi Chrome.
+ NATIVE_DESKTOP Aplikasi Desktop native.
+ NATIVE_DEVICE Aplikasi native perangkat.
+ NATIVE_IOS Aplikasi iOS.
+ NATIVE_SONY Aplikasi native Sony.
+ NATIVE_UNIVERSAL_WINDOWS_PLATFORM Aplikasi Universal Windows Platform native.
+ TYPE_UNSPECIFIED Jenis klien tidak ditentukan.
+ WEB Aplikasi web.
+ requester_ email 
+ string 
+ Email pemohon aplikasi.
+ scope 
+ string 
+ Cakupan yang aksesnya diberikan / dicabut.
+ scope_ data 
+ message 
+ Data Cakupan.
+ Permintaan sampel 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / token ?eventName= request &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Format pesan Konsol Admin 
+ {actor} requested access to {app_name} for {scope} scopes 
+ Cabut
+ Akses dicabut untuk aplikasi ke data pengguna.
+ Detail acara 
+ Nama peristiwa 
+ revoke 
+ Parameter 
+ app_ name 
+ string 
+ Aplikasi yang aksesnya telah diberikan atau dicabut.
+ client_ id 
+ string 
+ Client ID yang aksesnya telah diberikan atau dicabut.
+ client_ type 
+ string 
+ Jenis klien.
+ Kemungkinan nilai:
+ CONNECTED_DEVICE Klien perangkat yang terhubung.
+ NATIVE_ANDROID Aplikasi Android.
+ NATIVE_APPLICATION Aplikasi native.
+ NATIVE_CHROME_EXTENSION Aplikasi Chrome.
+ NATIVE_DESKTOP Aplikasi Desktop native.
+ NATIVE_DEVICE Aplikasi native perangkat.
+ NATIVE_IOS Aplikasi iOS.
+ NATIVE_SONY Aplikasi native Sony.
+ NATIVE_UNIVERSAL_WINDOWS_PLATFORM Aplikasi Universal Windows Platform native.
+ TYPE_UNSPECIFIED Jenis klien tidak ditentukan.
+ WEB Aplikasi web.
+ scope 
+ string 
+ Cakupan yang aksesnya diberikan / dicabut.
+ scope_ data 
+ message 
+ Data Cakupan.
+ Permintaan sampel 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / token ?eventName= revoke &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Format pesan Konsol Admin 
+ {actor} revoked access to {app_name} for {scope} scopes 
+ Kirim masukan
+ Kecuali dinyatakan lain, konten di halaman ini dilisensikan berdasarkan Lisensi Creative Commons Attribution 4.0 , sedangkan contoh kode dilisensikan berdasarkan Lisensi Apache 2.0 . Untuk mengetahui informasi selengkapnya, lihat Kebijakan Situs Google Developers . Java adalah merek dagang terdaftar dari Oracle dan/atau afiliasinya.
+ Terakhir diperbarui pada 2026-09-13 UTC.
+ Ada masukan untuk kami?
+ [[["Mudah dipahami","easyToUnderstand","thumb-up"],["Memecahkan masalah saya","solvedMyProblem","thumb-up"],["Lainnya","otherUp","thumb-up"]],[["Informasi yang saya butuhkan tidak ada","missingTheInformationINeed","thumb-down"],["Terlalu rumit/langkahnya terlalu banyak","tooComplicatedTooManySteps","thumb-down"],["Sudah usang","outOfDate","thumb-down"],["Masalah terjemahan","translationIssue","thumb-down"],["Masalah kode / contoh","samplesCodeIssue","thumb-down"],["Lainnya","otherDown","thumb-down"]],["Terakhir diperbarui pada 2026-09-13 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/activity/user-accounts]
+User Accounts Audit Activity Events | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ User Accounts Audit Activity Events 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ This document lists the events and parameters for
+ various types of
+ User Accounts Audit activity events. You can retrieve these events by
+ calling Activities.list() 
+ with applicationName=user_accounts .
+ 2-step verification enrollment changed
+ Events of this type are returned with type=2sv_change .
+ 2-step verification disable
+ Event details 
+ Event name 
+ 2sv_disable 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= 2sv_disable &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has disabled 2-step verification 
+ 2-step verification enroll
+ Event details 
+ Event name 
+ 2sv_enroll 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= 2sv_enroll &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has enrolled for 2-step verification 
+ Account password changed
+ Events of this type are returned with type=password_change .
+ Account password change
+ Event details 
+ Event name 
+ password_edit 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= password_edit &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has changed Account password 
+ Account recovery info changed
+ Account recovery information changed.
+ Events of this type are returned with type=recovery_info_change .
+ Account recovery email change
+ Event details 
+ Event name 
+ recovery_email_edit 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= recovery_email_edit &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has changed Account recovery email 
+ Account recovery phone change
+ Event details 
+ Event name 
+ recovery_phone_edit 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= recovery_phone_edit &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has changed Account recovery phone 
+ Account recovery secret question/answer change
+ Event details 
+ Event name 
+ recovery_secret_qa_edit 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= recovery_secret_qa_edit &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has changed Account recovery secret question/answer 
+ Advanced Protection enrollment changed
+ Events of this type are returned with type=titanium_change .
+ Advanced Protection enroll
+ Event details 
+ Event name 
+ titanium_enroll 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= titanium_enroll &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has enrolled for Advanced Protection 
+ Advanced Protection unenroll
+ Event details 
+ Event name 
+ titanium_unenroll 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= titanium_unenroll &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has disabled Advanced Protection 
+ Email forwarding settings changed
+ Events of this type are returned with type=email_forwarding_change .
+ Out of domain email forwarding enabled
+ Event details 
+ Event name 
+ email_forwarding_out_of_domain 
+ Sample request 
+ GET https://admin.googleapis.com /admin /reports /v1 /activity /users /all /applications / user_accounts ?eventName= email_forwarding_out_of_domain &maxResults=10 &access_token= YOUR_ACCESS_TOKEN 
+ Admin Console message format 
+ {actor} has enabled out of domain email forwarding to {email_forwarding_destination_address} . 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2025-03-25 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2025-03-25 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/usage/customer/accounts]
+Account Parameters | Admin console | Google for Developers 
+ Zum Hauptinhalt springen
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Anmelden 
+ Admin console
+ Google verwendet KI-Technologie, um Inhalte in Ihre bevorzugte Sprache zu übersetzen. KI-Übersetzungen können Fehler enthalten.
+ Startseite
+ Google Workspace
+ Admin console
+ Referenzen
+ Feedback geben
+ Account Parameters 
+ Mit Sammlungen den Überblick behalten
+ Sie können Inhalte basierend auf Ihren Einstellungen speichern und kategorisieren.
+ In diesem Dokument werden die Parameter für verschiedene Arten von Ereignissen im Zusammenhang mit Kontoaktivitäten aufgeführt. Sie können diese Ereignisse abrufen, indem Sie CustomerUsageReports.get() mit parameters=accounts: PARAMETER aufrufen.
+ Die Unterstützung für die Parameter num_super_admins , num_delegated_admins und all_domain_names wurde am 15. November 2024 eingestellt. Weitere Informationen finden Sie in der Dokumentation zum RoleAssignment Service und zum Domains Service .
+ Name 
+ Typ 
+ Beschreibung 
+ apps_total_licenses 
+ integer 
+ Gesamtzahl der für die Domain erworbenen G Suite Basic-Lizenzen. 
+ apps_used_licenses 
+ integer 
+ Die Anzahl der in der Domain verwendeten G Suite Basic-Lizenzen. 
+ authorized_apps 
+ Nachricht 
+ Liste der Drittanbieter-Apps, die mit einem beliebigen Umfang auf die Daten der Nutzer zugreifen. Enthält die Anzahl der Nutzer pro Anwendung. 
+ coordinate_total_licenses 
+ integer 
+ Gesamtzahl der für die Domain erworbenen Google Maps Coordinate-Lizenzen. 
+ customer_used_quota_in_mb 
+ integer 
+ Gesamtes von der Domain genutztes Speicherkontingent in Megabyte 
+ drive_used_quota_in_mb 
+ integer 
+ Speicherkontingent (in MB), das von der Domain für Daten in Drive verwendet wird. 
+ gmail_used_quota_in_mb 
+ integer 
+ Speicherkontingent in MB, das von der Domain für Daten in Gmail verwendet wird. 
+ gplus_photos_used_quota_in_mb 
+ integer 
+ Speicherkontingent in MB, das von der Domain für Daten in Google Fotos und Currents verwendet wird. 
+ gsuite_basic_total_licenses 
+ integer 
+ Gesamtzahl der für die Domain erworbenen G Suite Basic-Lizenzen. 
+ gsuite_basic_used_licenses 
+ integer 
+ Die Anzahl der in der Domain verwendeten G Suite Basic-Lizenzen. 
+ gsuite_enterprise_total_licenses 
+ integer 
+ Gesamtzahl der für die Domain erworbenen G Suite Enterprise-Lizenzen. 
+ gsuite_enterprise_used_licenses 
+ integer 
+ Die Anzahl der in der Domain verwendeten G Suite Enterprise-Lizenzen. 
+ gsuite_unlimited_total_licenses 
+ integer 
+ Gesamtzahl der für die Domain erworbenen G Suite Business-Lizenzen. 
+ gsuite_unlimited_used_licenses 
+ integer 
+ Die Anzahl der G Suite Business-Lizenzen, die in der Domain verwendet werden. 
+ num_1day_logins 
+ integer 
+ Die Anzahl der Kontonutzer, die sich am Tag dieses Berichts angemeldet haben. Das sind eindeutige Anmeldungen an diesem Datum zwischen 00:00 Uhr PST und 23:59:59 Uhr PST. 
+ num_30day_logins 
+ integer 
+ Die Anzahl der Kontonutzer, die sich in den letzten 30 Tagen vor dem Datum dieses Berichts angemeldet haben. 
+ num_7day_logins 
+ integer 
+ Die Anzahl der Kontonutzer, die sich in den letzten 7 Tagen vor dem Datum dieses Berichts angemeldet haben. 
+ num_archived_users 
+ integer 
+ Anzahl der archivierten Nutzer 
+ num_authorized_apps 
+ integer 
+ Die Anzahl der Drittanbieter-Apps, die auf die Daten des Nutzers zugreifen dürfen. 
+ num_disabled_accounts 
+ integer 
+ Anzahl der deaktivierten Nutzerkonten 
+ num_locked_users 
+ integer 
+ Anzahl der gesperrten Nutzerkonten 
+ num_passkeys_enrolled 
+ integer 
+ Die Anzahl der von Nutzern dieses Kunden registrierten Passkeys. 
+ num_security_keys 
+ integer 
+ Die Anzahl der Sicherheitsschlüssel, die von Nutzern dieses Kunden registriert wurden. 
+ num_suspended_users 
+ integer 
+ Anzahl der gesperrten Nutzerkonten 
+ num_users 
+ integer 
+ Die Gesamtzahl der Nutzer. 
+ num_users_2sv_enforced 
+ integer 
+ Anzahl der Nutzerkonten, für die die 2‑Faktor-Authentifizierung erzwungen wird. 
+ num_users_2sv_enrolled 
+ integer 
+ Die Anzahl der Nutzerkonten, die für die 2‑Faktor-Authentifizierung registriert sind. 
+ num_users_2sv_enrolled_and_enforced 
+ integer 
+ Die Anzahl der Nutzerkonten, für die die 2‑Faktor-Authentifizierung erzwungen wird und die für die 2‑Faktor-Authentifizierung registriert sind. 
+ num_users_2sv_not_enforced 
+ integer 
+ Die Anzahl der Nutzerkonten, für die die 2‑Faktor-Authentifizierung nicht erzwungen wird. 
+ num_users_2sv_not_enrolled 
+ integer 
+ Die Anzahl der Nutzerkonten, die nicht für die 2‑Faktor-Authentifizierung registriert sind. 
+ num_users_2sv_not_enrolled_and_not_enforced 
+ integer 
+ Die Anzahl der Nutzerkonten, für die die 2-Faktor-Authentifizierung weder erzwungen wird noch aktiviert ist. 
+ num_users_2sv_not_enrolled_but_enforced 
+ integer 
+ Die Anzahl der Nutzerkonten, für die die 2‑Faktor-Authentifizierung erzwungen wird, für die sie aber nicht aktiviert ist. 
+ num_users_2sv_not_protected 
+ integer 
+ Die Anzahl der Nutzerkonten, die nicht durch die 2‑Faktor-Authentifizierung geschützt sind. 
+ num_users_2sv_protected 
+ integer 
+ Die Anzahl der Nutzerkonten, die durch die 2‑Faktor-Authentifizierung geschützt sind. 
+ num_users_less_secure_apps_access_allowed 
+ integer 
+ Die Anzahl der Nutzerkonten, für die der Zugriff weniger sicherer Apps erlaubt wurde. 
+ num_users_less_secure_apps_access_denied 
+ integer 
+ Die Anzahl der Nutzerkonten, denen der Zugriff weniger sicherer Apps verweigert wurde. 
+ num_users_overridden_names 
+ integer 
+ Anzahl der Nutzer, die ihre Currents-Profilnamen geändert haben. Diese Nutzer haben Anzeigenamen, die sich von den von ihren Administratoren definierten Namen unterscheiden. 
+ num_users_password_length_compliant 
+ integer 
+ Anzahl der Nutzer, deren Passwortlänge der Passwortverwaltungsrichtlinie entspricht 
+ num_users_password_length_non_compliant 
+ integer 
+ Anzahl der Nutzer, deren Passwortlänge nicht der Passwortverwaltungsrichtlinie entspricht 
+ num_users_password_length_unknown 
+ integer 
+ Anzahl der Nutzer, deren Passwortlänge unbekannt ist 
+ num_users_password_strength_strong 
+ integer 
+ Anzahl der Nutzer mit einem starken Passwort 
+ num_users_password_strength_unknown 
+ integer 
+ Anzahl der Nutzer, deren Passwortstärke unbekannt ist 
+ num_users_password_strength_weak 
+ integer 
+ Anzahl der Nutzer mit schwacher Passwortstärke 
+ num_users_used_quota_ge_50_lt_80percent 
+ integer 
+ Die Anzahl der Nutzer, die zwischen 50% und 80% ihres Speicherkontingents genutzt haben. 
+ num_users_used_quota_ge_80percent 
+ integer 
+ Die Anzahl der Nutzer, die mehr als 80% ihres Speicherkontingents genutzt haben. 
+ num_users_used_quota_lt_50percent 
+ integer 
+ Die Anzahl der Nutzer, die weniger als 50% ihres Speicherkontingents genutzt haben. 
+ num_users_with_passkeys_enrolled 
+ integer 
+ Die Anzahl der Nutzer, die mindestens einen Passkey registriert haben. 
+ team_drive_used_quota_in_mb 
+ integer 
+ Von geteilten Ablagen belegter Speicherplatz in Megabyte 
+ total_quota_in_mb 
+ integer 
+ Gesamtes Speicherkontingent (in MB) für die Domain. Für Kunden, die sich für G Suite Business registriert haben, wird ein negativer Wert zurückgegeben. 
+ used_quota_in_mb 
+ integer 
+ Gesamtes von der Domain genutztes Speicherkontingent (in MB) 
+ vault_total_licenses 
+ integer 
+ Gesamtzahl der für die Domain erworbenen Google Vault-Lizenzen. 
+ Feedback geben
+ Sofern nicht anders angegeben, sind die Inhalte dieser Seite unter der Creative Commons Attribution 4.0 License und Codebeispiele unter der Apache 2.0 License lizenziert. Weitere Informationen finden Sie in den Websiterichtlinien von Google Developers . Java ist eine eingetragene Marke von Oracle und/oder seinen Partnern.
+ Zuletzt aktualisiert: 2026-09-13 (UTC).
+ Haben Sie Feedback für uns?
+ [[["Leicht verständlich","easyToUnderstand","thumb-up"],["Mein Problem wurde gelöst","solvedMyProblem","thumb-up"],["Sonstiges","otherUp","thumb-up"]],[["Benötigte Informationen nicht gefunden","missingTheInformationINeed","thumb-down"],["Zu umständlich/zu viele Schritte","tooComplicatedTooManySteps","thumb-down"],["Nicht mehr aktuell","outOfDate","thumb-down"],["Problem mit der Übersetzung","translationIssue","thumb-down"],["Problem mit Beispielen/Code","samplesCodeIssue","thumb-down"],["Sonstiges","otherDown","thumb-down"]],["Zuletzt aktualisiert: 2026-09-13 (UTC)."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/usage/user/accounts]
+Accounts Parameters | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ Accounts Parameters 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ This document lists the parameters for
+ various types of
+ Accounts activity events. You can retrieve these events by
+ calling UserUsageReport.get() 
+ with parameters=accounts: PARAMETER .
+ Support for the parameters is_super_admin and is_delegated_admin ended on November 15, 2024. Refer to the documentation of RoleAssignment Service for future references.
+ Name 
+ Type 
+ Description 
+ admin_set_name 
+ string 
+ The user's name as it was defined by the admin in the Admin console. 
+ disabled 
+ boolean 
+ If true , the user account is disabled. 
+ disabled_reason 
+ string 
+ The reason a user account is disabled, given by the administrator or by Google at the time of disabling. 
+ domain_name 
+ string 
+ The name of the domain. 
+ drive_used_quota_in_mb 
+ integer 
+ The storage (in MB) used by the user for data in Drive. 
+ first_name 
+ string 
+ The user's first name. 
+ gmail_used_quota_in_mb 
+ integer 
+ The storage (in MB) used by the user for data in Gmail. 
+ gplus_photos_used_quota_in_mb 
+ integer 
+ The storage (in MB) used by the user for data in Google Photos and Currents. 
+ is_2sv_enforced 
+ boolean 
+ If true , the user account has been enforced for 2-step verification. 
+ is_2sv_enrolled 
+ boolean 
+ If true , the user account is enrolled for 2-step verification. 
+ is_2sv_protected 
+ boolean 
+ If true , the user account is protected by 2-step verification. 
+ is_archived 
+ boolean 
+ If true , the user account is archived. 
+ is_less_secure_apps_access_allowed 
+ boolean 
+ Identifies whether the user is allowed access to less secure apps. 
+ is_suspended 
+ boolean 
+ If true , the user account is suspended. 
+ last_name 
+ string 
+ The user's last name. 
+ num_authorized_apps 
+ integer 
+ The number of third party applications authorized to access the user's data. 
+ num_passkeys_enrolled 
+ integer 
+ The number of passkeys enrolled by the user. 
+ num_roles_assigned 
+ integer 
+ The number of administrator roles assigned to the user. 
+ num_security_keys 
+ integer 
+ The number of security keys enrolled by the user. 
+ password_length_compliance 
+ string 
+ User's password length compliance 
+ password_strength 
+ string 
+ User's password strength 
+ timestamp_creation 
+ integer 
+ Timestamp when the account was created. 
+ timestamp_last_login 
+ integer 
+ The time when the user last logged into the user's account. The date is in the RFC 3339 format, for example 2010-10-28T10:26:35.000Z. 
+ timestamp_last_sso 
+ integer 
+ The time when the user last logged into the user's account using Single Sign-On (SSO). The date is in the RFC 3339 format, for example 2010-10-28T10:26:35.000Z. 
+ total_quota_in_mb 
+ integer 
+ The total storage (in MB) for the user. 
+ used_quota_in_mb 
+ integer 
+ The total storage (in MB) used by the user. 
+ used_quota_in_percentage 
+ integer 
+ The percentage of the user's total storage quota that is used. 
+ user_has_overridden_name 
+ boolean 
+ If true , the user has changed their Currents profile name. This user has a display name that is different than the name defined by their admin. 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2026-09-03 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-09-03 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/usage/user/classroom]
+Classroom Parameters | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ Classroom Parameters 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ This document lists the parameters for
+ various types of
+ Classroom activity events. You can retrieve these events by
+ calling UserUsageReport.get() 
+ with parameters=classroom: PARAMETER .
+ Name 
+ Type 
+ Description 
+ classroom_last_usage_date_usec 
+ integer 
+ The time of the user's most recent interaction within Classroom. 
+ num_courses_created 
+ integer 
+ The number of courses the user created on this report date. 
+ num_posts_created 
+ integer 
+ The number of posts the user created on this report date. 
+ role 
+ string 
+ The user's role, which can be either 'student' or 'teacher', depending on whether the user taught a course active in the last 30 days. 
+ timestamp_last_interaction 
+ integer 
+ The timestamp of the last time the user took an action on Classroom. 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2026-09-03 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-09-03 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/usage/user/gplus]
+Currents Parameters | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ Currents Parameters 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ This document lists the parameters for
+ various types of
+ Currents activity events. You can retrieve these events by
+ calling UserUsageReport.get() 
+ with parameters=gplus: PARAMETER .
+ All Currents reports and APIs are deprecated and will no longer be available after August 2023. For more information, see Learn more about the switch from Currents to Google Chat . .
+ Name 
+ Type 
+ Description 
+ num_plusones 
+ integer 
+ The number of likes performed by the user in a day. 
+ num_plusones_received 
+ integer 
+ The number of likes user's content received in a day. 
+ num_replies 
+ integer 
+ The number of comments made by the user in a day. 
+ num_replies_received 
+ integer 
+ The number of comments user's content received in a day. 
+ num_reshares 
+ integer 
+ The number of reshares made by the user in a day. 
+ num_reshares_received 
+ integer 
+ The number of reshares user's posts received in a day. 
+ num_shares 
+ integer 
+ The number of posts made by the user in a day, including reshares. 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2025-03-25 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2025-03-25 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/usage/user/chat]
+Google Chat Parameters | Admin console | Google for Developers 
+ Skip to main content
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ Sign in 
+ Admin console
+ Home
+ Google Workspace
+ Admin console
+ Reference
+ Send feedback
+ Google Chat Parameters 
+ Stay organized with collections
+ Save and categorize content based on your preferences.
+ This document lists the parameters for
+ various types of
+ Google Chat activity events. You can retrieve these events by
+ calling UserUsageReport.get() 
+ with parameters=chat: PARAMETER .
+ Name 
+ Type 
+ Description 
+ num_28day_attachments_uploaded 
+ integer 
+ The number of attachments uploaded in the last 28 days. 
+ num_28day_conversations_read 
+ integer 
+ The number of conversations read in the last 28 days. 
+ num_28day_messages_and_reactions_sent 
+ integer 
+ The number of messages and reactions sent in the last 28 days. 
+ num_28day_spaces_created 
+ integer 
+ The number of spaces created in the last 28 days. 
+ Send feedback
+ Except as otherwise noted, the content of this page is licensed under the Creative Commons Attribution 4.0 License , and code samples are licensed under the Apache 2.0 License . For details, see the Google Developers Site Policies . Java is a registered trademark of Oracle and/or its affiliates.
+ Last updated 2026-09-03 UTC.
+ Need to tell us more?
+ [[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2026-09-03 UTC."],[],[]]
+
+[Page: /workspace/admin/reports/v1/appendix/usage/user/drive]
+Google Drive Parameters | Admin console | Google for Developers 
+ דילוג לתוכן הראשי
+ Workspace
+ / 
+ English 
+ Deutsch 
+ Español 
+ Español – América Latina 
+ Français 
+ Indonesia 
+ Italiano 
+ Polski 
+ Português – Brasil 
+ Tiếng Việt 
+ Türkçe 
+ Русский 
+ עברית 
+ العربيّة 
+ فارسی 
+ हिंदी 
+ বাংলা 
+ ภาษาไทย 
+ 中文 – 简体 
+ 中文 – 繁體 
+ 日本語 
+ 한국어 
+ היכנס 
+ Admin console
+ ‫Google משתמשת בטכנולוגיית AI כדי לתרגם תוכן לשפה המועדפת עליך. בתרגומים כאלו עשויות להיות שגיאות.
+ דף הבית
+ Google Workspace
+ Admin console
+ חומרי עזר
+ שליחת משוב
+ Google Drive Parameters 
+ קל לארגן דפים בעזרת אוספים
+ אפשר לשמור ולסווג תוכן על סמך ההעדפות שלך.
+ במסמך הזה מפורטים הפרמטרים של אירועים שונים של פעילות ב-Google Drive. אפשר לאחזר את האירועים האלה באמצעות קריאה ל- UserUsageReport.get() עם parameters=drive: PARAMETER .
+ הדוחות Customer Usage ו- User Usage ב-Google Docs הוצאו משימוש ולא זמינים יותר מאז מאי 2018. להשתמש בדוחות המעודכנים של Google Drive בנושא שימוש של לקוחות ו שימוש של משתמשים . 
+ המדדים האלה משקפים את התנהגות המשתמשים המצטברת בפריטים ב-Google Drive בדומיין שלכם.
+אפשר לחלק את נתוני הדיווח למספרים מנקודת המבט של גורם או בעלים.
+ מדדי הגורם המבצע – האדם שמבצע את הפעולה בקובץ.
+ מדדים של הבעלים – האדם שהוא הבעלים של הקובץ שמתבצעת בו פעולה.
+ ערכים עם owned בשם שלהם מתייחסים לנתונים של הבעלים.
+ פרמטרים של הרשאות גישה
+ פרמטרים יכולים לספק מדדים מצטברים של חשיפה ובעלות על פריטים בדומיין שלכם. הפרמטרים האלה מופיעים בשלושה פורמטים כלליים, כאשר במקום הכוכבית (*) מופיע אחד מהשדות שמפורטים בטבלה רמות החשיפה שבהמשך: 
+ num_owned_items_with_visibility_*_added 
+ פריטים ב-Docs או ב-Drive שבוצעה בהם לפחות פעולה אחת מסוג addition , כמו יצירה, העלאה, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. אם יש לאותו הקובץ כמה אירועי addition , הם לא מצטברים בספירה. 
+ num_owned_items_with_visibility_*_removed 
+ פריטים ב-Docs או ב-Drive שבוצעה בהם לפחות פעולה מסוג removal ,
+ כמו העברה לאשפה, מחיקה סופית או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_*_delta 
+ השינוי נטו במספר הפריטים בבעלות בדומיין כולו ב-Google Docs וב-Drive, מפולח לפי משתמש. לדוגמה, אם פריט אחד נוסף ופריט אחר מוסר, המדדים של הפריטים שנוספו והוסרו יציגו 1, אבל המדד של הדלתא יציג 0. 
+ בסך הכול של האירועים, רק אירוע addition או removal אחד לכל פריט נספר בערך הסופי. לדוגמה, אם קובץ נוסף ל-Drive ואז מועבר לבעלים אחר, מופעלים שני אירועים מסוג addition ואירוע אחד מסוג removal , אבל הסיכום הסופי של הקובץ הוא הוספה אחת והסרה אחת. 
+ הגדרות של הרשאות גישה
+ בטבלה הבאה מפורטים השדות לפי סדר הנראות מהנמוכה ביותר (פרטי) לגבוהה ביותר (ציבורי). 
+ טבלה: רמות הרשאות הגישה
+ שדה 
+ הגדרה 
+ private 
+ הקובץ לא משותף עם אף אחד. 
+ shared_internally 
+ הקובץ שותף רק עם משתמשים או קבוצות בדומיין של הבעלים. 
+ anyone_in_domain_with_link 
+ הקובץ משותף כך שכל מי ששייך לדומיין ויש לו את הקישור יכול לגשת אליו. 
+ anyone_in_domain 
+ הקובץ משותף כך שכל מי שנמצא בדומיין יכול למצוא אותו ולגשת אליו. 
+ shared_externally 
+ הקובץ משותף כך שמשתמשים או קבוצות מחוץ לדומיין של הבעלים יכולים לראות אותו. 
+ anyone_with_link 
+ הקובץ משותף כך שכל מי שיש לו את הקישור יכול לגשת אליו. 
+ public 
+ הקובץ נגיש לכולם. 
+ מדדים ברמות שונות של חשיפה או אירועים
+ בחישוב של מדדי החשיפה נלקח בחשבון רק סטטוס החשיפה הגבוה ביותר – או הציבורי ביותר – של קובץ נתון. לדוגמה, נניח שהגדרות השיתוף הבאות חלות על קובץ יחיד. למרות שיש לקובץ כמה מצבי חשיפה, רק מצב החשיפה public מדווח. 
+ דוגמה למצב הרשאות גישה
+ הגדרת השיתוף 
+ מצב החשיפה 
+ גלויים לכולם 
+ public 
+ שותף עם כמה משתמשים בדומיין 
+ shared_internally 
+ שותף עם משתמשים ספציפיים מחוץ לדומיין 
+ shared_externally 
+ הערות לגבי החישוב: קבצים של מדדים מצטברים שנמצאים בבעלות הדומיין ולא בבעלות של משתמשים ספציפיים, לא נכללים בחישוב. המדדים מחושבים לכל משתמש בדומיין, בלי קשר לרישיון.
+ פרמטרים של פעילות שקשורים לפריטים
+ פרמטרים של פעילות פריטים יכולים לספק מדדי פעילות לפריטים בדומיין.
+ שם 
+ סוג 
+ תיאור 
+ num_google_documents_created 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_google_documents_edited 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs שנערכו על ידי המשתמש או הדומיין. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_google_documents_trashed 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_google_documents_viewed 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs שהמשתמש או הדומיין צפו בהם. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_google_drawings_created 
+ מספר שלם 
+ מספר הציורים ב-Google Drawings שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_google_drawings_edited 
+ מספר שלם 
+ מספר ה-Google Drawings שהמשתמש או הדומיין ערכו. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_google_drawings_trashed 
+ מספר שלם 
+ מספר ה-Google Drawings שנשלחו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_google_drawings_viewed 
+ מספר שלם 
+ מספר ה-Google Drawings שהמשתמש או הדומיין צפו בהם. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_google_forms_created 
+ מספר שלם 
+ מספר הטפסים ב-Google Forms שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_google_forms_edited 
+ מספר שלם 
+ מספר הטפסים ב-Google Forms שנערכו על ידי המשתמש או הדומיין. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_google_forms_trashed 
+ מספר שלם 
+ מספר הטפסים של Google Forms שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_google_forms_viewed 
+ מספר שלם 
+ מספר הטפסים של Google שהמשתמש או הדומיין צפו בהם. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_google_presentations_created 
+ מספר שלם 
+ מספר המצגות ב-Google שיצר המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_google_presentations_edited 
+ מספר שלם 
+ מספר המצגות ב-Google שהמשתמש או הדומיין ערכו. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_google_presentations_trashed 
+ מספר שלם 
+ מספר המצגות ב-Google שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_google_presentations_viewed 
+ מספר שלם 
+ מספר המצגות ב-Google שמשתמש או דומיין צפו בהן. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_google_sites_created 
+ מספר שלם 
+ מספר האתרים ב-Google Sites שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_google_sites_edited 
+ מספר שלם 
+ מספר האתרים ב-Google Sites שנערכו על ידי המשתמש או הדומיין. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_google_sites_trashed 
+ מספר שלם 
+ מספר האתרים ב-Google Sites שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_google_sites_viewed 
+ מספר שלם 
+ מספר האתרים ב-Google Sites שהמשתמש או הדומיין צפו בהם. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_google_spreadsheets_created 
+ מספר שלם 
+ מספר גיליונות Google שיצר המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_google_spreadsheets_edited 
+ מספר שלם 
+ מספר הגיליונות האלקטרוניים ב-Google שהמשתמש או הדומיין ערכו. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_google_spreadsheets_trashed 
+ מספר שלם 
+ מספר גיליונות Google שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_google_spreadsheets_viewed 
+ מספר שלם 
+ מספר הגיליונות האלקטרוניים של Google שהמשתמש או הדומיין צפו בהם. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_google_videos_created 
+ מספר שלם 
+ מספר הסרטונים ב-Google Videos שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_google_videos_edited 
+ מספר שלם 
+ מספר הסרטונים ב-Google שהמשתמש או הדומיין ערכו. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_google_videos_trashed 
+ מספר שלם 
+ מספר הסרטונים ב-Google שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_google_videos_viewed 
+ מספר שלם 
+ מספר הצפיות בסרטונים ב-Google של המשתמש או הדומיין. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_items_created 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_items_edited 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שנערכו על ידי המשתמש או הדומיין. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_items_trashed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_items_viewed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהמשתמש או הדומיין צפו בהם. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_other_types_created 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_other_types_edited 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive שנערכו על ידי המשתמש או הדומיין. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_other_types_trashed 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive שהועברו לאשפה על ידי המשתמש או הדומיין. אם פריט מסוים הועבר לאשפה ואז שוחזר, הוא עדיין ייספר במדד. אם פריט מסוים מוכנס לאשפה כמה פעמים, הוא נספר רק פעם אחת במדד. 
+ num_other_types_viewed 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive שהמשתמש או הדומיין צפו בהם. מספר הצפיות באותו קובץ נספר פעם אחת בלבד לכל קובץ. 
+ num_owned_external_items_added 
+ מספר שלם 
+ מספר הפריטים החיצוניים ב-Google Drive שנוספו לארגון. 
+ num_owned_external_items_delta 
+ מספר שלם 
+ num_owned_external_items_removed 
+ מספר שלם 
+ num_owned_google_documents_added 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs שבוצע בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_google_documents_created 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs שנוצרו ביום שבו נוצר הדוח, שהמשתמש בדומיין הוא הבעלים שלהם. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_google_documents_delta 
+ מספר שלם 
+ מספר המסמכים ב-Google בחשבון הלקוח שהבעלות עליהם השתנתה, כלומר הבעלות על הקבצים גדלה או קטנה. 
+ num_owned_google_documents_edited 
+ מספר שלם 
+ מספר המסמכים ב-Google בחשבון הלקוח שנערכו. 
+ num_owned_google_documents_removed 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs בחשבון הלקוח שהוסרו. 
+ num_owned_google_documents_trashed 
+ מספר שלם 
+ מספר המסמכים ב-Google Docs בחשבון של הלקוח שהועברו לאשפה. 
+ num_owned_google_documents_viewed 
+ מספר שלם 
+ מספר מסמכי Google בחשבון הלקוח שנצפו. 
+ num_owned_google_drawings_added 
+ מספר שלם 
+ מספר ה-Google Drawings עם אירוע אחד לפחות מסוג 'הוספה' שבוצע בהם, כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_google_drawings_created 
+ מספר שלם 
+ מספר ה-Google Drawings שנוצרו ביום שבו נוצר הדוח, שהמשתמש בדומיין הוא הבעלים שלהם. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_google_drawings_delta 
+ מספר שלם 
+ מספר ה-Google Drawings בחשבון הלקוח שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_google_drawings_edited 
+ מספר שלם 
+ מספר המסמכים ב-Google בחשבון הלקוח שנערכו. 
+ num_owned_google_drawings_removed 
+ מספר שלם 
+ מספר ה-Google Drawings בחשבון הלקוח שהוסרו. 
+ num_owned_google_drawings_trashed 
+ מספר שלם 
+ מספר ה-Google Drawings בחשבון הלקוח שהועברו לאשפה. 
+ num_owned_google_drawings_viewed 
+ מספר שלם 
+ מספר ה-Google Drawings בחשבון הלקוח שנצפו. 
+ num_owned_google_forms_added 
+ מספר שלם 
+ מספר הטפסים ב-Google Forms שבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_google_forms_created 
+ מספר שלם 
+ מספר הטפסים ב-Google Forms שנוצרו ביום שבו נוצר הדוח, והמשתמש בדומיין הוא הבעלים שלהם. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_google_forms_delta 
+ מספר שלם 
+ מספר הטפסים של Google בחשבון הלקוח שבהם הבעלות השתנתה, בין אם כדי להגדיל או להקטין את הבעלות על הקובץ. 
+ num_owned_google_forms_edited 
+ מספר שלם 
+ מספר המסמכים ב-Google בחשבון הלקוח שנערכו. 
+ num_owned_google_forms_removed 
+ מספר שלם 
+ מספר הטפסים של Google בחשבון הלקוח שהוסרו. 
+ num_owned_google_forms_trashed 
+ מספר שלם 
+ מספר הטפסים ב-Google Forms בחשבון הלקוח שהועברו לאשפה. 
+ num_owned_google_forms_viewed 
+ מספר שלם 
+ מספר הטפסים ב-Google Forms בחשבון הלקוח שנצפו. 
+ num_owned_google_presentations_added 
+ מספר שלם 
+ מספר המצגות ב-Google עם אירוע אחד לפחות מסוג 'הוספה' שבוצע בהן, כמו יצירה, העלאה, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_google_presentations_created 
+ מספר שלם 
+ מספר המצגות של Google שנוצרו ביום שבו נוצר הדוח, שהמשתמש בדומיין הוא הבעלים שלהן. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_google_presentations_delta 
+ מספר שלם 
+ מספר המצגות ב-Google בחשבון הלקוח שהבעלות עליהן השתנתה, כלומר הבעלות על הקבצים גדלה או קטנה. 
+ num_owned_google_presentations_edited 
+ מספר שלם 
+ מספר המצגות ב-Google בחשבון של הלקוח שנערכו. 
+ num_owned_google_presentations_removed 
+ מספר שלם 
+ מספר המצגות ב-Google בחשבון הלקוח שהוסרו. 
+ num_owned_google_presentations_trashed 
+ מספר שלם 
+ מספר המצגות ב-Google בחשבון הלקוח שהועברו לאשפה. 
+ num_owned_google_presentations_viewed 
+ מספר שלם 
+ מספר המצגות ב-Google בחשבון הלקוח שנצפו. 
+ num_owned_google_sites_added 
+ מספר שלם 
+ מספר האתרים ב-Google Sites שבוצע בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_google_sites_created 
+ מספר שלם 
+ מספר האתרים ב-Google Sites שנוצרו ביום שבו נוצר הדוח, והמשתמש בדומיין הוא הבעלים שלהם. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_google_sites_delta 
+ מספר שלם 
+ מספר האתרים ב-Google Sites בחשבון הלקוח שבהם הבעלות השתנתה, בין אם כדי להגדיל או להקטין את הבעלות על הקבצים. 
+ num_owned_google_sites_edited 
+ מספר שלם 
+ מספר האתרים ב-Google Sites בחשבון הלקוח שנערכו. 
+ num_owned_google_sites_removed 
+ מספר שלם 
+ מספר האתרים ב-Google Sites בחשבון הלקוח שהוסרו. 
+ num_owned_google_sites_trashed 
+ מספר שלם 
+ מספר האתרים ב-Google Sites בחשבון של הלקוח שהועברו לאשפה. 
+ num_owned_google_sites_viewed 
+ מספר שלם 
+ מספר האתרים ב-Google Sites בחשבון של הלקוח שנצפו. 
+ num_owned_google_spreadsheets_added 
+ מספר שלם 
+ מספר גיליונות Google שבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_google_spreadsheets_created 
+ מספר שלם 
+ מספר גיליונות Google שנוצרו ביום שבו נוצר הדוח, שהמשתמש בדומיין הוא הבעלים שלהם. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_google_spreadsheets_delta 
+ מספר שלם 
+ מספר גיליונות Google בחשבון הלקוח שהבעלות עליהם השתנתה, כלומר הבעלות על הקבצים גדלה או קטנה. 
+ num_owned_google_spreadsheets_edited 
+ מספר שלם 
+ מספר הגיליונות האלקטרוניים ב-Google בחשבון הלקוח שנערכו. 
+ num_owned_google_spreadsheets_removed 
+ מספר שלם 
+ מספר הגיליונות האלקטרוניים ב-Google בחשבון הלקוח שהוסרו. 
+ num_owned_google_spreadsheets_trashed 
+ מספר שלם 
+ מספר גיליונות Google שהועברו לאשפה בחשבון של הלקוח. 
+ num_owned_google_spreadsheets_viewed 
+ מספר שלם 
+ מספר הגיליונות האלקטרוניים של Google בחשבון הלקוח שנצפו. 
+ num_owned_google_videos_added 
+ מספר שלם 
+ מספר הסרטונים ב-Google שבוצעה בהם לפחות פעולה אחת מסוג 'הוספה', כמו יצירה, העלאה, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_google_videos_created 
+ מספר שלם 
+ מספר סרטוני Google שנוצרו ביום שבו נוצר הדוח, שהמשתמש בדומיין הוא הבעלים שלהם. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_google_videos_delta 
+ מספר שלם 
+ מספר הסרטונים ב-Google בחשבון הלקוח שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_google_videos_edited 
+ מספר שלם 
+ מספר הסרטונים ב-Google בחשבון הלקוח שנערכו. 
+ num_owned_google_videos_removed 
+ מספר שלם 
+ מספר הסרטונים ב-Google בחשבון הלקוח שהוסרו. 
+ num_owned_google_videos_trashed 
+ מספר שלם 
+ מספר הסרטונים ב-Google Videos בחשבון של הלקוח שהועברו לאשפה. 
+ num_owned_google_videos_viewed 
+ מספר שלם 
+ מספר הסרטונים ב-Google בחשבון של הלקוח שנצפו. 
+ num_owned_internal_items_added 
+ מספר שלם 
+ מספר הפריטים הפנימיים ב-Google Drive שבוצעה בהם לפחות פעולה אחת מסוג 'הוספה', כמו יצירה, העלאה, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_internal_items_delta 
+ מספר שלם 
+ num_owned_internal_items_removed 
+ מספר שלם 
+ num_owned_items_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_created 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שנוצרו ביום שבו נוצר הדוח, והמשתמש בדומיין הוא הבעלים שלהם. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_items_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive בחשבון הלקוח שהבעלות עליהם השתנתה, בין אם כדי להגדיל או להקטין את הבעלות על הקבצים. 
+ num_owned_items_edited 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive בחשבון של הלקוח שנערכו. 
+ num_owned_items_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive בחשבון של הלקוח שהוסרו. 
+ num_owned_items_trashed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive בחשבון הלקוח שהועברו לאשפה. 
+ num_owned_items_viewed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive בחשבון של הלקוח שנצפו. 
+ num_owned_items_with_visibility_anyone_in_domain_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם נראות של anyone_in_domain ושבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_anyone_in_domain_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של anyone_in_domain בחשבון הלקוח, שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_items_with_visibility_anyone_in_domain_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של anyone_in_domain בחשבון הלקוח, שהוסרו. 
+ num_owned_items_with_visibility_anyone_in_domain_with_link_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם נראות של anyone_in_domain_with_link ושבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_anyone_in_domain_with_link_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של anyone_in_domain_with_link בחשבון הלקוח, שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_items_with_visibility_anyone_in_domain_with_link_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של anyone_in_domain_with_link בחשבון הלקוח, והוסרו. 
+ num_owned_items_with_visibility_anyone_with_link_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם נראות של anyone_with_link ושבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_anyone_with_link_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של anyone_with_link בחשבון הלקוח, שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_items_with_visibility_anyone_with_link_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של anyone_with_link בחשבון הלקוח, והוסרו. 
+ num_owned_items_with_visibility_private_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם נראות של private ושבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_private_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של private בחשבון הלקוח, שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_items_with_visibility_private_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של private בחשבון הלקוח, והוסרו. 
+ num_owned_items_with_visibility_public_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם נראות של public ושבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_public_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של public בחשבון הלקוח, שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_items_with_visibility_public_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של public בחשבון הלקוח, והוסרו. 
+ num_owned_items_with_visibility_shared_externally_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם נראות של shared_externally ושבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_shared_externally_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של shared_externally בחשבון הלקוח, שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_items_with_visibility_shared_externally_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של shared_externally בחשבון הלקוח, והוסרו. 
+ num_owned_items_with_visibility_shared_internally_added 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם נראות של shared_internally ושבוצעו בהם לפחות אירוע אחד מסוג 'הוספה', כמו יצירה, העלאות, אירועי שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_items_with_visibility_shared_internally_delta 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של shared_internally בחשבון הלקוח, שבהם הבעלות השתנתה, כלומר הבעלות על הקובץ גדלה או קטנה. 
+ num_owned_items_with_visibility_shared_internally_removed 
+ מספר שלם 
+ מספר הפריטים ב-Google Drive שהוגדרה להם הרשאת גישה של shared_internally בחשבון הלקוח, והוסרו. 
+ num_owned_items_with_visibility_unknown_added 
+ מספר שלם 
+ num_owned_items_with_visibility_unknown_delta 
+ מספר שלם 
+ num_owned_items_with_visibility_unknown_removed 
+ מספר שלם 
+ num_owned_other_types_added 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive שבוצעה בהם לפחות פעולה אחת מסוג 'הוספה', כמו יצירה, העלאה, שחזור מהאשפה או העברת בעלות. הפעילות הזו מדווחת בלי קשר למצב הסופי של הפריט. 
+ num_owned_other_types_created 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive שנוצרו על ידי המשתמש או הדומיין. הדוח לא כולל פריטים שהגיעו לרשות הלקוח באמצעות שחזור מהאשפה, ביטול מחיקה או העברת בעלות. 
+ num_owned_other_types_delta 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive בחשבון הלקוח שהבעלות עליהם השתנתה, כלומר מספר הקבצים שהבעלות עליהם גדלה או קטנה. 
+ num_owned_other_types_edited 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive שנערכו על ידי המשתמש או הדומיין. אם מבצעים כמה עריכות באותו קובץ, הן נספרות רק פעם אחת לקובץ. 
+ num_owned_other_types_removed 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive בחשבון של הלקוח שהוסרו. 
+ num_owned_other_types_trashed 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive בחשבון של הלקוח שהועברו לאשפה. 
+ num_owned_other_types_viewed 
+ מספר שלם 
+ מספר הפריטים האחרים ב-Google Drive בחשבון של הלקוח שנצפו. 
+ timestamp_last_active_usage 
+ מספר שלם 
+ מציין את הפעם האחרונה שבה המשתמש היה פעיל ב-Google Drive. 
+ שליחת משוב
+ אלא אם צוין אחרת, התוכן של דף זה הוא ברישיון Creative Commons Attribution 4.0 ודוגמאות הקוד הן ברישיון Apache 2.0 . לפרטים, ניתן לעיין ב מדיניות האתר Google Developers‏ .‏ Java הוא סימן מסחרי רשום של חברת Oracle ו/או של השותפים העצמאיים שלה.
+ עדכון אחרון: 2026-09-13 (שעון UTC).
+ רוצה לתת לנו משוב?
+ [[["התוכן קל להבנה","easyToUnderstand","thumb-up"],["התוכן עזר לי לפתור בעיה","solvedMyProblem","thumb-up"],["סיבה אחרת","otherUp","thumb-up"]],[["חסרים לי מידע או פרטים","missingTheInformationINeed","thumb-down"],["התוכן מורכב מדי או עם יותר מדי שלבים","tooComplicatedTooManySteps","thumb-down"],["התוכן לא עדכני","outOfDate","thumb-down"],["בעיה בתרגום","translationIssue","thumb-down"],["בעיה בדוגמאות/בקוד","samplesCodeIssue","thumb-down"],["סיבה אחרת","otherDown","thumb-down"]],["עדכון אחרון: 2026-09-13 (שעון UTC)."],[],[]]

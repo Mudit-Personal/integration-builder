@@ -1,0 +1,413 @@
+{
+  "apps": [
+    {
+      "slug": "asana",
+      "name": "Asana",
+      "docsUrl": "https://developers.asana.com/docs",
+      "why": "Work management used across enterprises. Workspace user listing in a public OpenAPI spec.",
+      "logo": "asana.png"
+    },
+    {
+      "slug": "box",
+      "name": "Box",
+      "docsUrl": "https://developer.box.com/reference",
+      "why": "Enterprise content platform with an admin user listing.",
+      "logo": "box.svg"
+    },
+    {
+      "slug": "calendly",
+      "name": "Calendly",
+      "docsUrl": "https://developer.calendly.com/api-docs/4b402d5ab3edd-calendly-developer",
+      "why": "Scheduling tool bought per seat, with organization memberships in the API.",
+      "logo": "calendly.svg"
+    },
+    {
+      "slug": "github",
+      "name": "GitHub",
+      "docsUrl": "https://docs.github.com/en/rest",
+      "why": "Default code host for engineering teams, with organization member listing.",
+      "logo": "github.png"
+    },
+    {
+      "slug": "jira",
+      "name": "Jira Cloud",
+      "docsUrl": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/",
+      "why": "Most common issue tracker in B2B software teams.",
+      "logo": "jira.svg"
+    },
+    {
+      "slug": "linear",
+      "name": "Linear",
+      "docsUrl": "https://linear.app/developers/graphql",
+      "why": "Fast growing issue tracker, and a GraphQL read case.",
+      "logo": "linear.svg"
+    },
+    {
+      "slug": "notion",
+      "name": "Notion",
+      "docsUrl": "https://developers.notion.com/reference/get-users",
+      "why": "Team wiki bought per seat, with a user listing.",
+      "logo": "notion.svg"
+    },
+    {
+      "slug": "okta",
+      "name": "Okta",
+      "docsUrl": "https://developer.okta.com/docs/reference",
+      "why": "Leading workforce identity provider, with a user directory and system log.",
+      "logo": "okta.png"
+    },
+    {
+      "slug": "pagerduty",
+      "name": "PagerDuty",
+      "docsUrl": "https://developer.pagerduty.com/api-reference",
+      "why": "Standard on-call tool, with user listing.",
+      "logo": "pagerduty.svg"
+    },
+    {
+      "slug": "slack",
+      "name": "Slack",
+      "docsUrl": "https://api.slack.com/web",
+      "why": "Default team chat, with workspace user listing.",
+      "logo": "slack.png"
+    },
+    {
+      "slug": "zendesk",
+      "name": "Zendesk",
+      "docsUrl": "https://developer.zendesk.com/api-reference/ticketing/users/users/",
+      "why": "Leading support desk, with agent and user listing.",
+      "logo": "zendesk.svg"
+    },
+    {
+      "slug": "salesforce",
+      "name": "Salesforce",
+      "docsUrl": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",
+      "why": "Largest CRM. Users are queryable objects in the REST API.",
+      "logo": "salesforce.svg"
+    },
+    {
+      "slug": "hubspot",
+      "name": "HubSpot",
+      "docsUrl": "https://developers.hubspot.com/docs/api-reference/settings-user-provisioning-v3/guide",
+      "why": "Major CRM and marketing suite, with settings users API.",
+      "logo": "hubspot.svg"
+    },
+    {
+      "slug": "microsoft-365",
+      "name": "Microsoft 365 (Graph)",
+      "docsUrl": "https://learn.microsoft.com/en-us/graph/api/user-list",
+      "why": "Most widely licensed office suite. Graph lists tenant users and sign-in activity.",
+      "logo": "microsoft-365.svg"
+    },
+    {
+      "slug": "google-workspace",
+      "name": "Google Workspace Admin",
+      "docsUrl": "https://developers.google.com/admin-sdk/directory/reference/rest/v1/users/list",
+      "why": "Main alternative office suite, with an Admin SDK directory.",
+      "logo": "google-workspace.svg"
+    },
+    {
+      "slug": "zoom",
+      "name": "Zoom",
+      "docsUrl": "https://developers.zoom.us/docs/api/users/",
+      "why": "Standard meetings tool, with account user listing.",
+      "logo": "zoom.svg"
+    },
+    {
+      "slug": "dropbox",
+      "name": "Dropbox",
+      "docsUrl": "https://www.dropbox.com/developers/documentation/http/teams",
+      "why": "File sharing bought per seat, with team member listing.",
+      "logo": "dropbox.svg"
+    },
+    {
+      "slug": "docusign",
+      "name": "DocuSign",
+      "docsUrl": "https://developers.docusign.com/docs/admin-api/reference/",
+      "why": "Default e-signature tool, with an Admin API for org users.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/docusign/OpenAPI-Specifications/master/admin.rest.swagger-v2.1.json"
+      ]
+    },
+    {
+      "slug": "shopify",
+      "name": "Shopify",
+      "docsUrl": "https://shopify.dev/docs/api/admin-graphql/latest/queries/staffMembers",
+      "why": "Largest commerce platform for merchants, with staff member listing.",
+      "logo": "shopify.svg"
+    },
+    {
+      "slug": "confluence",
+      "name": "Atlassian Confluence",
+      "docsUrl": "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",
+      "why": "Standard enterprise wiki beside Jira.",
+      "readUrls": [
+        "https://developer.atlassian.com/cloud/confluence/swagger.v3.json"
+      ],
+      "logo": "confluence.svg"
+    },
+    {
+      "slug": "trello",
+      "name": "Trello",
+      "docsUrl": "https://developer.atlassian.com/cloud/trello/rest/",
+      "why": "Widely used kanban tool, with organization member listing.",
+      "readUrls": [
+        "https://developer.atlassian.com/cloud/trello/swagger.v3.json"
+      ],
+      "logo": "trello.svg"
+    },
+    {
+      "slug": "monday",
+      "name": "Monday.com",
+      "docsUrl": "https://developer.monday.com/api-reference/reference/users",
+      "why": "Large work management vendor, with a GraphQL users query."
+    },
+    {
+      "slug": "clickup",
+      "name": "ClickUp",
+      "docsUrl": "https://developer.clickup.com/reference/getauthorizedteams",
+      "why": "Popular work management tool, with team member data.",
+      "readUrls": [
+        "https://developer.clickup.com/openapi/clickup-api-v2-reference.json"
+      ],
+      "logo": "clickup.svg"
+    },
+    {
+      "slug": "airtable",
+      "name": "Airtable",
+      "docsUrl": "https://airtable.com/developers/web/api/introduction",
+      "why": "Widely used no-code database, with enterprise user APIs.",
+      "logo": "airtable.svg"
+    },
+    {
+      "slug": "smartsheet",
+      "name": "Smartsheet",
+      "docsUrl": "https://developers.smartsheet.com/api/smartsheet/openapi/users",
+      "why": "Enterprise spreadsheet work tool, with user listing and last login."
+    },
+    {
+      "slug": "figma",
+      "name": "Figma",
+      "docsUrl": "https://www.figma.com/developers/api",
+      "why": "Default design tool, with SCIM and activity logs for organizations.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/figma/rest-api-spec/main/openapi/openapi.yaml"
+      ],
+      "logo": "figma.svg"
+    },
+    {
+      "slug": "miro",
+      "name": "Miro",
+      "docsUrl": "https://developers.miro.com/reference/api-reference",
+      "why": "Leading whiteboard tool, with enterprise organization members.",
+      "logo": "miro.svg"
+    },
+    {
+      "slug": "canva",
+      "name": "Canva",
+      "docsUrl": "https://www.canva.dev/docs/connect/",
+      "why": "Design tool spreading through marketing teams.",
+      "logo": "canva.svg"
+    },
+    {
+      "slug": "adobe",
+      "name": "Adobe",
+      "docsUrl": "https://adobe-apiplatform.github.io/umapi-documentation/en/",
+      "why": "Creative Cloud licences are a large SaaS line item. User Management API lists org users.",
+      "logo": "adobe.svg"
+    },
+    {
+      "slug": "intercom",
+      "name": "Intercom",
+      "docsUrl": "https://developers.intercom.com/docs/references/rest-api/api.intercom.io/admins/listadmins",
+      "why": "Major customer messaging tool, with admin listing.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/main/descriptions/2.11/api.intercom.io.yaml"
+      ],
+      "logo": "intercom.svg"
+    },
+    {
+      "slug": "freshdesk",
+      "name": "Freshdesk",
+      "docsUrl": "https://developers.freshdesk.com/api/",
+      "why": "Major support desk, with agent listing."
+    },
+    {
+      "slug": "servicenow",
+      "name": "ServiceNow",
+      "docsUrl": "https://www.servicenow.com/docs/bundle/zurich-api-reference/page/integrate/inbound-rest/concept/c_TableAPI.html",
+      "why": "Largest enterprise IT workflow platform. sys_user is read through the Table API."
+    },
+    {
+      "slug": "bamboohr",
+      "name": "BambooHR",
+      "docsUrl": "https://documentation.bamboohr.com/reference/get-employees-directory",
+      "why": "Common mid-market HR system, with an employee directory."
+    },
+    {
+      "slug": "gusto",
+      "name": "Gusto",
+      "docsUrl": "https://docs.gusto.com/app-integrations/reference/get-v1-companies-company_id-employees",
+      "why": "Common payroll tool for small business, with employee listing.",
+      "logo": "gusto.svg"
+    },
+    {
+      "slug": "rippling",
+      "name": "Rippling",
+      "docsUrl": "https://developer.rippling.com/documentation/rest-api",
+      "why": "Fast growing HR and IT platform, with workers and users."
+    },
+    {
+      "slug": "greenhouse",
+      "name": "Greenhouse",
+      "docsUrl": "https://developers.greenhouse.io/harvest.html",
+      "why": "Leading recruiting system, with internal user listing.",
+      "logo": "greenhouse.svg"
+    },
+    {
+      "slug": "lever",
+      "name": "Lever",
+      "docsUrl": "https://hire.lever.co/developer/documentation",
+      "why": "Major recruiting system, with user listing."
+    },
+    {
+      "slug": "datadog",
+      "name": "Datadog",
+      "docsUrl": "https://docs.datadoghq.com/api/latest/users/",
+      "why": "Leading monitoring platform, with user listing and audit logs.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/DataDog/datadog-api-client-typescript/master/.generator/schemas/v2/openapi.yaml"
+      ],
+      "logo": "datadog.svg"
+    },
+    {
+      "slug": "newrelic",
+      "name": "New Relic",
+      "docsUrl": "https://docs.newrelic.com/docs/apis/nerdgraph/examples/nerdgraph-manage-users/",
+      "why": "Major observability vendor, with users in NerdGraph.",
+      "logo": "newrelic.svg"
+    },
+    {
+      "slug": "sentry",
+      "name": "Sentry",
+      "docsUrl": "https://docs.sentry.io/api/organizations/list-an-organizations-members/",
+      "why": "Default error tracker, with organization member listing.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/getsentry/sentry-api-schema/main/openapi-derefed.json"
+      ],
+      "logo": "sentry.svg"
+    },
+    {
+      "slug": "gitlab",
+      "name": "GitLab",
+      "docsUrl": "https://docs.gitlab.com/api/users/",
+      "why": "Main GitHub alternative, with user listing and last activity.",
+      "logo": "gitlab.svg"
+    },
+    {
+      "slug": "bitbucket",
+      "name": "Bitbucket",
+      "docsUrl": "https://developer.atlassian.com/cloud/bitbucket/rest/intro/",
+      "why": "Atlassian code host, with workspace members.",
+      "readUrls": [
+        "https://dac-static.atlassian.com/cloud/bitbucket/swagger.v3.json"
+      ],
+      "logo": "bitbucket.svg"
+    },
+    {
+      "slug": "snowflake",
+      "name": "Snowflake",
+      "docsUrl": "https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/user",
+      "why": "Leading data warehouse, with a user REST API.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/main/specifications/user.yaml"
+      ],
+      "logo": "snowflake.svg"
+    },
+    {
+      "slug": "sendgrid",
+      "name": "SendGrid",
+      "docsUrl": "https://www.twilio.com/docs/sendgrid/api-reference/teammates/retrieve-all-teammates",
+      "why": "Widely used email delivery service, with a teammates API.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/twilio/sendgrid-oai/main/spec/json/tsg_teammates_v3.json"
+      ],
+      "logo": "sendgrid.svg"
+    },
+    {
+      "slug": "segment",
+      "name": "Segment",
+      "docsUrl": "https://docs.segmentapis.com/tag/IAM-Users/",
+      "why": "Leading customer data platform, with an IAM users API."
+    },
+    {
+      "slug": "amplitude",
+      "name": "Amplitude",
+      "docsUrl": "https://amplitude.com/docs/apis/analytics/scim",
+      "why": "Major product analytics vendor, with a SCIM user API."
+    },
+    {
+      "slug": "cloudflare",
+      "name": "Cloudflare",
+      "docsUrl": "https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/list/",
+      "why": "Common network and edge vendor, with account member listing and audit logs.",
+      "readUrls": [
+        "https://raw.githubusercontent.com/cloudflare/api-schemas/main/openapi.json"
+      ],
+      "logo": "cloudflare.svg"
+    },
+    {
+      "slug": "1password",
+      "name": "1Password",
+      "docsUrl": "https://www.1password.dev/users-api/reference.md",
+      "why": "Common business password manager, with a Users API.",
+      "logo": "1password.svg"
+    },
+    {
+      "slug": "auth0",
+      "name": "Auth0",
+      "docsUrl": "https://auth0.com/docs/api/management/v2/users/get-users",
+      "why": "Common customer identity platform, with a Management API.",
+      "logo": "auth0.svg"
+    },
+    {
+      "slug": "vercel",
+      "name": "Vercel",
+      "docsUrl": "https://vercel.com/docs/rest-api/reference/endpoints/teams/list-team-members",
+      "why": "Common frontend hosting platform, with team member listing. Replaces Workday.",
+      "readUrls": [
+        "https://openapi.vercel.sh/"
+      ],
+      "logo": "vercel.svg"
+    }
+  ],
+  "excluded": [
+    {
+      "name": "Stripe",
+      "reason": "Payments API. Team members are not exposed."
+    },
+    {
+      "name": "Twilio",
+      "reason": "REST API lists subaccounts, not people. The organizations user API is limited."
+    },
+    {
+      "name": "Mailchimp",
+      "reason": "Marketing API covers audiences. No account team listing."
+    },
+    {
+      "name": "CircleCI",
+      "reason": "No organization member listing in the v2 API."
+    },
+    {
+      "name": "Mixpanel",
+      "reason": "APIs cover events and service accounts, not a project member listing."
+    },
+    {
+      "name": "Webflow",
+      "reason": "User APIs cover site visitors, not workspace members."
+    },
+    {
+      "name": "Workday",
+      "reason": "No public API reference could be fetched. The REST directory returned 404 and the docs home has no API content."
+    }
+  ]
+}

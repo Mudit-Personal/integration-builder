@@ -1,0 +1,24 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "integration-demo",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--config",
+        "web/vite.config.ts"
+      ],
+      "port": 4320
+    },
+    {
+      "name": "integration-api",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--no-warnings",
+        "scripts/read-dev.ts"
+      ],
+      "port": 4321
+    }
+  ]
+}

@@ -1,0 +1,1518 @@
+Rippling REST API | Rippling Developer 
+ For AI agents: an index of this documentation is at https://developer.rippling.com/llms.txt. Public pages have a Markdown version at the same URL with .md added.
+ Skip to main content 
+ REST API
+ REST API
+ Need to quickly find an endpoint? Search and filter the full Rippling REST API using the Endpoint search .
+ Overview ​ 
+ The Rippling REST API lets you read and write company data programmatically - build integrations, automate workflows, and connect Rippling to your existing systems.
+ Start with the essentials below, use the endpoint search to find a specific endpoint, or open a category guide for deeper walkthroughs on a particular API area.
+ Essentials ​ 
+ Quickstart - Make your first API call and verify your setup.
+ Tokens and permissions - Authenticate requests with bearer tokens. Tokens inherit the creator&#x27;s permissions and selected scopes.
+ Scopes - Reference which OAuth scopes grant access to each endpoint.
+ Versioning — Breaking changes ship as dated versions ( YYYY-MM-DD ). Pin a version with the Rippling-Api-Version header.
+ Query parameters - Shape responses with filter , expand , and order_by .
+ Pagination - Page through list endpoints with limit and cursor .
+ Data models - Understand core resources like User and Worker and how they relate.
+ Usage and rate limits - Global limits, burst thresholds, and how to handle rate-limit errors.
+ Errors and troubleshooting - Diagnose common status codes and resolve failed requests.
+ Category guides ​ 
+ Beyond the essentials, the Guides section is organized by API category. Each category includes a Getting Started guide plus additional topic-specific guides—for example, Custom Objects and Reports under Data, Functions under Developer, or Draft Hires under HRIS.
+ Data - Custom objects, custom fields, and reports across the employee graph.
+ Developer - Functions, deployments, and automation built in the Developer app.
+ HRIS - Foundational employee data such as users, workers, and compensation.
+ IT - App user, device, device orders, and software deployment information.
+ Organizational Data — Company structure like departments, titles, entities, and work locations.
+ Supergroups - Reusable groups for workflows, integrations, and policies.
+ Talent - Recruiting, headcount planning, performance, and compensation bands.
+ Time - Schedules, time entries, time off, and timeclock data.
+ Legal notes
+ Usage is subject to the Rippling developer Terms of Use . All API products require authentication and are subject to rate limits.
+ In this article:
+ Overview 
+ Essentials 
+ Category guides
+
+[Page: /documentation/rest-api/reference/list-users.md]
+# List users
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+> A list of users.
+
+Source: https://developer.rippling.com/documentation/rest-api/reference/list-users
+
+`GET https://rest.ripplingapis.com/users/`
+
+A list of users.
+ - Requires: `API Tier 1`
+ - Sortable fields: `id`, `created_at`, `updated_at`
+
+- OAuth scopes: `users.read`
+
+## Parameters
+
+| Name | In | Type | Required | Description |
+|---|---|---|---|---|
+| `order_by` | query | string | No |  |
+| `limit` | query | integer | No | The maximum number of results to return. Defaults to 50. Maximum is 100. |
+| `cursor` | query | string | No |  |
+
+## Responses
+
+### 200: Successful response
+
+- `__meta` (object): A list of redacted fields.
+  - `redacted_fields` (array of object)
+    - `name` (string): The name for the redacted field
+    - `reason` (string): The reason for the redaction
+- `results` (array of object)
+  - `id` (string, required): Identifier field
+  - `created_at` (string, required): Record creation date
+  - `updated_at` (string, required): Record update date
+  - `active` (boolean): Whether the user is able to access company resources, typically when they are in actively engaged with the company and not after off-boarding.
+  - `username` (string): The unique identifier across Rippling used by the User for direct authentication into their associated company. Globally unique.
+  - `name` (object): The user's name.
+    - `formatted` (string): The user's full name.
+    - `given_name` (string): The given legal name of the user, or first name in most Western languages.
+    - `middle_name` (string): The middle name(s) of the user.
+    - `family_name` (string): The legal family name of the user, or last name in most Western languages.
+    - `preferred_given_name` (string): The preferred given name, or first name in most Western languages, by the user.
+    - `preferred_family_name` (string): The preferred family name, or last name in most Western languages, by the user.
+  - `display_name` (string): The display name of the user using either the concatenated preferred given and family name or username depending on availability.
+  - `emails` (array of object): The user's email addresses.
+    - `value` (string): A valid email address.
+    - `type` (string): The classification of the email. One of: `HOME`, `WORK`, `OTHER`.
+    - `display` (string): The display value of the email address.
+  - `phone_numbers` (array of object): The user's phone numbers.
+    - `value` (string): The canonical global phone number pursuant to RFC3966.
+    - `type` (string): The classification of the phone number, pursuant to SCIM RFC 7643 4.1.2. One of: `HOME`, `WORK`, `MOBILE`, `FAX`, `OTHER`.
+    - `display` (string): The display value of the phone number.
+  - `addresses` (array of object): The user's addresses.
+    - `type` (string): The classification of the address. One of: `HOME`, `WORK`, `OTHER`.
+    - `formatted` (string): The formatted mailing address.
+    - `street_address` (string): The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information, pursuant to SCIM RFC 7643 4.1.2..
+    - `locality` (string): The city or locality component.
+    - `region` (string): The state or region component, pursuant to SCIM RFC 7643 4.1.2.
+    - `postal_code` (string): The zip code or postal code component, pursuant to SCIM RFC 7643 4.1.2.
+    - `country` (string): The country component, pursuant to SCIM RFC 7643 4.1.2. One of: `AF`, `AX`, `AL`, `DZ`, `AS`, `AD`, `AO`, `AI`, `AQ`, `AG`, ….
+  - `photos` (array of object): The user's photos.
+    - `value` (string): The URL of the photo.
+    - `type` (string): The classification of the photo. One of: `PHOTO`, `THUMBNAIL`.
+  - `preferred_language` (string): The User's preferred written or spoken language in the same format of the HTTP Accept-Language header, pursuant to Section 5.3.5 of RFC7231.
+  - `locale` (string): The User's default location for purposes of localization of currency, date time format, or numerical representations pursuant to RFC5646.
+  - `timezone` (string): The User's current time zone in IANA database Olson format
+  - `number` (string): The permanent profile number of the user.
+- `next_link` (string, uri): A link to the next page of responses.
+
+
+[Page: /documentation/rest-api/reference/get-users.md]
+# Retrieve a specific user
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+> Retrieve a specific user
+
+Source: https://developer.rippling.com/documentation/rest-api/reference/get-users
+
+`GET https://rest.ripplingapis.com/users/{id}/`
+
+Retrieve a specific user
+
+- OAuth scopes: `users.read`
+- Requires: API_Tier_1
+
+## Parameters
+
+| Name | In | Type | Required | Description |
+|---|---|---|---|---|
+| `id` | path | string, id | Yes | ID of the resource to return |
+
+## Responses
+
+### 200: Successful response
+
+- `__meta` (object)
+  - `redacted_fields` (array of object)
+    - `name` (string): The name for the redacted field
+    - `reason` (string): The reason for the redaction
+- `id` (string, required): Identifier field
+- `created_at` (string, required): Record creation date
+- `updated_at` (string, required): Record update date
+- `active` (boolean): Whether the user is able to access company resources, typically when they are in actively engaged with the company and not after off-boarding.
+- `username` (string): The unique identifier across Rippling used by the User for direct authentication into their associated company. Globally unique.
+- `name` (object): The user's name.
+  - `formatted` (string): The user's full name.
+  - `given_name` (string): The given legal name of the user, or first name in most Western languages.
+  - `middle_name` (string): The middle name(s) of the user.
+  - `family_name` (string): The legal family name of the user, or last name in most Western languages.
+  - `preferred_given_name` (string): The preferred given name, or first name in most Western languages, by the user.
+  - `preferred_family_name` (string): The preferred family name, or last name in most Western languages, by the user.
+- `display_name` (string): The display name of the user using either the concatenated preferred given and family name or username depending on availability.
+- `emails` (array of object): The user's email addresses.
+  - `value` (string): A valid email address.
+  - `type` (string): The classification of the email. One of: `HOME`, `WORK`, `OTHER`.
+  - `display` (string): The display value of the email address.
+- `phone_numbers` (array of object): The user's phone numbers.
+  - `value` (string): The canonical global phone number pursuant to RFC3966.
+  - `type` (string): The classification of the phone number, pursuant to SCIM RFC 7643 4.1.2. One of: `HOME`, `WORK`, `MOBILE`, `FAX`, `OTHER`.
+  - `display` (string): The display value of the phone number.
+- `addresses` (array of object): The user's addresses.
+  - `type` (string): The classification of the address. One of: `HOME`, `WORK`, `OTHER`.
+  - `formatted` (string): The formatted mailing address.
+  - `street_address` (string): The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information, pursuant to SCIM RFC 7643 4.1.2..
+  - `locality` (string): The city or locality component.
+  - `region` (string): The state or region component, pursuant to SCIM RFC 7643 4.1.2.
+  - `postal_code` (string): The zip code or postal code component, pursuant to SCIM RFC 7643 4.1.2.
+  - `country` (string): The country component, pursuant to SCIM RFC 7643 4.1.2. One of: `AF`, `AX`, `AL`, `DZ`, `AS`, `AD`, `AO`, `AI`, `AQ`, `AG`, ….
+- `photos` (array of object): The user's photos.
+  - `value` (string): The URL of the photo.
+  - `type` (string): The classification of the photo. One of: `PHOTO`, `THUMBNAIL`.
+- `preferred_language` (string): The User's preferred written or spoken language in the same format of the HTTP Accept-Language header, pursuant to Section 5.3.5 of RFC7231.
+- `locale` (string): The User's default location for purposes of localization of currency, date time format, or numerical representations pursuant to RFC5646.
+- `timezone` (string): The User's current time zone in IANA database Olson format
+- `number` (string): The permanent profile number of the user.
+
+
+[Page: /documentation/rest-api/essentials/api-tokens]
+API tokens and permissions | Rippling Developer 
+ For AI agents: an index of this documentation is at https://developer.rippling.com/llms.txt. Public pages have a Markdown version at the same URL with .md added.
+ Skip to main content 
+ REST API
+ REST API
+ Overview ​ 
+ Rippling’s REST API uses API tokens to authenticate requests and determine what data can be accessed. API token access is determined by two factors:
+ The permission profile of the user who created the token.
+ The API scopes selected during token creation.
+ While your permission profile may be granted access to certain information, you will also need to enable these same scopes when generating the API token in order to fetch this information. Consequently, if a user does not have permission to view certain data within Rippling, they will be unable to select specific scopes when creating an API token.
+ Since API tokens are generated with the permissions of the owner, a change to the owner&#x27;s permissions can also change the scopes available to select within the API token.
+ Tokens are generated in the API credentials tab of the Developer app. Within API credentials, there are two permission levels: Manage the API Tokens app (admin) or Create and manage API Tokens .
+ Capability Admin Create and manage API Tokens 
+ Create and edit own tokens ✅ ✅ 
+ View own tokens ✅ ✅ 
+ View all company tokens ✅ ❌ 
+ Edit other users’ token metadata ✅ ❌ 
+ Revoke any token ✅ ❌ 
+ We recommend granting admin permissions to your IT administrator or security team.
+ API tokens are Bearer tokens passed in the Authorization header:
+ Authenticated request
+ curl -X &#x27;GET&#x27; &#x27;https://rest.ripplingapis.com/users&#x27; -H &#x27;accept: application/json&#x27; -H &#x27;Authorization: Bearer UOCgmwb.....&#x27; 
+ Since each API token is associated with an owner, it is automatically revoked or expired if the owner is terminated or the token remains unused for over 30 days. You can refer to the Last accessed field to see when an API token was last used.
+ Key takeaways
+ API tokens inherit the permissions of their creator.
+ A token can only access data permitted by both the user’s permission profile and the token’s scopes.
+ Changes to a user’s permissions automatically applies to all tokens they&#x27;ve created.
+ Tokens are revoked if the owner is terminated or if the token is unused for more than 30 days.
+ Manage API tokens ​ 
+ Create ​ 
+ Navigate to API credentials ( Developer > API credentials ). 
+ Click New API token . An API token requires the following fields:
+ Field Description Able to update after creation 
+ Name A descriptive display name to communicate what the API token is used for. ✅ 
+ Unique identifier The unique identifier for the API token. ❌ 
+ API version The version associated with the API token. API tokens using prior versions will stay on that version until either the owner or Admin updates the version, or the version is deprecated. ✅ 
+ Assign scopes to the API token.
+ If Custom Objects or Custom Object Records scopes are included during token creation, you will also need to select which object and record types the API token will be able to access (dependent upon your permissions). See this Help Center article for more information.
+ Save the API token value after completing the creation flow. Note that you cannot view the API token again, so ensure you download or copy it at this point. Any request using the API token appears as the owner making the request, so please treat an API token as a password.
+ When an API token is created, a notification to the owner, API Token Admins, and company Super/Full Admins is sent for security purposes:
+ Subject: "New API token created for your organization" 
+ Edit ​ 
+ API token owners can add or remove scopes from an API token at any time. To edit an existing token:
+ Go to Developer > API credentials .
+ Click the three dots next to the token.
+ Click Edit and update scopes as needed.
+ API token scopes can only be updated by the token&#x27;s owner!
+ Rippling does not allow updating API scopes on tokens not created by the user. API token admins can update the Name and API version of other user&#x27;s tokens.
+ Revoke ​ 
+ Revoking an API token is a destructive action. It deletes the API token and attempting to use it again will result in an HTTP 401 Unauthorized error.
+ Go to Developer > API credentials .
+ Click the three dots next to the token.
+ Click Revoke and remove , then confirm.
+ When the API token is revoked, an email notification is sent to the owner, API Token Admins, and company Super/Full Admins.
+ Subject: "An API token was revoked" 
+ Permission use cases ​ 
+ Below are example permission profiles and how you can provide the appropriate amount of access based on company needs.
+ If you are not familiar with Rippling permissions, please review the following Help Center articles:
+ Introduction to permissions 
+ Create and assign a permission profile 
+ Super Admin (System default) ​ 
+ Third-Party IT Consultant ​ 
+ Developer (System default) ​ 
+ Payroll Administrator ​ 
+ Time Off Admin/Manager ​ 
+ Custom Fields Admin ​ 
+ FAQs ​ 
+ Why am I seeing null values in responses? ​ 
+ null values indicate the data exists but your API token does not have permission to view it.
+ Check:
+ The token owner’s permission profile.
+ The token’s enabled scopes.
+ Whether the required expand parameters have been included in the request.
+ Field-by-field rules for workers, users, and compensation are in Worker and user field access .
+ Insufficient OAuth scopes ​ 
+ Insufficient oauth scopes to access ____ errors occur when an API request tries to access data or endpoints outside the API token’s scope or the user’s permission level.
+ Check:
+ The token owner’s permission profile.
+ The token’s enabled scopes.
+ Why is my response missing employees or records? ​ 
+ API responses only include data the API token owner&#x27;s permission profile is authorized to view.
+ For example:
+ Managers can only retrieve data for their direct and indirect reports.
+ Super Admins can retrieve company-wide data.
+ To expand access, update the user’s permission profile to include The entire company .
+ When API token creators are terminated, what happens to their API tokens? ​ 
+ Tokens are automatically revoked.
+ Can ownership transfer when an admin offboards who created API tokens? ​ 
+ No. Another admin must create a new API token.
+ Why isn&#x27;t API token ownership transferred? ​ 
+ API tokens are personal credentials tied to the person who created them, not company assets that can be reassigned. When that person is terminated, their tokens are automatically revoked so a former employee can&#x27;t keep programmatic access to your Rippling data.
+ In this article:
+ Overview 
+ Manage API tokens Create 
+ Edit 
+ Revoke 
+ Permission use cases 
+ FAQs Why am I seeing null values in responses? 
+ Insufficient OAuth scopes 
+ Why is my response missing employees or records? 
+ When API token creators are terminated, what happens to their API tokens? 
+ Can ownership transfer when an admin offboards who created API tokens? 
+ Why isn't API token ownership transferred?
+
+[Page: /documentation/rest-api/essentials/pagination]
+REST API pagination guide | Rippling Developer 
+ For AI agents: an index of this documentation is at https://developer.rippling.com/llms.txt. Public pages have a Markdown version at the same URL with .md added.
+ Skip to main content 
+ REST API
+ REST API
+ Overview ​ 
+ Pagination is a method of splitting large sets of API results into smaller chunks (pages), retrieved sequentially using parameters like limit and a cursor to navigate through them.
+ List endpoints are always forward paginated (e.g., GET /users ).
+ Limit ​ 
+ limit controls how many results are returned in a single page.
+ Default page size is 50 .
+ Most endpoints allow a maximum of 100 .
+ If the requested value exceeds the endpoint maximum, the API returns a 400 error.
+ &#x27;https://rest.ripplingapis.com/users?limit=25&#x27; \ -H &#x27;accept: application/json&#x27; \ -H &#x27;Authorization: Bearer UOCgmwb.....&#x27; 
+ Use smaller limits when testing or debugging to reduce payload size.
+ Cursor ​ 
+ cursor is used to fetch the next page of results.
+ Start with a request without cursor.
+ Read the next_link value from the response.
+ Use next_link as-is to request the next page.
+ Continue until next_link is null .
+ Example flow using GET List leave requests:
+ Initial request:
+ GET https://rest.ripplingapis.com/leave-requests?filter=...&order_by=created_at desc 
+ Response includes:
+ "next_link": "https://rest.ripplingapis.com/leave-requests?cursor=..." 
+ Request the URL in next_link to fetch the next page.
+ &#x27;https://rest.ripplingapis.com/users?cursor=cD01ODNmZDg5MDA1ZWQyMzNmOGYxZGY0Zjk%3D&limit=25&#x27; \ -H &#x27;accept: application/json&#x27; \ -H &#x27;Authorization: Bearer UOCgmwb.....&#x27; 
+ In this article:
+ Overview 
+ Limit 
+ Cursor
+
+[Page: /documentation/rest-api/essentials/troubleshooting]
+API errors and troubleshooting | Rippling Developer 
+ For AI agents: an index of this documentation is at https://developer.rippling.com/llms.txt. Public pages have a Markdown version at the same URL with .md added.
+ Skip to main content 
+ REST API
+ REST API
+ Overview ​ 
+ Resolve API errors quickly, starting with basic checks, reviewing common error codes, then following the debugging steps to pinpoint the cause. If you still need assistance after troubleshooting, reach out to Rippling customer support for next steps.
+ Quick checks ​ 
+ Many common API errors can be resolved by ensuring that the correct endpoint, credentials, and permissions are in place.
+ Check URL, version, and path parameters – Verify you are using the correct API base URL and version.
+ Check authentication – Ensure your API key or token is valid and has not expired.
+ Check permissions – Confirm your account or role has access to the requested endpoint.
+ Common status codes ​ 
+ Status Details Next steps Retry 
+ 200 OK Request succeeded (common on reads) Use the response — 
+ 201 Created Resource created successfully Store the returned ID (and location header, if present) — 
+ 204 No Content Success with no response body Treat as success — 
+ 301 Moved Permanently Endpoint URL is incorrect or outdated Update your configured endpoint to the new URL ❌ No 
+ 400 Bad Request Invalid payload, parameters, or headers Fix the request to match the API specifications ❌ No (fix required) 
+ 401 Unauthorized Authentication failed (missing, invalid, or expired token) Verify your token is present, valid, unexpired, and sent in the correct header ❌ No (fix required) 
+ 403 Forbidden Authenticated but missing required permissions Request or enable the required permissions/scopes ❌ No (fix required) 
+ 404 Not Found Resource not found or not accessible Verify resource ID, environment, and permissions ❌ No (fix required) 
+ 409 Conflict State conflict, duplicate, or version mismatch Fetch latest state and resolve the conflict ⚠️ Maybe 
+ 422 Unprocessable Entity Request is valid JSON but fails validation rules (missing required fields, invalid formats, constraint violations) Inspect the response body for field-level errors and correct the input ❌ No 
+ 429 Rate Limit Too many requests in a short period (rate limit exceeded) Retry with exponential backoff ✅ Yes 
+ 500 Internal Server Error Unexpected server-side failure Retry with exponential backoff. If the error persists, contact customer support and include the x-rippling-request-id from the response headers. ✅ Yes 
+ 504 Gateway Timeout Request timed out (large or slow query) Retry with exponential backoff. Consider narrowing the request (reduce scope/date range). If the error persists, contact customer support. ✅ Yes 
+ If the error starts with 4xx , it usually means something in the request needs fixing. If it starts with 5xx , it means something went wrong on Rippling&#x27;s end.
+ Example error responses ​ 
+ // 401 Unauthorized { "error" : "Unauthorized" , "message" : "Missing or invalid API key" } // 404 Not Found { "error" : "Not Found" , "message" : "The requested resource does not exist" } // 422 Validation Error { "error" : "Validation Error" , "details" : { "field" : "email" , "message" : "Invalid email format" } } // 429 Too Many Requests { "error" : "Too Many Requests" , "message" : "Rate limit exceeded. Please try again later." } 
+ API debugging checklist ​ 
+ Once you’ve ruled out common access issues and error codes, narrow down the root cause:
+ Pinpoint the problem ​ 
+ What were you trying to do? (e.g., “get user details”)
+ When did it happen? (date/time)
+ What error code or message did you see? Copy/screenshot if possible.
+ Narrow the scope ​ 
+ Does this happen for all users or just one?
+ Does it happen in all environments (test, staging, production) or just one?
+ Can someone else reproduce the same issue?
+ Match the error ​ 
+ Use the error codes table to determine the cause of the error and apply quick fixes.
+ Take action ​ 
+ Retry once or twice (wait a minute in between).
+ Double-check inputs (IDs, spelling, formatting).
+ Try with another account, item, or environment.
+ If urgent, collect details and escalate to customer support .
+ Gather evidence ​ 
+ Compare a working example vs the failing one — what’s different?
+ Did anything recently change (password reset, new release, expired key)?
+ Collect details for escalation or handoff: 
+ Error code / message
+ Request ID (if shown)
+ Time (UTC)
+ Action attempted
+ Need more help? ​ 
+ If you’ve gone through the troubleshooting steps and still need assistance, please provide the following details when reaching out to customer support:
+ The API endpoint (e.g., /users/123)
+ The error code (e.g., 404)
+ The time of the error (include timezone, preferably UTC)
+ Any extra context (e.g., “worked yesterday, now fails”)
+ Customers – Contact support@rippling.com or reach out to your Technical Account Manager or Account Manager.
+ Approved App Shop partners – If you’re building an integration for the Rippling App Shop, contact partner.support@rippling.com .
+ In this article:
+ Overview 
+ Quick checks 
+ Common status codes Example error responses 
+ API debugging checklist Pinpoint the problem 
+ Narrow the scope 
+ Match the error 
+ Take action 
+ Gather evidence 
+ Need more help?
+
+[Page: /documentation/rest-api/essentials/api-tokens.md]
+# API tokens and permissions
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+> Create and manage API tokens in Rippling.
+
+Source: https://developer.rippling.com/documentation/rest-api/essentials/api-tokens
+
+## Overview
+
+Rippling’s REST API uses API tokens to authenticate requests and determine what data can be accessed. API token access is determined by two factors:
+
+1. The permission profile of the user who created the token.
+2. The API scopes selected during token creation.
+
+While your permission profile may be granted access to certain information, you will also need to enable these same scopes when generating the API token in order to fetch this information. Consequently, if a user does not have permission to view certain data within Rippling, they will be unable to select specific scopes when creating an API token.
+
+> **Rippling:**
+> Since API tokens are generated with the permissions of the owner, a change to the owner's permissions can also change the scopes available to select within the API token.
+
+Tokens are generated in the API credentials tab of the Developer app. Within API credentials, there are two permission levels: **Manage the API Tokens app** (admin) or **Create and manage API Tokens**.
+
+| Capability | Admin | Create and manage API Tokens |
+|----------|-------|-----------|
+| Create and edit own tokens | ✅ | ✅ |
+| View own tokens | ✅ | ✅ |
+| View all company tokens | ✅ | ❌ |
+| Edit other users’ token metadata | ✅ | ❌ |
+| Revoke any token | ✅ | ❌ |
+
+> **Rippling:**
+> We recommend granting **admin** permissions to your IT administrator or security team.
+
+API tokens are Bearer tokens passed in the `Authorization` header:
+
+```bash title="Authenticated request" {4} showLineNumbers
+curl -X 'GET'
+  'https://rest.ripplingapis.com/users'
+  -H 'accept: application/json'
+  -H 'Authorization: Bearer UOCgmwb.....'
+```
+
+Since each API token is associated with an owner, it is automatically revoked or expired if the owner is terminated or the token remains unused for over 30 days. You can refer to the `Last accessed` field to see when an API token was last used.
+
+> **Key takeaways:**
+> - API tokens inherit the permissions of their creator.
+> - A token can only access data permitted by both the user’s permission profile **and** the token’s scopes.
+> - Changes to a user’s permissions automatically applies to all tokens they've created.
+> - Tokens are revoked if the owner is terminated or if the token is unused for more than 30 days.
+
+---
+
+## Manage API tokens
+
+### Create {#create}
+
+1. Navigate to [API credentials](https://app.rippling.com/api-tokens/tokens) (**Developer** > **API credentials**).
+
+2. Click **New API token**.  An API token requires the following fields:
+
+| Field | Description | Able to update after creation |
+|----------|-------|----------------|
+| Name | A descriptive display name to communicate what the API token is used for. | ✅ |
+| Unique identifier | The unique identifier for the API token. | ❌ |
+| API version | The version associated with the API token. API tokens using prior versions will stay on that version until either the owner or Admin updates the version, or the version is deprecated. | ✅ |
+
+3. Assign scopes to the API token.
+
+> **Rippling:**
+> If **Custom Objects** or **Custom Object Records** scopes are included during token creation, you will also need to select which object and record types the API token will be able to access (dependent upon your permissions). See this [Help Center article](https://help.rippling.com/article?articleId=500332279960) for more information.
+
+4. Save the API token value after completing the creation flow. Note that **you cannot view the API token** again, so ensure you download or copy it at this point. Any request using the API token appears as the owner making the request, so please treat an API token as a password.
+
+When an API token is created, a notification to the owner, API Token Admins, and company Super/Full Admins is sent for security purposes:
+
+**Subject:** *"New API token created for your organization"*
+
+![New API Token email](https://developer.rippling.com/assets/images/new-api-token-a3dca6a796e33de489bbdb7b4d6969dd.png)
+
+### Edit
+
+API token owners can add or remove scopes from an API token at any time. To edit an existing token:
+
+1. Go to **Developer** > **API credentials**.
+2. Click the three dots next to the token.
+3. Click **Edit** and update scopes as needed.
+
+> **API token scopes can only be updated by the token:**
+> Rippling does not allow updating API scopes on tokens not created by the user. API token admins can update the **Name** and **API version** of other user's tokens.
+
+### Revoke
+
+> **Rippling:**
+> Revoking an API token is a destructive action. It deletes the API token and attempting to use it again will result in an `HTTP 401 Unauthorized` error.
+
+1. Go to **Developer** > **API credentials**.
+2. Click the three dots next to the token.
+3. Click **Revoke and remove**, then confirm.
+
+When the API token is revoked, an email notification is sent to the owner, API Token Admins, and company Super/Full Admins.
+
+**Subject:** *"An API token was revoked"*
+
+![New API Token email](https://developer.rippling.com/assets/images/revoked-api-token-1af7c04f93f908e3936e115c8f0c92f6.png)
+
+---
+
+## Permission use cases
+
+Below are example permission profiles and how you can provide the appropriate amount of access based on company needs.
+
+If you are not familiar with Rippling permissions, please review the following Help Center articles:
+
+- [Introduction to permissions](https://help.rippling.com/article?articleId=360054482954)
+- [Create and assign a permission profile](https://help.rippling.com/article?articleId=360054482094)
+
+The [super admin](https://help.rippling.com/article?articleId=218616651966) permission profile grants users unrestricted access to all features and settings within Rippling. This includes the ability to view, create, modify, and delete any data or settings, as well as configure system-level settings and manage other users' permissions.
+
+| Category | Details |
+|--------|---------|
+| **Permission profile scope** | The entire company |
+| **API Tokens app permissions** | Manage the API Tokens app Create and manage API tokens |
+| **Employment data access** | View and edit all sensitive data |
+| **Limitations** | Limited to the scopes selected within the API token. If all scopes are selected, then there are no limitations. |
+
+The [Third-Party IT Consultant](https://help.rippling.com/article?articleId=599276218499) profile allows the user to manage IT-related applications, integrations, and devices within Rippling. They can install and configure IT apps, manage hardware/software inventories, and integrate with other tools.
+
+This is used for external IT consultants or vendors who need to maintain or set up IT infrastructure without accessing confidential employee data. It ensures that the user can perform necessary IT functions while maintaining data security.
+
+| Category | Details |
+|--------|---------|
+| **Permission profile scope** | The entire company |
+| **API Tokens app permissions** | Manage the API Tokens app Create and manage API tokens |
+| **Employment data access** | View all basic personal |
+| **Limitations** | Limited to the scopes selected within the API token. Unable to fetch sensitive employee data due to the permission profile limitations (such as compensation). Unable to edit employee data, or use certain PATCH, POST, and PUT endpoints. |
+
+Users with this profile can create API tokens, functions, webhooks, and custom applications within Rippling. This role is focused on extending the platform's capabilities and integrating it with other systems.
+
+Assign this profile to in-house developers or technical team members working on custom integrations or applications that enhance Rippling’s functionality.
+
+| Category | Details |
+|--------|---------|
+| **Permission profile scope** | The entire company |
+| **API Tokens app permissions** | Create and manage API tokens |
+| **Employment data access** | View all basic personal |
+| **Limitations** | Limited to the scopes selected within the API token. Unable to fetch sensitive employee data due to the permission profile limitations (such as compensation). Unable to manage the API Tokens app or view API tokens created by other Admins. |
+
+The [Payroll Administrator](https://help.rippling.com/article?articleId=599276218499) profile provides the ability to manage and approve payroll processes, ensuring that employees are paid accurately and on time. It includes managing payroll runs, handling deductions, bonuses, and benefits, and integrating payroll data with accounting systems. It also allows the creation and management of API tokens related to payroll functions.
+
+Suitable for HR or finance personnel responsible for payroll processing, this permission profile makes certain that those handling sensitive payroll data can manage it efficiently while integrating seamlessly with financial tracking systems.
+
+| Category | Details |
+|--------|---------|
+| **Permission profile scope** | The entire company |
+| **API Tokens app permissions** | Create and manage API tokens |
+| **Employment data access** | View and edit all sensitive employment data |
+| **Limitations** | Limited to the scopes selected within the API token. Unable to manage the API Tokens app or view API tokens created by other Admins. |
+
+Users with the [Time Off Admin/Manager](https://help.rippling.com/article?articleId=599276218499) profile can manage employee time-off requests and policies. They have the authority to approve or reject time-off requests, set or adjust time-off policies, and track leave balances for all employees.
+
+Suitable for HR managers or team leads who need to oversee employee attendance and guarantee the organization’s time-off policies are applied consistently.
+
+| Category | Details |
+|--------|---------|
+| **Permission profile scope** | Direct and indirect reports |
+| **API Tokens app permissions** | Create and manage API tokens |
+| **Employment data access** | View all basic personal |
+| **Limitations** | Limited to the scopes selected within the API token. Unable to fetch sensitive employee data due to the permission profile limitations (ex. compensation). Cannot fetch information outside of direct and indirect reports. Unable to manage the API Tokens app or view API tokens created by other Admins. |
+
+Custom fields are additional fields you can add if you want to collect and store information beyond Rippling’s default fields.
+
+In order to access this information, the API admin needs their permission profile configured with access to sensitive employment data.
+
+| Category | Details |
+|--------|---------|
+| **Permission profile scope** | The entire company |
+| **API Tokens app permissions** | Create and manage API tokens |
+| **Employment data access** | View all sensitive employment data |
+| **Limitations** | Limited to the scopes selected within the API token. Unable to manage the API Tokens app or view API tokens created by other Admins. |
+
+---
+
+## FAQs
+
+### Why am I seeing null values in responses?
+null values indicate the data exists but your API token does not have permission to view it.
+
+Check:
+
+- The token owner’s permission profile.
+- The token’s enabled scopes.
+- Whether the required [expand parameters](https://developer.rippling.com/documentation/rest-api/essentials/query-parameters.md) have been included in the request.
+
+Field-by-field rules for workers, users, and compensation are in [Worker and user field access](https://developer.rippling.com/documentation/rest-api/guides/worker-field-access.md).
+
+### Insufficient OAuth scopes
+
+`Insufficient oauth scopes to access ____` errors occur when an API request tries to access data or endpoints outside the API token’s scope or the user’s permission level.
+
+Check:
+
+- The token owner’s permission profile.
+- The token’s enabled scopes.
+
+### Why is my response missing employees or records?
+
+API responses only include data the API token owner's permission profile is authorized to view.
+
+For example:
+
+- Managers can only retrieve data for their direct and indirect reports.
+- Super Admins can retrieve company-wide data.
+
+To expand access, update the user’s permission profile to include **The entire company**.
+
+### When API token creators are terminated, what happens to their API tokens?
+
+Tokens are automatically revoked.
+
+### Can ownership transfer when an admin offboards who created API tokens?
+
+No. Another admin must create a new API token.
+
+### Why isn't API token ownership transferred?
+
+API tokens are personal credentials tied to the person who created them, not company assets that can be reassigned. When that person is terminated, their tokens are automatically revoked so a former employee can't keep programmatic access to your Rippling data.
+
+
+[Page: /documentation/rest-api/essentials/pagination.md]
+# REST API pagination guide
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+> Use pagination for the Rippling REST API.
+
+Source: https://developer.rippling.com/documentation/rest-api/essentials/pagination
+
+## Overview
+
+Pagination is a method of splitting large sets of API results into smaller chunks (pages), retrieved sequentially using parameters like `limit` and a `cursor` to navigate through them.
+
+List endpoints are always forward paginated (e.g., `GET /users`).
+
+---
+
+## Limit
+
+`limit` controls how many results are returned in a single page.
+
+- Default page size is **50**.
+- Most endpoints allow a maximum of **100**.
+- If the requested value exceeds the endpoint maximum, the API returns a `400` error.
+
+```bash curl -X 'GET' \
+  'https://rest.ripplingapis.com/users?limit=25' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer UOCgmwb.....'
+  ```
+
+> **Rippling:**
+> Use smaller limits when testing or debugging to reduce payload size.
+
+---
+
+## Cursor
+
+`cursor` is used to fetch the next page of results.
+
+- Start with a request without cursor.
+- Read the `next_link` value from the response.
+- Use `next_link` as-is to request the next page.
+- Continue until `next_link` is `null`.
+
+Example flow using GET List leave requests:
+
+1. Initial request:
+`GET https://rest.ripplingapis.com/leave-requests?filter=...&order_by=created_at desc`
+2. Response includes:
+`"next_link": "https://rest.ripplingapis.com/leave-requests?cursor=..."`
+3. Request the URL in `next_link` to fetch the next page.
+```bash -X 'GET' \
+  'https://rest.ripplingapis.com/users?cursor=cD01ODNmZDg5MDA1ZWQyMzNmOGYxZGY0Zjk%3D&limit=25' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer UOCgmwb.....'
+  ```
+
+
+[Page: /documentation/rest-api/essentials/troubleshooting.md]
+# API errors and troubleshooting
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+> Diagnose and resolve common Rippling API errors using error codes, debugging steps, and best practices.
+
+Source: https://developer.rippling.com/documentation/rest-api/essentials/troubleshooting
+
+## Overview
+
+Resolve API errors quickly, starting with basic checks, reviewing common error codes, then following the debugging steps to pinpoint the cause. If you still need assistance after troubleshooting, reach out to Rippling customer support for next steps.
+
+---
+
+## Quick checks
+
+Many common API errors can be resolved by ensuring that the correct endpoint, credentials, and permissions are in place.
+
+- **Check URL, version, and path parameters** – Verify you are using the correct API base URL and version.
+- **Check authentication** – Ensure your API key or token is valid and has not expired.
+- **Check permissions** – Confirm your account or role has access to the requested endpoint.
+
+---
+
+## Common status codes
+
+| Status | Details | Next steps | Retry |
+|--------|--------------------|------------------------------|--------|
+| `200 OK` | Request succeeded (common on reads) | Use the response | — |
+| `201 Created` | Resource created successfully | Store the returned ID (and location header, if present) | — |
+| `204 No Content` | Success with no response body | Treat as success | — |
+| `301 Moved Permanently` | Endpoint URL is incorrect or outdated | Update your configured endpoint to the new URL | ❌ No |
+| `400 Bad Request` | Invalid payload, parameters, or headers | Fix the request to match the API specifications | ❌ No (fix required) |
+| `401 Unauthorized` | Authentication failed (missing, invalid, or expired token) | Verify your token is present, valid, unexpired, and sent in the correct header | ❌ No (fix required) |
+| `403 Forbidden` | Authenticated but missing required permissions | Request or enable the required permissions/scopes | ❌ No (fix required) |
+| `404 Not Found` | Resource not found or not accessible | Verify resource ID, environment, and permissions | ❌ No (fix required) |
+| `409 Conflict` | State conflict, duplicate, or version mismatch | Fetch latest state and resolve the conflict | ⚠️ Maybe |
+| `422 Unprocessable Entity` | Request is valid JSON but fails validation rules (missing required fields, invalid formats, constraint violations) | Inspect the response body for field-level errors and correct the input | ❌ No |
+| `429 Rate Limit` | Too many requests in a short period (rate limit exceeded) | Retry with exponential backoff | ✅ Yes |
+| `500 Internal Server Error` | Unexpected server-side failure | Retry with exponential backoff. If the error persists, contact customer support and include the `x-rippling-request-id` from the response headers. | ✅ Yes |
+| `504 Gateway Timeout` | Request timed out (large or slow query) | Retry with exponential backoff. Consider narrowing the request (reduce scope/date range). If the error persists, contact customer support. | ✅ Yes |
+
+> **Rippling:**
+> If the error starts with `4xx`, it usually means something in the request needs fixing. If it starts with `5xx`, it means something went wrong on Rippling's end.
+
+### Example error responses
+
+```json
+// 401 Unauthorized
+{
+  "error": "Unauthorized",
+  "message": "Missing or invalid API key"
+}
+
+// 404 Not Found
+{
+  "error": "Not Found",
+  "message": "The requested resource does not exist"
+}
+
+// 422 Validation Error
+{
+  "error": "Validation Error",
+  "details": {
+    "field": "email",
+    "message": "Invalid email format"
+  }
+}
+
+// 429 Too Many Requests
+{
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded. Please try again later."
+}
+```
+
+---
+
+## API debugging checklist
+
+Once you’ve ruled out common access issues and error codes, narrow down the root cause:
+
+### Pinpoint the problem
+
+- What were you trying to do? (e.g., “get user details”)
+- When did it happen? (date/time)
+- What error code or message did you see? Copy/screenshot if possible.
+
+### Narrow the scope
+
+- Does this happen for **all users** or just one?
+- Does it happen in **all environments** (test, staging, production) or just one?
+- Can someone else reproduce the same issue?
+
+### Match the error
+
+Use the error codes table to determine the cause of the error and apply quick fixes.
+
+### Take action
+
+- Retry once or twice (wait a minute in between).
+- Double-check inputs (IDs, spelling, formatting).
+- Try with another account, item, or environment.
+- If urgent, collect details and [escalate to customer support](#need-more-help).
+
+### Gather evidence
+
+- Compare a **working example** vs the **failing one** — what’s different?
+- Did anything **recently change** (password reset, new release, expired key)?
+- Collect details for escalation or handoff:
+  - Error code / message
+  - Request ID (if shown)
+  - Time (UTC)
+  - Action attempted
+
+---
+
+## Need more help?
+
+If you’ve gone through the troubleshooting steps and still need assistance, please provide the following details when reaching out to customer support:
+
+- The API endpoint (e.g., /users/123)
+- The error code (e.g., 404)
+- The time of the error (include timezone, preferably UTC)
+- Any extra context (e.g., “worked yesterday, now fails”)
+
+**Customers** – Contact [support@rippling.com](mailto:support@rippling.com) or reach out to your Technical Account Manager or Account Manager.
+
+**Approved App Shop partners** – If you’re building an integration for the Rippling App Shop, contact [partner.support@rippling.com](mailto:partner.support@rippling.com).
+
+
+[Page: /documentation/developer-portal/v2-guides/installation.md]
+# Installation (OAuth)
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+Source: https://developer.rippling.com/documentation/developer-portal/v2-guides/installation
+
+## Overview
+
+Rippling integrations rely on OAuth 2.0, in which Rippling is the server and your application is the client. At a high-level, Rippling will send the user to your redirect URL with a `?code=<xxx>` parameter when they install your application in Rippling. This provides the authorization that your application will utilize to exchange for access and refresh tokens.
+
+## Requirements
+To understand the installation flow requirements expected from apps in the Rippling App Shop, see our [Partner Requirements](https://developer.rippling.com/documentation/developer-portal/getting-started/requirements.md).
+
+## Installation flow
+
+To begin, navigate to your Login URL and then navigate to your App Shop Listing URL as your app will not yet be discoverable from the App Shop.
+
+**Please use the following URLs for your apps:**
+
+**Purpose** | **URL** |
+---------|---------- |
+ Login URL | https://app.rippling.com
+ App Shop Listing URL | https://app.rippling.com/app-shop/app/{APPNAME}
+ App Authorize URL | https://app.rippling.com/apps/PLATFORM/{APPNAME}/authorize
+ API Base URL | https://api.rippling.com
+ API Token URL | https://api.rippling.com/api/o/token/
+
+![installation1](https://developer.rippling.com/assets/images/installation1-b2814c72f6e6e0a8e306c7272d027526.png)
+
+![installation2](https://developer.rippling.com/assets/images/installation2-e739c6382b2a59eaba66ef78d545dba3.png)
+
+### Initial redirect
+
+As you go through the setup flow, you will be redirected to the redirect URL that you configured in the **Default Redirect URL** field in your app listing. The following query parameters will be present in the redirect:
+
+| Redirect Query Parameter | Description                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| code                     | OAuth code that can be exchanged for an access token.                                                                     |
+| buy                      | A boolean value based on whether the user indicated they are purchasing a new account, or connecting an existing account. |
+| redirect_uri             | The URL on Rippling that the user should be sent back to once the OAuth setup is done.                                    |
+
+> **Rippling:**
+> **Please note:** Rippling will only use redirect URIs that have already been configured in your app. Rippling will not redirect to any URL that is passed as a parameter unless it has been configured as an additional redirect URL in your app listing.
+
+Using the code value, your server will be able to get an access token from Rippling.
+
+> **Rippling:**
+> Once the user has been redirected from Rippling to your application, the authorization code is valid for 300 seconds. The authorization code must be used to redeem an access token within 300 seconds of the code being issued. If an access token is not redeemed with this authorization code by then, the user will need to Redirect from Rippling again.
+
+Rippling will redirect to your redirect URL with an authorization code. The redirect will look like this:
+
+```
+https://oauth.pstmn.io/v1/callback?code=kThqQg24SmDr3Z3XV6oo2CgpC03ysS2M&redirect_uri=https%3A%2F%2Fapp.rippling.com%2Fapps%2FPLATFORM%2FPortalTest%2Freturn&buy=false
+```
+
+- The `redirect_uri` is the URL that you must return the user to in Rippling to complete the app installation flow.
+
+> **Rippling:**
+> The authorization code should be not be grabbed directly from the URL link after the redirect. It should be extracted using server-side code (outside of Rippling) to securely capture and handle the authorization code.
+
+If you need to quickly get another authorization code with your test company, you can go directly to the Redirect URL for your app (replace `INSERTAPPNAME` with your app name) and then click the **Continue** button:
+
+```
+https://app.rippling.com/apps/PLATFORM/INSERTAPPNAME/redirect
+```
+
+When the user is redirected from Rippling to your app, that user should then sign in to the app. This allows you to identify the account and associate the code with their account. The redirect URL that you receive from Rippling is where you should redirect the user back to following the user signing into the application.
+
+### Retrieving an access token
+
+To retrieve the access token, your server will need to make a POST request to the API Token URL. The POST request should include a basic auth header with base64 encoded `clientid:clientsecret`, along with the following parameters:
+
+| Auth Query Parameters | Description                                                                  |
+| --------------------- | ---------------------------------------------------------------------------- |
+| grant_type            | authorization_code                                                           |
+| code                  | OAuth code that was sent in the redirect.                                     |
+| redirect_uri          | Your redirect URL. This must match the redirect URL you had provided to Rippling. |
+
+**Example request:**
+
+```
+curl "https://api.rippling.com/api/o/token/" -X POST -H "Authorization: Basic REDACTED" -F "grant_type=authorization_code" -F "code=INSERTAUTHORIZATIONCODE" -F "redirect_uri=https://example.com"
+```
+
+- The `REDACTED` should be replaced with Base64 encoding of the `client_id:client_secret` string in the request header.
+
+- The `INSERTAUTHORIZATIONCODE` should be replaced with the authorization (OAuth) code that Rippling returns in the `code` parameter after the redirect from Rippling to your application .
+
+- The `https://example.com` should be replaced with your **redirect URL** that has already been configured in your Rippling app.
+
+**Example response:**
+
+```json
+{
+  "access_token": "REDACTED",
+  "token_type": "Bearer",
+  "expires_in": 129600,
+  "refresh_token": "REDACTED",
+  "scope": "employee:workEmail employee:name"
+}
+```
+
+When you receive an access token from Rippling, the payload will also include an `expires_in` output. The `expires_in` value is based in seconds and informs you of when your access token will expire. For example, if your access token response includes `expires_in: 129600` then this means the access token you received has a duration of 129,600 seconds.
+
+Access tokens grant access to Rippling APIs for each company. One Access Token will give access to one Rippling Company. So if twelve Rippling companies have installed your app, then twelve Access Tokens will need to be used.
+
+### Mark app as installed
+
+After the installation flow is completed and the user is directed back to Rippling, you will call [POST Mark App Installed](https://developer.rippling.com/documentation/base-api/reference/post-mark-app-installed) to finalize the installation.
+
+**Example request:**
+
+```
+curl -L -X POST 'https://api.rippling.com/platform/api/mark_app_installed' \
+-H 'Accept: application/json' \
+-H 'Authorization: Bearer REDACTED
+```
+
+**Example response:**
+
+```
+{
+  "ok": true
+}
+```
+
+### Refresh tokens
+
+To retrieve a Refresh Token, send a POST request to the same API Token URL with basic auth and your client ID and secret and the following form parameters:
+
+| Refresh Query Parameters | Description                          |
+| ------------------------ | ------------------------------------ |
+| grant_type               | refresh_token                        |
+| refresh_token            | Refresh token from the initial grant. |
+
+**Example request:**
+
+```
+curl "https://api.rippling.com/api/o/token/" -X POST -H "Authorization: Basic REDACTED" -F "grant_type=refresh_token" -F "refresh_token=INSERTFREFRESHTOKEN"
+```
+
+- The `REDACTED` should be replaced with Base64 encoding of the `client_id:client_secret` string in the request header.
+
+- The `INSERTFREFRESHTOKEN` should be replaced with your **existing refresh token**.
+
+## Linking the OAuth tokens with the Rippling company
+
+Now that the connection has been made, your server should request the company information. This information can then be matched with your application's internal database so that you can link the tokens with the corresponding Rippling Company.
+
+**Current company**
+
+Retrieve the current company's information with the [GET List Companies](https://developer.rippling.com/documentation/rest-api/reference/list-companies.md) endpoint. Note, the fields returned will depend on the scopes the customer has authorized your service to access.
+
+**Request**
+
+```
+curl --location --request GET 'https://rest.ripplingapis.com/companies' \
+--header 'Authorization: Bearer REDACTED'
+```
+
+**Response**
+
+```json
+{
+    "id": "595f75ffd2a5f80ae22ce88e",
+    "ein": "123121111",
+    "address": {
+        "city": "San Francisco",
+        "state": "CA",
+        "country": "US",
+        "zip": "94110",
+        "streetLine1": "3000 Mission Street"
+    },
+    "workLocations": [
+        {
+            "id": "5984bca87ee766438fd6faa5",
+            "nickname": "SF",
+            "address": {
+                "city": "Salem",
+                "zip": "97317",
+                "streetLine1": "4000 Mission Street Southeast",
+                "country": "US",
+                "state": "OR",
+                "steLocationCode": {
+                    "cityCode": "0004491020",
+                    "psdCode": "",
+                    "schoolCode": "",
+                    "countyCode": "047",
+                    "stateCode": "41",
+                    "municipalityCode": "",
+                    "transitDistrictCode": "",
+                    "locationCode": "41-047-0004491020"
+                }
+            }
+        }
+    ],
+    "primaryEmail": "aamir+prod@rippling.com",
+    "phone": "9892471335",
+    "name": "Bob's Bakery"
+}
+```
+
+## FAQs
+
+    Yes, authorization codes expire after 300 seconds.
+
+No, authorization codes can only be used a single time.
+
+Yes, your integration needs to retrieve an access token within 300 seconds of receiving the authorization code.
+
+Go back to your installation in Rippling. You can pick up where you left off in the installation flow. Click the **Redirect** button again on the Redirect installation flow screen. This will generate a new authorization code.
+
+Yes, access tokens will expire.
+
+Use the `expired_in` output as part of the response from the token endpoint to tell how long the access token is valid for. It is important that your integration uses the seconds populated in the `expired_in` output to understand when an access token will expire.
+
+The lifetime of access tokens can be read during the initial retrieval of the access tokens. Third-party applications are responsible for tracking the expiration of their tokens and using refresh tokens to retrieve new access tokens once their access tokens expire.
+
+Yes, they can. Once you have an access token, you can use it to call any of the API endpoints your app is scoped for.
+
+Once a refresh token is used to retrieve another access token, that refresh token will be revoked. Refresh tokens are revoked once they are used.
+
+To fetch a new token pair, the customer will need to uninstall/reinstall or reauthorize (navigate to `https://app.rippling.com/apps/PLATFORM/{INSERTAPPNAME}/authorize`) the app listing in their Rippling account.
+
+In doing this, the customer will be redirected to the redirect URL configured in your app with a new authorization code. You can then use that authorization code and redeem it for a new access and refresh token pair.
+
+Refresh tokens have a 1-hour grace period after their first usage in which applications can reuse them to retrieve a new set of access and refresh tokens. Refresh tokens can only be used once because their usage should result in an additional access token and refresh token. Refresh tokens allows clients to continue to have a valid access token without further interaction with the user.
+
+No, current installs will need to reauthorize the app in order to grant the app access to the new scopes. For example, if you have three customers with active app installations, each of these customers will need to reauthorize and consent to the scopes now available in the app.
+
+To reauthorize, admins must be directed to the Authorize installation step of their app's installation flow. The template URL for this step is: https://app.rippling.com/apps/PLATFORM/{APPNAME}/authorize. Once their the admins would then proceed through the rest of the installation flow and finish the installation.
+
+Additionally, the customer can also reauthorize by uninstalling the existing app completely and reinstalling the app from scratch. The admin can uninstall the existing app by going to the the *app in Rippling > Settings > Uninstall.*
+
+For more information on redirect URLs and common questions surrounding this, please see [Redirect URLs](https://developer.rippling.com/documentation/developer-portal/v2-guides/redirect.md).
+
+Rippling will send a `company.deleted` event when a Rippling customer has uninstalled your app. The webhook will look like this:
+
+```json
+event_name=company.deleted&id=583fd8803bf207cab80269b9&company_id=583fd8803bf207cab80269b9&company_primary_email=huroncompany%2Bfake%40rippling.com
+```
+
+Additionally, any endpoint will return a `403` error code with a response of:
+
+`{
+    "detail": "The token has been revoked"
+}`
+
+> **Need Support?:**
+> If you're a partner seeking answers or encountering difficulties while integrating with Rippling, please contact us at partner.support@rippling.com. Ensure our responses reach you by preventing emails from this address from being filtered into your spam folder.
+
+
+[Page: /documentation/developer-portal/v2-guides/oauth.md]
+# OAuth Credentials
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+Source: https://developer.rippling.com/documentation/developer-portal/v2-guides/oauth
+
+Each app listing will have two sets of credentials: one for testing/development purposes (sandbox credentials) and one for production usage (production credentials).
+
+| **Credential Type**         | **Description**                                                                                           |
+|-------------------------|-------------------------------------------------------------------------------------------------------|
+| **Sandbox credentials** | These are the credentials that should be used any time you want to install your sandbox app in your test company. Customers should never use these credentials. |
+| **Production Credentials**  | These are the credentials that will be used any time a customer goes to install your app listing.    |
+
+## Find your credentials
+
+Each credential is comprised of a **client ID** and **client secret**. The credentials can be found on your app listing by navigating to the **Integration** tab and then clicking on **Credentials**.
+
+![oauth1](https://developer.rippling.com/assets/images/oauth1-088dfdec80f867d19cb82ca8927132fc.png)
+
+**Sandbox credentials**
+
+The *Credentials > Sandbox* tab will only display a client ID/client secret if you have already [deployed](https://developer.rippling.com/documentation/developer-portal/creating-publishing/deploy.md) your sandbox app listing. These credentials will need to be used to install your sandbox app in your test company.
+
+**Production credentials**
+
+Once the app listing has been approved for [beta testing](https://developer.rippling.com/documentation/developer-portal/creating-publishing/testing.md), the *Credentials > Production* tab will expose your client ID and secret that you should use for your production integration. This credential pair will be used by all customers when they install your app.
+
+## FAQs
+
+If you need to install your sandbox app in your test company, use your sandbox app credentials. If a customer needs to install your app, use your production credentials.
+
+No, they will not.
+
+No, you cannot. You must use your production credentials.
+
+This occurs when you are using the credentials for your production app instead of using the credentials for your sandbox app. Please ensure you are using the correct credentials.
+
+
+[Page: /documentation/developer-portal/v2-guides/user-management.md]
+# User Management
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+Source: https://developer.rippling.com/documentation/developer-portal/v2-guides/user-management
+
+## Overview
+
+User Management allows customers to automate the creation, updating, and deletion of users in third-party software when actions are taken in Rippling. When supporting User Management, third-party apps must abide by certain requirements.
+
+Rippling's User Management V2 is facilitated through:
+
+- Admin Configuration
+- Partner API Calls
+
+Within each app in Rippling, an admin can configure the **account provisioning** and **provision time** settings. This admin configuration is unique to each Rippling company.
+
+The account provisioning setting allows customers to tell Rippling which employees should and should not automatically receive access as users in a third-party application. Admins can configure rules using groupings of employees within their company (e.g. "all full-time employees in the sales department" or "all employees on the product team located in New York").
+
+You can read more about how account provisioning works [here](https://help.rippling.com/page?page=third-party-access#access-assignments) (article only accessible to active Rippling customers and partners).
+
+![accountprovisioning](https://developer.rippling.com/assets/images/accountprovisioning-4a9e5ef3d2b3fff68f7e0bbb5ed1a071.png)
+
+The provision time setting allows customers to tell Rippling when employees should have their user created in the third-party application **if they meet the access rules**. Admins can choose if they want employees to be set up with a user in the third-party application as soon as they've signed their offer letter, on their start date, on a fixed time before their start date, or as soon as the admin hires them.
+
+You can read more about how provision time settings work [here](https://help.rippling.com/s/article/360054480734).
+
+![provisiontime](https://developer.rippling.com/assets/images/provisiontime-2cefa424689812310ed9a257dec2d05a.png)
+
+Both of these settings, configured by customers, determine which and when employee webhook events are emitted to your webhook URL configured in your app listing. It also determines which employees are returned within the `PROVISIONING` supergroup.
+
+V2 REST API partners will use the following sequence of API calls to determine which users have access to your app listing:
+
+1. **Install the app:** The admin will complete the app install.
+2. **Fetch the provisioned user group using GET List Supergroups:** Make a call to [GET List Supergroups](https://developer.rippling.com/documentation/rest-api/reference/list-supergroups.md). Only groups relevant to your app install will be returned.
+3. **Locate the group with the `display_name` called `PROVISIONING`.** Retrieve the `id` for this group.
+4. **Fetch group members using GET List Supergroup Members:** Use the id obtained from the previous step, and call the [GET List Supergroup Members](https://developer.rippling.com/documentation/rest-api/reference/list-supergroups-group-id-members.md) endpoint. The returned members of this supergroup will contain the employees provisioned to use your app.
+5. **Map users to employees using GET List Workers:** The `employee_id` from GET List Supergroup Members corresponds to a `worker_id`.
+6. **Use GET List Workers to fetch more details, if needed.** Use the `number` field when expanding `user` from GET List Workers as the definitive identifier for mapping employees in your system. This field serves as the unique ID for the employee.
+
+<!-- Partners adding User Management as a feature to their integration should use `GET Employees` to fetch the complete list of all employees who should be created as users in the third-party application. When calling the `GET Employees` endpoint, partners will only get a list of employees returned who:
+
+- Meet the configured app access rules
+- Meet the provision time setting
+
+Partners should **not** use the `GET Employees (Including Terminated)` endpoint for user provisioning, as it includes terminated employees in the results. Instead, this endpoint should be used when you need to sync employee data to your software without creating them as users.
+
+If necessary, you can sync data for all employees, whether they are active or terminated, and regardless of whether they have been added as a provisioned user within your application. To achieve this, use the `GET Employees (Including Terminated)` endpoint and set the optional parameter `send_all_roles` to **true**. -->
+<!--
+Example request:
+
+```
+curl -L -X GET 'https://api.rippling.com/platform/api/employees/include_terminated?send_all_roles=true' \
+``` -->
+
+<!-- In using `GET Employees` to power User Management, it is important to utilize the correct employee identifier when mapping employees in your system. For this mapping, the employee's `uniqueId` should be used.
+
+The `uniqueId` is the employee's permanent profile number that will always be unique within the context of that specific company, and will not change even if an individual is rehired within the same company. This is what makes this field the suggested identifier for mapping users in your software. -->
+
+## Requirements
+
+To understand the user management requirements expected from apps in the Rippling App Shop, refer to our [Partner Requirements](https://developer.rippling.com/documentation/developer-portal/getting-started/requirements.md).
+
+## FAQs
+
+<!--
+
+Only employees provisioned within the application will be returned with the [GET Employees endpoint](https://developer.rippling.com/documentation/employee-api/reference/get-employees). All employees returned from `GET Employees` should be considered as users in your application.
+
+No, you should not. After initial app install, you should only provision or deprovision users when you either 1) receive a webhook event or 2) detect a change in the employees returned in `GET Employees`.
+
+No, you should not. After initial app install, you should only provision or deprovision users when you either 1) receive a webhook event or 2) detect a change in the employees returned in `GET Employees`.
+
+`GET Employees` should be used as the source of the truth for users. `GET Employees (Including Terminated)` should be used as the source of the truth for syncing employee data. `GET Employees` typically will have the same or fewer employees returned from `GET Employees (Including Terminated)` because `GET Employees` will only return employees who meet the user access rules and provisioning time settings.
+
+ -->
+
+Use the `number` field from `GET List Workers` (when expanding `user`) as it represents the unique employee ID. Ensure that this field is utilized when mapping users in your software.
+
+User Management is a [required](https://developer.rippling.com/documentation/developer-portal/getting-started/requirements.md) feature for all partner integrations. However, this doesn't mean that every employee at a company needs access to the application.
+
+During the initial app installation, Admins can restrict access by configuring **account provisioning** and **provision time** settings.
+
+Once installed, you can call `GET List Workers` to fetch employee information.
+
+If limiting employee access is relevant to your integration, you should specify the necessary Admin settings in your third-party integration documentation.
+
+> **Need Support?:**
+> If you're a partner seeking answers or encountering difficulties while integrating with Rippling, please contact us at partner.support@rippling.com. Ensure our responses reach you by preventing emails from this address from being filtered into your spam folder.
+
+
+[Page: /documentation/developer-portal/v2-guides/errors.md]
+# Errors
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+Source: https://developer.rippling.com/documentation/developer-portal/v2-guides/errors
+
+## Common errors
+
+| Response code | Error message                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | How to resolve                                                                                                                                                                                                                                                                                               |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **200**            | **Success**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | You have an acknowledgement that the request was successful.                                                                                                                                                                                                                                                      |
+| **400**            | **Bad Request**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | There is something wrong with the request. Review this carefully before reaching out to the Rippling team.                                                                                                                                                                                                                        |
+| **401**            | **Unauthorized**: The access token retrieved from Rippling has expired. All tokens associated with an employee are revoked when the employee is terminated. This is to ensure security and the person who has “installed” the app must always be in the company, ensuring a point of contact.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | You will want to alert the user that the connection has been disrupted. You should then request another admin to go through the installation flow by hitting the installation url.                                                                                                                                             |
+| **403**            | **Forbidden**: You do not have permission to perform this action. The user possibly does not have sufficient permissions to access the requested endpoint. If you run into this when first installing the app, you should not mark it as a successful installation. If this shows after the connection was established, it might be that the user who installed your App at Rippling has lost the appropriate admin permissions. For example, if a user for your Rippling account, but not a Payroll admin, installs a payroll app on Rippling, the data flow would result in the user gaining access to restricted data. | You will want to alert the user that the connection has been disrupted. You should then request another admin to go through the installation flow by hitting the installation url. If the same user tries to install the App, you will still end up with a 403. You should request the user contacts another admin with more permissions to install the app. If a customer uninstalls your app in Rippling, you can expect this error code as well. |
+| **500**            | **Internal Server Error**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Reach out to the engineering team and check if something is broken.                                                                                                                                                                                                                                               |
+| **504**            | **Timeout Error**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Please try paginating your response with limit and offset before reaching out to the Rippling engineering team.                                                                                                                                                                                                                                               |
+
+## FAQs
+
+When a customer uninstalls your app in Rippling, your existing access token and refresh token tied with that customer's install will get revoked. If you try to access the APIs using your customer's token, you will receive a **403** error response with the following content:
+
+`"detail": "The token has been revoked"`
+
+If you receive this message, we recommend resetting the state of the integration in your application such that you are able to appropriately support a future reinstall of the app.
+
+> **Need Support?:**
+> If you're a partner seeking answers or encountering difficulties while integrating with Rippling, please contact us at partner.support@rippling.com. Ensure our responses reach you by preventing emails from this address from being filtered into your spam folder.
+
+
+[Page: /documentation/rippling-platform/reports/getting-started.md]
+# Get started with reports
+
+> For the complete documentation index, see [llms.txt](https://developer.rippling.com/llms.txt). Every page is available as Markdown by adding .md to its URL.
+
+> Rippling reports let you analyze employee data, app activity, custom apps, and imported data.
+
+Source: https://developer.rippling.com/documentation/rippling-platform/reports/getting-started
+
+Rippling reports let you analyze your data to help you better understand your business. You can build reports using any of your data in Rippling, including your employee data, data about the activity in your Rippling apps, data captured using custom apps, and data imported from your third-party business systems.
+
+There are three ways to create reports:
+
+- **Use Rippling AI to build a report**. Enter your prompt and Rippling AI will automatically build a report that meets your requirements. You can chat with Rippling AI to iterate on the report until it looks the way you want.
+
+> **Rippling:**
+>    This is only available with a Rippling AI subscription.
+
+- **Use a report recipe**. Report recipes are templated, pre-built reports that can be loaded with a couple of clicks and then customized as much or as little as you like.
+- **Build your own report**. Build a report from the ground up, bringing in the data you want to see and designing the layout and visualization to meet your needs.
+
+Your permissions determine which recipes you can use and what data you can include in reports. For more information, see [Report permissions](https://developer.rippling.com/documentation/rippling-platform/reports/permissions.md).
+
+## Get acquainted with the Reports and Dashboards app
+
+To get started with reports, open the sidebar and select **Data** > **Reports and Dashboards**.
+
+### Tabs in the Reports and Dashboards app
+
+The Reports and Dashboards app has the following tabs:
+
+- **Recent**. Reports you’ve recently viewed.
+- **Created by me**. Reports you’ve created or whose ownership has been transferred to you.
+- **Shared with me**. Reports that other people have shared with you.
+- **Report access**. Lets super and full admins see who at the company has access to which reports.
+
+### Reports editor
+
+The reports editor is where you’ll design your report. There are four main sections:
+
+1. **Available data**. This is where you’ll find and select data to add to your report. Depending on your permissions, you’ll see data related to your employees, your Rippling apps, and any custom or imported data.
+2. **Configuration**. This is where you’ll adjust the layout and formatting of the report and configure any drilldowns.
+3. **Filters & controls**. This is where you’ll manage the filters that narrow down the data in your report.
+4. **Report content**. This is where the report itself is displayed. The report content is updated in real time as you make changes.
+
+As you make changes in the reports editor, use the **Undo** and **Redo** options in the top right corner to revert changes or add them back.
+
+## How to create a report
+
+To create and save a new report, follow these steps:
+
+1. From the sidebar, select **Data** > **Reports and Dashboards**.
+2. Click the **New Report** button.
+3. Select a report recipe or click **Start from scratch** to build your own customized report.
+4. Select your desired **chart type**. You can select from the following options:
+   - **Grid**. Displays data in a table with columns and rows. You can optionally aggregate the data by grouping the rows together.
+   - **Pivot table**. Presents aggregated data in a tabular format, letting you see and compare values side-by-side.
+   - **Chart**. Select any of the available chart types to display data graphically, such as bar chart, line chart, funnel chart, or scatter chart.
+5. Add data to the report. From the *Available data* panel on the left, drag fields and drop them directly into the section where you want them displayed, such as columns, rows, grouping, X axis, etc.
+6. Adjust the other settings in the report as needed, such as the time frame, filters, aggregation, and sorting. Time frames and filters are covered together in [Filters and time frames in reports](https://developer.rippling.com/documentation/rippling-platform/reports/filters.md). Aggregation, sorting, and display settings are covered in the sections below.
+7. Once you’re happy with your report, rename it by clicking the **edit** icon next to the name, then click **Save**.
+
+Your report is saved and will appear at the top of the *Recent* and *Created by Me* tabs.
+
+## Refine the data in your report
+
+You can use the following options to refine the data in your report. Time frames and filters are covered together in [Filters and time frames in reports](https://developer.rippling.com/documentation/rippling-platform/reports/filters.md).
+
+- Select the report time frame
+- Apply filters
+- Adjust the joins
+- Write a custom SQL query
+- Group and aggregate the data
+- Change the grouping depth
+- Bucket by time period
+- Select the target currency
+- Select the target time zone
+- Configure drill-down reports
+
+### Set the report time frame
+
+One of the most important elements of your report is the time frame over which you're analyzing data.
+
+There are two ways to adjust time period for data used in the report:
+
+- **Set the *Data as of***. Use the *Data as of* setting to set the baseline date for the report. By default, it’s set to today to show the most current values. However, if you change this to January 1, 2025, the report will show what the values were as of January 1, 2025.
+- **Apply a date range filter**. Use any date field to filter the report. For example, add the *Start date* field and use it to filter your report to people who started in the current calendar quarter.
+
+For more information, see [Filters and time frames in reports](https://developer.rippling.com/documentation/rippling-platform/reports/filters.md).
+
+### Apply filters
+
+Filters let you narrow down the data in your report. For example, you could filter a report to include just people in certain departments or work locations, devices with a particular OS version, or pay runs in a given status.
+
+For more information, see [Filters and time frames in reports](https://developer.rippling.com/documentation/rippling-platform/reports/filters.md).
+
+### Adjust the joins
+
+If your report uses data from multiple datasets, you may want to change the way it’s joined. For example, you could change the join from a left join to an inner join to limit the dataset to only employees with values in both datasets.
+
+For more information, see [Joins in reports](https://developer.rippling.com/documentation/rippling-platform/reports/joins.md).
+
+Note that the ability to change how the data is joined is not available in a select set of report recipes, as noted in the “Special report recipes” section below.
+
+### Write a custom SQL query
+
+You can write SQL in a report to generate new fields. You can then join those fields with the other data in your report. You can only add one SQL query to a report. The query is saved only within the report where you created it.
+
+For more information, see [Write a custom SQL query in a report](https://developer.rippling.com/documentation/rippling-platform/reports/custom-sql.md).
+
+### Group and aggregate the data
+
+If you’ve selected a **grid** as your layout, you can consolidate the data in your report by adding grouping. For example, if you have a report listing each person’s annual base compensation and you’d like to see a department total, you can group the report by department to automatically generate a sum for each department.
+
+If you’re using a **pivot table** or **chart** layout, the data is automatically grouped and aggregated as you design your report. You can then update the aggregation settings as desired by clicking the three dots on the field name and selecting your preferred aggregation method.
+
+For more information, see [Charts and grouping in reports](https://developer.rippling.com/documentation/rippling-platform/reports/visualization.md).
+
+### Change the grouping depth
+
+For data points that have a hierarchy, such as department or manager, you can change the grouping depth.
+
+When your report is grouped using a field that has a hierarchy, such as department or manager, you can change the grouping depth. This lets you select the level in the hierarchy you want to group by, the most specific (or lowest) level, all levels, or a particular level of your choosing.
+
+To do this, click the three dots next to the field name and select **Grouping depth**.
+
+For example, say your company has an Engineering department with sub-departments for Backend, Frontend, and Infra, and you have a report that is grouped by department:
+
+- When you select **Most specific** as the grouping depth, the report displays the *Backend*, *Frontend*, and *Infra* departments as the rows.
+- When you select **All levels** as the grouping depth, the report displays *Engineering* as a row, with nested rows for *Backend*, *Frontend*, and *Infra*.
+
+### Bucket by time period
+
+When your report is grouped by a date or time field, you also have the option to choose an interval, or bucket, for the grouping, which allows you to create a time series of data. For example, if you group payroll data by check date, you can then bucket your data by year and month to produce a monthly time series.
+
+To do this, click the three dots next to the field name, select **Bucket by**.
+
+For more information, see [Charts and grouping in reports](https://developer.rippling.com/documentation/rippling-platform/reports/visualization.md).
+
+### Add report formulas
+
+If you want to create a custom calculation, you can do so by adding a report formula. Report formulas let you use Rippling’s proprietary query language RQL to calculate new values using the data in your report. For example, you could add a field that automatically calculates total compensation by writing a formula that sums annual base compensation and target annual bonus.
+
+### Select the target currency
+
+If your report contains monetary values, you can convert them to any currency supported by Rippling. To do so, click the three dots in the top right corner of the report and select the desired currency.
+
+For more information, see [Charts and grouping in reports](https://developer.rippling.com/documentation/rippling-platform/reports/visualization.md).
+
+### Select the target time zone
+
+If your report contains date or time values, you can convert the time zone used in the report. To do so, click the three dots in the top right corner of the report and select the desired time zone.
+
+### Configure drilldown reports
+
+If your report includes aggregated data, you’ll be able to click on an aggregated value and drill down to the details behind it. You can customize the contents of these drilldown reports to show the details you want to see.
+
+To do so, select the **Settings** tab, then select **Drilldown**. From here, you can add and remove fields in the drilldown report. Then, click into an aggregated row of the report to open the drilldown, where you can customize filters and other settings.
+
+For more information, see [Configure drilldown reports](https://developer.rippling.com/documentation/rippling-platform/reports/drilldowns.md).
+
+## Change the display and formatting of your report
+
+You can use the following options to change the display and formatting of your report:
+
+- Sort the data
+- Customize field display names
+- Change the formatting of numbers, currencies, and dates
+- Apply conditional formatting
+- Change the row density
+- Configure a pivot table
+- Adjust chart settings
+
+### Sort the data
+
+You can change the way the data in your report is sorted (ascending or descending order) by clicking on the three dots next to the field name, then selecting **Sort**.
+
+### Customize field display names
+
+You can customize the display name for any field used in the report. For example, if your report contains the field *Annual base compensation*, you could shorten it to *Comp* in the report.
+
+To do so, click the three dots next to the field name and select **Rename**.
+
+Note that the name of the field will remain unchanged in the *Selected fields* area. Only the display name will change.
+
+### Change the formatting of numbers, currencies, and dates
+
+Select your preferred format for numbers and currency values. To do this, select the three dots on the field name or click the down arrow in the column header, then select **Number formatting** or **Date formatting**.
+
+For more information, see [Apply formatting to numbers or dates](https://developer.rippling.com/documentation/rippling-platform/reports/formatting.md).
+
+### Apply conditional formatting
+
+Add conditional formatting to use color to highlight values that meet specific criteria. For example, shade all cells with titles that contain the title “Coordinator” red, apply different colors to each unique value in the table, or apply a color spectrum across a range of values.
+
+To add conditional formatting, click the three dots next to the field name, then select **Conditional formatting**.
+
+### Change the row density
+
+You can adjust the spacing of the report rows to optimize for readability vs. information density. To do so:
+
+1. Select the **Settings** tab.
+2. Select **Configuration** in the menu.
+3. Select your preferred **Row density**.
+
+## Share and download reports
+
+After you create a report, you can save it for future use, share it with your colleagues in Rippling, and download it for offline reference.
+
+For more information, see [Share and download reports](https://developer.rippling.com/documentation/rippling-platform/reports/sharing.md).
+
+## Special report recipes with limited capabilities
+
+There are a few special report recipes in Rippling that do not have the same full set of capabilities as most reports:
+
+- Talent retention rate
+- Time & Attendance change history report
+- Automation Studio triggered events report
+- Automation Studio triggered actions report
+
+When you use these recipes, your options for customizing the report may be limited.
+
+## How quickly updated data shows up in reports
+
+When you create a new report or open a saved report, nearly all the data in the report is queried, which means most of the report data is updated, but there are a few circumstances where data is updated on a specific schedule.
+
+### Refreshing the data in custom reports
+
+The information in custom reports is cached for two hours. This means that if the data in Rippling changes and you have the report open, the data won’t be updated for two hours.
+
+There are two ways to manually refresh the data:
+
+- Change the report time frame or employee filters and then re-run the report.
+- Click the **Refresh data** icon. You can refresh the data this way once per minute.
+
+### Employee data
+
+Employee data is updated in reports within 15 minutes of when the change is made. This includes all personal and employment data (name, address, SSN, department, compensation, etc.). If you don’t see the change you expect, wait a few minutes and then try again.
+
+### Time tracking data
+
+It takes 24 hours for timecard changes and job dimension adjustments to process and reflect in reports. If a timecard was updated recently, the changes will not appear immediately.
+
+### Change history reports
+
+The change history report relies on a daily cache for performance purposes, and this cache is automatically reset every night PST. Therefore, the data you see in the change history report only includes changes through the previous day.
+
+## How scheduled and backdated changes are reflected
+
+When you modify employee data within Rippling, you can apply those changes immediately or schedule them to take effect on a future date or as of a prior date. This is often displayed as the **effective date** of a change. The effective date of a change has many effects across Rippling, including how data is reflected in a particular time period within reports.
+
+### Changes that have an effective date in the future
+
+Any changes with a future effective date will not be reflected within reports until the change is applied *on* the effective date. Therefore, a future-scheduled change will not appear on a report with today's date.
+
+### Changes that are made with a prior effective date
+
+Changes with a backdated effective date, including employee data you've imported from a previous system, will be reflected in reports as of the effective date.
+
+## Why a custom field can be empty
+
+When you populate the value in a custom field, the date that value was populated is also stored in Rippling. You can think of this as the “effective date” for the custom field value. When you run reports that include custom fields, the custom field values will only show up in the report if the date range includes that effective date.
+
+For example, say you have a custom field for collecting driver’s license numbers. You hire a new employee named Paul, and he adds his driver’s license number the day he onboards to Rippling, which is January 1, 2024.
+
+- If you run a report that shows a **snapshot** of data as of December 15, 2023, Paul’s driver’s license field will be empty. But if you change the date in the report to January 2, 2024, the report will show Paul’s driver’s license number.
+- If you run a report that covers a **range of time** covering December 15 - 31, 2024, Paul’s driver’s license field will be empty. But if you change the date range to cover December 15 - January 15, 2024, the report will show Paul’s driver’s license number.
+
+> **Note:**
+> There is a brief 15-minute window when new changes to employee data may not show up in reports. If a custom field you expect to be present is missing from your report, and the field has recently been updated, wait a few minutes and try again.
+
+## Why a retroactive change may not show up as expected
+
+When you make a change to an employee's data, you can schedule when the change goes into effect. This can be any future or past date. If you make a change with an effective date in the past, and then run a report that includes the data, the report will show the updated values as of the date the change was made, not as of the retroactive effective date.
+
+For example, let's say that on May 11, you changed an employee's department from *Mid-market* to *Marketing*, with an effective date of May 2. You then run a report that includes the employee's department.
+
+- When you run the report with the *Data as of* set to May 11, the employee's department will show as *Marketing*.
+- When you run the report with the *Data as of* set to May 2, the employee's department will show as *Mid-market*.
+
+## See also
+
+- [Joins in reports](https://developer.rippling.com/documentation/rippling-platform/reports/joins.md)
+- [Write a custom SQL query in a report](https://developer.rippling.com/documentation/rippling-platform/reports/custom-sql.md)
+- [Filters and time frames in reports](https://developer.rippling.com/documentation/rippling-platform/reports/filters.md)
+- [Charts and grouping in reports](https://developer.rippling.com/documentation/rippling-platform/reports/visualization.md)
+- [Configure drilldown reports](https://developer.rippling.com/documentation/rippling-platform/reports/drilldowns.md)
+- [Apply formatting to numbers or dates](https://developer.rippling.com/documentation/rippling-platform/reports/formatting.md)
+- [Report permissions](https://developer.rippling.com/documentation/rippling-platform/reports/permissions.md)
+- [Share and download reports](https://developer.rippling.com/documentation/rippling-platform/reports/sharing.md)
+- [Get started with dashboards](https://developer.rippling.com/documentation/rippling-platform/dashboards/getting-started.md)
+- [Permissions for data in Rippling](https://developer.rippling.com/documentation/rippling-platform/data-model/permissions.md)
+- [Generate and Download Reports Using the API](https://developer.rippling.com/documentation/rest-api/guides/reports)

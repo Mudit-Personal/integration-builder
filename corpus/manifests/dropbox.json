@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Dropbox Business",
+    "slug": "dropbox-business",
+    "apiVersion": "2"
+  },
+  "baseUrl": "https://api.dropboxapi.com",
+  "connectionFields": [],
+  "authMethods": [
+    {
+      "type": "bearer",
+      "label": "Team access token (Dropbox Business API)",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "POST",
+      "path": "/2/team/get_info",
+      "query": {},
+      "body": null,
+      "readOnlyPostReason": "Dropbox's API uses POST for all endpoints, including read-only calls; this call does not change anything."
+    },
+    "recordsPath": "members",
+    "pagination": {
+      "type": "none"
+    },
+    "requiredScopes": [
+      "members.read"
+    ],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "profile.team_member_id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "profile.email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "profile.name.display_name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "profile.status.\\.tag",
+        "fallbackPaths": null,
+        "map": {
+          "active": "active",
+          "invited": "pending",
+          "suspended": "suspended",
+          "removed": "deleted"
+        },
+        "format": null
+      },
+      "role": null,
+      "userType": null,
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The supplied documentation describes only authentication types and contains no endpoint for per-user last-active fields, audit logs or usage reports, so no usage signal could be confirmed."
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "Applications that authorize team scopes to use the Business API will receive a team access token."
+    },
+    {
+      "claim": "auth",
+      "quote": "--header \"Authorization: Bearer <OAUTH2_ACCESS_TOKEN>\""
+    }
+  ],
+  "assumptions": [
+    "IMPORTANT: The source contains no endpoint that lists team members. The only team endpoint it shows is /2/team/get_info, which is used here only because it is the one team path in the source. It returns general team information, not a list of people, so the users part of this manifest will not work as is. Please replace it with the real team member listing endpoint from the Dropbox Business API reference.",
+    "The members record path, the field names (profile.team_member_id, profile.email, profile.name.display_name, profile.status) and the status values (active, invited, suspended, removed) come from general knowledge of Dropbox, not from the supplied text, and are unconfirmed.",
+    "The scope name members.read is unconfirmed.",
+    "Dropbox pages through member lists with a separate 'continue' endpoint, which this format cannot express, so pagination is set to none and large teams may be only partly listed.",
+    "Role, user type, last-active and created-at fields are left empty because the source does not document them.",
+    "Usage is marked unavailable. Dropbox likely has team activity data, but the supplied text did not document it.",
+    "The source documents OAuth2 bearer team tokens but not how they are obtained (authorize and token URLs), so only a pre-issued bearer token is listed. App key and secret basic auth is also described but only for app-level calls, not for team data.",
+    "The source does not say which Dropbox Business plan gates the API, so no plan requirement is set.",
+    "Rate limits are not stated in the source and are left empty."
+  ]
+}

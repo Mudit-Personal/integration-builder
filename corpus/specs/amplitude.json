@@ -1,0 +1,3175 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Amplitude Public APIs",
+    "version": "2026-10-05",
+    "summary": "Event ingestion, analytics, taxonomy, export, async DSAR jobs, and agent-readable site content APIs for Amplitude.",
+    "description": "Amplitude is a digital analytics platform covering product analytics, experimentation, session replay, web analytics, and CDP capabilities.\n\nThis document describes the public HTTP surface most useful to programmatic clients and AI agents:\n\n- **Ingestion** (`api2.amplitude.com`) — send events. Authenticated with a project API key in the request body.\n- **Analytics, Taxonomy, Export, Cohorts** (`amplitude.com/api`) — read and manage project data. Authenticated with HTTP Basic using a project API key and secret key.\n- **DSAR** (`amplitude.com/api/2/dsar`) — export a user’s data. Authenticated with HTTP Basic using the organization API key and organization secret key, not project credentials.\n- **Site content** (`amplitude.com`) — Markdown and index representations of amplitude.com pages, for retrieval-augmented and agent use.\n\nFor conversational access to Amplitude data, prefer the Amplitude MCP server (`https://mcp.amplitude.com/mcp`, OAuth 2.0) over these REST APIs. For public documentation, use the read-only Docs MCP server (`https://amplitude.com/docs/api/mcp`).\n\nThe full catalog of Amplitude’s agent-callable resources is published at https://amplitude.com/.well-known/ai-catalog.json.\n\nEndpoint coverage here is deliberately limited to documented, stable endpoints. See https://amplitude.com/docs/apis for the complete reference, including the Experiment, Attribution, Lookup Table, and User Privacy APIs.",
+    "termsOfService": "https://amplitude.com/terms",
+    "contact": {
+      "name": "Amplitude Support",
+      "url": "https://amplitude.com/support"
+    },
+    "license": {
+      "name": "Amplitude Terms of Service",
+      "url": "https://amplitude.com/terms"
+    }
+  },
+  "externalDocs": {
+    "description": "Amplitude API reference",
+    "url": "https://amplitude.com/docs/apis"
+  },
+  "x-api-versioning": {
+    "scheme": "per-api-path",
+    "documentVersionScheme": "date",
+    "description": "API families use independent path namespaces (for example /2/httpapi, /api/2/dsar and /api/5/cohorts). Batch and site-content paths are unversioned. The namespace number is not a shared release number or a semantic-version guarantee.",
+    "deprecationPolicy": {
+      "status": "not-verified",
+      "description": "No company-wide REST retirement notice period or sunset dates are asserted by this document. SDK maintenance policy does not establish REST API lifecycle policy."
+    }
+  },
+  "servers": [
+    {
+      "url": "https://amplitude.com",
+      "description": "Analytics REST host (default / US data residency)"
+    },
+    {
+      "url": "https://analytics.eu.amplitude.com",
+      "description": "Analytics REST host (EU data residency)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Ingestion",
+      "description": "Send event data to Amplitude.",
+      "externalDocs": {
+        "url": "https://amplitude.com/docs/apis/analytics/http-v2"
+      }
+    },
+    {
+      "name": "Analytics",
+      "description": "Query behavioral data: segmentation, funnels, retention, sessions, revenue, and saved charts.",
+      "externalDocs": {
+        "url": "https://amplitude.com/docs/apis/analytics/dashboard-rest"
+      }
+    },
+    {
+      "name": "Taxonomy",
+      "description": "Read and manage tracking plan events and properties.",
+      "externalDocs": {
+        "url": "https://amplitude.com/docs/apis/analytics/taxonomy"
+      }
+    },
+    {
+      "name": "Export",
+      "description": "Bulk export raw event data.",
+      "externalDocs": {
+        "url": "https://amplitude.com/docs/apis/analytics/export"
+      }
+    },
+    {
+      "name": "Cohorts",
+      "description": "List, download, and upload behavioral cohorts.",
+      "externalDocs": {
+        "url": "https://amplitude.com/docs/apis/analytics/behavioral-cohorts"
+      }
+    },
+    {
+      "name": "DSAR",
+      "description": "Submit and retrieve asynchronous data subject access requests.",
+      "externalDocs": {
+        "url": "https://amplitude.com/docs/apis/analytics/ccpa-dsar"
+      }
+    },
+    {
+      "name": "Site content",
+      "description": "Agent-readable representations of amplitude.com pages. Public, unauthenticated, read-only.",
+      "externalDocs": {
+        "url": "https://amplitude.com/llms.txt"
+      }
+    },
+    {
+      "name": "MCP",
+      "description": "Model Context Protocol endpoint. Preferred over the REST endpoints for conversational and agent access, because it carries per-user OAuth scopes rather than a project-wide key pair.",
+      "externalDocs": {
+        "url": "https://amplitude.com/docs/amplitude-ai/amplitude-mcp"
+      }
+    }
+  ],
+  "paths": {
+    "/mcp": {
+      "servers": [
+        {
+          "url": "https://mcp.amplitude.com",
+          "description": "MCP host (default / US data residency)"
+        },
+        {
+          "url": "https://mcp.eu.amplitude.com",
+          "description": "MCP host (EU data residency)"
+        }
+      ],
+      "post": {
+        "tags": [
+          "MCP"
+        ],
+        "operationId": "callMcpServer",
+        "summary": "Amplitude MCP server (Streamable HTTP)",
+        "description": "JSON-RPC 2.0 over Streamable HTTP, per the Model Context Protocol specification. Described here so the OAuth scopes an agent needs are discoverable from this document; the request and response bodies are defined by MCP, not by Amplitude.\n\nDo not hardcode tool names — call `tools/list` and read the definitions the server returns at runtime.\n\n`mcp:read` is sufficient for read-only tools. Tools that create or modify dashboards, notebooks, experiments, cohorts, or metrics additionally require `mcp:write`.",
+        "security": [
+          {
+            "mcpOAuth": [
+              "mcp:read"
+            ]
+          },
+          {
+            "mcpOAuth": [
+              "mcp:write"
+            ]
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "A JSON-RPC 2.0 request as defined by MCP."
+              },
+              "example": {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/list"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON-RPC result, or an SSE stream when the client accepts `text/event-stream`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Missing, expired, or revoked access token. The `WWW-Authenticate` header carries the protected resource metadata URL. Refresh once; if that fails, restart the authorization code flow.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "Bearer challenge carrying `resource_metadata`, per RFC 9728.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "The token is valid but lacks the scope for this tool, or the underlying Amplitude user lacks permission on the target resource."
+          }
+        }
+      }
+    },
+    "/2/httpapi": {
+      "x-replaces": {
+        "path": "/httpapi",
+        "status": "deprecated",
+        "documentationUrl": "https://amplitude.com/docs/apis/analytics/http-v2"
+      },
+      "x-api-version": "2",
+      "servers": [
+        {
+          "url": "https://api2.amplitude.com",
+          "description": "Event ingestion host (default / US data residency)"
+        },
+        {
+          "url": "https://api.eu.amplitude.com",
+          "description": "Event ingestion host (EU data residency)"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Ingestion"
+        ],
+        "operationId": "uploadEvents",
+        "summary": "Upload events (HTTP V2)",
+        "description": "Send events to Amplitude in real time. Requests are limited to 1 MB.\n\n**Retrying safely.** Idempotency is per event, not per request, and is keyed on `insert_id` — Amplitude does not honour an `Idempotency-Key` header. Set a stable `insert_id` on every event before the first attempt and reuse it verbatim on retries; Amplitude discards an event whose `insert_id` matches one already seen for that `device_id` within the last 7 days. Without it, a retry after a network timeout double-counts every event in the payload, because a request that timed out may still have been ingested.",
+        "security": [],
+        "externalDocs": {
+          "url": "https://amplitude.com/docs/apis/analytics/http-v2"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequestBody"
+              },
+              "example": {
+                "api_key": "YOUR_API_KEY",
+                "events": [
+                  {
+                    "user_id": "12345",
+                    "event_type": "watch_tutorial",
+                    "time": 1396381378123,
+                    "event_properties": {
+                      "source": "notification"
+                    },
+                    "user_properties": {
+                      "Cohort": "Test A"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Events accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/IngestionBadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/IngestionForbidden"
+          },
+          "413": {
+            "$ref": "#/components/responses/IngestionPayloadTooLarge"
+          },
+          "429": {
+            "$ref": "#/components/responses/IngestionRateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/IngestionServerError"
+          }
+        }
+      }
+    },
+    "/batch": {
+      "servers": [
+        {
+          "url": "https://api2.amplitude.com",
+          "description": "Event ingestion host (default / US data residency)"
+        },
+        {
+          "url": "https://api.eu.amplitude.com",
+          "description": "Event ingestion host (EU data residency)"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Ingestion"
+        ],
+        "operationId": "uploadEventsBatch",
+        "summary": "Upload events (Batch)",
+        "description": "Upload large volumes of event data at once. Same payload shape as HTTP V2 with higher throughput limits and looser throttling. Use this for backfills and server-to-server pipelines.\n\n**Retrying safely.** As with HTTP V2, idempotency is keyed on each event’s `insert_id` rather than an `Idempotency-Key` header. Backfills are the case where this matters most: a retried batch without stable `insert_id` values silently duplicates every event it contains.",
+        "security": [],
+        "externalDocs": {
+          "url": "https://amplitude.com/docs/apis/analytics/batch-event-upload"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Events accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/IngestionBadRequest"
+          },
+          "413": {
+            "$ref": "#/components/responses/IngestionPayloadTooLarge"
+          },
+          "429": {
+            "$ref": "#/components/responses/IngestionRateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/IngestionServerError"
+          }
+        }
+      }
+    },
+    "/api/2/events/list": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "listEvents",
+        "summary": "List events",
+        "description": "Return every active and inactive event type in the project, with display name and deleted state.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/events/segmentation": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getEventSegmentation",
+        "summary": "Event segmentation",
+        "description": "Return metrics for one or two events over a date range, optionally segmented and grouped. URL-encode special characters in event types and property names.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "e",
+            "in": "query",
+            "required": true,
+            "description": "Event definition as a JSON object with `event_type` and optional `filters` and `group_by`. Use `_active` for any active event, `_all` for any event, and prefix custom events with `ce:`.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "{\"event_type\":\"watch_tutorial\"}"
+          },
+          {
+            "name": "e2",
+            "in": "query",
+            "required": false,
+            "description": "Second event definition, same shape as `e`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          },
+          {
+            "name": "m",
+            "in": "query",
+            "required": false,
+            "description": "Metric to return. Non-property metrics: `uniques`, `totals`, `pct_dau`, `average`. Property metrics: `histogram`, `sums`, `value_avg`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "uniques",
+                "totals",
+                "pct_dau",
+                "average",
+                "histogram",
+                "sums",
+                "value_avg"
+              ]
+            }
+          },
+          {
+            "name": "i",
+            "in": "query",
+            "required": false,
+            "description": "Interval: 1 for daily, 7 for weekly, 30 for monthly. Use -300000, -3600000 for realtime intervals.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "required": false,
+            "description": "Segment definitions, as a JSON array of filter condition objects. Repeat the parameter for multiple segments.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "g",
+            "in": "query",
+            "required": false,
+            "description": "Property to group by, for example `platform`. Available only with a single segment. Limit: two.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of group-by values returned. Max 1000.",
+            "schema": {
+              "type": "integer",
+              "maximum": 1000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Series data with labels and per-series values.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/funnels": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getFunnelAnalysis",
+        "summary": "Funnel analysis",
+        "description": "Return conversion data for a series of events. Repeat the `e` parameter once per funnel step, in order.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "e",
+            "in": "query",
+            "required": true,
+            "description": "Funnel step event definition. Repeat once per step, in funnel order.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "description": "Whether steps must occur in the given order. `ordered` (default), `unordered`, or `sequential`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ordered",
+                "unordered",
+                "sequential"
+              ]
+            }
+          },
+          {
+            "name": "n",
+            "in": "query",
+            "required": false,
+            "description": "User set: `new` or `active` (default).",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "new",
+                "active"
+              ]
+            }
+          },
+          {
+            "name": "cs",
+            "in": "query",
+            "required": false,
+            "description": "Conversion window in seconds.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "required": false,
+            "description": "Segment definitions, as a JSON array of filter condition objects. Repeat the parameter for multiple segments.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "g",
+            "in": "query",
+            "required": false,
+            "description": "Property to group by, for example `platform`. Available only with a single segment. Limit: two.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of group-by values returned. Max 1000.",
+            "schema": {
+              "type": "integer",
+              "maximum": 1000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Funnel step counts and conversion rates.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/retention": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getRetentionAnalysis",
+        "summary": "Retention analysis",
+        "description": "Return retention for a starting event and a return event over a date range.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "se",
+            "in": "query",
+            "required": true,
+            "description": "Starting event definition.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "{\"event_type\":\"_active\"}"
+          },
+          {
+            "name": "re",
+            "in": "query",
+            "required": true,
+            "description": "Returning event definition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          },
+          {
+            "name": "rm",
+            "in": "query",
+            "required": false,
+            "description": "Retention type: `bracket`, `rolling` (unbounded), or `n` (N-day). Defaults to N-day.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "bracket",
+                "rolling",
+                "n"
+              ]
+            }
+          },
+          {
+            "name": "i",
+            "in": "query",
+            "required": false,
+            "description": "Interval: 1 daily, 7 weekly, 30 monthly.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                7,
+                30
+              ]
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "required": false,
+            "description": "Segment definitions, as a JSON array of filter condition objects. Repeat the parameter for multiple segments.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "g",
+            "in": "query",
+            "required": false,
+            "description": "Property to group by, for example `platform`. Available only with a single segment. Limit: two.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retention series.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/users": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getUserCounts",
+        "summary": "Active and new user counts",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          },
+          {
+            "name": "m",
+            "in": "query",
+            "required": false,
+            "description": "Either `active` or `new`. Defaults to `active`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "new"
+              ]
+            }
+          },
+          {
+            "name": "i",
+            "in": "query",
+            "required": false,
+            "description": "Interval: 1 daily, 7 weekly, 30 monthly.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                7,
+                30
+              ]
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "required": false,
+            "description": "Segment definitions, as a JSON array of filter condition objects. Repeat the parameter for multiple segments.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "g",
+            "in": "query",
+            "required": false,
+            "description": "Property to group by, for example `platform`. Available only with a single segment. Limit: two.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User counts per interval.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/sessions/average": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getAverageSessionLength",
+        "summary": "Average session length",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Average session length per day, in seconds.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/sessions/length": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getSessionLengthDistribution",
+        "summary": "Session length distribution",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          },
+          {
+            "name": "timeHistogramConfigBinTimeUnit",
+            "in": "query",
+            "required": false,
+            "description": "Bin unit: `seconds`, `minutes`, `hours`, or `days`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "seconds",
+                "minutes",
+                "hours",
+                "days"
+              ]
+            }
+          },
+          {
+            "name": "timeHistogramConfigBinMin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timeHistogramConfigBinMax",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "timeHistogramConfigBinSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session length buckets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/composition": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getUserComposition",
+        "summary": "User composition by property",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          },
+          {
+            "name": "p",
+            "in": "query",
+            "required": true,
+            "description": "Property to break down by. Amplitude properties include `version`, `country`, `city`, `region`, `DMA`, `language`, `platform`, `os`, `device`, `device_type`, `start_version`, and `paying`. Prefix custom user properties with `gp:`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Property value distribution.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/revenue/ltv": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getRevenueLtv",
+        "summary": "Revenue lifetime value",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260801"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last date included in the data series, formatted YYYYMMDD.",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{8}$",
+              "example": "20260831"
+            }
+          },
+          {
+            "name": "m",
+            "in": "query",
+            "required": false,
+            "description": "Chart measure: 0 ARPU, 1 ARPPU, 2 total revenue, 3 paying users.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                0,
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "i",
+            "in": "query",
+            "required": false,
+            "description": "Interval: 1 daily, 7 weekly, 30 monthly.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                7,
+                30
+              ]
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "required": false,
+            "description": "Segment definitions, as a JSON array of filter condition objects. Repeat the parameter for multiple segments.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "g",
+            "in": "query",
+            "required": false,
+            "description": "Property to group by, for example `platform`. Available only with a single segment. Limit: two.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "LTV series.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/realtime": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getRealtimeActiveUsers",
+        "summary": "Real-time active users",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "i",
+            "in": "query",
+            "required": false,
+            "description": "Number of 5-minute buckets to return: 1, 5, 15, or 30.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                5,
+                15,
+                30
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Active user counts for recent intervals.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/useractivity": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getUserActivity",
+        "summary": "User activity",
+        "description": "Return a single user’s event stream and user properties. Rate limits for this endpoint are lower than other Dashboard REST endpoints.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "description": "Amplitude ID of the user.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Zero-indexed offset into the event stream.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of events to return. Defaults to 1000.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User properties and recent events.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/usersearch": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "searchUsers",
+        "summary": "User search",
+        "description": "Look up users by Amplitude ID, device ID, user ID, or user ID prefix.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "description": "Amplitude ID, device ID, user ID, or user ID prefix.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching users and match type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/3/chart/{chartId}/csv": {
+      "x-api-version": "3",
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "getChartResults",
+        "summary": "Get results from an existing chart",
+        "description": "Return the current results of a saved chart. The response shape depends on the chart type.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chartId",
+            "in": "path",
+            "required": true,
+            "description": "Chart ID, taken from the chart URL in the Amplitude web app.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "abc123"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chart results. Shape varies by chart type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/export": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Export"
+        ],
+        "operationId": "exportEvents",
+        "summary": "Export raw events",
+        "description": "Export raw event data for a time range as a zipped archive of newline-delimited JSON files. Range is bounded by `server_upload_time`, maximum 365 days and 4 GB per request. Data is available roughly two hours after ingestion.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "description": "First hour included, formatted YYYYMMDDTHH.",
+            "schema": {
+              "type": "string",
+              "example": "20260101T00"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "description": "Last hour included, formatted YYYYMMDDTHH.",
+            "schema": {
+              "type": "string",
+              "example": "20260127T00"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Zipped archive of JSON event files.",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Request too large. Export exceeds the 4 GB limit — narrow the time range."
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "No data available for the requested time range."
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/3/cohorts": {
+      "x-api-version": "3",
+      "get": {
+        "tags": [
+          "Cohorts"
+        ],
+        "operationId": "listCohorts",
+        "summary": "List all cohorts",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cohort metadata for the project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/5/cohorts/request/{cohortId}": {
+      "x-api-version": "5",
+      "get": {
+        "tags": [
+          "Cohorts"
+        ],
+        "operationId": "requestCohortExport",
+        "summary": "Request a cohort export",
+        "description": "Start an asynchronous cohort export and return a request ID. Poll `/api/5/cohorts/request-status/{requestId}`, then download from `/api/5/cohorts/request/{requestId}/file`.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cohortId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "props",
+            "in": "query",
+            "required": false,
+            "description": "Set to 1 to include user properties in the export.",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "propKeys",
+            "in": "query",
+            "required": false,
+            "description": "Specific user property to include. Repeat for multiple properties.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Export request accepted, with a request ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CohortExportRequest"
+                }
+              }
+            },
+            "links": {
+              "status": {
+                "operationId": "getCohortExportStatus",
+                "parameters": {
+                  "requestId": "$response.body#/request_id"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/5/cohorts/request-status/{requestId}": {
+      "x-api-version": "5",
+      "get": {
+        "tags": [
+          "Cohorts"
+        ],
+        "operationId": "getCohortExportStatus",
+        "summary": "Get cohort export status",
+        "description": "Poll while HTTP 202 reports JOB INPROGRESS. Download only after HTTP 200 reports JOB COMPLETED.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CohortExportStatus"
+                },
+                "example": {
+                  "request_id": "qfaZya",
+                  "cohort_id": "cohort-id",
+                  "async_status": "JOB COMPLETED"
+                }
+              }
+            },
+            "links": {
+              "download": {
+                "operationId": "downloadCohort",
+                "parameters": {
+                  "requestId": "$response.body#/request_id"
+                },
+                "description": "Follow only when async_status is JOB COMPLETED."
+              }
+            }
+          },
+          "202": {
+            "description": "Export is still running; continue polling.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CohortExportStatus"
+                },
+                "example": {
+                  "request_id": "qfaZya",
+                  "cohort_id": "cohort-id",
+                  "async_status": "JOB INPROGRESS"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/5/cohorts/request/{requestId}/file": {
+      "x-api-version": "5",
+      "get": {
+        "tags": [
+          "Cohorts"
+        ],
+        "operationId": "downloadCohort",
+        "summary": "Download a cohort export",
+        "description": "Redirects to a short-lived download link. The request URL is valid for seven days; each generated link is valid for one minute.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cohort membership file.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "description": "Cohort data; the published reference does not specify a serialization format."
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Redirect to a pre-signed S3 download URL valid for one minute. Follow Location immediately; the original request URL remains valid for seven days.",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/dsar/requests": {
+      "x-api-version": "2",
+      "post": {
+        "tags": [
+          "DSAR"
+        ],
+        "operationId": "createDsarRequest",
+        "summary": "Request user data asynchronously",
+        "description": "Submit a data subject access request. HTTP 202 returns requestId; poll getDsarRequestStatus until status is done or failed. Jobs complete within three days and results expire after two days. Requests do not include Statsig data.",
+        "security": [
+          {
+            "orgApiKeyAndSecretKey": []
+          }
+        ],
+        "externalDocs": {
+          "url": "https://amplitude.com/docs/apis/analytics/ccpa-dsar"
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DsarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Request accepted. Use requestId to poll for completion.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DsarAccepted"
+                }
+              }
+            },
+            "links": {
+              "status": {
+                "operationId": "getDsarRequestStatus",
+                "parameters": {
+                  "requestId": "$response.body#/requestId"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/DsarRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/dsar/requests/{requestId}": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "DSAR"
+        ],
+        "operationId": "getDsarRequestStatus",
+        "summary": "Poll a data subject access request",
+        "description": "Poll staging/submitted jobs. Stop polling on failed and inspect failReason; on done download the returned URLs with the same credentials before they expire. The documented cost budget is 14,400/hour: each POST costs 8 and each GET costs 1.",
+        "security": [
+          {
+            "orgApiKeyAndSecretKey": []
+          }
+        ],
+        "externalDocs": {
+          "url": "https://amplitude.com/docs/apis/analytics/ccpa-dsar"
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request status, with download URLs populated when done.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DsarStatus"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/DsarRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/dsar/requests/{requestId}/outputs/{outputId}": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "DSAR"
+        ],
+        "operationId": "downloadDsarOutput",
+        "summary": "Download a completed DSAR output",
+        "description": "Use an output URL returned by getDsarRequestStatus after status is done. outputId is the integer at the end of that URL. Links expire after two days. Clients may follow a redirect to the gzipped file; each file contains newline-delimited JSON events.",
+        "security": [
+          {
+            "orgApiKeyAndSecretKey": []
+          }
+        ],
+        "externalDocs": {
+          "url": "https://amplitude.com/docs/apis/analytics/ccpa-dsar"
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "outputId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gzipped newline-delimited JSON data.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/DsarRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/taxonomy/event": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "listEventTypes",
+        "summary": "Get all event types",
+        "description": "Requires the Amplitude Data add-on.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event types in the tracking plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "createEventType",
+        "summary": "Create an event type",
+        "description": "Requires the Amplitude Data add-on.",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "event_type"
+                ],
+                "properties": {
+                  "event_type": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event type created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/taxonomy/event/{eventType}": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "getEventType",
+        "summary": "Get an event type",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "eventType",
+            "in": "path",
+            "required": true,
+            "description": "URL-encoded event type name.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event type definition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "updateEventType",
+        "summary": "Update an event type",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "eventType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "display_name": {
+                    "type": "string"
+                  },
+                  "new_event_type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event type updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "deleteEventType",
+        "summary": "Delete an event type",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "eventType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event type deleted."
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/taxonomy/event-property": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "listEventProperties",
+        "summary": "Get event properties",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": false,
+            "description": "Limit results to properties on a single event type. Omit to return properties across all events.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "createEventProperty",
+        "summary": "Create an event property",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "event_type",
+                  "event_property"
+                ],
+                "properties": {
+                  "event_type": {
+                    "type": "string"
+                  },
+                  "event_property": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "is_required": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event property created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/api/2/taxonomy/user-property": {
+      "x-api-version": "2",
+      "get": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "listUserProperties",
+        "summary": "Get all user properties",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User properties in the tracking plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Taxonomy"
+        ],
+        "operationId": "createUserProperty",
+        "summary": "Create a user property",
+        "security": [
+          {
+            "apiKeyAndSecretKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_property"
+                ],
+                "properties": {
+                  "user_property": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User property created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AnalyticsBadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/AnalyticsUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/AnalyticsRateLimited"
+          }
+        }
+      }
+    },
+    "/{pagePath}.md": {
+      "get": {
+        "tags": [
+          "Site content"
+        ],
+        "operationId": "getPageMarkdown",
+        "summary": "Get any amplitude.com page as Markdown",
+        "description": "Append `.md` to any amplitude.com page path to get a Markdown rendering of its main content. Public and unauthenticated.",
+        "security": [],
+        "parameters": [
+          {
+            "name": "pagePath",
+            "in": "path",
+            "required": true,
+            "description": "Page path without the leading slash, for example `pricing` or `blog/some-post`.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "pricing"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Markdown rendering of the page.",
+            "content": {
+              "text/markdown": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SiteContentBadRequest"
+          },
+          "404": {
+            "content": {
+              "text/markdown": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "No published page exists at that path. See https://amplitude.com/llms.txt for the available pages."
+          },
+          "500": {
+            "$ref": "#/components/responses/SiteContentServerError"
+          },
+          "508": {
+            "description": "Request loop detected — the page was already being rendered as Markdown.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteContentError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "tags": [
+          "Site content"
+        ],
+        "operationId": "getLlmsTxt",
+        "summary": "Site index for LLMs",
+        "description": "Categorized index of amplitude.com pages with titles and descriptions, following the llms.txt convention.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Plain text index.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The index could not be generated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/llms-full.txt": {
+      "get": {
+        "tags": [
+          "Site content"
+        ],
+        "operationId": "getLlmsFullTxt",
+        "summary": "Expanded site index for LLMs",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Plain text index with expanded page content.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/ai-catalog.json": {
+      "get": {
+        "tags": [
+          "Site content"
+        ],
+        "operationId": "getAiCatalog",
+        "summary": "Agentic Resource Discovery catalog",
+        "description": "Catalog of Amplitude’s agent-callable resources — MCP servers, skills, and APIs — per the Agentic Resource Discovery specification.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "ARD catalog document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "tags": [
+          "Site content"
+        ],
+        "operationId": "getOpenApiDocument",
+        "summary": "This document",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OpenAPI description of Amplitude’s public APIs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "orgApiKeyAndSecretKey": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "DSAR uses HTTP Basic with the org API key and org secret key, as documented in the DSAR request examples."
+      },
+      "apiKeyAndSecretKey": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "HTTP Basic authentication. Username is the project API key, password is the project secret key. Both are found in Amplitude under Settings → Projects → General. Credentials must be base64 encoded.\n\nThis scheme is project-scoped and all-or-nothing: a key pair grants every operation on its project. There is no narrower grant. When an agent needs least-privilege access, prefer the MCP server and its `mcpOAuth` scopes over these keys."
+      },
+      "mcpOAuth": {
+        "type": "oauth2",
+        "description": "OAuth 2.1 authorization code flow with PKCE, used by the Amplitude MCP server at `https://mcp.amplitude.com/mcp`.\n\nEndpoints and scopes here mirror the authorization server metadata at https://mcp.amplitude.com/.well-known/oauth-authorization-server, which is authoritative. Clients may be registered dynamically (RFC 7591) at `https://mcp.amplitude.com/register`; public clients are supported.\n\nScopes bound the token but do not widen it — every call is additionally enforced against the permissions of the Amplitude user who approved the grant. Request the narrowest scope that covers the task.\n\nFor EU data residency, substitute `https://mcp.eu.amplitude.com`.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://mcp.amplitude.com/authorize",
+            "tokenUrl": "https://mcp.amplitude.com/token",
+            "refreshUrl": "https://mcp.amplitude.com/token",
+            "scopes": {
+              "mcp:read": "Read charts, dashboards, cohorts, experiments, feature flags, events, properties, and session replays.",
+              "mcp:write": "Create and modify dashboards, notebooks, experiments, cohorts, and metrics.",
+              "offline_access": "Issue a refresh token so the agent can act after the user closes the browser. Omit for one-shot interactive tasks."
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "CohortExportRequest": {
+        "type": "object",
+        "required": [
+          "request_id",
+          "cohort_id"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string"
+          },
+          "cohort_id": {
+            "type": "string"
+          }
+        }
+      },
+      "CohortExportStatus": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CohortExportRequest"
+          }
+        ],
+        "type": "object",
+        "required": [
+          "async_status"
+        ],
+        "properties": {
+          "async_status": {
+            "type": "string",
+            "enum": [
+              "JOB INPROGRESS",
+              "JOB COMPLETED"
+            ]
+          }
+        }
+      },
+      "DsarRequest": {
+        "type": "object",
+        "required": [
+          "startDate",
+          "endDate"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "userId"
+            ]
+          },
+          {
+            "required": [
+              "amplitudeId"
+            ]
+          }
+        ],
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "amplitudeId": {
+            "type": "integer"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "DsarAccepted": {
+        "type": "object",
+        "required": [
+          "requestId"
+        ],
+        "properties": {
+          "requestId": {
+            "type": "integer"
+          }
+        }
+      },
+      "DsarStatus": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "integer"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "amplitudeId": {
+            "type": "integer"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "staging",
+              "submitted",
+              "done",
+              "failed"
+            ]
+          },
+          "failReason": {
+            "type": "string"
+          },
+          "urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "expires": {
+            "type": "string",
+            "description": "Expiry date as supplied by the API."
+          }
+        }
+      },
+      "UploadRequestBody": {
+        "type": "object",
+        "required": [
+          "api_key",
+          "events"
+        ],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "description": "Amplitude project API key."
+          },
+          "events": {
+            "type": "array",
+            "description": "Events to upload.",
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            }
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "min_id_length": {
+                "type": "integer",
+                "description": "Overrides the default minimum length of 5 for `user_id` and `device_id`."
+              }
+            }
+          }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "description": "One of `user_id` or `device_id` is required, in addition to `event_type`.",
+        "required": [
+          "event_type"
+        ],
+        "properties": {
+          "event_type": {
+            "type": "string",
+            "description": "Unique identifier for the event. `$identify` and `$groupidentify` are reserved for identification."
+          },
+          "user_id": {
+            "type": "string",
+            "description": "ID for the user. Minimum 5 characters unless overridden with `min_id_length`.",
+            "minLength": 5
+          },
+          "device_id": {
+            "type": "string",
+            "description": "Device-specific identifier."
+          },
+          "time": {
+            "type": "integer",
+            "description": "Event timestamp in milliseconds since epoch. Defaults to upload time."
+          },
+          "event_properties": {
+            "type": "object",
+            "description": "Data sent along with the event. Max depth 40."
+          },
+          "user_properties": {
+            "type": "object",
+            "description": "Data tied to the user. Supports `$set`, `$setOnce`, `$add`, `$append`, and `$unset` when `event_type` is `$identify`."
+          },
+          "groups": {
+            "type": "object",
+            "description": "Event-level groups. Requires the Accounts add-on. Up to 5 group types and 10 group values per event."
+          },
+          "group_properties": {
+            "type": "object",
+            "description": "Properties tied to the groups in `groups`. Applies when `event_type` is `$groupidentify`."
+          },
+          "insert_id": {
+            "type": "string",
+            "description": "Idempotency key for this event. Amplitude discards an event whose `insert_id` matches one already received for the same `device_id` within the last 7 days. Generate it before the first send — deterministically from the event, or as a UUID stored with it — and reuse the same value on every retry. Generating a fresh one per attempt defeats deduplication entirely."
+          },
+          "session_id": {
+            "type": "integer",
+            "description": "Session start time in milliseconds since epoch. `-1` means no session."
+          },
+          "event_id": {
+            "type": "integer",
+            "description": "Incrementing counter that distinguishes events with the same user and timestamp."
+          },
+          "app_version": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "os_name": {
+            "type": "string"
+          },
+          "os_version": {
+            "type": "string"
+          },
+          "device_brand": {
+            "type": "string"
+          },
+          "device_manufacturer": {
+            "type": "string"
+          },
+          "device_model": {
+            "type": "string"
+          },
+          "carrier": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "dma": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "location_lat": {
+            "type": "number"
+          },
+          "location_lng": {
+            "type": "number"
+          },
+          "ip": {
+            "type": "string",
+            "description": "IP address of the user. Use `$remote` to use the request IP."
+          },
+          "user_agent": {
+            "type": "string",
+            "description": "Unparsed user agent string, which Amplitude parses into user properties."
+          },
+          "price": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "revenue": {
+            "type": "number",
+            "description": "Revenue amount. When price and quantity are both sent, revenue is price × quantity."
+          },
+          "productId": {
+            "type": "string"
+          },
+          "revenueType": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Three-character uppercase ISO 4217 code."
+          },
+          "idfa": {
+            "type": "string"
+          },
+          "idfv": {
+            "type": "string"
+          },
+          "adid": {
+            "type": "string"
+          },
+          "android_id": {
+            "type": "string"
+          },
+          "android_app_set_id": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "object",
+            "description": "Tracking plan metadata.",
+            "properties": {
+              "branch": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "UploadSuccess": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "const": 200
+          },
+          "events_ingested": {
+            "type": "integer",
+            "description": "Number of events ingested from the request."
+          },
+          "payload_size_bytes": {
+            "type": "integer",
+            "description": "Size of the upload payload in bytes."
+          },
+          "server_upload_time": {
+            "type": "integer",
+            "description": "Milliseconds since epoch when Amplitude accepted the request."
+          }
+        }
+      },
+      "SiteContentError": {
+        "type": "object",
+        "description": "Error response from the amplitude.com site content endpoints. Fields follow RFC 9457 problem details, extended with `code` and `hint`. Served as `application/json`.",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "detail",
+          "hint",
+          "documentation_url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI identifying the problem type."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short, human-readable summary of the problem type."
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code, repeated in the body."
+          },
+          "code": {
+            "type": "string",
+            "description": "Stable machine-readable identifier. Branch on this rather than on `title` or `detail`, which may be reworded.",
+            "enum": [
+              "missing_parameter",
+              "page_not_found",
+              "loop_detected",
+              "rendering_failed"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "description": "What went wrong with this specific request."
+          },
+          "hint": {
+            "type": "string",
+            "description": "How to resolve it — whether to fix the request, look elsewhere, or retry."
+          },
+          "documentation_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "instance": {
+            "type": "string",
+            "description": "Path of the request that failed, when known."
+          }
+        }
+      },
+      "ApiError": {
+        "type": [
+          "object",
+          "string"
+        ],
+        "description": "Shared description of existing error bodies, not a new wire envelope. JSON APIs may return optional code/error fields or an errors array; other endpoints return text or Markdown. Fields are optional and clients must use the HTTP status and Content-Type. Endpoint-specific details may be present.",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code, repeated in the body."
+          },
+          "error": {
+            "type": "string",
+            "description": "Human-readable error description.",
+            "examples": [
+              "Invalid request path",
+              "Missing request body",
+              "Invalid JSON request body",
+              "Request missing required field",
+              "Invalid event JSON",
+              "Invalid API key",
+              "Invalid field values on some events"
+            ]
+          },
+          "missing_field": {
+            "type": "string",
+            "description": "Request-level required field that is missing."
+          },
+          "events_with_invalid_fields": {
+            "type": "object",
+            "description": "Maps field names to the indexes of the events that failed validation."
+          },
+          "events_with_missing_fields": {
+            "type": "object",
+            "description": "Maps field names to the indexes of the events missing them."
+          },
+          "eps_threshold": {
+            "type": "integer",
+            "description": "Current events-per-second threshold for the project."
+          },
+          "throttled_devices": {
+            "type": "object",
+            "description": "Maps device IDs to their current events-per-second rate."
+          },
+          "throttled_events": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Indexes of events that were throttled."
+          },
+          "silenced_devices": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Device IDs Amplitude has silenced."
+          },
+          "silenced_events": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Indexes of events whose device was silenced."
+          },
+          "exceeded_daily_quota_devices": {
+            "type": "object",
+            "description": "Maps device or user IDs to their daily event count, for those over quota."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            },
+            "description": "Taxonomy API error details."
+          }
+        },
+        "additionalProperties": true
+      },
+      "IngestionError": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApiError"
+          }
+        ],
+        "type": "object",
+        "description": "Object-form ingestion error. ApiError is the shared response model."
+      }
+    },
+    "responses": {
+      "DsarRateLimited": {
+        "description": "DSAR cost budget exceeded. POST costs 8, GET costs 1; all endpoints share 14,400 cost/hour. Reduce polling frequency before retrying.",
+        "content": {
+          "*/*": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "IngestionBadRequest": {
+        "description": "Invalid upload request: malformed JSON, missing required fields, invalid field values, or silenced devices.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            },
+            "example": {
+              "code": 400,
+              "error": "Request missing required field",
+              "missing_field": "api_key",
+              "events_with_missing_fields": {
+                "event_type": [
+                  3
+                ]
+              }
+            }
+          }
+        }
+      },
+      "IngestionForbidden": {
+        "description": "Blocked by Amplitude’s web application firewall, or sent from a sanctioned region.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            },
+            "example": {
+              "code": 403,
+              "error": "Forbidden"
+            }
+          }
+        }
+      },
+      "IngestionPayloadTooLarge": {
+        "description": "Payload exceeds 1 MB. Split the events array across multiple requests.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            },
+            "example": {
+              "code": 413,
+              "error": "Payload too large"
+            }
+          }
+        }
+      },
+      "IngestionRateLimited": {
+        "description": "Too many requests for a user or device. Pause sending for that user or device for 30 seconds, then retry until the 429 clears.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            },
+            "example": {
+              "code": 429,
+              "error": "Too many requests for some devices and users"
+            }
+          }
+        }
+      },
+      "IngestionServerError": {
+        "description": "Server error. Retry the request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "SiteContentBadRequest": {
+        "description": "No page path was supplied.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SiteContentError"
+            },
+            "example": {
+              "type": "https://amplitude.com/errors/missing_parameter",
+              "title": "Missing required parameter",
+              "status": 400,
+              "code": "missing_parameter",
+              "detail": "No page path was supplied. Append .md to a page path, for example /pricing.md.",
+              "hint": "Request a page path, for example https://amplitude.com/pricing.md.",
+              "documentation_url": "https://amplitude.com/openapi.json"
+            }
+          }
+        }
+      },
+      "SiteContentServerError": {
+        "description": "The Markdown rendering could not be generated. Retryable.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SiteContentError"
+            },
+            "example": {
+              "type": "https://amplitude.com/errors/rendering_failed",
+              "title": "Markdown rendering failed",
+              "status": 500,
+              "code": "rendering_failed",
+              "detail": "The Markdown rendering of /pricing could not be generated.",
+              "hint": "Retry the request. If it keeps failing, fetch the page as HTML without the .md suffix.",
+              "documentation_url": "https://amplitude.com/openapi.json",
+              "instance": "/pricing"
+            }
+          }
+        }
+      },
+      "AnalyticsBadRequest": {
+        "description": "Invalid request. Check that JSON query parameters are well formed and that special characters are URL encoded.",
+        "content": {
+          "*/*": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "AnalyticsUnauthorized": {
+        "description": "Missing or invalid credentials. Send HTTP Basic auth with the project API key as the username and the secret key as the password.",
+        "content": {
+          "*/*": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      },
+      "AnalyticsRateLimited": {
+        "description": "Concurrent or hourly rate limit exceeded for the project. The response identifies which limit was hit. Up to 5 concurrent requests are allowed across Amplitude REST endpoints.",
+        "content": {
+          "*/*": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiError"
+            }
+          }
+        }
+      }
+    }
+  }
+}

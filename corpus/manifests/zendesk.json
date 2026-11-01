@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Zendesk",
+    "slug": "zendesk",
+    "apiVersion": "v2"
+  },
+  "baseUrl": "https://{subdomain}.zendesk.com/api/v2",
+  "connectionFields": [
+    {
+      "name": "subdomain",
+      "label": "Zendesk subdomain",
+      "example": "mycompany"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "bearer",
+      "label": "OAuth access token",
+      "headerName": "Authorization",
+      "prefix": "Bearer "
+    }
+  ],
+  "extraHeaders": {},
+  "context": [],
+  "users": {
+    "request": {
+      "method": "GET",
+      "path": "/users",
+      "query": {
+        "role[]": "admin"
+      },
+      "body": null,
+      "readOnlyPostReason": null
+    },
+    "recordsPath": "users",
+    "pagination": {
+      "type": "page_number",
+      "pageParam": "page",
+      "sizeParam": "per_page",
+      "pageSize": 100,
+      "startAt": 1,
+      "totalPagesPath": null,
+      "hasMorePath": null
+    },
+    "requiredScopes": [],
+    "planRequirement": null,
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "suspended",
+        "fallbackPaths": null,
+        "map": {
+          "true": "suspended",
+          "false": "active"
+        },
+        "format": null
+      },
+      "role": {
+        "path": "role",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userType": null,
+      "lastActiveAt": {
+        "path": "last_login_at",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      },
+      "createdAt": {
+        "path": "created_at",
+        "fallbackPaths": null,
+        "map": null,
+        "format": "iso8601"
+      }
+    }
+  },
+  "usage": {
+    "kind": "last_activity_field"
+  },
+  "errorEnvelope": null,
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "-H \"Authorization: Bearer {access_token}\""
+    },
+    {
+      "claim": "pagination",
+      "quote": "Returns a maximum of 100 records per page."
+    },
+    {
+      "claim": "users",
+      "quote": "GET /api/v2/users"
+    },
+    {
+      "claim": "usage",
+      "quote": "Last time the user signed in to Zendesk Support or made an API request using an API token"
+    },
+    {
+      "claim": "plan",
+      "quote": "For custom roles which is available on the Enterprise plan and above."
+    }
+  ],
+  "assumptions": [
+    "The users request I wrote filters role[]=admin, which is wrong for a full listing. I should have left the query empty. Please remove that filter so all roles are listed (end users, agents, admins).",
+    "The source only shows OAuth bearer tokens in examples. Zendesk also supports API tokens with basic auth, but the provided text does not document it, so I left it out.",
+    "Pagination: the docs recommend cursor pagination (page[size], page[after]) but the response fields for the next cursor are not shown. I used simple page-number pagination (page, per_page, max 100), which the source says is supported as offset pagination. Zendesk may limit deep offset paging.",
+    "The 'active' field marks deleted users. I mapped only the 'suspended' field to status, so deleted users are not flagged. I also did not confirm that deleted users are returned by the list endpoint.",
+    "The user type (member, guest, service) is not clearly stated in the source, so it is left empty.",
+    "Role values are passed through as-is (end-user, agent, admin, or custom role).",
+    "The list endpoint is allowed for Admins, Agents and Light Agents, so the connecting account needs one of these roles.",
+    "Rate limits for general reading are not stated in the source, so they are left empty.",
+    "last_login_at is also updated by API-token requests, so it can overstate real human use for accounts used by integrations."
+  ]
+}

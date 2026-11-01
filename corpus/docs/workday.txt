@@ -1,0 +1,64 @@
+Workday Documentation 
+ Skip to main content 
+ Let's find what you're looking for
+ Your one-stop shop for Workday Documentation
+ Latest News
+ 2026R2 Feature Release Review Webinars 
+ Feature Release Review webinars showcase new 2026R2 functionality across more than 30 product areas. Recorded sessions are available  here .
+ New Course Manuals
+ Workday Documentation now hosts official Workday Education Course Manuals . You can access in-depth, self-service references on how to use Workday products with examples, key concepts, and screenshots.
+ Public Access to the Administrator Guide
+ Anyone in need of help can now access the Administrator Guide and other Workday documentation on doc.workday.com without a login. See more details here .
+ Workday Content Crew 
+ View release prep resources, see what Workday Documentation events are coming, and collaborate with your peers about how you use content to help you adopt Workday features.
+ Quick Links
+ Workday Documentation Announcements 
+ Get Started with Workday Documentation 
+ Guides 
+ Release Center 
+ Glossary 
+ Workday Feature Descriptions 
+ See What’s Changed in Guides 
+ Legal Notice 
+ Login Help 
+ Workday Success Plans 
+ How-to Videos
+ Get the most out of Workday Documentation. Note: Videos are not translated.
+
+[Page: /user-guide/en-us/workday-documentation-basics/machine-translation-disclaimer.html]
+Translation Disclaimer 
+ Skip to main content 
+ Workday User Guide
+ <!-- Up -->
+ 0" class="tocforward"> 
+ <!-- 0">Down -->
+ Last Updated: 2026-09-18
+ Download PDF 
+ Translation Disclaimer 
+ Translation Disclaimer
+ The Administrator Guide, certain Workday sites, and the user interface for certain products might be displayed in languages other than the default English version. These translations might be provided through AI and machine translation. Content generated through machine translation might contain inaccuracies. The English default version remains the controlling version. All warranties related to translations, including accuracy and reliability, are hereby expressly disclaimed.
+ Talk to Us About Workday Documentation 
+ Was this helpful? 
+ Yes 
+ No 
+ What needs our attention? 
+ Accurate 
+ Answers my question 
+ Easy to find 
+ Easy to understand 
+ Helps me complete my task 
+ Complete with details 
+ What needs our attention? 
+ Not accurate 
+ Doesn't answer my question 
+ Not easy to find 
+ Not easy to understand 
+ Doesn't help me complete my task 
+ Incomplete or lacks detail 
+ Please tell us about the task you're doing or share additional details. 
+ Email 
+ Full Name 
+ Workday will use your name and email to provide you responses to your feedback. Your information will be handled in accordance with our Privacy Statement .
+ Send Feedback 
+ Thank you for your feedback
+ This content is not part of the Workday Administrator Guide.

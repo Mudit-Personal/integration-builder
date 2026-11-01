@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Shopify",
+    "slug": "shopify",
+    "apiVersion": "2026-10"
+  },
+  "baseUrl": "https://{subdomain}.myshopify.com",
+  "connectionFields": [
+    {
+      "name": "subdomain",
+      "label": "Shopify store subdomain (the part before .myshopify.com)",
+      "example": "your-store"
+    }
+  ],
+  "authMethods": [
+    {
+      "type": "api_key",
+      "label": "Admin API access token",
+      "in": "header",
+      "name": "X-Shopify-Access-Token",
+      "prefix": ""
+    }
+  ],
+  "extraHeaders": {
+    "Content-Type": "application/json"
+  },
+  "context": [],
+  "users": {
+    "request": {
+      "method": "POST",
+      "path": "/admin/api/2026-10/graphql.json",
+      "query": {},
+      "body": {
+        "query": "query ($first: Int!, $cursor: String) { staffMembers(first: $first, after: $cursor) { nodes { id email name firstName lastName active accountType isShopOwner exists } pageInfo { hasNextPage endCursor } } }"
+      },
+      "readOnlyPostReason": "Shopify's GraphQL Admin API only accepts POST requests; this is a read-only query with no mutation."
+    },
+    "recordsPath": "data.staffMembers.nodes",
+    "pagination": {
+      "type": "cursor",
+      "cursorPath": "data.staffMembers.pageInfo.endCursor",
+      "cursorParam": "cursor",
+      "cursorIn": "graphql_variable",
+      "hasMorePath": "data.staffMembers.pageInfo.hasNextPage",
+      "sizeParam": "first",
+      "pageSize": 250
+    },
+    "requiredScopes": [
+      "read_users"
+    ],
+    "planRequirement": "Shopify Plus or Advanced",
+    "fields": {
+      "externalId": {
+        "path": "id",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "email": {
+        "path": "email",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "displayName": {
+        "path": "name",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "status": {
+        "path": "active",
+        "fallbackPaths": null,
+        "map": {
+          "true": "active",
+          "false": "inactive"
+        },
+        "format": null
+      },
+      "role": {
+        "path": "accountType",
+        "fallbackPaths": null,
+        "map": null,
+        "format": null
+      },
+      "userType": {
+        "path": "accountType",
+        "fallbackPaths": null,
+        "map": {
+          "regular": "member",
+          "restricted": "member",
+          "saml": "member",
+          "invited": "member",
+          "requested": "member",
+          "collaborator": "guest",
+          "collaborator_team_member": "guest"
+        },
+        "format": null
+      },
+      "lastActiveAt": null,
+      "createdAt": null
+    }
+  },
+  "usage": {
+    "kind": "unavailable",
+    "reason": "The staff member record has no last-login or last-active field, and the supplied documentation describes no audit log or per-user activity report for staff."
+  },
+  "errorEnvelope": {
+    "successPath": "errors",
+    "successValue": "",
+    "messagePath": "errors[0].message",
+    "rateLimitedCodes": [
+      "THROTTLED"
+    ],
+    "authCodes": [
+      "ACCESS_DENIED"
+    ]
+  },
+  "rateLimit": {
+    "maxRequestsPerMinute": null,
+    "remainingHeader": null,
+    "resetHeader": null,
+    "resetFormat": null
+  },
+  "evidence": [
+    {
+      "claim": "auth",
+      "quote": "Every GraphQL Admin API request carries an access token in the X-Shopify-Access-Token header."
+    },
+    {
+      "claim": "pagination",
+      "quote": "You can retrieve up to a maximum of 250 resources."
+    },
+    {
+      "claim": "users",
+      "quote": "Returns a paginated list of Staff Member"
+    },
+    {
+      "claim": "plan",
+      "quote": "Requires read _users access scope. Also: The app must be a finance embedded app or installed on a Shopify Plus or Advanced store."
+    },
+    {
+      "claim": "rate_limit",
+      "quote": "The GraphQL Admin API is rate-limited using calculated query costs, measured in cost points."
+    },
+    {
+      "claim": "errors",
+      "quote": "THROTTLED The client has exceeded the rate limit"
+    }
+  ],
+  "assumptions": [
+    "The errorEnvelope is a best guess: Shopify returns an 'errors' array in a 200 response, and I couldn't express 'errors is absent' exactly, so the runtime may need to treat a non-empty errors field as failure.",
+    "Only the access token header is documented for server access. Shopify's OAuth and client-credentials token grants are mentioned but not detailed in the source, so they are not listed.",
+    "The staff list needs the read_users scope and a Shopify Plus or Advanced store (or a finance embedded app). Shopify Support must enable the scope for the app.",
+    "The source shows no last-active or login-time field for staff, and no audit log, so usage is marked unavailable.",
+    "The staff record has no created-at field in the source, so createdAt is left empty.",
+    "The account type 'invited' and 'requested' are treated as members; their status is based on the 'active' flag only. The mapping of account types to member or guest is my judgment.",
+    "The GraphQL cursor variable name ($cursor) and page-size variable ($first) are chosen by me in the query. The page size of 250 is the documented maximum.",
+    "Role is set to the raw accountType because the source has no separate role field.",
+    "The API version 2026-10 is the one labeled latest in the source and is hardcoded in the path; it will need updating when Shopify retires it.",
+    "The rate limit is point-based (cost points), not requests per minute, so no per-minute figure is given."
+  ]
+}
