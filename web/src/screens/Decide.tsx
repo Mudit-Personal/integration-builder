@@ -42,12 +42,13 @@ function DataAccess({ s, dispatch, pack }: Pick<ScreenProps, 's' | 'dispatch' | 
 
 function QuestionBody({ q, s, dispatch }: { q: Question; s: Flow; dispatch: ScreenProps['dispatch'] }) {
   const answered = !!s.answers[q.id];
+  const viewer = s.role === 'Viewer';
   return <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 }}>
     <span>{q.text}</span>
-    <ToggleGroup options={q.options} value={answered ? q.options[q.current] : undefined} onChange={v => dispatch({ type: 'decide', patch: q.patch(q.options.indexOf(v)), answer: [q.id, 'chosen'] })} />
+    <ToggleGroup options={q.options} value={answered ? q.options[q.current] : undefined} disabled={viewer} onChange={v => dispatch({ type: 'decide', patch: q.patch(q.options.indexOf(v)), answer: [q.id, 'chosen'] })} />
     {!answered ? <div style={{ display: 'flex', gap: 12, alignItems: 'baseline', flexWrap: 'wrap', fontSize: 14 }}>
       <span style={{ color: 'var(--ink-2)' }}>Recommended: <b style={{ fontWeight: 500, color: 'var(--ink)' }}>{q.options[q.recommended]}</b>. {q.why}</span>
-      <TextLink onClick={() => dispatch({ type: 'decide', patch: q.patch(q.recommended), answer: [q.id, 'recommended'] })}>Use recommended</TextLink>
+      {viewer ? null : <TextLink onClick={() => dispatch({ type: 'decide', patch: q.patch(q.recommended), answer: [q.id, 'recommended'] })}>Use recommended</TextLink>}
     </div> : null}
   </div>;
 }
@@ -75,11 +76,11 @@ export function Decide({ s, dispatch, go, pack, name }: ScreenProps) {
           <span style={{ fontWeight: 500 }}>{r.title}</span>
           {r.question ? <QuestionBody q={r.question} s={s} dispatch={dispatch} /> : <span style={{ color: 'var(--ink-2)', minWidth: 0, overflowWrap: 'anywhere' }}>{plain ? r.plain : r.value}</span>}
           <Label tag={TAGS[answer ?? r.source]} />
-          {toOpen ? <TextLink style={{ justifySelf: 'end' }} onClick={() => setOpen(open === key ? null : key)}>{open === key ? 'Close' : r.choice ? 'Change' : 'Why'}</TextLink> : <span />}
+          {toOpen ? <TextLink style={{ justifySelf: 'end' }} onClick={() => setOpen(open === key ? null : key)}>{open === key ? 'Close' : r.choice && !viewer ? 'Change' : r.choice ? 'Options' : 'Why'}</TextLink> : <span />}
         </div>
         {open === key ? <div className="dopen">
           {r.why ? <span style={{ font: '400 14px/1.5 var(--font-mono)', color: 'var(--ink-2)', maxWidth: 560, overflowWrap: 'anywhere' }}>Docs: {r.why}</span> : null}
-          {r.choice ? <ToggleGroup options={r.choice.options} value={r.choice.current} onChange={v => dispatch({ type: 'decide', patch: r.choice!.patch(v) })} /> : null}
+          {r.choice ? <ToggleGroup options={r.choice.options} value={r.choice.current} disabled={viewer} onChange={v => dispatch({ type: 'decide', patch: r.choice!.patch(v) })} /> : null}
         </div> : null}
       </Fragment>;
     });

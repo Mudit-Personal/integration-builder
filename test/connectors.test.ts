@@ -196,3 +196,10 @@ test('the sample workspace never comes back once the list is stored, even empty'
   saveConnectors([]);
   assert.deepEqual(loadConnectors(), []);
 });
+
+test('a viewer cannot change a decision, so a ready connector stays ready', () => {
+  const ready = atCode(started());
+  const viewing = play(ready, { type: 'set', patch: { role: 'Viewer' } }, changeDecision);
+  assert.deepEqual(viewing.decisions, ready.decisions);
+  assert.equal(saved(viewing)[0].status, 'ready');
+});

@@ -32,10 +32,10 @@ export function TextLink({ onClick, children, style }: { onClick: () => void; ch
   return <a href="#" className="tap" onClick={e => { e.preventDefault(); onClick(); }} style={{ fontSize: 14, whiteSpace: 'nowrap', ...style }}>{children}</a>;
 }
 
-export function ToggleGroup({ options, value, onChange, style }: { options: string[]; value?: string; onChange?: (value: string) => void; style?: CSSProperties }) {
+export function ToggleGroup({ options, value, onChange, disabled = false, style }: { options: string[]; value?: string; onChange?: (value: string) => void; disabled?: boolean; style?: CSSProperties }) {
   return <div role="radiogroup" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, ...style }}>{options.map(o => {
     const on = o === value;
-    return <button key={o} role="radio" aria-checked={on} onClick={() => onChange?.(o)} style={{ height: 48, padding: '0 17px', whiteSpace: 'nowrap', font: 'var(--fw-regular) var(--fs-body)/1 var(--font-sans)', borderRadius: 0, cursor: 'pointer', border: '1px solid var(--border-strong)', background: on ? 'var(--action-selected)' : 'transparent', color: on ? 'var(--text-on-accent)' : 'var(--text-strong)' }}>{o}</button>;
+    return <button key={o} role="radio" aria-checked={on} disabled={disabled} onClick={() => onChange?.(o)} style={{ height: 48, padding: '0 17px', whiteSpace: 'nowrap', font: 'var(--fw-regular) var(--fs-body)/1 var(--font-sans)', borderRadius: 0, cursor: disabled ? 'default' : 'pointer', opacity: disabled && !on ? 0.55 : 1, border: '1px solid var(--border-strong)', background: on ? 'var(--action-selected)' : 'transparent', color: on ? 'var(--text-on-accent)' : 'var(--text-strong)' }}>{o}</button>;
   })}</div>;
 }
 

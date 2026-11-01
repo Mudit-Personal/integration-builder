@@ -87,7 +87,8 @@ export const reducer = (s: Flow, a: Action): Flow => {
     case 'read-stopped': return a.read.kind === 'denied' ? { ...s, step: SOURCE, maxStep: SOURCE, read: a.read } : { ...s, read: a.read };
     case 'read-clear': return { ...s, read: NOT_READING, maxStep: SOURCE };
     // A changed decision invalidates the checks, so Code cannot be reached on stale results.
-    case 'decide': return {
+    // Viewers review decisions but never change them, whatever control fired.
+    case 'decide': if (s.role === 'Viewer') return s; return {
       ...s, decisions: { ...s.decisions, ...a.patch }, checks: IDLE, result: null, codeReached: false, maxStep: Math.min(s.maxStep, DECIDE),
       answers: a.answer ? { ...s.answers, [a.answer[0]]: a.answer[1] } : s.answers,
     };

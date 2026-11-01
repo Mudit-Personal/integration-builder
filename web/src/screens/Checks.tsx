@@ -59,9 +59,11 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
   const sample = maskedSample(m);
   const survived = done && !failed ? HIGHLIGHTS.map(id => results.find(r => r.id === id && r.status === 'pass')).filter(r => !!r).slice(0, 4) : [];
   const folded = survived.length > 0 && !showAll;
+  // A Viewer can't run checks, but still sees the verdict a Builder left on this exact build.
+  const verdict = viewer && run.kind === 'idle' && s.result?.hash === hashManifest(m) && !s.result.failed ? s.result : null;
 
-  const title = !done ? (run.kind === 'idle' ? 'Checks need a Builder' : 'Running checks…') : failed ? `${failed} ${failed === 1 ? 'check' : 'checks'} failed` : 'All checks passed';
-  const lead = !done ? (run.kind === 'idle' ? "Viewers can't run checks. Switch View as to run them." : replay ? 'Replaying stored results.' : `Running the connector against a simulated ${name} built from its docs. Nothing leaves your browser.`)
+  const title = verdict ? 'All checks passed' : !done ? (run.kind === 'idle' ? 'Checks need a Builder' : 'Running checks…') : failed ? `${failed} ${failed === 1 ? 'check' : 'checks'} failed` : 'All checks passed';
+  const lead = verdict ? `${verdict.passed} checks passed when a Builder last ran them on this build. Viewers can see the result but can't run checks.` : !done ? (run.kind === 'idle' ? "Viewers can't run checks. Switch View as to run them." : replay ? 'Replaying stored results.' : `Running the connector against a simulated ${name} built from its docs. Nothing leaves your browser.`)
     : failed ? 'Generate stays off until this is fixed. Nothing was written.'
     : `${passed} checks passed against a simulated ${name} built from its docs. Nothing was written. The real ${name} API was not called.`;
 
@@ -85,7 +87,7 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
         <Mono>Passed · {r.requests} simulated requests</Mono>
       </div>)}</div>
       <div style={{ marginTop: 24 }}><Button variant="link" onClick={() => setShowAll(v => !v)}>{showAll ? 'Hide the full list' : `Show every check, ${passed} passed`}</Button></div></> : null}
-    {folded ? null : <div className="checks-grid">
+    {folded || verdict ? null : <div className="checks-grid">
       {GROUPS.map((g, gi) => <div key={g.label}><SectionHeading size="label" style={{ marginTop: 16 }}>{g.label}</SectionHeading>
         {SCENARIOS.filter(x => g.categories.includes(x.category)).map(x => <CheckItem key={x.id} title={x.title} {...scenarioRow(results[SCENARIOS.indexOf(x)], replay)} />)}
         {g.categories.includes('safety') ? fixed.map(c => <CheckItem key={c.id} title={c.title} description={run.kind === 'idle' ? 'Waiting' : c.detail} meta={run.kind === 'idle' ? '' : STATIC_META[c.status][0]} status={run.kind === 'idle' ? 'pending' : STATIC_META[c.status][1]} />) : null}
