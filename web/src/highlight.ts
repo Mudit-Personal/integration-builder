@@ -20,7 +20,7 @@ const RULES: Record<string, Record<string, string>> = {
   },
   md: {
     keyword: /^#{1,6} .*$/.source,
-    string: /`[^`\n]*`/.source,
+    string: /```[\s\S]*?```|`[^`\n]*`/.source,
   },
 };
 

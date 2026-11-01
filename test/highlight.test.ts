@@ -27,6 +27,7 @@ test('Markdown marks headings and inline code', () => {
   const lines = highlight('# Title\n\nKeep `manifest.json` here.', 'README.md');
   assert.deepEqual(kinds(lines, 'keyword'), ['# Title']);
   assert.deepEqual(kinds(lines, 'string'), ['`manifest.json`']);
+  assert.deepEqual(kinds(highlight('```ts\nrun();\n```', 'README.md'), 'string'), ['```ts', 'run();', '```']);
 });
 
 test('an unknown file type stays plain, with blank lines kept', () => {

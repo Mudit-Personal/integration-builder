@@ -2,8 +2,8 @@ import { strToU8, zipSync } from 'fflate';
 import { useMemo, useState } from 'react';
 import type { ScreenProps } from '../App.tsx';
 import { applyDecisions } from '../decisions.ts';
-import { Button, Callout, P, CodeBlock, Marker, Mono, PageTitle, Push, SectionHeading, SplitLayout, StatusLabel, Tabs, ToggleGroup } from '../ds.tsx';
-import { buildFiles, buildPrompt, buildSummary, FOLDER, usageSnippet, type BundleFile } from '../handover.ts';
+import { Button, Callout, CodeBlock, Marker, Mono, PageTitle, Push, SectionHeading, SplitLayout, StatusLabel, Tabs, ToggleGroup } from '../ds.tsx';
+import { buildFiles, buildPrompt, buildSummary, FOLDER, type BundleFile } from '../handover.ts';
 import { JOURNEYS } from '../journey.ts';
 import { ENGINE_SOURCES } from '../sources.ts';
 import { CHECKS, RUN } from '../state.ts';
@@ -48,7 +48,7 @@ export function Code({ s, go, pack, name }: ScreenProps) {
       setNote("Your browser didn't allow copying. Select the summary and copy it by hand.");
     }
   };
-  const snippet = usageSnippet(m, d, `./${m.app.slug}.connector.ts`);
+  const showingFiles = mode !== PROMPT && mode !== SUMMARY;
   const on = d.deliverables;
   const inc: [string, string][] = ([
     ['API client', on.client, `${m.app.slug}.connector.ts`], ['Auth setup', on.auth, m.authMethods[0].label],
@@ -57,11 +57,9 @@ export function Code({ s, go, pack, name }: ScreenProps) {
     ['Logging', on.logging, d.logLevel], ['Response caching', on.caching, `${d.cacheTtl} min`],
   ] as const).map(([label, kept, value]) => [label, kept ? value : 'Left out']);
   return <SplitLayout panel={<>
-    {mode === PROMPT || mode === SUMMARY ? <><SectionHeading>How to use it</SectionHeading>
-      {(prompted ? ['Copy the summary and send it to your developer, in a ticket or a message.', 'Or hand it to an AI coding tool yourself: download the files and copy the prompt from the AI tool prompt tab.', 'Before it goes live, someone runs one check with a real account.'] : ['Copy the prompt and download the files.', TOOLS[tool], 'Review the changes your tool makes, like any pull request.']).map((t, i) => <div key={i} style={{ display: 'flex', gap: 24, padding: '14px 0', borderBottom: 'var(--rule-hair)' }}><Mono>{i + 1}</Mono><span>{t}</span></div>)}</>
-      : snippet ? <><SectionHeading>Use it in your app</SectionHeading><CodeBlock code={snippet} name="usage.ts" style={{ marginTop: 16 }} /></>
-        : <><SectionHeading>Use it in your app</SectionHeading><P>You left out the API client. Build yours from manifest.json; it holds every request, field and limit.</P></>}
-    {prompted ? null : <><SectionHeading size="label" style={{ marginTop: 24 }}>What's in it</SectionHeading>
+    {showingFiles ? null : <><SectionHeading>How to use it</SectionHeading>
+      {(prompted ? ['Copy the summary and send it to your developer, in a ticket or a message.', 'Or hand it to an AI coding tool yourself: download the files and copy the prompt from the AI tool prompt tab.', 'Before it goes live, someone runs one check with a real account.'] : ['Copy the prompt and download the files.', TOOLS[tool], 'Review the changes your tool makes, like any pull request.']).map((t, i) => <div key={i} style={{ display: 'flex', gap: 24, padding: '14px 0', borderBottom: 'var(--rule-hair)' }}><Mono>{i + 1}</Mono><span>{t}</span></div>)}</>}
+    {prompted && !showingFiles ? null : <><SectionHeading size={showingFiles ? 'title' : 'label'} style={showingFiles ? undefined : { marginTop: 24 }}>What's in it</SectionHeading>
       {inc.map(r => <div key={r[0]} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: 'var(--rule-hair)' }}><Marker tone={r[1] === 'Left out' ? 'hollow' : 'done'} /><span style={{ flex: 1 }}>{r[0]}</span><Mono>{r[1]}</Mono></div>)}</>}
     <div className="footer-row" style={{ gap: 12, marginTop: 24 }}><Button variant="link" onClick={() => go(CHECKS)}>Back</Button><Push />{mode === SUMMARY ? <Button variant="secondary" onClick={copySummary}>Copy summary</Button> : mode !== PROMPT ? <Button variant="secondary" onClick={save}>Download .zip</Button> : <Button variant="secondary" onClick={save}>Download files</Button>}<Button onClick={() => go(RUN)}>{prompted ? 'See a preview' : 'Run a sync'}</Button></div>
     {/* Below the buttons, so the one just pressed doesn't move. */}

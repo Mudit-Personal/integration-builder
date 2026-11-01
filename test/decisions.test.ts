@@ -144,6 +144,13 @@ test('each deliverable left out changes the generated code', () => {
   assert.ok(decisionRows(pack, without('pagination')).some(r => r.group === 'Pagination' && r.title === 'Left out'));
 });
 
+test('the README shows how to call the connector, unless the client is left out', () => {
+  const readme = (d: Decisions) => buildFiles(packOf(corpus[0]), d, ENGINE_SOURCES, 0).find(f => f.name === 'README.md')!.code;
+  const slug = corpus[0].app.slug;
+  assert.match(readme(DEFAULT_DECISIONS), new RegExp(`## Use it\\n\\n\`\`\`ts\\nimport \\{ \\w+ \\} from "\\./${slug}\\.connector\\.ts";`));
+  assert.doesNotMatch(readme(without('client')), /## Use it/);
+});
+
 test('the summary for a developer names the app, what is blocked and how many checks passed', () => {
   const m = makeManifest(PAGINATIONS[1], AUTHS[0]);
   const pack = packOf(m, [{ key: 'sensitive:/contacts', name: 'Contacts', path: '/contacts', sensitivity: 'sensitive' as const, note: '' }]);
