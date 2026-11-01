@@ -136,7 +136,7 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
     <AppHeader steps={s.id && !profile ? JOURNEYS[s.audience].steps : []} current={s.step} maxStep={s.maxStep} onStep={go} onHome={home} right={<>
       {s.id && !profile ? <Button variant="link" style={{ font: '400 13px/1 var(--font-mono)' }} onClick={() => leave({ type: 'reset' })}>Start over</Button> : null}
       <span className="account"><button type="button" className="account-open" aria-label={`Your profile, signed in as ${account.email}`} aria-current={profile ? 'page' : undefined} onClick={() => onProfile(true)}>
-        <span className="avatar" title={displayName(account)}>{initialsOf(account)}</span></button>
+        <span className="avatar" aria-hidden="true">{initialsOf(account)}</span><span className="account-name">{displayName(account)}</span></button>
         <Button variant="link" style={{ font: '400 13px/1 var(--font-mono)' }} onClick={onLogOut}>Log out</Button></span>
     </>} />
     {profile ? <Profile account={account} connectors={connectors && connectors.length} onAccount={onAccount} onBack={() => onProfile(false)} backLabel={s.id ? `Back to ${pack?.manifest.app.name ?? 'your connector'}` : 'Back to your connectors'} /> : null}
