@@ -138,9 +138,9 @@ test('each deliverable left out changes the generated code', () => {
   assert.match(connector(without('auth')), /skipAuth: true/);
   assert.doesNotMatch(connector(without('users')), /Users = async/);
   assert.doesNotMatch(connector(without('usage')), /Usage = async/);
-  assert.match(connector(without('logging')), /"logLevel":"off"/);
-  assert.match(connector(without('errors')), /"maxRetries":0/);
-  assert.match(connector(without('pagination')), /"maxPages":1/);
+  assert.match(connector(without('logging')), /"logLevel": "off"/);
+  assert.match(connector(without('errors')), /"maxRetries": 0/);
+  assert.match(connector(without('pagination')), /"maxPages": 1/);
   assert.ok(decisionRows(pack, without('pagination')).some(r => r.group === 'Pagination' && r.title === 'Left out'));
 });
 
