@@ -8,3 +8,4 @@ web/dist/
 *.key
 *.p12
 .npmrc
+.vercel

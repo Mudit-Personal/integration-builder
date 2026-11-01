@@ -6,7 +6,7 @@
     "node": "24.x"
   },
   "scripts": {
-    "prepare": "git config core.hooksPath .githooks",
+    "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true",
     "test": "node --test test/*.test.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p web",
     "demo:packs": "node --no-warnings scripts/build-packs.ts",
