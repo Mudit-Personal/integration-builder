@@ -36,7 +36,6 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
   const [notice, setNotice] = useState<string | null>(null);
   const [pack, setPack] = useState<AppPack | null>(null);
   const [failed, setFailed] = useState(false);
-  const [code, setCode] = useState('');
   const reading = useRef<AbortController | null>(null);
   const load = () => {
     setLoadFailed(null);
@@ -91,7 +90,7 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
   };
   const go = (step: number) => {
     onProfile(false);
-    if (step !== READ || s.read.kind === 'denied') stopReading();
+    if (step !== READ) stopReading();
     dispatch({ type: 'go', step });
     window.scrollTo(0, 0);
   };
@@ -101,23 +100,19 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
     const ctrl = reading.current = new AbortController();
     dispatch({ type: 'read-start', url });
     window.scrollTo(0, 0);
-    readDocs({ url, text, code }, message => { if (!ctrl.signal.aborted) dispatch({ type: 'read-progress', message }); }, ctrl.signal)
+    readDocs({ url, text }, message => { if (!ctrl.signal.aborted) dispatch({ type: 'read-progress', message }); }, ctrl.signal)
       .catch(() => ({ kind: 'failed' as const, message: 'The connection dropped during the read. Check your network and try again.' }))
       .then(out => {
         if (ctrl.signal.aborted) return;
         if (out.kind === 'done') {
           savePack(s.id!, out.pack);
           dispatch({ type: 'read-done', pack: out.pack });
-        } else {
-          if (out.kind === 'denied') setCode('');
-          dispatch({ type: 'read-stopped', read: out });
-        }
+        } else dispatch({ type: 'read-stopped', read: out });
       });
   };
   const leave = (action: Action, message: string | null = null) => {
     onProfile(false);
     stopReading();
-    setCode('');
     setNotice(message);
     dispatch(action);
     window.scrollTo(0, 0);
@@ -144,7 +139,7 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
     {notice ? <div className="notice"><Callout>{notice}</Callout></div> : null}
     {!s.id && !connectors ? <div className="centered">{loadFailed ? <><Callout>{loadFailed}</Callout><Button variant="secondary" style={{ marginTop: 16 }} onClick={load}>Try again</Button></> : <P>Loading your workspace…</P>}</div>
       : !s.id ? <Home connectors={connectors!} onNew={() => leave({ type: 'new', id: crypto.randomUUID(), audience: lastAudience(connectors!) })} onOpen={open} onRemove={remove} />
-      : s.step === SOURCE ? <Source s={s} dispatch={dispatch} go={go} code={code} setCode={setCode} onRead={startRead} />
+      : s.step === SOURCE ? <Source s={s} dispatch={dispatch} go={go} onRead={startRead} />
       : s.step === READ && s.read.kind !== 'idle' ? <LiveReading read={s.read} url={s.url} go={go} onPaste={text => startRead(s.url, text)} />
       : pack ? <Suspense><Screen key={s.slug} s={s} dispatch={dispatch} go={go} pack={pack} name={pack.manifest.app.name} /></Suspense>
       : <div className="centered"><P>{failed ? "This app's data didn't load. Reload the page to try again." : 'Loading…'}</P></div>}

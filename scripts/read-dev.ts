@@ -1,13 +1,15 @@
 import { createServer } from 'node:http';
 import { handleApp } from '../src/app-service.ts';
 import { migrate, neonSql, pgliteSql } from '../src/db.ts';
-import { claudeCli, llmFromEnv } from '../src/llm.ts';
+import { claudeCli, codexCli, llmFromEnv } from '../src/llm.ts';
 import { handleRead } from '../src/read-service.ts';
 
-const PORT = 4321;
-const hosted = llmFromEnv();
-const using = hosted ? (process.env.OPENAI_MODEL && process.env.OPENAI_API_KEY ? `OpenAI ${process.env.OPENAI_MODEL}` : 'the Messages API') : 'the signed-in claude CLI';
-const deps = { llm: hosted ?? claudeCli(), accessCode: process.env.DEMO_ACCESS_CODE ?? 'local' };
+const PORT = Number(process.env.READ_PORT ?? 4321);
+const codex = process.env.READ_LLM === 'codex';
+const hosted = codex ? null : llmFromEnv();
+const using = codex ? 'the signed-in codex CLI'
+  : hosted ? (process.env.OPENAI_MODEL && process.env.OPENAI_API_KEY ? `OpenAI ${process.env.OPENAI_MODEL}` : 'the Messages API') : 'the signed-in claude CLI';
+const deps = { llm: codex ? codexCli() : hosted ?? claudeCli() };
 // Neon when DATABASE_URL is set, otherwise a Postgres kept in .data/ so accounts survive restarts.
 const db = (process.env.DATABASE_URL ? neonSql(process.env.DATABASE_URL) : pgliteSql('.data/pglite')).then(async sql => { await migrate(sql); return sql; });
 

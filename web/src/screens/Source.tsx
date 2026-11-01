@@ -12,9 +12,9 @@ const FEATURED = ['slack', 'github', 'jira-cloud', 'notion', 'okta', 'calendly',
 const rank = (slug: string) => (FEATURED.indexOf(slug) + 1 || FEATURED.length + 1);
 const BY_FEATURED = [...APPS].sort((a, b) => rank(a.slug) - rank(b.slug));
 
-type Props = { s: Flow; dispatch: (a: Action) => void; go: (step: number) => void; code: string; setCode: (code: string) => void; onRead: (url: string) => void };
+type Props = { s: Flow; dispatch: (a: Action) => void; go: (step: number) => void; onRead: (url: string) => void };
 
-export function Source({ s, dispatch, go, code, setCode, onRead }: Props) {
+export function Source({ s, dispatch, go, onRead }: Props) {
   const [search, setSearch] = useState('');
   const known = matchApp(APPS, s.url);
   const q = search.trim().toLowerCase();
@@ -25,7 +25,6 @@ export function Source({ s, dispatch, go, code, setCode, onRead }: Props) {
   const url = s.url.trim();
   // Already read, by us earlier or live just now. Nothing to spend.
   const ready = !!known || (!!url && s.live?.url === url);
-  const needsCode = !ready && !!url;
   const host = known?.host ?? hostFrom(s.url) ?? 'this API';
   const d = s.decisions;
   const j = JOURNEYS[s.audience];
@@ -41,7 +40,7 @@ export function Source({ s, dispatch, go, code, setCode, onRead }: Props) {
   ];
   const rows = j.deliverables === 'all' ? all : all.filter(([key]) => key === 'users' || key === 'usage');
   const nothing = !d.deliverables.users && !d.deliverables.usage;
-  return <SplitLayout footer={<><Push />{nothing ? <Mono>Pick at least Users or Usage data</Mono> : null}<Button disabled={nothing || (!ready && !(url && code))} onClick={() => (ready ? go(j.afterRead) : onRead(url))}>Read the docs</Button></>} panel={<>
+  return <SplitLayout footer={<><Push />{nothing ? <Mono>Pick at least Users or Usage data</Mono> : null}<Button disabled={nothing || (!ready && !url)} onClick={() => (ready ? go(j.afterRead) : onRead(url))}>Read the docs</Button></>} panel={<>
     <SectionHeading>What happens next</SectionHeading>
     {j.next.map((t, i) => <div key={i} style={{ display: 'flex', gap: 28, padding: '16px 0', borderBottom: 'var(--rule-hair)' }}><Mono>{i + 1}</Mono><span>{t}</span></div>)}
     <SectionHeading size="label" style={{ marginTop: 36 }}>Safe by default</SectionHeading>
@@ -51,10 +50,6 @@ export function Source({ s, dispatch, go, code, setCode, onRead }: Props) {
     <ToggleGroup options={AUDIENCES.map(a => JOURNEYS[a].label)} value={j.label} onChange={v => dispatch({ type: 'audience', audience: AUDIENCES.find(a => JOURNEYS[a].label === v)! })} />
     <div style={{ font: '400 14px/1.45 var(--font-sans)', color: 'var(--text-muted)', marginTop: 10 }}>{j.blurb}</div>
     <TextField label="API documentation link" mono value={s.url} onChange={url => dispatch({ type: 'url', url })} style={{ marginTop: 36 }} />
-    {needsCode ? <>
-      <TextField label="Access code" type="password" value={code} onChange={setCode} style={{ marginTop: 20 }} />
-      <div style={{ font: '400 14px/1.45 var(--font-sans)', color: s.read.kind === 'denied' ? 'var(--text-strong)' : 'var(--text-muted)', marginTop: 10 }}>{s.read.kind === 'denied' ? s.read.message : 'Live reading uses AI. Ask whoever shared this link for the code.'}</div>
-    </> : null}
     <TextField label="Search apps" value={search} onChange={setSearch} style={{ marginTop: 20 }} />
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
       {chips.map(a => <AppChip key={a.slug} name={a.name} icon={a.logo ? `./apps/${a.logo}` : undefined} selected={known?.slug === a.slug} onClick={() => dispatch({ type: 'pick', app: a })} />)}

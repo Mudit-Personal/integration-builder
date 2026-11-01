@@ -8113,17 +8113,17 @@ var require_sha256 = __commonJS({
       exports2.HMAC = HMAC;
       function hash2(data) {
         var h = new Hash().update(data);
-        var digest2 = h.digest();
+        var digest = h.digest();
         h.clean();
-        return digest2;
+        return digest;
       }
       exports2.hash = hash2;
       exports2["default"] = hash2;
       function hmac(key, data) {
         var h = new HMAC(key).update(data);
-        var digest2 = h.digest();
+        var digest = h.digest();
         h.clean();
-        return digest2;
+        return digest;
       }
       exports2.hmac = hmac;
       function fillBuffer(buffer, hmac2, info, counter) {
@@ -8219,13 +8219,13 @@ var require_timing_safe_equal = __commonJS({
   "node_modules/standardwebhooks/dist/timing_safe_equal.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.timingSafeEqual = timingSafeEqual2;
+    exports.timingSafeEqual = timingSafeEqual;
     function assert2(expr, msg = "") {
       if (!expr) {
         throw new Error(msg);
       }
     }
-    function timingSafeEqual2(a, b) {
+    function timingSafeEqual(a, b) {
       if (a.byteLength !== b.byteLength) {
         return false;
       }
@@ -10088,7 +10088,7 @@ async function openRegularFile(relPath, dest) {
   return handle;
 }
 async function hashFile(full) {
-  const digest2 = crypto.createHash("sha256");
+  const digest = crypto.createHash("sha256");
   const handle = await openRegularFile(path.basename(full), full);
   const buf = new Uint8Array(1024 * 1024);
   try {
@@ -10096,12 +10096,12 @@ async function hashFile(full) {
       const { bytesRead } = await handle.read(buf, 0, buf.length);
       if (bytesRead === 0)
         break;
-      digest2.update(buf.subarray(0, bytesRead));
+      digest.update(buf.subarray(0, bytesRead));
     }
   } finally {
     await handle.close();
   }
-  return digest2.digest("hex");
+  return digest.digest("hex");
 }
 async function filenamesInDir(root, under, base) {
   if (!await requireDir(under, base))
@@ -35461,9 +35461,6 @@ var llmFromEnv = () => {
   return ANTHROPIC_API_KEY ? claudeApi() : null;
 };
 
-// src/read-service.ts
-import { createHash as createHash2, timingSafeEqual } from "node:crypto";
-
 // node_modules/zod/v4/classic/external.js
 var external_exports = {};
 __export(external_exports, {
@@ -56317,8 +56314,6 @@ var readBody = (req, max = MAX_BODY) => new Promise((resolve2, reject) => {
   req.on("end", () => resolve2(size > max ? null : Buffer.concat(chunks).toString("utf8")));
   req.on("error", reject);
 });
-var digest = (s) => createHash2("sha256").update(s).digest();
-var sameCode = (a, b) => timingSafeEqual(digest(a), digest(b));
 var parse3 = (raw) => {
   try {
     const body = JSON.parse(raw);
@@ -56338,15 +56333,14 @@ var failure2 = (e, timedOut) => {
   console.error("read failed", e.name);
   return { type: "failed", code: "error", message: "Something went wrong while reading these docs. Try again in a minute." };
 };
-var handleRead = async (req, res, { llm, accessCode, deadlineMs = DEADLINE_MS }) => {
+var handleRead = async (req, res, { llm, deadlineMs = DEADLINE_MS }) => {
   if (req.method !== "POST") return json2(res, 405, "Use POST.");
-  if (!llm || !accessCode) return json2(res, 503, "Live reading is not set up on this server.");
+  if (!llm) return json2(res, 503, "Live reading is not set up on this server.");
   if (!String(req.headers["content-type"]).includes("application/json")) return json2(res, 415, "Send JSON.");
   const raw = await readBody(req);
   if (raw === null) return json2(res, 413, "That is over the 2 MB limit.");
   const body = parse3(raw);
   if (!body) return json2(res, 400, "That request could not be read.");
-  if (typeof body.code !== "string" || !sameCode(body.code, accessCode)) return json2(res, 401, "That access code is not right.");
   const gone = new AbortController();
   res.on("close", () => gone.abort());
   const deadline = AbortSignal.timeout(deadlineMs);
@@ -56381,7 +56375,7 @@ var handleRead = async (req, res, { llm, accessCode, deadlineMs = DEADLINE_MS })
 };
 
 // server/read.ts
-var deps = { llm: llmFromEnv(), accessCode: process.env.DEMO_ACCESS_CODE };
+var deps = { llm: llmFromEnv() };
 var read_default = (req, res) => handleRead(req, res, deps);
 export {
   read_default as default

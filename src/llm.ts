@@ -46,13 +46,16 @@ export const claudeCli = (model = DEFAULT_MODEL, timeoutMs = 300_000): Llm => as
   });
 };
 
+// Tools an injected prompt could use. Codex has no flag to turn every tool off at once.
+const CODEX_OFF = ['shell_tool', 'unified_exec', 'apps', 'plugins', 'browser_use', 'computer_use', 'in_app_browser', 'image_generation', 'multi_agent', 'hooks'];
+
 /**
- * Dev-only adapter over the local Codex CLI and its ChatGPT sign-in. A read-only sandbox in an empty temp folder, no user config
- * and no rules, so a prompt injected through vendor docs can't write or reach the network. Codex has no system prompt flag,
+ * Dev-only adapter over the local Codex CLI and its ChatGPT sign-in. A read-only sandbox in an empty temp folder, no user config,
+ * no rules and its tools off, so a prompt injected through vendor docs can't write or reach the network. Codex has no system prompt flag,
  * so the system text leads the prompt. Its --output-schema is strict and rejects the manifest's oneOf and records, so the schema
  * rides in the prompt too, and Zod and the repair loop validate. effort is a Codex reasoning level such as low, high or max.
  */
-export const codexCli = (model?: string, effort?: string, timeoutMs = 600_000): Llm => async req => {
+export const codexCli = (model = process.env.CODEX_MODEL, effort?: string, timeoutMs = 600_000): Llm => async req => {
   const { spawn } = await import('node:child_process');
   const { mkdtemp, readFile, rm } = await import('node:fs/promises');
   const { join } = await import('node:path');
@@ -60,12 +63,12 @@ export const codexCli = (model?: string, effort?: string, timeoutMs = 600_000): 
   const { $schema: _draft, ...schema } = req.schema as { $schema?: string };
   const started = Date.now();
   const args = [
-    'exec', '--ephemeral', '--skip-git-repo-check', '--ignore-user-config', '--ignore-rules', '--json', '-s', 'read-only', '-C', dir,
-    '-o', join(dir, 'answer.json'),
+    'exec', '--json', '--ephemeral', '--skip-git-repo-check', '--ignore-user-config', '--ignore-rules', '-s', 'read-only', '-C', dir,
+    '-o', join(dir, 'out.json'), ...CODEX_OFF.flatMap(f => ['--disable', f]),
     ...(model ? ['-m', model] : []), ...(effort ? ['-c', `model_reasoning_effort="${effort}"`] : []), '-',
   ];
   try {
-    const events = await new Promise<string>((resolve, reject) => {
+    const { out, err, code } = await new Promise<{ out: string; err: string; code: number | null }>((resolve, reject) => {
       const child = spawn('codex', args, { cwd: dir, stdio: ['pipe', 'pipe', 'pipe'] });
       const timer = setTimeout(() => { child.kill(); reject(new Error(`Model call timed out after ${timeoutMs / 1000}s`)); }, timeoutMs);
       let out = '';
@@ -73,22 +76,20 @@ export const codexCli = (model?: string, effort?: string, timeoutMs = 600_000): 
       child.stdout.on('data', d => { out += d; });
       child.stderr.on('data', d => { err += d; });
       child.on('error', e => { clearTimeout(timer); reject(e); });
-      child.on('close', code => {
-        clearTimeout(timer);
-        if (code === 0) resolve(out);
-        else reject(new Error(`Codex call failed (exit ${code}): ${(out.match(/"message":"([^"]+)"/)?.[1] ?? err).slice(0, 300)}`));
-      });
+      child.on('close', code => { clearTimeout(timer); resolve({ out, err, code }); });
       req.signal?.addEventListener('abort', () => child.kill());
       child.stdin.end(`${req.system}\n\nDo not run commands. Answer with one JSON object that matches this JSON Schema, and nothing else.\n${JSON.stringify(schema)}\n\n${req.prompt}`);
     });
-    let output: unknown = null;
-    const answer = await readFile(join(dir, 'answer.json'), 'utf8').catch(() => '');
-    try { output = JSON.parse(answer.slice(answer.indexOf('{'), answer.lastIndexOf('}') + 1)); } catch { /* Fails schema review, so the repair loop asks again. */ }
+    const events = out.split('\n').flatMap(l => { try { return [JSON.parse(l)]; } catch { return []; } });
+    const failure = events.findLast(e => e.type === 'error' || e.type === 'turn.failed');
+    const text = await readFile(join(dir, 'out.json'), 'utf8').catch(() => null);
+    if (failure || text === null) throw new Error(`Model call failed (exit ${code}): ${JSON.stringify(failure ?? '').slice(0, 500)} ${err.slice(-300)}`);
+    let output: unknown = null; // Not JSON. The repair loop asks again.
+    try {
+      output = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+    } catch {}
     const usage = { inputTokens: 0, outputTokens: 0, costUsd: 0, ms: Date.now() - started, model: [model ?? 'codex default', effort].filter(Boolean).join(' ') };
-    for (const line of events.split('\n')) {
-      const e = line.startsWith('{') ? JSON.parse(line) : null;
-      if (e?.type === 'turn.completed') { usage.inputTokens += e.usage?.input_tokens ?? 0; usage.outputTokens += e.usage?.output_tokens ?? 0; }
-    }
+    for (const e of events) if (e.type === 'turn.completed') { usage.inputTokens += e.usage?.input_tokens ?? 0; usage.outputTokens += e.usage?.output_tokens ?? 0; }
     return { output, usage };
   } finally {
     await rm(dir, { recursive: true, force: true });

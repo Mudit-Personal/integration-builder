@@ -91,7 +91,7 @@ export const reducer = (s: Flow, a: Action): Flow => {
       // What to generate was chosen on Source, before the read.
       decisions: { ...DEFAULT_DECISIONS, deliverables: s.decisions.deliverables },
     };
-    case 'read-stopped': return a.read.kind === 'denied' ? { ...s, step: SOURCE, maxStep: SOURCE, read: a.read } : { ...s, read: a.read };
+    case 'read-stopped': return { ...s, read: a.read };
     case 'read-clear': return { ...s, read: NOT_READING, maxStep: SOURCE };
     // A changed decision invalidates the checks, so Code cannot be reached on stale results.
     case 'decide': return {
