@@ -1,0 +1,177 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2.0.0",
+      "name": "PagerDuty",
+      "slug": "pagerduty"
+    },
+    "assumptions": [
+      "User status, creation date and last activity are not returned by the List users endpoint, so those fields are left empty.",
+      "Page size maximums are not stated in the source, so a page size of 100 is used for users and audit records.",
+      "OAuth / scoped OAuth is mentioned with scopes but no token or authorize URLs are given, so only the API key method is listed.",
+      "The audit records endpoint requires the Audit Trail feature; the exact paid plan name is not stated so the feature name is used as the plan requirement.",
+      "The since and until filters for audit records are assumed to use ISO8601 dates.",
+      "Audit actor IDs in actors[0].id are assumed to be the same IDs as users.id."
+    ],
+    "authMethods": [
+      {
+        "in": "header",
+        "label": "API Key",
+        "name": "Authorization",
+        "prefix": "Token token=",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://api.pagerduty.com",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "The API Key with format `Token token=<API_KEY>`"
+      },
+      {
+        "claim": "pagination",
+        "quote": "See [`Cursor-based pagination`](https://developer.pagerduty.com/docs/rest-api-v2/pagination/) for instructions on how to paginate through the result set."
+      },
+      {
+        "claim": "users",
+        "quote": "List users of your PagerDuty account, optionally filtered by a search query."
+      },
+      {
+        "claim": "usage",
+        "quote": "List audit trail records matching provided query params or default criteria."
+      },
+      {
+        "claim": "plan",
+        "quote": "Only admins, account owners, or global API tokens on PagerDuty account [pricing plans](https://www.pagerduty.com/pricing) with the \"Audit Trail\" feature can access this endpoint."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "action"
+        },
+        "metricConstant": null,
+        "occurredAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "execution_time"
+        },
+        "userRef": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "actors[0].id"
+        },
+        "userRefType": "externalId",
+        "value": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        }
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "cursor",
+        "cursorPath": "next_cursor",
+        "hasMorePath": null,
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": "Audit Trail",
+      "recordsPath": "records",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/audit/records",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "audit_records.read"
+      ],
+      "window": {
+        "endParam": "until",
+        "format": "iso8601",
+        "maxDays": null,
+        "startParam": "since"
+      }
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "role"
+        },
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "hasMorePath": "more",
+        "limitParam": "limit",
+        "offsetParam": "offset",
+        "pageSize": 100,
+        "totalPath": "total",
+        "type": "offset"
+      },
+      "planRequirement": null,
+      "recordsPath": "users",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "users.read"
+      ]
+    }
+  }
+}

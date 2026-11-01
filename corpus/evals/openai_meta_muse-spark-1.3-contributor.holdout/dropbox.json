@@ -1,0 +1,109 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": null,
+      "name": "Dropbox",
+      "slug": "dropbox"
+    },
+    "assumptions": [
+      "The source did not document an endpoint that lists every person on a team, so the team-level read POST /2/team/get_info is used as a placeholder and does not actually return a user list.",
+      "The source did not document response field names for users, so all user fields are set to null rather than guessing.",
+      "The source did not describe pagination, so pagination is set to none as a placeholder.",
+      "The source did not describe rate limits, remaining headers, or reset headers.",
+      "The source did not document per-user last-active fields, audit logs, activity logs, or per-user usage reports, so usage is marked unavailable.",
+      "The source did not state which paid plan is required for team endpoints, so no plan requirement was set.",
+      "The source did not provide OAuth authorize URLs, token URLs, or a complete scope list, so authentication is described as bearer tokens and app key basic auth only.",
+      "Dropbox reads data with POST to RPC endpoints, so POST is used as read-only."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "Team access token",
+        "prefix": "bearer",
+        "type": "bearer"
+      },
+      {
+        "headerName": "Authorization",
+        "label": "User access token",
+        "prefix": "bearer",
+        "type": "bearer"
+      },
+      {
+        "label": "App key and secret",
+        "passwordLabel": "App secret",
+        "type": "basic",
+        "usernameLabel": "App key"
+      }
+    ],
+    "baseUrl": "https://api.dropboxapi.com",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Team Authentication"
+      },
+      {
+        "claim": "auth",
+        "quote": "Authorization: Bearer <OAUTH2_ACCESS_TOKEN>"
+      },
+      {
+        "claim": "auth",
+        "quote": "When supplying the app key and secret for App Authentication, the app key and secret are given in place of the HTTP username and password, respectively."
+      },
+      {
+        "claim": "plan",
+        "quote": "Dropbox Business is more than secure storage"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Source provided does not document per-user last-active fields, audit or activity logs, or per-user reports; only authentication examples and marketing pages were present."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": null,
+        "email": null,
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "team_id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "type": "none"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "POST",
+        "path": "/2/team/get_info",
+        "query": {},
+        "readOnlyPostReason": "Dropbox documents reading data with POST to RPC endpoints, e.g. POST https://api.dropboxapi.com/2/team/get_info; the POST changes nothing."
+      },
+      "requiredScopes": []
+    }
+  }
+}

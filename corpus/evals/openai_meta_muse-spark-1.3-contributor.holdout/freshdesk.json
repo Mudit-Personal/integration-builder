@@ -1,0 +1,126 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2",
+      "name": "Freshdesk",
+      "slug": "freshdesk"
+    },
+    "assumptions": [
+      "The provided excerpt did not include a full field definition for the List All Agents response, so email, name and created_at mappings use field names that appear elsewhere in the docs and may need verification against a live response.",
+      "Only agents are treated as licensed users; contacts represent end-customers/requesters and are not included in the user list.",
+      "Agent status, role and deactivation values were not documented in the excerpt, so those fields are left null and suspended or deactivated agents cannot be distinguished yet.",
+      "Pagination for agents is assumed to follow the standard listing behaviour documented for tickets and contacts using page, per_page and link header.",
+      "Rate limits vary by plan from trial to Enterprise, so 700 per minute is used as the documented maximum and the actual limit depends on the customer's plan.",
+      "No per-user last-active field and no detailed audit-log record format were documented, so usage is marked unavailable."
+    ],
+    "authMethods": [
+      {
+        "label": "API Key",
+        "passwordLabel": "Dummy Password",
+        "type": "basic",
+        "usernameLabel": "API Key"
+      }
+    ],
+    "baseUrl": "https://{subdomain}.freshdesk.com",
+    "connectionFields": [
+      {
+        "example": "acme",
+        "label": "Subdomain",
+        "name": "subdomain"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "You can use your personal API key to authenticate the request."
+      },
+      {
+        "claim": "pagination",
+        "quote": "To scroll through the pages, add the parameter page to the query string."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "The number of API calls per minute is based on your plan."
+      },
+      {
+        "claim": "users",
+        "quote": "List All Agents"
+      },
+      {
+        "claim": "plan",
+        "quote": "Estate plan and above"
+      },
+      {
+        "claim": "errors",
+        "quote": "API requests that result in errors will return an appropriate HTTP status code"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": 700,
+      "remainingHeader": "X-RateLimit-Remaining",
+      "resetFormat": "delta_seconds",
+      "resetHeader": "Retry-After"
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "No per-user last-active or last-login field, and no documented audit or activity log record format with user and timestamp fields, was found in the provided documentation to measure usage."
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "created_at"
+        },
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "pageSize": 100,
+        "sizeParam": "per_page",
+        "type": "link_header"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/api/v2/agents",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

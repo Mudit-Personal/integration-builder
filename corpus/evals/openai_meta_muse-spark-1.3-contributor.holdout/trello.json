@@ -1,0 +1,174 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "0.0.1",
+      "name": "Trello",
+      "slug": "trello"
+    },
+    "assumptions": [
+      "Enterprise ID is not returned by a list endpoint in the provided documentation, so you must enter it manually when connecting.",
+      "The enterprise users response is documented as paginated with 100 users at a time using a cursor parameter, but the field holding the next cursor is not shown, so pagination continues until an empty page is returned.",
+      "Status mapping assumes deactivated true means inactive and false means active; role assumes admin true means admin and false means member; user type assumes collaborator true means guest and false means member.",
+      "Rate limits were not stated in the provided documentation.",
+      "Required OAuth scope for enterprise user listing was not listed for this operation, so the documented enterprise read scope is used."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://auth.atlassian.com/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [
+          "read:board:trello",
+          "write:board:trello",
+          "write:board:membership:trello",
+          "read:organization:trello",
+          "write:organization:trello",
+          "write:organization:membership:trello",
+          "read:member:trello",
+          "write:member:trello",
+          "read:enterprise:trello",
+          "write:enterprise:trello"
+        ],
+        "tokenUrl": "https://auth.atlassian.com/authorize/oauth/token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "in": "query",
+        "label": "API Key",
+        "name": "key",
+        "prefix": "",
+        "type": "api_key"
+      },
+      {
+        "in": "query",
+        "label": "API Token",
+        "name": "token",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://api.trello.com/1",
+    "connectionFields": [
+      {
+        "example": "5e9f8a1b2c3d4e5f6a7b8c9d0",
+        "label": "Enterprise ID",
+        "name": "enterprise_id"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "An Enterprise admin token is required for this route."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The response is paginated and will return 100 users at a time."
+      },
+      {
+        "claim": "users",
+        "quote": "Get an enterprise's users."
+      },
+      {
+        "claim": "usage",
+        "quote": "dateLastImpression"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [
+            "member.username"
+          ],
+          "format": null,
+          "map": null,
+          "path": "member.fullname"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "member.email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "member.id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "member.dateLastImpression"
+        },
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "admin"
+          },
+          "path": "admin"
+        },
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "active",
+            "true": "inactive"
+          },
+          "path": "deactivated"
+        },
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "guest"
+          },
+          "path": "collaborator"
+        }
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "cursor",
+        "cursorPath": "0.member.id",
+        "hasMorePath": null,
+        "pageSize": 100,
+        "sizeParam": null,
+        "type": "cursor"
+      },
+      "planRequirement": "Enterprise",
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/enterprises/{{connection.enterprise_id}}/members/query",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "read:enterprise:trello"
+      ]
+    }
+  }
+}

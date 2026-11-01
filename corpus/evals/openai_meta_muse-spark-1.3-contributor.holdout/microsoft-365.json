@@ -1,0 +1,146 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v1.0",
+      "name": "Microsoft Graph",
+      "slug": "microsoft-graph"
+    },
+    "assumptions": [
+      "Pagination next-link field name is not shown in this excerpt; using standard OData @odata.nextLink with $top. Page size is 500 because signInActivity is selected.",
+      "How the bearer token is obtained, including OAuth endpoints and tenant setup, is not stated in the excerpt.",
+      "The excerpt does not state that disabled accounts are included; accountEnabled is used to keep them and map status.",
+      "signInActivity may be empty for tenants without Microsoft Entra ID P1 or P2, without AuditLog.Read.All, or for users who never signed in.",
+      "No role field is documented on the user resource, so role is left empty.",
+      "Rate limits and error body format are not stated in the excerpt."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "Bearer token",
+        "prefix": "bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://graph.microsoft.com/v1.0",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Bearer {token}. Required."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The default and maximum page sizes are 100 and 999 user objects respectively"
+      },
+      {
+        "claim": "users",
+        "quote": "Retrieve a list of user objects."
+      },
+      {
+        "claim": "usage",
+        "quote": "Get the last signed-in date and request ID of the sign-in for a given user."
+      },
+      {
+        "claim": "plan",
+        "quote": "Details for the signInActivity property require a Microsoft Entra ID P1 or P2 license and the AuditLog.Read.All permission."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "createdDateTime"
+        },
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "displayName"
+        },
+        "email": {
+          "fallbackPaths": [
+            "userPrincipalName"
+          ],
+          "format": null,
+          "map": null,
+          "path": "mail"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [
+            "signInActivity.lastNonInteractiveSignInDateTime"
+          ],
+          "format": "iso8601",
+          "map": null,
+          "path": "signInActivity.lastSignInDateTime"
+        },
+        "role": null,
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "inactive",
+            "true": "active"
+          },
+          "path": "accountEnabled"
+        },
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "guest": "guest",
+            "member": "member"
+          },
+          "path": "userType"
+        }
+      },
+      "pagination": {
+        "pageSize": 500,
+        "sizeParam": "$top",
+        "type": "next_url",
+        "urlPath": "@odata.nextLink"
+      },
+      "planRequirement": null,
+      "recordsPath": "value",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {
+          "$select": "displayName,id,mail,userPrincipalName,accountEnabled,userType,signInActivity,createdDateTime"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "User.Read.All",
+        "AuditLog.Read.All"
+      ]
+    }
+  }
+}

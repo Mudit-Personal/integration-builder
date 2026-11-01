@@ -1,0 +1,134 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2026-10",
+      "name": "Shopify",
+      "slug": "shopify"
+    },
+    "assumptions": [
+      "No per-user last-active, last-login, or activity/audit log field was documented for staff members, so usage is marked unavailable.",
+      "StaffMember does not document a role, creation date, or status beyond the active boolean, so role, createdAt, lastActiveAt and userType are left empty.",
+      "Rate-limit numbers and headers were not stated; docs only describe cost-based throttling, so rateLimit fields are left null.",
+      "Docs require Plus or Advanced store for read_users; Advanced is used as the minimum plan requirement.",
+      "Authentication is documented only as X-Shopify-Access-Token header; OAuth URLs were not provided so only api_key is listed.",
+      "Maximum page size of 250 is taken from GraphQL pagination docs and hard-coded as first: 250 in the query."
+    ],
+    "authMethods": [
+      {
+        "in": "header",
+        "label": "Access Token",
+        "name": "X-Shopify-Access-Token",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://{shop}.myshopify.com",
+    "connectionFields": [
+      {
+        "example": "your-development-store",
+        "label": "Shop subdomain",
+        "name": "shop"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Every GraphQL Admin API request carries an access token in the X-Shopify-Access-Token header."
+      },
+      {
+        "claim": "pagination",
+        "quote": "You can retrieve up to a maximum of 250 resources."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "The GraphQL Admin API is rate-limited using calculated query costs, measured in cost points."
+      },
+      {
+        "claim": "users",
+        "quote": "Staff members are users who can access the Shopify admin"
+      },
+      {
+        "claim": "plan",
+        "quote": "The app must be a finance embedded app or installed on a Shopify Plus or Advanced store."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Source documents only staff profile fields such as email, name and active with no last-active, login, audit log, or per-user report."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "false": "inactive",
+            "true": "active"
+          },
+          "path": "active"
+        },
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "graphql_variable",
+        "cursorParam": "cursor",
+        "cursorPath": "data.staffMembers.pageInfo.endCursor",
+        "hasMorePath": "data.staffMembers.pageInfo.hasNextPage",
+        "pageSize": 250,
+        "sizeParam": null,
+        "type": "cursor"
+      },
+      "planRequirement": "Advanced",
+      "recordsPath": "data.staffMembers.nodes",
+      "request": {
+        "body": {
+          "query": "query ($cursor: String) { staffMembers(first: 250, after: $cursor) { nodes { id email firstName lastName name active accountType } pageInfo { hasNextPage endCursor } } }"
+        },
+        "method": "POST",
+        "path": "/admin/api/2026-10/graphql.json",
+        "query": {},
+        "readOnlyPostReason": "GraphQL Admin API reads use POST but this query only retrieves staff members and changes nothing."
+      },
+      "requiredScopes": [
+        "read_users"
+      ]
+    }
+  }
+}

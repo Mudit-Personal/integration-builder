@@ -1,0 +1,121 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "host_undeclared",
+          "where": "baseUrl",
+          "message": "snowflakecomputing.com does not appear anywhere in the source."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2",
+      "name": "Snowflake",
+      "slug": "snowflake"
+    },
+    "assumptions": [
+      "Base URL host pattern was not stated in the source, so a tenant account host is assumed and needs confirmation.",
+      "Authentication method was not described in the source, so a bearer token option is assumed and needs confirmation.",
+      "Response body schema for GET /api/v2/users was not included, so it is assumed the response is a list and record field names are unknown except for name.",
+      "User fields such as email, status, role, type, last active and created dates were not documented, so only name is mapped and the rest are left empty.",
+      "It could not be confirmed whether disabled, suspended or dropped users are included in the list.",
+      "Pagination with fromName and showLimit is inferred from parameter descriptions; the exact cursor behavior and page size limit were not stated.",
+      "No per-user last activity field or audit/activity REST endpoint was documented in the source, so usage is marked unavailable. Account Usage views are SQL views, not REST endpoints.",
+      "Rate limits, error format, required privileges/scopes, and plan requirements were not stated in the source."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "JWT Bearer Token",
+        "prefix": "bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://{account}.docs.snowflake.com",
+    "connectionFields": [
+      {
+        "example": "myorg-myaccount",
+        "label": "Snowflake account identifier",
+        "name": "account"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "users",
+        "quote": "Lists the users in the system."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Parameter to enable fetching rows only following the first row whose object name matches the specified string."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Parameter to limit the maximum number of rows returned by a command."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Source documents only user listing/describe endpoints. No per-user last-active field or audit/activity log REST endpoint is documented for usage."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": null,
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "fromName",
+        "cursorPath": "$[-1].name",
+        "hasMorePath": null,
+        "pageSize": 100,
+        "sizeParam": "showLimit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/api/v2/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

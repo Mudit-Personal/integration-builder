@@ -1,0 +1,164 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2.0",
+      "name": "Miro",
+      "slug": "miro"
+    },
+    "assumptions": [
+      "Organization ID is not listed by an endpoint; it is taken from the token-info endpoint organization.id.",
+      "Organization members endpoint is Enterprise only, so non-Enterprise tenants cannot use this user list.",
+      "Display name is not returned by the organization members endpoint, so it is left empty.",
+      "Creation date is not returned by the organization members endpoint, so it is left empty.",
+      "Active true is treated as active and active false as inactive; separate suspended values were not documented.",
+      "The endpoint is documented as cursor paged but the example shows a bare array; a cursor field is assumed for paging.",
+      "Page size maximum was not documented, so 100 is used as a sensible value.",
+      "Rate limit tiers are mentioned but no numeric limits or headers were documented, so rate limits are left empty."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://miro.com/oauth/authorize",
+        "label": "OAuth2 Authorization Code",
+        "scopes": [
+          "boards:read",
+          "boards:write",
+          "microphone:listen",
+          "screen:record",
+          "webcam:record",
+          "organizations:read",
+          "organizations:teams:read",
+          "organizations:teams:write"
+        ],
+        "tokenUrl": "https://api.miro.com/v1/oauth/token",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://api.miro.com",
+    "connectionFields": [],
+    "context": [
+      {
+        "extract": {
+          "org_id": "organization.id"
+        },
+        "name": "org_id",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/v1/oauth-token",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "https://api.miro.com/v1/oauth/token"
+      },
+      {
+        "claim": "pagination",
+        "quote": "based on the organization ID and the cursor"
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Rate limiting"
+      },
+      {
+        "claim": "users",
+        "quote": "Retrieves organization members based on the organization ID and the cursor"
+      },
+      {
+        "claim": "usage",
+        "quote": "lastActivityAt"
+      },
+      {
+        "claim": "plan",
+        "quote": "Enterprise only"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": null,
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [],
+          "format": "iso8601",
+          "map": null,
+          "path": "lastActivityAt"
+        },
+        "role": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "role"
+        },
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "false": "inactive",
+            "true": "active"
+          },
+          "path": "active"
+        },
+        "userType": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "type"
+        }
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "cursor",
+        "cursorPath": "cursor",
+        "hasMorePath": null,
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": "Enterprise",
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/v2/orgs/{{context.org_id}}/members",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "organizations:read"
+      ]
+    }
+  }
+}

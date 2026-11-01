@@ -1,0 +1,149 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "host_undeclared",
+          "where": "authMethods[0].tokenUrl",
+          "message": "oauth2.googleapis.com does not appear anywhere in the source."
+        },
+        {
+          "severity": "block",
+          "code": "host_undeclared",
+          "where": "authMethods[0].authorizeUrl",
+          "message": "accounts.google.com does not appear anywhere in the source."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v1",
+      "name": "Google Workspace",
+      "slug": "google-workspace"
+    },
+    "assumptions": [
+      "Source states OAuth scopes but does not state OAuth authorize or token endpoint URLs, so authentication uses the documented access_token query parameter and no token URLs are assumed.",
+      "User listing uses customer=my_customer alias to return all domains for the customer, per source guidance to use customer instead of domain for multi-domain accounts.",
+      "Source does not document the User resource field names (e.g. primary email, id, name, suspended, last login), so user identity, status and activity mappings cannot be confirmed and are left null without guessing.",
+      "Non-deleted listing is assumed to include active, suspended and archived users; deleted users require showDeleted=true which returns only deleted users, so deleted and non-deleted cannot be returned together in one call.",
+      "No maximum maxResults value is stated in the source, so pageSize 200 is a sensible default.",
+      "Source mentions UserUsageReport parameters such as timestamp_last_login but provides no HTTP path or response schema for UserUsageReport.get(), and Activities.list() samples provide no response schema, so no verifiable per-user usage mapping can be built without guessing.",
+      "Rate limits, error envelope, plan requirements and total counts are not stated in the source."
+    ],
+    "authMethods": [
+      {
+        "in": "query",
+        "label": "OAuth Access Token",
+        "name": "access_token",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://admin.googleapis.com",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Requires one of the following OAuth scopes:"
+      },
+      {
+        "claim": "auth",
+        "quote": "https://www.googleapis.com/auth/admin.directory.user.readonly"
+      },
+      {
+        "claim": "users",
+        "quote": "Retrieves a paginated list of either deleted users or all users in a domain."
+      },
+      {
+        "claim": "users",
+        "quote": "You can also use the my_customer alias to represent your account's customerId ."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Token to specify next page in the list."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Token used to access next page of this result."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Maximum number of results to return."
+      },
+      {
+        "claim": "usage",
+        "quote": "The time when the user last logged into the user's account."
+      },
+      {
+        "claim": "usage",
+        "quote": "calling UserUsageReport.get()"
+      },
+      {
+        "claim": "usage",
+        "quote": "calling Activities.list()"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Source does not provide a verifiable per-user usage signal: the users.list User fields including any last-login are not documented, UserUsageReport.get() parameters like timestamp_last_login are named but have no HTTP path or response schema, and Activities.list() samples have no response schema for records and timestamp fields, so mapping would require guessing."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": null,
+        "email": null,
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "pageToken",
+        "cursorPath": "nextPageToken",
+        "hasMorePath": null,
+        "pageSize": 200,
+        "sizeParam": "maxResults",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "users",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/admin/directory/v1/users",
+        "query": {
+          "customer": "my_customer",
+          "projection": "FULL"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "https://www.googleapis.com/auth/admin.directory.user.readonly"
+      ]
+    }
+  }
+}
