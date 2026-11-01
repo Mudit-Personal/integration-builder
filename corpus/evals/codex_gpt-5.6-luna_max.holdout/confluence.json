@@ -1,0 +1,187 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Confluence Cloud",
+      "slug": "confluence-cloud",
+      "apiVersion": "1.0.0"
+    },
+    "baseUrl": "https://{subdomain}.atlassian.net",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Atlassian site subdomain",
+        "example": "your-domain"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "basic",
+        "label": "Basic authentication",
+        "usernameLabel": "Username",
+        "passwordLabel": "Password"
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2 authorization code",
+        "authorizeUrl": "https://auth.atlassian.com/authorize",
+        "tokenUrl": "https://auth.atlassian.com/oauth/token",
+        "scopes": [
+          "read:content-details:confluence",
+          "read:audit-log:confluence"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/wiki/rest/api/search/user",
+        "query": {
+          "cql": "user.accountid is not empty"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "results",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "start",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "read:content-details:confluence"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "content.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": {
+          "path": "content.title",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/wiki/rest/api/audit",
+        "query": {
+          "startDate": "{{window.start}}",
+          "endDate": "{{window.end}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "results",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "start",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "read:audit-log:confluence"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "startDate",
+        "endParam": "endDate",
+        "format": "date",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "author.accountId",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "creationDate",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "epoch_millis"
+        },
+        "metric": {
+          "path": "category",
+          "fallbackPaths": [
+            "summary"
+          ],
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "This API uses OAuth 2 with the authorizationCode grant flow."
+      },
+      {
+        "claim": "pagination",
+        "quote": "When additional results are available, returns `next` and `prev` URLs to retrieve them in subsequent calls."
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: cql(query,required) start(query) limit(query) expand(query) sitePermissionTypeFilter(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "Searches for users using user-specific queries"
+      },
+      {
+        "claim": "usage",
+        "quote": "This contains information about events like space exports, group membership changes, app installations, etc."
+      }
+    ],
+    "assumptions": [
+      "The source does not document a tenant-wide organization or administrator user-list endpoint. The manifest uses the documented user search endpoint with `user.accountid is not empty`, but the source does not prove that this expression returns every account.",
+      "The supplied user-search response does not explicitly confirm that `content.id` is the same account ID returned by audit records, so that identifier mapping is assumed.",
+      "The source does not confirm whether user search includes suspended, deactivated, guest, or privacy-hidden accounts. Some user fields may also be unavailable because of privacy settings.",
+      "The selected endpoints expose start and limit parameters, but the source does not document their complete pagination behavior or a maximum page size. Offset pagination with a page size of 100 is assumed.",
+      "The source does not state the required format for audit startDate and endDate values; calendar dates are assumed.",
+      "The source identifies audit creationDate only as an integer and does not state its unit; epoch milliseconds are assumed.",
+      "The audit log contains administrative and other recorded events, so it is the best documented activity signal but may not represent every product view or login.",
+      "Reading the audit log requires the Confluence Administrator global permission.",
+      "The source does not state an API request rate limit or a paid-plan requirement, so those values are left unspecified.",
+      "The source does not document an error envelope for errors returned in a successful HTTP response."
+    ]
+  }
+}

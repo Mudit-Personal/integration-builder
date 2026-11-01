@@ -1,0 +1,186 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.query",
+          "message": "{{context.currentUser.current_organization}} is never set."
+        },
+        {
+          "severity": "block",
+          "code": "paging_ignored",
+          "where": "users.pagination",
+          "message": "The spec pages this list with \"page_token\", so one request would miss people. Set the pagination it documents."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Calendly",
+      "slug": "calendly",
+      "apiVersion": "2.0.0"
+    },
+    "baseUrl": "https://api.calendly.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0",
+        "authorizeUrl": "https://auth.calendly.com/oauth/authorize",
+        "tokenUrl": "https://auth.calendly.com/oauth/token",
+        "scopes": []
+      },
+      {
+        "type": "basic",
+        "label": "Personal access token",
+        "usernameLabel": "Unused",
+        "passwordLabel": "Personal access token"
+      },
+      {
+        "type": "basic",
+        "label": "Personal access token (bearer)",
+        "usernameLabel": "Unused",
+        "passwordLabel": "Personal access token"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "currentUser",
+        "request": {
+          "method": "GET",
+          "path": "/users/me",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "current_organization": "resource.current_organization"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/organization_memberships",
+        "query": {
+          "organization": "{{context.current_organization}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "collection",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "pagination.next_page_token",
+        "cursorParam": "page_token",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": null,
+        "pageSize": 100
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user.uri",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "user.email",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user.name",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "resource.role",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "role": {
+          "path": "role",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        },
+        "userType": {
+          "path": "resource.user.slug",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "user.updated_at",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        },
+        "createdAt": {
+          "path": "user.created_at",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Put the access token in the `Authorization: Bearer <TOKEN>` header"
+      },
+      {
+        "claim": "pagination",
+        "quote": "next_page_token"
+      },
+      {
+        "claim": "users",
+        "quote": "list the Organization Memberships for all users belonging to an organization"
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns a list of activity log entries"
+      },
+      {
+        "claim": "plan",
+        "quote": "This endpoint requires an <strong>Enterprise</strong> subscription."
+      }
+    ],
+    "assumptions": [
+      "Calendly's organization membership response does not expose a user status field, so suspended or deactivated members cannot be identified through this endpoint.",
+      "The source does not state whether all deactivated members remain listed in organization memberships; the connector lists every membership returned by the API.",
+      "The activity log endpoint is limited to Enterprise subscriptions, so usage data will be unavailable on lower plans.",
+      "The source does not document a maximum page size for these list endpoints; 100 rows per request was chosen as a sensible value.",
+      "OAuth 2.0 scopes and the exact grant type are not described in the source; the connector uses the documented authorization and token URLs.",
+      "The activity log's actor.uri is assumed to match the user.uri returned by organization memberships.",
+      "The organization memberships endpoint is assumed to accept the organization URI returned by /users/me as the organization parameter."
+    ]
+  }
+}

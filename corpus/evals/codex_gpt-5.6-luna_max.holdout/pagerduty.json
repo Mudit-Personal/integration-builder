@@ -1,0 +1,174 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "PagerDuty",
+      "slug": "pagerduty",
+      "apiVersion": "2.0.0"
+    },
+    "baseUrl": "https://api.pagerduty.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "API Key",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": "Token token="
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "users",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": "total",
+        "hasMorePath": "more"
+      },
+      "requiredScopes": [
+        "users.read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": {
+          "path": "role",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": {
+          "path": "type",
+          "fallbackPaths": null,
+          "map": {
+            "user": "member"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/log_entries",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "log_entries",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": "total",
+        "hasMorePath": "more"
+      },
+      "requiredScopes": [
+        "incidents.read"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "since",
+        "endParam": "until",
+        "format": "iso8601",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "user.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "metric": {
+          "path": "type",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "The API Key with format `Token token=<API_KEY>`"
+      },
+      {
+        "claim": "pagination",
+        "quote": "limit(query) offset(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "List users of your PagerDuty account"
+      },
+      {
+        "claim": "usage",
+        "quote": "List all of the incident log entries across the entire account."
+      }
+    ],
+    "assumptions": [
+      "The users response does not include status, last activity, or creation-time fields, so those normalized fields are left empty.",
+      "The source does not state maximum page sizes or rate-limit headers; a page size of 100 is used and rate-limit details are left empty.",
+      "Incident log entries cover incident activity only, so they may miss other product use and records without a user reference cannot be attributed to a person.",
+      "The source mentions OAuth scopes but provides no OAuth authorization or token URLs, so only the documented API-key method is configured.",
+      "The source lists Accept and Content-Type as required headers but does not provide their values, so no static extra-header values are configured.",
+      "The source does not state a maximum time range for since and until, so maxDays is left empty."
+    ]
+  }
+}

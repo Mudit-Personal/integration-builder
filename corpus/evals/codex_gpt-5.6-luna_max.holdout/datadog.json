@@ -1,0 +1,303 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "baseUrl",
+          "message": "https://{subdomain}.{site} lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "authMethods[3].tokenUrl",
+          "message": "https://{subdomain}.{site}/oauth2/v1/token lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "authMethods[3].authorizeUrl",
+          "message": "https://{subdomain}.{site}/oauth2/v1/authorize lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "field_not_in_schema",
+          "where": "users.fields.externalId",
+          "message": "\"0.id\" is not in the response schema."
+        },
+        {
+          "severity": "block",
+          "code": "field_not_in_schema",
+          "where": "usage.fields.userRef",
+          "message": "\"0.attributes.viewer.id\" is not in the response schema."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Datadog",
+      "slug": "datadog",
+      "apiVersion": "v2"
+    },
+    "baseUrl": "https://{subdomain}.datadoghq.com",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Datadog subdomain",
+        "example": "{subdomain}"
+      },
+      {
+        "name": "site",
+        "label": "Datadog site",
+        "example": "{site}"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Datadog API key",
+        "in": "header",
+        "name": "DD-API-KEY",
+        "prefix": ""
+      },
+      {
+        "type": "api_key",
+        "label": "Datadog application key",
+        "in": "header",
+        "name": "DD-APPLICATION-KEY",
+        "prefix": ""
+      },
+      {
+        "type": "bearer",
+        "label": "Bearer token",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2",
+        "authorizeUrl": "https://{subdomain}.datadoghq.com/oauth2/v1/authorize",
+        "tokenUrl": "https://{subdomain}.datadoghq.com/oauth2/v1/token",
+        "scopes": [
+          "agent_builder_run",
+          "ai_gateway_config_read",
+          "ai_gateway_config_write",
+          "ai_gateway_usage",
+          "ai_guard_evaluate",
+          "apm_api_catalog_read",
+          "apm_api_catalog_write",
+          "apm_read",
+          "apm_service_catalog_read",
+          "apm_service_catalog_write",
+          "appsec_vm_read",
+          "assistant_access",
+          "aws_configurations_manage",
+          "billing_edit",
+          "billing_read",
+          "bits_dev_write",
+          "bits_investigations_read",
+          "bits_investigations_write",
+          "bits_security_analyst_write",
+          "cases_read",
+          "cases_shared_settings_write",
+          "cases_write",
+          "ci_visibility_pipelines_write",
+          "ci_visibility_read",
+          "cloud_cost_management_read",
+          "cloud_cost_management_write",
+          "code_analysis_read",
+          "code_coverage_read",
+          "continuous_profiler_pgo_read",
+          "coterm_read",
+          "coterm_write",
+          "create_webhooks",
+          "dashboards_embed_share",
+          "dashboards_invite_share",
+          "dashboards_public_share",
+          "dashboards_read",
+          "dashboards_write",
+          "data_scanner_read",
+          "data_scanner_write",
+          "embeddable_graphs_share",
+          "error_tracking_read",
+          "error_tracking_write",
+          "event_correlation_config_read",
+          "event_correlation_config_write",
+          "events_read",
+          "feature_flag_approvals_override",
+          "feature_flag_config_read",
+          "feature_flag_config_write",
+          "feature_flag_environment_config_read",
+          "feature_flag_environment_config_write",
+          "hosts_read",
+          "incident_notification_settings_read",
+          "incident_notification_settings_write",
+          "incident_read",
+          "incident_settings_read",
+          "incident_settings_write",
+          "incident_write",
+          "integrations_read",
+          "logs_modify_indexes",
+          "logs_read_data",
+          "logs_read_index_data",
+          "manage_integrations",
+          "metrics_read",
+          "monitors_downtime",
+          "monitors_read",
+          "monitors_write",
+          "network_connections_read",
+          "org_connections_read",
+          "org_connections_write",
+          "org_management",
+          "product_analytics_experiments_read",
+          "product_analytics_experiments_write",
+          "product_analytics_metrics_read",
+          "product_analytics_metrics_write",
+          "product_analytics_settings_read",
+          "product_analytics_settings_write",
+          "product_analytics_warehouse_model_write",
+          "repo_info_read",
+          "security_comments_read",
+          "security_monitoring_critical_assets_read"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "current_user",
+        "request": {
+          "method": "GET",
+          "path": "/api/v2/current_user",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "organizationId": "data.relationships.org.data.id"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/v2/current_user",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "data.relationships.other_users.data",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": null,
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "aggregate_report",
+      "request": {
+        "method": "GET",
+        "path": "/api/v2/dashboards/usage",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "data",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "meta.page.next_offset",
+        "cursorParam": "page[offset]",
+        "cursorIn": "query",
+        "hasMorePath": "links.next",
+        "sizeParam": "page[limit]",
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "dashboards_read"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": null,
+      "fields": {
+        "userRef": {
+          "path": "attributes.viewer.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "attributes.viewed_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "metric": null,
+        "metricConstant": "total_views",
+        "value": {
+          "path": "attributes.total_views",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Your Datadog API Key."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Results are paginated"
+      },
+      {
+        "claim": "users",
+        "quote": "Get the user associated with the current authentication context."
+      },
+      {
+        "claim": "usage",
+        "quote": "Get usage stats for all dashboards"
+      }
+    ],
+    "assumptions": [
+      "The source does not document an organization-wide people or members endpoint. The users mapping therefore uses the documented other_users relationship as a best-effort identifier list and is not guaranteed to include every person, the signed-in user, or profile fields.",
+      "The source does not document status, role, user type, email, name, creation time, or last-login fields for other_users.",
+      "The source describes AuthZ as an OAuth 2 implicit grant, but the manifest schema has no implicit-grant type; the OAuth entry uses the closest available authorization-code shape.",
+      "The source does not document a user identifier inside audit-event attributes, so dashboard viewer records are used for usage instead.",
+      "Dashboard view counts may be null or zero without RUM and only include views recorded starting January 2025.",
+      "The source does not state request-rate limits or a paid plan requirement.",
+      "The source provides host placeholders but no concrete subdomain or site examples."
+    ]
+  }
+}

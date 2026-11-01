@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "calendly",
+    "status": "passed",
+    "correct": true,
+    "attempts": 2,
+    "ms": 63529,
+    "tokens": {
+      "input": 16962,
+      "output": 9317
+    },
+    "scenarios": {
+      "passed": 26,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "auth: basic,basic,oauth2_authorization_code (accepted: bearer)",
+      "usage: last_activity_field (accepted: event_log)"
+    ],
+    "reason": ""
+  }
+]

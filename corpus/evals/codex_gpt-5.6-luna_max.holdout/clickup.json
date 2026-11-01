@@ -1,0 +1,112 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "ClickUp",
+      "slug": "clickup",
+      "apiVersion": "v2"
+    },
+    "baseUrl": "https://api.clickup.com/api",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Personal API Key",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": ""
+      },
+      {
+        "type": "bearer",
+        "label": "OAuth2 Access Token",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/v2/team",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "teams[0].members",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "user.email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user.username",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The supplied documentation does not expose a per-user last-activity field, an audit or activity log, or a per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "**Personal API Key** Obtain from ClickUp's settings page under 'Apps' and add it to the header as `Authorization: pk_...`"
+      },
+      {
+        "claim": "auth",
+        "quote": "**OAuth2 Access Token** Generated through the OAuth2 flow and add it to the header as `Authorization: Bearer {access_token}`"
+      },
+      {
+        "claim": "pagination",
+        "quote": "To fetch the next page of history (older comments), you must use the `start` and `start_id` parameters together"
+      },
+      {
+        "claim": "users",
+        "quote": "\"members\":[{\"user\":{\"id\":\"integer\",\"username\":\"string\",\"email\":\"string\""
+      }
+    ],
+    "assumptions": [
+      "The source does not document pagination for GET /v2/team, so the manifest treats one response as complete.",
+      "The source returns members nested inside each workspace but does not document a way to combine all workspaces; the manifest uses teams[0].members and may omit members from other workspaces.",
+      "The source does not provide member status, role, user type, creation time, or last activity, so those fields are left empty and suspended or deactivated people cannot be identified separately.",
+      "The source does not state a rate limit or plan requirement.",
+      "The source mentions an OAuth flow and token endpoint but does not provide an authorization URL; the manifest therefore models the documented OAuth access token as bearer authentication.",
+      "The source contained suspicious text."
+    ]
+  }
+}

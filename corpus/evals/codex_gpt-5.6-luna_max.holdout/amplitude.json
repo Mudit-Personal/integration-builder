@@ -1,0 +1,160 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Amplitude",
+      "slug": "amplitude",
+      "apiVersion": null
+    },
+    "baseUrl": "https://amplitude.com",
+    "connectionFields": [
+      {
+        "name": "user",
+        "label": "Amplitude user ID or user ID prefix",
+        "example": "example-user-id"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "basic",
+        "label": "Project API key and secret key",
+        "usernameLabel": "Project API key",
+        "passwordLabel": "Project secret key"
+      },
+      {
+        "type": "basic",
+        "label": "Organization API key and secret key",
+        "usernameLabel": "Organization API key",
+        "passwordLabel": "Organization secret key"
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "Amplitude MCP OAuth",
+        "authorizeUrl": "https://mcp.amplitude.com/authorize",
+        "tokenUrl": "https://mcp.amplitude.com/token",
+        "scopes": [
+          "mcp:read"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/2/usersearch",
+        "query": {
+          "user": "{{connection.user}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": null,
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/api/2/useractivity",
+        "query": {
+          "user": "{{user.externalId}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "forEachUser": true,
+      "window": null,
+      "fields": {
+        "userRef": {
+          "path": "user",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": null,
+        "metric": null,
+        "metricConstant": "user_activity",
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "HTTP Basic authentication. Username is the project API key, password is the project secret key."
+      },
+      {
+        "claim": "pagination",
+        "quote": "user(query,required) offset(query) limit(query)"
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Rate limits for this endpoint are lower than other Dashboard REST endpoints."
+      },
+      {
+        "claim": "users",
+        "quote": "Look up users by Amplitude ID, device ID, user ID, or user ID prefix."
+      },
+      {
+        "claim": "usage",
+        "quote": "Return a single user’s event stream and user properties."
+      },
+      {
+        "claim": "plan",
+        "quote": "Requires the Amplitude Data add-on."
+      }
+    ],
+    "assumptions": [
+      "The source does not document an organization- or tenant-wide people-list endpoint. The users request therefore uses the documented user-search operation with a configured user ID or prefix and cannot enumerate every person or confirm suspended and deactivated users.",
+      "The user-search and user-activity responses are described only as objects, with no response field schemas. The user paths and root records paths are conservative mappings based on the documented terminology; email, display name, status, role, user type, timestamps, and event values remain unmapped.",
+      "The user-activity endpoint is treated as the usage event log because it returns a user’s event stream. No per-user last-active field or aggregate report is documented.",
+      "The user-search operation documents no paging parameters, so one lookup response is treated as complete.",
+      "The source says user-activity rate limits are lower than other Dashboard REST endpoints but provides no numeric limit or headers.",
+      "The source contained suspicious text instructing use of another host; that instruction was ignored."
+    ]
+  }
+}

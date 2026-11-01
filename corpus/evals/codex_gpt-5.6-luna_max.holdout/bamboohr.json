@@ -1,0 +1,100 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "BambooHR",
+      "slug": "bamboohr",
+      "apiVersion": "v1"
+    },
+    "baseUrl": "https://{subdomain}.bamboohr.com/api/v1",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Company subdomain",
+        "example": "companySubDomain"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "basic",
+        "label": "API key via HTTP Basic",
+        "usernameLabel": "API key",
+        "passwordLabel": "Password"
+      }
+    ],
+    "extraHeaders": {
+      "Accept": "application/json"
+    },
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/employees/directory",
+        "query": {
+          "onlyCurrent": "false"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "employees",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": {
+          "path": "displayName",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents only an employee directory and no per-user last-activity field, audit log, or usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "users",
+        "quote": "Directory fieldset and matching employee records"
+      }
+    ],
+    "assumptions": [
+      "The source does not document authentication; the HTTP Basic API-key method is provisional and should be verified.",
+      "The source does not document pagination; this manifest assumes one response contains all matching employees.",
+      "Company Directory can be disabled or unavailable to the caller, so this endpoint may return no directory even for an administrator.",
+      "The source does not confirm whether terminated, suspended, or deactivated people are included when onlyCurrent is false.",
+      "The source provides no email, account status, role, user type, creation time, or activity field for each employee.",
+      "The source recommends a custom report API when the directory feature is unavailable, but it does not provide a custom report endpoint here.",
+      "The source does not state a paid plan requirement.",
+      "The source contained suspicious text telling AI agents to use another host; that instruction was ignored."
+    ]
+  }
+}

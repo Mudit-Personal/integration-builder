@@ -1,0 +1,139 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Bitbucket",
+      "slug": "bitbucket",
+      "apiVersion": "2.0"
+    },
+    "baseUrl": "https://api.bitbucket.org/2.0",
+    "connectionFields": [
+      {
+        "name": "workspace",
+        "label": "Bitbucket workspace slug",
+        "example": "my-workspace"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Team account API key",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": ""
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0",
+        "authorizeUrl": "https://bitbucket.org/site/oauth2/authorize",
+        "tokenUrl": "https://bitbucket.org/site/oauth2/access_token",
+        "scopes": [
+          "account"
+        ]
+      },
+      {
+        "type": "basic",
+        "label": "Basic HTTP Authentication",
+        "usernameLabel": "Username",
+        "passwordLabel": "App password"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/workspaces/{{connection.workspace}}/permissions",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "values",
+      "pagination": {
+        "type": "next_url",
+        "urlPath": "next",
+        "sizeParam": "pagelen",
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "account"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user.uuid",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": {
+          "path": "user.display_name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": {
+          "path": "last_accessed",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "createdAt": {
+          "path": "user.created_on",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "API Keys can be used as Basic HTTP Authentication credentials and provide a substitute for the account's actual username and password."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Results can be [paginated](/cloud/bitbucket/rest/intro/#pagination)."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns the list of members in a workspace and their permission levels."
+      },
+      {
+        "claim": "usage",
+        "quote": "`last_accessed`"
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The connector is scoped to one workspace slug supplied in the connection; the source does not define a single account-wide workspace identifier.",
+      "The source does not confirm whether suspended, deactivated, invited, or pending identities appear in this member listing, and the listed response has no status field.",
+      "The source says last_accessed may no longer be present after an administration migration, so last-active data may be missing.",
+      "The source does not document a page-size maximum; the manifest uses 100 as a sensible page size.",
+      "The source provides no API rate-limit values or response headers.",
+      "The source does not state a paid plan requirement for the selected endpoints.",
+      "The selected member response does not include an email field, so email is unavailable.",
+      "The source identifies the API-key scheme and Authorization header but does not document the exact header value prefix; no prefix is configured."
+    ]
+  }
+}

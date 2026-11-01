@@ -1,0 +1,126 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Gusto",
+      "slug": "gusto",
+      "apiVersion": "2026-06-15"
+    },
+    "baseUrl": "https://api.gusto-demo.com",
+    "connectionFields": [
+      {
+        "name": "company_id",
+        "label": "Company ID",
+        "example": "e2c4c0ce-2986-48b9-86cf-ec27f6ed9a36"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Company access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/v1/companies/{{connection.company_id}}/employees",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "per",
+        "pageSize": 25,
+        "startAt": 1,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "uuid",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "first_name",
+          "fallbackPaths": [
+            "last_name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents employee retrieval but does not document a per-user activity field, audit or activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Company-level authentication"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Number of objects per page. For majority of endpoints will default to 25"
+      },
+      {
+        "claim": "users",
+        "quote": "Get employees of a company"
+      },
+      {
+        "claim": "errors",
+        "quote": "The requested resource does not exist."
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The provided excerpt omits the employee endpoint path, so the configured path is unconfirmed.",
+      "The employee response schema is not included; field mappings are limited to names present in the excerpt.",
+      "The source does not state whether page numbering starts at 0 or 1; pagination assumes page 1.",
+      "The source does not confirm whether the default employee list includes terminated employees; no termination filter is applied.",
+      "Only the demo API host is provided; a production host is not confirmed.",
+      "OAuth token acquisition details, scopes, and URLs are not sufficiently specified for an OAuth auth method.",
+      "The source does not state a required plan or rate limit."
+    ]
+  }
+}

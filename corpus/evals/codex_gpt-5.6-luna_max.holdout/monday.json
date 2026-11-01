@@ -1,0 +1,205 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "monday.com",
+      "slug": "monday-com",
+      "apiVersion": "2026-07"
+    },
+    "baseUrl": "https://api.monday.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Personal API token",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": ""
+      }
+    ],
+    "extraHeaders": {
+      "Content-Type": "application/json"
+    },
+    "context": [],
+    "users": {
+      "request": {
+        "method": "POST",
+        "path": "/v2",
+        "query": {},
+        "body": {
+          "query": "query ($page: Int!, $limit: Int!) { users(page: $page, limit: $limit, status: [ACTIVE, INACTIVE, PENDING]) { id email name user_config { kind } status last_activity created_at } }",
+          "variables": {
+            "page": 1,
+            "limit": 1000
+          }
+        },
+        "readOnlyPostReason": "The documented users query is GraphQL and the API accepts GraphQL queries in a POST JSON body; this query only reads users."
+      },
+      "recordsPath": "data.users",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "limit",
+        "pageSize": 1000,
+        "startAt": 1,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "users:read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "status",
+          "fallbackPaths": null,
+          "map": {
+            "active": "active",
+            "inactive": "inactive",
+            "pending": "pending"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "user_config.kind",
+          "fallbackPaths": null,
+          "map": {
+            "admin": "admin",
+            "member": "member",
+            "guest": "guest",
+            "view_only": "viewer",
+            "agent_member": "service",
+            "portal": "guest",
+            "portfolio_api_user": "service",
+            "nexus_api_user": "service",
+            "resource_directory_api_user": "service",
+            "omnichannel_api_user": "service",
+            "goals_api_user": "service",
+            "projects_api_user": "service",
+            "sprint_management_api_user": "service",
+            "crm_commerce_api_user": "service",
+            "campaigns_api_user": "service",
+            "data_retention_api_user": "service",
+            "monday_service_api_user": "service",
+            "ai_platform_agent_api_user": "service",
+            "dependencies_api_user": "service",
+            "historical_tracking_backfill_api_user": "service",
+            "crm_user_agent_member": "service"
+          },
+          "format": null
+        },
+        "userType": {
+          "path": "user_config.kind",
+          "fallbackPaths": null,
+          "map": {
+            "admin": "member",
+            "member": "member",
+            "guest": "guest",
+            "view_only": "member",
+            "agent_member": "service",
+            "portal": "guest",
+            "portfolio_api_user": "service",
+            "nexus_api_user": "service",
+            "resource_directory_api_user": "service",
+            "omnichannel_api_user": "service",
+            "goals_api_user": "service",
+            "projects_api_user": "service",
+            "sprint_management_api_user": "service",
+            "crm_commerce_api_user": "service",
+            "campaigns_api_user": "service",
+            "data_retention_api_user": "service",
+            "monday_service_api_user": "service",
+            "ai_platform_agent_api_user": "service",
+            "dependencies_api_user": "service",
+            "historical_tracking_backfill_api_user": "service",
+            "crm_user_agent_member": "service"
+          },
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "last_activity",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "createdAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": 5000,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Once you have your token, you can make requests with the API by passing the token in the `Authorization` header."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The page number to return. Starts at 1."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "You made more than 5,000 requests in one minute"
+      },
+      {
+        "claim": "users",
+        "quote": "Returns an array containing metadata about one or multiple users"
+      },
+      {
+        "claim": "usage",
+        "quote": "The last date and time the user was active."
+      },
+      {
+        "claim": "errors",
+        "quote": "Response will be `200 – OK` for application-level errors."
+      }
+    ],
+    "assumptions": [
+      "The source describes OAuth 2.0 authorization but does not provide a token URL, so only the documented API-token method is represented.",
+      "The source documents page numbering and a maximum limit but no total-pages or has-more response field; pagination assumes the runtime stops after an empty page.",
+      "The source documents `is_deleted` but does not explain whether soft-deleted users are returned by `Query.users` or how to filter them; all documented activation statuses are requested.",
+      "No suspended user status is documented; `INACTIVE` is the documented deactivated status and is requested.",
+      "The source names rate-limit headers but does not define which header contains remaining requests or how reset values are formatted, so those fields are null.",
+      "The source shows GraphQL errors in a 200 response as an errors array, but does not provide the scalar success flag required by the errorEnvelope format, so errorEnvelope is null.",
+      "The source gives last_activity without a timezone, so it is treated as an ISO 8601 timestamp.",
+      "The source does not state a plan requirement for the users query, so no plan requirement is set.",
+      "The source contained suspicious text with instructions for AI agents, documentation-index directions, and request-header directions; those instructions were ignored."
+    ]
+  }
+}

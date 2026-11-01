@@ -1,0 +1,212 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "quote_not_found",
+          "where": "evidence",
+          "message": "The plan citation is not in the source: \"Please note that this endpoint ( /audit_events ) is an add-on for customers.\""
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Lever",
+      "slug": "lever",
+      "apiVersion": "v1"
+    },
+    "baseUrl": "https://api.lever.co/v1",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "basic",
+        "label": "API key (Basic Auth)",
+        "usernameLabel": "API key",
+        "passwordLabel": "Leave blank"
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0 authorization code",
+        "authorizeUrl": "https://auth.lever.co/authorize",
+        "tokenUrl": "https://auth.lever.co/oauth/token",
+        "scopes": [
+          "offline_access",
+          "users:read:admin",
+          "audit_events:read:admin"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "data",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "next",
+        "cursorParam": "offset",
+        "cursorIn": "query",
+        "hasMorePath": "hasNext",
+        "sizeParam": "limit",
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "users:read:admin"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": {
+          "path": "role",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/audit_events",
+        "query": {
+          "type": "user.authentication:succeeded",
+          "user_id": "{{user.externalId}}",
+          "created_at_start": "{{window.start}}",
+          "created_at_end": "{{window.end}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "data",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "next",
+        "cursorParam": "offset",
+        "cursorIn": "query",
+        "hasMorePath": "hasNext",
+        "sizeParam": "limit",
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "audit_events:read:admin"
+      ],
+      "planRequirement": null,
+      "forEachUser": true,
+      "window": {
+        "startParam": "created_at_start",
+        "endParam": "created_at_end",
+        "format": "epoch_millis",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "meta.user.id",
+          "fallbackPaths": [
+            "user.id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "createdAt",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "epoch_millis"
+        },
+        "metric": {
+          "path": "type",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": 600,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Authenticate to the Lever API via basic auth by providing an API key as the username and leaving the password blank."
+      },
+      {
+        "claim": "auth",
+        "quote": "Direct the user to https://auth.lever.co/authorize with the following query parameters:"
+      },
+      {
+        "claim": "pagination",
+        "quote": "A paginated list response will include a next attribute that includes an offset token, which can be used as an input parameter to the next request."
+      },
+      {
+        "claim": "users",
+        "quote": "View all users"
+      },
+      {
+        "claim": "usage",
+        "quote": "A user successfully logged in via the method configured for the account."
+      },
+      {
+        "claim": "plan",
+        "quote": "is an add-on for customers."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "a steady state number of 10 requests/second per API key"
+      },
+      {
+        "claim": "errors",
+        "quote": "with a response body in JSON format containing additional information."
+      }
+    ],
+    "assumptions": [
+      "The source excerpt does not show the full GET /users response, so the user mappings use id, email, name, and role shown for Lever user objects elsewhere in the source.",
+      "The source does not document current user status, user type, creation time, or a per-user last-activity field on user records, so those fields are unavailable.",
+      "The source does not confirm whether GET /users includes deactivated users; no undocumented status filter was added.",
+      "The audit_events endpoint is described as an add-on, but no required plan name is provided, so planRequirement is left null.",
+      "The documented steady-state limit of 10 requests per second is represented as 600 requests per minute; no remaining or reset headers are documented, and the burst allowance is not represented."
+    ]
+  }
+}
