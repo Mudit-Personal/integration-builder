@@ -1,4 +1,5 @@
-import { useEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
+import { highlight } from './highlight.ts';
 
 export const AppLogo = ({ src }: { src: string }) => <img src={src} alt="" width={20} height={20} style={{ display: 'block', flex: 'none' }} onError={e => { e.currentTarget.style.display = 'none'; }} />;
 
@@ -94,13 +95,28 @@ export function CheckItem({ title, description, meta, status = 'done', waiting =
   </div>;
 }
 
-export function CodeBlock({ code, style }: { code: string; style?: CSSProperties }) {
-  const lines = code.replace(/\n$/, '').split('\n');
-  const comment = (l: string) => /^\s*(\/\/|\*|\/\*|#)/.test(l);
-  return <div style={{ overflow: 'auto', background: 'var(--surface-panel)', ...style }}>
-    <pre style={{ margin: 0, padding: '16px 0', font: 'var(--fw-regular) var(--fs-code)/var(--lh-code) var(--font-mono)', color: 'var(--text-strong)' }}>{lines.map((l, i) => <div key={i} style={{ display: 'flex' }}>
-      <span style={{ flex: 'none', width: 48, textAlign: 'right', paddingRight: 16, color: 'var(--text-meta)', userSelect: 'none' }}>{i + 1}</span>
-      <span style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', minWidth: 0, paddingRight: 16, color: comment(l) ? 'var(--text-muted)' : undefined }}>{l || ' '}</span></div>)}</pre>
+const COPY_LABELS = { idle: 'Copy', copied: 'Copied', failed: "Couldn't copy" };
+
+/** A black code screen. `name` titles it and picks the highlighting. `prose` wraps long lines and drops line numbers, for text that isn't code. */
+export function CodeBlock({ code, name, prose = false, onCopy, style }: { code: string; name: string; prose?: boolean; onCopy?: () => void; style?: CSSProperties }) {
+  const trimmed = code.replace(/\n$/, '');
+  const lines = useMemo(() => highlight(trimmed, name), [trimmed, name]);
+  const [copy, setCopy] = useState<keyof typeof COPY_LABELS>('idle');
+  useEffect(() => {
+    if (copy === 'idle') return;
+    const timer = setTimeout(() => setCopy('idle'), 1600);
+    return () => clearTimeout(timer);
+  }, [copy]);
+  return <div className="code" data-prose={prose || undefined} style={style}>
+    <div className="code-bar">
+      <span className="code-name">{name}</span>
+      <button type="button" className="code-copy press" aria-label={`Copy ${name}`} onClick={() => navigator.clipboard.writeText(trimmed).then(() => { setCopy('copied'); onCopy?.(); }, () => setCopy('failed'))}><span aria-live="polite">{COPY_LABELS[copy]}</span></button>
+    </div>
+    <div className="code-scroll" role="region" aria-label={name} tabIndex={0}>
+      <pre>{lines.map((line, i) => <div key={i} className="code-line">
+        {prose ? null : <span className="code-number">{i + 1}</span>}
+        <code>{line.map((t, j) => <span key={j} className={`tok-${t.kind}`}>{t.text}</span>)}</code></div>)}</pre>
+    </div>
   </div>;
 }
 

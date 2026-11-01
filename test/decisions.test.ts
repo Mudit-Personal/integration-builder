@@ -138,10 +138,23 @@ test('each deliverable left out changes the generated code', () => {
   assert.match(connector(without('auth')), /skipAuth: true/);
   assert.doesNotMatch(connector(without('users')), /Users = async/);
   assert.doesNotMatch(connector(without('usage')), /Usage = async/);
-  assert.match(connector(without('logging')), /"logLevel":"off"/);
-  assert.match(connector(without('errors')), /"maxRetries":0/);
-  assert.match(connector(without('pagination')), /"maxPages":1/);
+  assert.match(connector(without('logging')), /"logLevel": "off"/);
+  assert.match(connector(without('errors')), /"maxRetries": 0/);
+  assert.match(connector(without('pagination')), /"maxPages": 1/);
   assert.ok(decisionRows(pack, without('pagination')).some(r => r.group === 'Pagination' && r.title === 'Left out'));
+});
+
+test('the README shows how to call the connector, unless the client is left out', () => {
+  const readme = (d: Decisions) => buildFiles(packOf(corpus[0]), d, ENGINE_SOURCES, 0).find(f => f.name === 'README.md')!.code;
+  const slug = corpus[0].app.slug;
+  assert.match(readme(DEFAULT_DECISIONS), new RegExp(`## Use it\\n\\n\`\`\`ts\\nimport \\{ \\w+ \\} from "\\./${slug}\\.connector\\.ts";`));
+  assert.doesNotMatch(readme(without('client')), /## Use it/);
+});
+
+test('the prompt ends an unavailable usage reason with one full stop', () => {
+  const pack = packOf(corpus.find(m => m.usage.kind === 'unavailable')!);
+  const prompt = buildPrompt(pack, DEFAULT_DECISIONS, buildFiles(pack, DEFAULT_DECISIONS, ENGINE_SOURCES, 0), 0);
+  assert.match(prompt, /^- Usage: not included\. .*[^.]\.$/m);
 });
 
 test('the summary for a developer names the app, what is blocked and how many checks passed', () => {

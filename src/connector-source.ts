@@ -13,7 +13,7 @@ export type ConnectorSettings = {
 const settingsCode = (s: ConnectorSettings) => {
   const { limits, logLevel, cacheTtlMs } = s;
   const pass = `const LOG_RANK = { debug: 0, info: 1, warn: 2, error: 3, off: 4 };
-const settings = ${JSON.stringify({ limits, logLevel, cacheTtlMs })};
+const settings = ${JSON.stringify({ limits, logLevel, cacheTtlMs }, null, 2)};
 
 const withSettings = (options: RunOptions): RunOptions => ({
   ...options,${s.skipAuth ? '\n  skipAuth: true,' : ''}

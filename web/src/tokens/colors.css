@@ -40,4 +40,13 @@
 --status-pending:var(--ink-4);
 --env-production:var(--blue);
 --env-sandbox:var(--ink-3);
+/* Code screens */
+--code-bg:#0c0e0f;
+--code-bar:#16191a;
+--code-line:#2b2f32;
+--code-text:#e8e8e6;
+--code-muted:#8d9398;
+--code-keyword:#8fa2ff;
+--code-string:#c9d1ff;
+--code-type:#ffffff;
 }
