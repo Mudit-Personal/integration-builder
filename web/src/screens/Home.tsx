@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { flushSync } from 'react-dom';
 import type { SavedConnector } from '../connectors.ts';
 import { AppLogo, Button, Marker, Mono, P, PageTitle } from '../ds.tsx';
 import { audienceOf, JOURNEYS } from '../journey.ts';
@@ -28,16 +29,18 @@ type Props = { connectors: SavedConnector[]; onNew: () => void; onOpen: (c: Save
 
 export function Home({ connectors, onNew, onOpen, onRemove }: Props) {
   const [removing, setRemoving] = useState<string | null>(null);
+  // The rows below slide up into the gap instead of jumping.
+  const remove = (id: string) => (document.startViewTransition ? document.startViewTransition(() => flushSync(() => onRemove(id))) : onRemove(id));
   const add = <Button onClick={onNew}>{connectors.length ? 'Connect another app' : 'Connect your first app'}</Button>;
   return <main className="centered">
     <PageTitle title="Your connectors" lead={connectors.length ? summary(connectors) : undefined} aside={connectors.length ? add : null} />
     {connectors.length ? <ul className="home-list">
-      {connectors.map(c => <li key={c.id} className="home-row">
+      {connectors.map(c => <li key={c.id} className="home-row" style={{ viewTransitionName: `home-${c.id}` }}>
         <Marker tone={c.status === 'draft' ? 'pending' : 'done'} />
         <span className="home-name">{logoOf(c.slug) ? <AppLogo src={`./apps/${logoOf(c.slug)}`} /> : null}{c.name}</span>
         {removing === c.id ? <div className="home-remove">
           <span>Remove {c.name}? You can't undo this.</span>
-          <Button variant="link" onClick={() => onRemove(c.id)}>Yes, remove</Button>
+          <Button variant="link" onClick={() => remove(c.id)}>Yes, remove</Button>
           <Button variant="link" autoFocus onClick={() => setRemoving(null)}>Keep it</Button>
         </div> : <>
           <span>{statusText(c)}</span>
@@ -49,7 +52,7 @@ export function Home({ connectors, onNew, onOpen, onRemove }: Props) {
           </div>
         </>}
       </li>)}
-    </ul> : <div style={{ marginTop: 16 }}>
+    </ul> : <div className="home-empty" style={{ marginTop: 16 }}>
       <P style={{ margin: '0 0 24px' }}>You haven't connected an app yet.</P>
       {add}
     </div>}
