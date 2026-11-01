@@ -19,7 +19,7 @@ function Elapsed() {
 
 const HOW_READ = <SectionHeading lead="An AI reads the docs and drafts a connector. Anything it claims has to quote the source, or it fails review.">How this is read</SectionHeading>;
 
-export function LiveReading({ read, url, go, onPaste }: { read: Exclude<LiveRead, { kind: 'idle' }>; url: string; go: (step: number) => void; onPaste: (text: string) => void }) {
+export function LiveReading({ read, url, go, onRetry, onPaste }: { read: Exclude<LiveRead, { kind: 'idle' }>; url: string; go: (step: number) => void; onRetry: () => void; onPaste: (text: string) => void }) {
   const [text, setText] = useState('');
   const host = hostFrom(url) ?? 'this site';
   const back = <Button variant="link" onClick={() => go(SOURCE)}>Back</Button>;
@@ -31,17 +31,12 @@ export function LiveReading({ read, url, go, onPaste }: { read: Exclude<LiveRead
       </div>
     </SplitLayout>;
   }
-  if (read.kind === 'paste') {
-    return <SplitLayout footer={<>{back}<Push /><Button disabled={!text.trim()} onClick={() => onPaste(text)}>Read pasted text</Button></>} panel={HOW_READ}>
-      <PageTitle title={`Paste ${host}'s docs`} lead={read.message} />
-      <label style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 36, font: 'var(--type-label)', color: 'var(--text-strong)' }}>Documentation text
-        <textarea className="paste" rows={14} value={text} onChange={e => setText(e.target.value)} />
-      </label>
-    </SplitLayout>;
-  }
-  return <SplitLayout footer={back} panel={HOW_READ}>
-    <PageTitle title="We couldn't finish reading these docs" />
-    <Callout style={{ marginTop: 28 }}>{read.message}</Callout>
+  const failed = read.kind === 'failed';
+  return <SplitLayout footer={<>{back}<Push />{failed ? <Button variant="secondary" onClick={onRetry}>Read the docs again</Button> : null}<Button disabled={!text.trim()} onClick={() => onPaste(text)}>Read pasted text</Button></>} panel={HOW_READ}>
+    {failed ? <><PageTitle title="We couldn't finish reading these docs" /><Callout style={{ marginTop: 28 }}>{read.message}</Callout></> : <PageTitle title={`Paste ${host}'s docs`} lead={read.message} />}
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 36, font: 'var(--type-label)', color: 'var(--text-strong)' }}>Documentation text
+      <textarea className="paste" rows={14} value={text} onChange={e => setText(e.target.value)} />
+    </label>
   </SplitLayout>;
 }
 
@@ -66,10 +61,10 @@ export function Read({ s, go, pack, name }: ScreenProps) {
     <KeyValueRow monoLabel label="No quote, review it" value="An assumption" />
     <KeyValueRow monoLabel label="Marked for review" value="For a person" />
     {pack.read ? <>
-      <SectionHeading size="label" style={{ marginTop: 36 }}>This read</SectionHeading>
+      <SectionHeading size="group" style={{ marginTop: 36 }}>This read</SectionHeading>
       <KeyValueRow label="Attempts" value={pack.read.attempts} />
       <KeyValueRow label="Tokens" value={`${tokens(pack.read.inputTokens)} in · ${tokens(pack.read.outputTokens)} out`} /></> : null}
-    <SectionHeading size="label" style={{ marginTop: 36 }}>Fingerprint</SectionHeading>
+    <SectionHeading size="group" style={{ marginTop: 36 }}>Fingerprint</SectionHeading>
     <P>The result is fingerprinted as <code>{pack.hash}</code>.</P></>}>
     <PageTitle title={done ? `${name}'s documentation is mapped` : `Mapping ${name}'s documentation…`} lead={done ? `${steps.length} steps done. Nothing has been generated yet.` : live ? 'Showing what the read found.' : `Replaying an AI read of ${name}'s docs, with the quote behind each finding.`} />
     <div style={{ borderTop: 'var(--rule-strong)', marginTop: 28 }}>{steps.map((r, i) => <CheckItem key={r.title} title={r.title} description={r.description} waiting={i >= n} meta={i < n ? r.meta : ''} status={i < n ? 'done' : i === n ? 'live' : 'pending'} />)}</div>

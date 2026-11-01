@@ -4,10 +4,10 @@ import type { ChecksRun, StaticCheck } from './checks.ts';
 import type { CheckResult, SavedConnector } from './connectors.ts';
 import { DEFAULT_DECISIONS, DELIVERABLES, type Decisions, type QuestionId } from './decisions.ts';
 import type { LiveRead } from './live.ts';
-import { audienceOf, CHECKS, CODE, DECIDE, JOURNEYS, READ, SOURCE, type Audience } from './journey.ts';
+import { audienceOf, CHECKS, CODE, DECIDE, JOURNEYS, READ, READY, SOURCE, type Audience } from './journey.ts';
 import { matchApp, type AppEntry, type AppPack } from './pack.ts';
 
-export { CHECKS, CODE, DECIDE, READ, RUN, SOURCE } from './journey.ts';
+export { CHECKS, CODE, DECIDE, READ, READY, RUN, SOURCE } from './journey.ts';
 
 export const APPS = apps as AppEntry[];
 
@@ -25,6 +25,8 @@ export type Flow = {
   /** Outlives the run in checks, which is never saved, so a reopened connector keeps its verdict. */
   result: CheckResult | null;
   codeReached: boolean;
+  /** When the code, prompt or summary first left the app. */
+  handedOff: number | null;
 };
 
 export type Action =
@@ -46,13 +48,15 @@ export type Action =
   | { type: 'checks-done'; hash: string; fixed: StaticCheck['status'][] }
   | { type: 'checks-reset' }
   | { type: 'checks-abandon' }
+  | { type: 'hand-off'; at: number }
+  | { type: 'pack-changed' }
   | { type: 'reset' };
 
 const IDLE: ChecksRun = { kind: 'idle' };
 
 const NOT_READING: LiveRead = { kind: 'idle' };
 
-const CLEAN = { decisions: DEFAULT_DECISIONS, answers: {}, checks: IDLE, result: null, codeReached: false } satisfies Partial<Flow>;
+const CLEAN = { decisions: DEFAULT_DECISIONS, answers: {}, checks: IDLE, result: null, codeReached: false, handedOff: null } satisfies Partial<Flow>;
 
 const fresh = (app: AppEntry) => ({ ...CLEAN, slug: app.slug, live: null });
 
@@ -65,10 +69,10 @@ export const reducer = (s: Flow, a: Action): Flow => {
   switch (a.type) {
     case 'new': return { ...initial(), id: a.id, audience: a.audience };
     case 'open': {
-      const { id, slug, step, flow } = a.saved;
+      const { id, slug, step, status, flow } = a.saved;
       // Connectors saved before every deliverable had a switch lack the newer keys.
       const opened = { ...initial(), id, slug, ...flow, audience: audienceOf(flow.audience), decisions: { ...flow.decisions, deliverables: { ...DEFAULT_DECISIONS.deliverables, ...flow.decisions.deliverables } } };
-      return a.lost ? { ...opened, step: SOURCE, maxStep: SOURCE, live: null, result: null, codeReached: false } : { ...opened, step };
+      return a.lost ? { ...opened, step: SOURCE, maxStep: SOURCE, live: null, result: null, codeReached: false, handedOff: null } : status === 'draft' ? { ...opened, step } : { ...opened, step: READY, maxStep: READY };
     }
     case 'home': return initial();
     case 'go': return { ...s, step: a.step, maxStep: Math.max(s.maxStep, a.step), codeReached: s.codeReached || a.step === CODE };
@@ -93,9 +97,9 @@ export const reducer = (s: Flow, a: Action): Flow => {
     };
     case 'read-stopped': return { ...s, read: a.read };
     case 'read-clear': return { ...s, read: NOT_READING, maxStep: SOURCE };
-    // A changed decision invalidates the checks, so Code cannot be reached on stale results.
+    // A changed decision invalidates the checks, so Code cannot be reached on stale results, and whatever left the app is out of date.
     case 'decide': return {
-      ...s, decisions: { ...s.decisions, ...a.patch }, checks: IDLE, result: null, codeReached: false, maxStep: Math.min(s.maxStep, DECIDE),
+      ...s, decisions: { ...s.decisions, ...a.patch }, checks: IDLE, result: null, codeReached: false, handedOff: null, maxStep: Math.min(s.maxStep, DECIDE),
       answers: a.answer ? { ...s.answers, [a.answer[0]]: a.answer[1] } : s.answers,
     };
     case 'checks-start': return { ...s, maxStep: Math.min(s.maxStep, CHECKS), checks: { kind: 'running', replay: a.replay, results: [] } };
@@ -107,6 +111,8 @@ export const reducer = (s: Flow, a: Action): Flow => {
     }
     case 'checks-reset': return { ...s, checks: IDLE };
     case 'checks-abandon': return s.checks.kind === 'running' ? { ...s, checks: IDLE } : s;
+    case 'hand-off': return { ...s, handedOff: s.handedOff ?? a.at };
+    case 'pack-changed': return { ...s, step: CHECKS, maxStep: CHECKS, result: null, codeReached: false, handedOff: null };
     // Keeps the app and any live read, so starting over never spends a second read.
     case 'reset': return { ...s, ...CLEAN, step: SOURCE, maxStep: SOURCE, read: NOT_READING };
   }

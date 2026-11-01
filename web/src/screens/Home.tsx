@@ -8,7 +8,7 @@ const logoOf = (slug: string) => APPS.find(a => a.slug === slug)?.logo;
 
 const statusText = (c: SavedConnector) => {
   const steps = JOURNEYS[audienceOf(c.flow.audience)].steps.slice(0, c.step + 1).filter(s => s !== null);
-  return c.status === 'ready' ? 'Ready' : `In progress, step ${steps.length} ${steps.at(-1)!.toLowerCase()}`;
+  return c.status === 'draft' ? `In progress, step ${steps.length} ${steps.at(-1)!.toLowerCase()}` : c.status === 'ready' ? 'Ready' : 'Handed off';
 };
 
 const checkText = ({ flow: { result }, hash }: SavedConnector) => {
@@ -17,8 +17,9 @@ const checkText = ({ flow: { result }, hash }: SavedConnector) => {
 };
 
 const summary = (list: SavedConnector[]) => {
-  const ready = list.filter(c => c.status === 'ready').length;
-  return `${ready} ready, ${list.length - ready} in progress. ${APPS.length} apps to choose from, or any API with docs.`;
+  const count = (status: SavedConnector['status']) => list.filter(c => c.status === status).length;
+  const handedOff = count('handed-off');
+  return `${count('ready')} ready, ${handedOff ? `${handedOff} handed off, ` : ''}${count('draft')} in progress. ${APPS.length} apps to choose from, or any API with docs.`;
 };
 
 const updated = (ms: number) => new Date(ms).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
@@ -32,7 +33,7 @@ export function Home({ connectors, onNew, onOpen, onRemove }: Props) {
     <PageTitle title="Your connectors" lead={connectors.length ? summary(connectors) : undefined} aside={connectors.length ? add : null} />
     {connectors.length ? <ul className="home-list">
       {connectors.map(c => <li key={c.id} className="home-row">
-        <Marker tone={c.status === 'ready' ? 'done' : 'pending'} />
+        <Marker tone={c.status === 'draft' ? 'pending' : 'done'} />
         <span className="home-name">{logoOf(c.slug) ? <AppLogo src={`./apps/${logoOf(c.slug)}`} /> : null}{c.name}</span>
         {removing === c.id ? <div className="home-remove">
           <span>Remove {c.name}? You can't undo this.</span>
