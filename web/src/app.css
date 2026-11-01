@@ -17,8 +17,9 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .page-title { display: flex; align-items: flex-end; gap: 32px; }
 .callout { display: flex; align-items: center; gap: 32px; }
 .centered { min-height: calc(100vh - var(--header-h)); display: flex; flex-direction: column; padding: 56px clamp(24px, 6vw, 112px) 40px; }
-.dgroup { font: var(--type-label); color: var(--text-strong); padding: 22px 0 10px; border-bottom: var(--rule-strong); }
-.dsummary { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; font: var(--type-body); color: var(--text-muted); }
+.dgroup { font: 500 22px/1.2 var(--font-sans); letter-spacing: -0.01em; color: var(--text-strong); padding: 36px 0 12px; border-bottom: var(--rule-strong); }
+.dgroup .mono { letter-spacing: 0; }
+.dsummary { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; font: var(--type-body); letter-spacing: 0; padding: 22px 0 10px; color: var(--text-muted); }
 .drow { display: grid; grid-template-columns: minmax(110px, 200px) minmax(0, 1fr) 132px 64px; gap: 20px; align-items: center; padding: 13px 0; border-bottom: var(--rule-hair); }
 .drow.ask { background: var(--blue-tint); padding: 16px 0 16px 16px; }
 .dopen { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; padding: 16px 0 16px min(220px, 20%); border-bottom: var(--rule-hair); }

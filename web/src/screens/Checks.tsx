@@ -69,12 +69,12 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
     : `${passed} checks passed against a simulated ${name} built from its docs.${untested ? ` ${untested} not tested, because you left out what they test.` : ''} Nothing was written. The real ${name} API was not called.`;
 
   const people = <>
-    <SectionHeading size="label" style={{ marginTop: verdict ? 36 : 28 }}>Sample, as everyone sees it</SectionHeading>
+    <SectionHeading size="group" style={{ marginTop: verdict ? 36 : 28 }}>Sample, as everyone sees it</SectionHeading>
     {sample.map((r, i) => <div key={i} className="sample-row"><Mono c="var(--ink)">{r.name}</Mono><Mono c="var(--ink-2)">{r.email}</Mono><Mono>{r.role}</Mono></div>)}
     <div style={{ fontSize: 14, color: 'var(--ink-2)', marginTop: 10 }}>Made-up people from the simulator. Masking can't be turned off, for any role.</div></>;
   const panel = verdict ? <>
     <SectionHeading lead={`A simulated copy of ${name}, built from its docs. We tried the problems a real account runs into, like outages and expired sign-ins.`}>What we tested</SectionHeading>
-    <SectionHeading size="label" style={{ marginTop: 36 }}>Your account</SectionHeading>
+    <SectionHeading size="group" style={{ marginTop: 36 }}>Your account</SectionHeading>
     <P>Nothing touched your real {name} account. No sign-in was needed.</P>
     {people}</> : <>
     <SectionHeading lead="The first run stores every result in this tab's memory. A re-run with the same decisions replays them. Change a decision and it runs again.">Test cache</SectionHeading>
@@ -83,13 +83,13 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
     <KeyValueRow label="Stored results" value={stored ? `${stored} · until you reload` : 'None yet'} />
     <div style={{ marginTop: 8 }}><Checkbox checked={replayOn} onChange={setReplayOn} label="Replay stored results on re-run" description="Turn off to run every scenario again." /></div>
     <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 20 }}><Button variant="secondary" disabled={!stored} onClick={() => { clearStored(); redraw(n => n + 1); }}>Clear cache</Button>{replay ? <StatusLabel>Replayed</StatusLabel> : null}</div>
-    <SectionHeading size="label" style={{ marginTop: 36 }}>What's stored</SectionHeading>
+    <SectionHeading size="group" style={{ marginTop: 36 }}>What's stored</SectionHeading>
     <P>Scenario results only: pass or fail, a short detail and a request count. No credentials exist here, because the vendor is simulated.</P>
     {people}</>;
 
   return <SplitLayout footer={<><Button variant="link" onClick={() => go(DECIDE)}>{verdict ? 'Back' : 'Back to decisions'}</Button><Push /><Button variant="secondary" disabled={run.kind === 'running'} onClick={() => dispatch({ type: 'checks-reset' })}>Run again</Button><Button disabled={!canGenerate} onClick={() => go(CODE)}>{verdict ? 'Continue' : 'Generate code'}</Button></>} panel={panel}>
     <PageTitle title={title} lead={lead} aside={canGenerate ? <StatusLabel size="lg">{verdict ? 'Ready to hand off' : 'Ready to generate'}</StatusLabel> : null} />
-    {survived.length ? <><SectionHeading size="label" style={{ marginTop: 40 }}>What it survived</SectionHeading>
+    {survived.length ? <><SectionHeading size="group" style={{ marginTop: 40 }}>What it survived</SectionHeading>
       <div className="highlights">{survived.map(r => <div key={r.id} className="highlight">
         <span className="highlight-title">{r.title}</span>
         <span style={{ color: 'var(--text-muted)' }}>{r.proves}</span>
@@ -97,7 +97,7 @@ export function Checks({ s, dispatch, go, pack, name }: ScreenProps) {
       </div>)}</div></> : null}
     {survived.length || (verdict && done) ? <div style={{ marginTop: 24 }}><Button variant="link" onClick={() => setShowAll(v => !v)}>{showAll ? 'Hide the full list' : `Show every check, ${passed} passed`}</Button></div> : null}
     {folded ? null : <div className="checks-grid">
-      {GROUPS.map((g, gi) => <div key={g.label}><SectionHeading size="label" style={{ marginTop: 16 }}>{g.label}</SectionHeading>
+      {GROUPS.map((g, gi) => <div key={g.label}><SectionHeading size="group" style={{ marginTop: 16 }}>{g.label}</SectionHeading>
         {SCENARIOS.filter(x => g.categories.includes(x.category)).map(x => <CheckItem key={x.id} title={x.title} {...scenarioRow(results[SCENARIOS.indexOf(x)], replay)} />)}
         {g.categories.includes('safety') ? fixed.map(c => <CheckItem key={c.id} title={c.title} description={run.kind === 'idle' ? 'Waiting' : c.detail} meta={run.kind === 'idle' ? '' : STATIC_META[c.status][0]} status={run.kind === 'idle' ? 'pending' : STATIC_META[c.status][1]} />) : null}
       </div>)}

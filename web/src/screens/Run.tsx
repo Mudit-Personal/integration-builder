@@ -59,7 +59,7 @@ export function Run({ s, go, pack, name }: ScreenProps) {
     {people ? <PageTitle title="Here are your people" lead={`We found ${users.length} people in a simulated copy of ${name}, the same way it will read your real account. Names and emails are masked.`} aside={<StatusLabel size="lg">Preview complete</StatusLabel>} />
       : <><PageTitle title={`${users.length} people synced from ${name}`} lead={`The generated connector ran once, the same way it will in your app. ${stats.requests} requests in ${stats.elapsedMs} ms, all to a simulated ${name}.`} aside={<StatusLabel size="lg">Sync complete</StatusLabel>} />
       <div className="stats">{tiles.map(([label, value]) => <div key={label} className="stat"><span className="stat-value">{value}</span><span style={{ color: 'var(--text-muted)' }}>{label}</span></div>)}</div></>}
-    <SectionHeading size="label" style={{ marginTop: 40 }}>People, as everyone sees them</SectionHeading>
+    <SectionHeading size="group" style={{ marginTop: 40 }}>People, as everyone sees them</SectionHeading>
     {users.slice(0, SHOWN).map(u => <div key={u.externalId} className="person-row">
       <span style={{ color: 'var(--text-strong)' }}>{maskName(u.displayName)}</span>
       <Mono c="var(--ink-2)">{maskEmail(u.email)}</Mono>

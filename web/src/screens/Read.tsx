@@ -66,10 +66,10 @@ export function Read({ s, go, pack, name }: ScreenProps) {
     <KeyValueRow monoLabel label="No quote, review it" value="An assumption" />
     <KeyValueRow monoLabel label="Marked for review" value="For a person" />
     {pack.read ? <>
-      <SectionHeading size="label" style={{ marginTop: 36 }}>This read</SectionHeading>
+      <SectionHeading size="group" style={{ marginTop: 36 }}>This read</SectionHeading>
       <KeyValueRow label="Attempts" value={pack.read.attempts} />
       <KeyValueRow label="Tokens" value={`${tokens(pack.read.inputTokens)} in · ${tokens(pack.read.outputTokens)} out`} /></> : null}
-    <SectionHeading size="label" style={{ marginTop: 36 }}>Fingerprint</SectionHeading>
+    <SectionHeading size="group" style={{ marginTop: 36 }}>Fingerprint</SectionHeading>
     <P>The result is fingerprinted as <code>{pack.hash}</code>.</P></>}>
     <PageTitle title={done ? `${name}'s documentation is mapped` : `Mapping ${name}'s documentation…`} lead={done ? `${steps.length} steps done. Nothing has been generated yet.` : live ? 'Showing what the read found.' : `Replaying an AI read of ${name}'s docs, with the quote behind each finding.`} />
     <div style={{ borderTop: 'var(--rule-strong)', marginTop: 28 }}>{steps.map((r, i) => <CheckItem key={r.title} title={r.title} description={i < n ? r.description : '…'} meta={i < n ? r.meta : ''} status={i < n ? 'done' : 'pending'} />)}</div>
