@@ -1,7 +1,7 @@
 import type { ScreenProps } from '../App.tsx';
 import { Button, KeyValueRow, Mono, P, PageTitle, Push, SectionHeading, SplitLayout, StatusLabel } from '../ds.tsx';
 import { JOURNEYS, stepBefore } from '../journey.ts';
-import { CODE, READY } from '../state.ts';
+import { CODE, DECIDE, READY } from '../state.ts';
 
 type Props = Pick<ScreenProps, 's' | 'go' | 'name'> & { onHome: () => void; onAnother: () => void };
 
@@ -14,7 +14,7 @@ export function Ready({ s, go, name, onHome, onAnother }: Props) {
     <KeyValueRow label={prompted ? 'Preview' : 'First sync'} value="Finished on a simulated copy" />
     <KeyValueRow label={`Your real ${name}`} value="Not touched" />
     <SectionHeading size="group" style={{ marginTop: 36 }}>Changing it</SectionHeading>
-    <P>Open it from your list and change a decision. Its checks run again before it's ready.</P></>}>
+    <P>Go back to {j.steps[DECIDE]} and change anything. Its checks run again before it's ready.</P></>}>
     <PageTitle title={`${name} is ready`} lead={`It passed its checks and ran on a simulated copy. Next, get it to where it will run.`} aside={<StatusLabel size="lg">Saved to your list</StatusLabel>} />
     <div className="ready-list">
       <div className="ready-row">

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useReducer, useRef, useState, type ComponentType } from 'react';
 import { displayName, initialsOf, loadWorkspace, removeConnector, saveConnector, type Account } from './api.ts';
-import { dropPack, holdPacks, packLost, readPack, savePack, upsert, type SavedConnector } from './connectors.ts';
+import { dropPack, holdPacks, isStale, packLost, readPack, savePack, upsert, type SavedConnector } from './connectors.ts';
 import { AppHeader, Button, Callout, P } from './ds.tsx';
 import { readDocs } from './live.ts';
 import { loadPack, type AppPack } from './pack.ts';
@@ -84,6 +84,10 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
   // A read in flight is not saved: it dies with the page, and the slug is still the previous app's.
   useEffect(() => {
     if (s.id && s.read.kind === 'idle' && pack?.manifest.app.slug === s.slug) setConnectors(list => list && upsert(list, s, pack, Date.now()));
+  }, [s, pack]);
+  // A connector saved as ready can outlive the pack it was checked against.
+  useEffect(() => {
+    if (s.step === READY && pack?.manifest.app.slug === s.slug && isStale(s, pack)) dispatch({ type: 'go', step: CHECKS });
   }, [s, pack]);
   const stopReading = () => {
     reading.current?.abort();

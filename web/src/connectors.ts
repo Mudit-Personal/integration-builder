@@ -25,11 +25,16 @@ const toSaved = (f: Flow, name: string, hash: string, updatedAt: number): SavedC
   },
 });
 
+const hashOf = (f: Flow, pack: AppPack) => hashManifest(applyDecisions(pack.manifest, f.decisions));
+
+/** True when the checks behind a saved status no longer cover this pack. */
+export const isStale = (f: Flow, pack: AppPack) => statusOf(f, hashOf(f, pack)) === 'draft';
+
 /** Returns the same list when nothing changed, so a reopened connector keeps its place and its time. */
 export const upsert = (list: SavedConnector[], f: Flow, pack: AppPack, now: number): SavedConnector[] => {
   const prev = list.find(c => c.id === f.id);
   if (!prev && f.step === SOURCE) return list;
-  const next = toSaved(f, pack.manifest.app.name, hashManifest(applyDecisions(pack.manifest, f.decisions)), now);
+  const next = toSaved(f, pack.manifest.app.name, hashOf(f, pack), now);
   if (prev && JSON.stringify({ ...prev, updatedAt: now }) === JSON.stringify(next)) return list;
   return [next, ...list.filter(c => c.id !== f.id)];
 };

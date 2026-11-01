@@ -4,7 +4,7 @@ import type { ChecksRun, StaticCheck } from './checks.ts';
 import type { CheckResult, SavedConnector } from './connectors.ts';
 import { DEFAULT_DECISIONS, DELIVERABLES, type Decisions, type QuestionId } from './decisions.ts';
 import type { LiveRead } from './live.ts';
-import { audienceOf, CHECKS, CODE, DECIDE, JOURNEYS, READ, SOURCE, type Audience } from './journey.ts';
+import { audienceOf, CHECKS, CODE, DECIDE, JOURNEYS, READ, READY, SOURCE, type Audience } from './journey.ts';
 import { matchApp, type AppEntry, type AppPack } from './pack.ts';
 
 export { CHECKS, CODE, DECIDE, READ, READY, RUN, SOURCE } from './journey.ts';
@@ -65,10 +65,10 @@ export const reducer = (s: Flow, a: Action): Flow => {
   switch (a.type) {
     case 'new': return { ...initial(), id: a.id, audience: a.audience };
     case 'open': {
-      const { id, slug, step, flow } = a.saved;
+      const { id, slug, step, status, flow } = a.saved;
       // Connectors saved before every deliverable had a switch lack the newer keys.
       const opened = { ...initial(), id, slug, ...flow, audience: audienceOf(flow.audience), decisions: { ...flow.decisions, deliverables: { ...DEFAULT_DECISIONS.deliverables, ...flow.decisions.deliverables } } };
-      return a.lost ? { ...opened, step: SOURCE, maxStep: SOURCE, live: null, result: null, codeReached: false } : { ...opened, step };
+      return a.lost ? { ...opened, step: SOURCE, maxStep: SOURCE, live: null, result: null, codeReached: false } : status === 'draft' ? { ...opened, step } : { ...opened, step: READY, maxStep: READY };
     }
     case 'home': return initial();
     case 'go': return { ...s, step: a.step, maxStep: Math.max(s.maxStep, a.step), codeReached: s.codeReached || a.step === CODE };

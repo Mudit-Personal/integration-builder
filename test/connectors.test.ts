@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { hashManifest } from '../src/hash.ts';
-import { dropPack, packLost, savePack, upsert, type SavedConnector } from '../web/src/connectors.ts';
+import { dropPack, isStale, packLost, savePack, upsert, type SavedConnector } from '../web/src/connectors.ts';
 import { applyDecisions, DEFAULT_DECISIONS } from '../web/src/decisions.ts';
 import type { AppPack } from '../web/src/pack.ts';
 import type { Audience } from '../web/src/journey.ts';
-import { CHECKS, CODE, DECIDE, initial, READ, reducer, type Action, type Flow } from '../web/src/state.ts';
+import { CODE, DECIDE, initial, READ, READY, reducer, type Action, type Flow } from '../web/src/state.ts';
 import { AUTHS, makeManifest, PAGINATIONS } from './fixtures.ts';
 
 const manifest = makeManifest(Object.values(PAGINATIONS)[0], Object.values(AUTHS)[0]);
@@ -52,15 +52,25 @@ test('a pack that changed underneath a ready connector returns it to draft', () 
   assert.equal(saved(atCode(started()), [], 1, { ...pack, manifest: changed })[0].status, 'draft');
 });
 
-test('reopening restores decisions and stays ready, on Checks rather than Code', () => {
+test('reopening a ready connector restores decisions and lands on Ready', () => {
   const flow = play(started(), { type: 'decide', patch: { retries: 5 } });
   const [c] = saved(atCode(flow));
-  assert.equal(c.step, CHECKS);
   const opened = reducer(initial(), { type: 'open', saved: c, lost: false });
-  assert.equal(opened.step, CHECKS);
+  assert.deepEqual([opened.step, opened.maxStep], [READY, READY]);
   assert.equal(opened.decisions.retries, 5);
   assert.equal(opened.checks.kind, 'idle');
   assert.equal(saved(opened, [c])[0].status, 'ready');
+});
+
+test('reopening a draft goes back to where it was', () => {
+  const [c] = saved(passing(atRead(started())));
+  assert.equal(reducer(initial(), { type: 'open', saved: c, lost: false }).step, READ);
+});
+
+test('a ready connector whose pack changed since it was saved is stale', () => {
+  const opened = reducer(initial(), { type: 'open', saved: saved(atCode(started()))[0], lost: false });
+  assert.equal(isStale(opened, pack), false);
+  assert.equal(isStale(opened, { ...pack, manifest: { ...manifest, baseUrl: 'https://api.acme.test/v3' } }), true);
 });
 
 test('reopening without changes keeps the list and its time', () => {

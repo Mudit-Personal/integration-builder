@@ -26,7 +26,7 @@ const download = (name: string, files: BundleFile[]) => {
 
 export function Code({ s, go, pack, name }: ScreenProps) {
   const d = s.decisions;
-  const passed = s.checks.kind === 'done' ? s.checks.results.filter(r => r.status === 'pass').length : 0;
+  const passed = s.result?.passed ?? 0;
   const m = useMemo(() => applyDecisions(pack.manifest, d), [pack, d]);
   const files = useMemo(() => buildFiles(pack, d, ENGINE_SOURCES, passed), [pack, d, passed]);
   const prompt = useMemo(() => buildPrompt(pack, d, files, passed), [pack, d, files, passed]);
