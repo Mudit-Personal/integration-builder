@@ -1,0 +1,179 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Docusign Admin API",
+      "slug": "docusign-admin-api",
+      "apiVersion": "2.1"
+    },
+    "baseUrl": "https://api.docusign.net/Management",
+    "connectionFields": [
+      {
+        "name": "email",
+        "label": "Profile email",
+        "example": "max@example.net"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth2 Access Code",
+        "authorizeUrl": "https://account.docusign.com/oauth/auth",
+        "tokenUrl": "https://account.docusign.com/oauth/auth",
+        "scopes": [
+          "organization_read",
+          "user_data_redact",
+          "permission_read",
+          "group_read",
+          "user_read",
+          "account_read",
+          "account_write",
+          "user_write",
+          "identity_provider_read",
+          "domain_read",
+          "asset_group_account_read",
+          "asset_group_account_clone_write",
+          "asset_group_account_clone_read",
+          "organization_sub_account_read",
+          "organization_sub_account_write",
+          "connect_org_config_read_api",
+          "connect_org_config_write_api",
+          "connect_org_hmac_read_api",
+          "connect_org_hmac_write_api",
+          "connect_org_oauth_write_api",
+          "connect_org_oauth_read_api"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "organization",
+        "request": {
+          "method": "GET",
+          "path": "/v2/organizations",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "organization_id": "organizations[0].id"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/v2/organizations/{{context.organization_id}}/users/profile",
+        "query": {
+          "email": "{{connection.email}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "users",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [
+        "user_read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "memberships[0].email",
+          "fallbackPaths": [
+            "user_name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user_name",
+          "fallbackPaths": [
+            "first_name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "user_status",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "role": {
+          "path": "is_organization_admin",
+          "fallbackPaths": null,
+          "map": {
+            "true": "admin",
+            "false": "member"
+          },
+          "format": null
+        },
+        "userType": null,
+        "lastActiveAt": {
+          "path": "last_login",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "createdAt": {
+          "path": "created_on",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth2 Access code Grant"
+      },
+      {
+        "claim": "users",
+        "quote": "To get a list of users in an organization, use [Users: getUsers](/docs/admin-api/reference/usermanagement/users/getusers/) instead."
+      },
+      {
+        "claim": "usage",
+        "quote": "\"last_login\":\"string date-time\""
+      },
+      {
+        "claim": "pagination",
+        "quote": "page(query) page_size(query)"
+      }
+    ],
+    "assumptions": [
+      "The source omits the path and response schema for Users: getUsers, while explicitly stating that the email-specific profile endpoint is not the organization user list. This manifest therefore uses the documented profile endpoint and cannot enumerate every person without additional vendor documentation.",
+      "The email connection field is required because the documented profile endpoint requires the email query parameter.",
+      "The context step selects the first organization returned; the source does not explain how to choose among multiple organizations.",
+      "The source does not define raw values for user_status, so no status mapping is applied.",
+      "The source does not document audit logs or per-user reports; last_login is the only documented activity signal.",
+      "The source does not state a rate limit or paid-plan requirement.",
+      "The source does not document pagination for the email-specific profile endpoint, so pagination is set to none."
+    ]
+  }
+}

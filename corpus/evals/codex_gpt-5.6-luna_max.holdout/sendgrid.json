@@ -1,0 +1,121 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Twilio SendGrid",
+      "slug": "twilio-sendgrid",
+      "apiVersion": "1.0.0"
+    },
+    "baseUrl": "https://api.sendgrid.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "SendGrid API key",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/v3/teammates",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "result",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "username",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "username",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": {
+          "path": "user_type",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": {
+          "path": "user_type",
+          "fallbackPaths": null,
+          "map": {
+            "admin": "member",
+            "owner": "member",
+            "teammate": "member"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents no per-user last-activity field, audit log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "The API key must be sent as a bearer token in the Authorization header."
+      },
+      {
+        "claim": "pagination",
+        "quote": "This endpoint allows you to retrieve a paginated list of all current Teammates."
+      },
+      {
+        "claim": "users",
+        "quote": "Retrieve all teammates"
+      }
+    ],
+    "assumptions": [
+      "The source lists both global and EU API hosts; this manifest uses the first, global host.",
+      "The source does not document a maximum limit, so pageSize is set to 100.",
+      "The source does not document a teammate status field or how suspended and deactivated teammates appear, so no status mapping is configured.",
+      "The source does not document a combined display name, so username is used as displayName.",
+      "Pending invitations are excluded because the users endpoint documents current teammates and invitation records do not include a username.",
+      "The optional on-behalf-of header is not configured because the source does not say when it is required or provide a connection value.",
+      "The source does not document rate-limit values or a plan requirement."
+    ]
+  }
+}

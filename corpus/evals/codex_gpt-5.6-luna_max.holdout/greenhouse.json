@@ -1,0 +1,120 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Greenhouse",
+      "slug": "greenhouse",
+      "apiVersion": "v1"
+    },
+    "baseUrl": "https://harvest.greenhouse.io",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "basic",
+        "label": "Harvest API key (Basic Auth)",
+        "usernameLabel": "Greenhouse API token",
+        "passwordLabel": "Password (leave blank)"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/v1/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "link_header",
+        "sizeParam": null,
+        "pageSize": 100
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "primary_email_address",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents candidate-specific activity feeds, but no per-user last-active field, account-wide user activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": "X-RateLimit-Remaining",
+      "resetHeader": "X-RateLimit-Reset",
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Harvest uses Basic Auth over HTTPS for authentication."
+      },
+      {
+        "claim": "pagination",
+        "quote": "API methods that return a collection of results are always paginated."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Harvest API requests for approved Greenhouse partners and customer-built custom integrations are limited to the amount specified in the returned X-RateLimit-Limit header, per 10 seconds."
+      },
+      {
+        "claim": "users",
+        "quote": "GET: List Users"
+      },
+      {
+        "claim": "usage",
+        "quote": "The activity feed is the list of activities on a candidate's profile, including interviews, notes, and emails."
+      },
+      {
+        "claim": "plan",
+        "quote": "Custom Fields on the application object are only available to customers with Enterprise-level accounts."
+      },
+      {
+        "claim": "errors",
+        "quote": "Unauthenticated requests will return an HTTP 401 response."
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The provided excerpt names GET: List Users and documents /v1/users/{id}/pending_approvals, but omits the complete list-users request and user response schema.",
+      "The maximum page size for GET: List Users is not stated; pageSize 100 is a conservative default based on the documented default for other collection endpoints.",
+      "The source does not document how disabled or deactivated users are represented or whether the user list includes them.",
+      "The documented rate limit is 50 requests per 10 seconds; no per-minute equivalent or reset timestamp format is stated.",
+      "The only plan note applies to application custom fields; no plan requirement is stated for the Users endpoint.",
+      "Harvest v1/v2 is described as deprecated and scheduled for removal on August 31, 2026; no v3 endpoint details are provided."
+    ]
+  }
+}

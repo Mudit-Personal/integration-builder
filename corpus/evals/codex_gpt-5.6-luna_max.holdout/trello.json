@@ -1,0 +1,229 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "pagination_path_missing",
+          "where": "users.pagination",
+          "message": "\"cursor\" is not in the response schema."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "paging_ignored",
+          "where": "users.pagination",
+          "message": "The spec pages this list with \"cursor\", so one request would miss people. Set the pagination it documents."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "pagination_path_missing",
+          "where": "users.pagination",
+          "message": "\"cursor\" is not in the response schema."
+        }
+      ]
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Trello",
+      "slug": "trello",
+      "apiVersion": "0.0.1"
+    },
+    "baseUrl": "https://api.trello.com/1",
+    "connectionFields": [
+      {
+        "name": "key",
+        "label": "Trello API key",
+        "example": "your-api-key"
+      },
+      {
+        "name": "token",
+        "label": "Trello API token",
+        "example": "your-api-token"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "API key",
+        "in": "query",
+        "name": "key",
+        "prefix": ""
+      },
+      {
+        "type": "api_key",
+        "label": "API token",
+        "in": "query",
+        "name": "token",
+        "prefix": ""
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0",
+        "authorizeUrl": "https://auth.atlassian.com/authorize",
+        "tokenUrl": "https://auth.atlassian.com/authorize/oauth/token",
+        "scopes": [
+          "read:board:trello",
+          "write:board:trello",
+          "write:board:membership:trello",
+          "read:organization:trello",
+          "write:organization:trello",
+          "write:organization:membership:trello",
+          "read:member:trello",
+          "write:member:trello",
+          "read:enterprise:trello",
+          "write:enterprise:trello"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "current_member",
+        "request": {
+          "method": "GET",
+          "path": "/tokens/{{connection.token}}/member",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "enterpriseId": "idEnterprise"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/enterprises/{{context.enterpriseId}}/members/query",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "cursor",
+        "cursorParam": "cursor",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": null,
+        "pageSize": 100
+      },
+      "requiredScopes": [],
+      "planRequirement": "Enterprise",
+      "fields": {
+        "externalId": {
+          "path": "member.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "member.email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "member.fullname",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "deactivated",
+          "fallbackPaths": null,
+          "map": {
+            "true": "inactive",
+            "false": "active"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "admin",
+          "fallbackPaths": null,
+          "map": {
+            "true": "admin",
+            "false": "member"
+          },
+          "format": null
+        },
+        "userType": {
+          "path": "member.memberType",
+          "fallbackPaths": null,
+          "map": {
+            "normal": "member",
+            "ghost": "guest"
+          },
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "member.dateLastImpression",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "\"APIKey\",\"type\":\"apiKey\",\"in\":\"query\",\"paramName\":\"key\""
+      },
+      {
+        "claim": "auth",
+        "quote": "\"name\":\"OAuth2\",\"type\":\"oauth2\",\"tokenUrl\":\"https://auth.atlassian.com/authorize/oauth/token\""
+      },
+      {
+        "claim": "pagination",
+        "quote": "The response is paginated and will return 100 users at a time."
+      },
+      {
+        "claim": "users",
+        "quote": "Get an enterprise's users."
+      },
+      {
+        "claim": "usage",
+        "quote": "dateLastImpression"
+      },
+      {
+        "claim": "plan",
+        "quote": "An Enterprise admin token is required for this route."
+      }
+    ],
+    "assumptions": [
+      "The source documents a cursor query parameter and a paginated response but does not document a response cursor, continuation URL, total, or has-more value; pagination is left as none because no supported pagination path can be confirmed.",
+      "The source does not explain the default behavior of the deactivated filter, so it is left unset to avoid intentionally filtering out members.",
+      "The source documents deactivated members but no suspended status; deactivated maps to inactive and suspended members cannot be distinguished.",
+      "The source gives dateLastImpression as a string but does not define its timestamp format; it is used as the per-user activity signal without conversion.",
+      "The source does not state API rate limits, so rate-limit values are unknown.",
+      "The source labels the selected listing as enterprise-scoped but does not explicitly name a paid plan; Enterprise is used as the closest documented access tier.",
+      "The context call depends on the token owner's idEnterprise; the source does not document a separate way to discover an enterprise ID for OAuth2 connections.",
+      "The enterprise member-query response does not enumerate memberType values; normal and ghost mappings come from the documented Trello member response."
+    ]
+  }
+}

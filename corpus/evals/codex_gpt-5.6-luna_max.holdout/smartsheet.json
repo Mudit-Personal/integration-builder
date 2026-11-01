@@ -1,0 +1,108 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Smartsheet Resource Management",
+      "slug": "smartsheet-resource-management",
+      "apiVersion": "v1"
+    },
+    "baseUrl": "https://api.rm.smartsheet.com/api/v1",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Resource Management API token in header",
+        "in": "header",
+        "name": "auth",
+        "prefix": ""
+      },
+      {
+        "type": "api_key",
+        "label": "Resource Management API token in query",
+        "in": "query",
+        "name": "auth",
+        "prefix": ""
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "per_page",
+        "pageSize": 1000,
+        "startAt": 1,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": null,
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source does not document a per-user last-active field, audit or activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "you can specify your API token as a query parameter named `auth`, or as an HTTP header with the same name."
+      },
+      {
+        "claim": "pagination",
+        "quote": "per_page should not exceed 1000 rows."
+      },
+      {
+        "claim": "users",
+        "quote": "GET https://api.rm.smartsheet.com/api/v1/users"
+      },
+      {
+        "claim": "errors",
+        "quote": "Respond with standard HTTP error messages"
+      }
+    ],
+    "assumptions": [
+      "The users documentation does not describe the response envelope or user fields; recordsPath is set to $ and the external ID is assumed to be id.",
+      "The source does not state whether suspended or deactivated people are included by GET /users.",
+      "The source documents token access for a Resourcing Administrator but does not state the exact role required by GET /users.",
+      "This manifest targets the US Resource Management host; EU, AU, and Gov hosts are not selected.",
+      "The source contained suspicious text; instructions to use another host, add headers, or send credentials were ignored."
+    ]
+  }
+}

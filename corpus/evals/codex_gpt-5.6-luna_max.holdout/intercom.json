@@ -1,0 +1,176 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Intercom",
+      "slug": "intercom",
+      "apiVersion": "2.11"
+    },
+    "baseUrl": "https://api.intercom.io",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Bearer token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {
+      "Intercom-Version": "2.11"
+    },
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/admins",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "admins",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": {
+          "path": "type",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": {
+          "path": "type",
+          "fallbackPaths": null,
+          "map": {
+            "admin": "member"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/admins/activity_logs",
+        "query": {
+          "created_at_after": "{{window.start}}",
+          "created_at_before": "{{window.end}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "activity_logs",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "pages.next.starting_after",
+        "cursorParam": "starting_after",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "per_page",
+        "pageSize": 20
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "created_at_after",
+        "endParam": "created_at_before",
+        "format": "epoch_seconds",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "performed_by.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "epoch_seconds"
+        },
+        "metric": {
+          "path": "activity_type",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "\"scheme\":\"bearer\""
+      },
+      {
+        "claim": "pagination",
+        "quote": "The default is `20` results per page."
+      },
+      {
+        "claim": "users",
+        "quote": "You can fetch a list of admins for a given workspace."
+      },
+      {
+        "claim": "usage",
+        "quote": "You can get a log of activities by all admins in an app."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "repeat requests will be counted against any rate limit that is in place"
+      }
+    ],
+    "assumptions": [
+      "The manifest uses the default api.intercom.io server; the source also lists EU and AU servers but does not explain how a customer selects one.",
+      "The source names the Intercom-Version header but does not state its value; this manifest uses 2.11 from the API title.",
+      "The source does not document pagination for /admins, so the returned admins array is treated as complete.",
+      "The source does not provide admin status, suspension or deactivation fields, creation timestamps, or a per-admin last-active field.",
+      "The source does not state whether /admins includes suspended or deactivated admins, so only records returned by that endpoint can be included.",
+      "The activity-log parameter list omits starting_after and per_page even though the response and general pagination text mention them; the manifest assumes standard cursor pagination applies.",
+      "The source describes activity timestamps as integer date-time values but does not state the exact unit for time filters; the manifest uses epoch seconds.",
+      "The source does not state a plan requirement, numeric rate limit, rate-limit headers, or an in-body error envelope."
+    ]
+  }
+}

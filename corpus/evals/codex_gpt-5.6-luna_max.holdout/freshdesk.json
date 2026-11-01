@@ -1,0 +1,129 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Freshdesk",
+      "slug": "freshdesk",
+      "apiVersion": "v2"
+    },
+    "baseUrl": "https://{subdomain}.freshdesk.com",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Freshdesk subdomain",
+        "example": "thelocker"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "basic",
+        "label": "API key",
+        "usernameLabel": "API key",
+        "passwordLabel": "Dummy password"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/v2/agents",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "link_header",
+        "sizeParam": "per_page",
+        "pageSize": 100
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The documentation lists an audit log export endpoint but does not document its request method, response records, or a per-person activity field. It also does not document a per-user last-login field or usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": "X-RateLimit-Remaining",
+      "resetHeader": "Retry-After",
+      "resetFormat": "delta_seconds"
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "You can use your personal API key to authenticate the request."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The maximum number of objects that can be retrieved per page is 100."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "The number of API calls per minute is based on your plan."
+      },
+      {
+        "claim": "users",
+        "quote": "List All Agents"
+      },
+      {
+        "claim": "usage",
+        "quote": "Export Audit Logs"
+      },
+      {
+        "claim": "plan",
+        "quote": "The number of API calls per minute is based on your plan."
+      },
+      {
+        "claim": "errors",
+        "quote": "Improved error handling - errors will return appropriate HTTP status codes and an error body"
+      }
+    ],
+    "assumptions": [
+      "The supplied documentation does not show the response schema for List All Agents; id, email, name, and created_at are mapped from fields named elsewhere in the documentation, while status, role, user type, and activity fields are left unset.",
+      "The documentation does not say whether List All Agents includes suspended or deactivated agents, so no status filter is applied.",
+      "The documentation lists Export Audit Logs but does not document its request method, response shape, pagination, or person identifier, so usage is unavailable.",
+      "Rate limits vary by plan and may be increased, so no single maximum requests-per-minute value is set.",
+      "The documentation does not state a plan requirement for the agents listing endpoint."
+    ]
+  }
+}

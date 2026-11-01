@@ -1,0 +1,38 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "schema",
+          "where": "",
+          "message": "Invalid input: expected object, received null"
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "schema",
+          "where": "",
+          "message": "Invalid input: expected object, received null"
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "schema",
+          "where": "",
+          "message": "Invalid input: expected object, received null"
+        }
+      ]
+    }
+  ],
+  "last": null
+}

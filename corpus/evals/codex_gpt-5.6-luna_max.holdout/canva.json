@@ -1,0 +1,160 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Canva",
+      "slug": "canva",
+      "apiVersion": "2024-06-18"
+    },
+    "baseUrl": "https://api.canva.com/rest",
+    "connectionFields": [
+      {
+        "name": "designId",
+        "label": "Design ID",
+        "example": "string"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0 authorization code with PKCE",
+        "authorizeUrl": "https://www.canva.com/api/oauth/authorize",
+        "tokenUrl": "https://api.canva.com/rest/v1/oauth/token",
+        "scopes": [
+          "design:content:read",
+          "design:meta:read",
+          "design:content:write",
+          "folder:read",
+          "folder:write",
+          "folder:permission:write",
+          "asset:read",
+          "asset:write",
+          "comment:read",
+          "comment:write",
+          "collaboration:event",
+          "brandtemplate:meta:read",
+          "brandtemplate:content:read",
+          "brandtemplate:content:write",
+          "profile:read",
+          "openid",
+          "profile",
+          "email"
+        ]
+      },
+      {
+        "type": "basic",
+        "label": "Basic access authentication",
+        "usernameLabel": "Client ID",
+        "passwordLabel": "Client secret"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/v1/designs/{{connection.designId}}/analytics/viewers",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "items",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "continuation",
+        "cursorParam": "continuation",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "limit",
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "design:content:read"
+      ],
+      "planRequirement": "Enterprise",
+      "fields": {
+        "externalId": {
+          "path": "user.user_id",
+          "fallbackPaths": [
+            "viewer_id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": {
+          "path": "user.display_name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": {
+          "path": "last_viewed_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "epoch_seconds"
+        },
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Basic access authentication"
+      },
+      {
+        "claim": "pagination",
+        "quote": "limit(query) continuation(query)"
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Each app can export a maximum of 750 times per 5-minute window"
+      },
+      {
+        "claim": "users",
+        "quote": "\"viewer_id\":\"string\",\"user\":{\"user_id\":\"string\",\"team_id\":\"string\",\"display_name\":\"string\"}"
+      },
+      {
+        "claim": "usage",
+        "quote": "\"last_viewed_at\":\"integer int64\""
+      },
+      {
+        "claim": "plan",
+        "quote": "member of a [Canva Enterprise](https://www.canva.com/enterprise/) organization."
+      },
+      {
+        "claim": "errors",
+        "quote": "\"error\":{\"code\":\"string enum license_required|approval_required|internal_failure\",\"message\":\"string\"}"
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text instructing the client to add request headers; that instruction was ignored.",
+      "The source does not document an account-wide team-member or organization-user listing. This manifest therefore lists viewers of the configured design, not every person on the Canva account.",
+      "Viewer analytics is documented as a preview API and requires Canva Enterprise.",
+      "The viewer response does not document email addresses, account status, roles, user types, or account creation timestamps, so those fields are unavailable.",
+      "Canva documents last_viewed_at only as integer int64 without specifying units; epoch seconds is assumed.",
+      "The maximum value for limit is not documented; page size 100 is a sensible default.",
+      "The source documents export-specific throttles but no general read-endpoint rate limit or rate-limit headers.",
+      "The source does not document an error envelope for successful HTTP responses."
+    ]
+  }
+}

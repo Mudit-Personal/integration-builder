@@ -1,0 +1,154 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Shopify",
+      "slug": "shopify",
+      "apiVersion": "2026-10"
+    },
+    "baseUrl": "https://{store_name}.myshopify.com/admin/api/2026-10",
+    "connectionFields": [
+      {
+        "name": "store_name",
+        "label": "Shopify store name",
+        "example": "your-development-store"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Shopify access token",
+        "in": "header",
+        "name": "X-Shopify-Access-Token",
+        "prefix": ""
+      }
+    ],
+    "extraHeaders": {
+      "Content-Type": "application/json"
+    },
+    "context": [],
+    "users": {
+      "request": {
+        "method": "POST",
+        "path": "/graphql.json",
+        "query": {},
+        "body": {
+          "query": "query ($cursor: String) { staffMembers(first: 250, after: $cursor) { nodes { id email name active accountType } pageInfo { hasNextPage endCursor } } }"
+        },
+        "readOnlyPostReason": "Shopify documents GraphQL queries as POST requests and says queries are equivalent to making a GET request in REST."
+      },
+      "recordsPath": "data.staffMembers.nodes",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "pageInfo.endCursor",
+        "cursorParam": "cursor",
+        "cursorIn": "graphql_variable",
+        "hasMorePath": "pageInfo.hasNextPage",
+        "sizeParam": null,
+        "pageSize": 250
+      },
+      "requiredScopes": [
+        "read_users"
+      ],
+      "planRequirement": "Shopify Plus or Advanced",
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "active",
+          "fallbackPaths": null,
+          "map": {
+            "true": "active",
+            "false": "inactive"
+          },
+          "format": null
+        },
+        "role": null,
+        "userType": {
+          "path": "accountType",
+          "fallbackPaths": null,
+          "map": {
+            "collaborator": "guest",
+            "collaborator_team_member": "guest",
+            "invited": "member",
+            "regular": "member",
+            "requested": "member",
+            "restricted": "member",
+            "saml": "member"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents no per-user last-active or last-login field, audit or activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Every GraphQL Admin API request carries an access token in the X-Shopify-Access-Token header."
+      },
+      {
+        "claim": "pagination",
+        "quote": "You can retrieve up to a maximum of 250 resources."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "The GraphQL Admin API is rate-limited using calculated query costs"
+      },
+      {
+        "claim": "users",
+        "quote": "Returns a paginated list of Staff Member objects for the shop."
+      },
+      {
+        "claim": "plan",
+        "quote": "The app must be a finance embedded app or installed on a Shopify Plus or Advanced store."
+      },
+      {
+        "claim": "errors",
+        "quote": "the GraphQL API can return a 200 OK response code in cases that would typically produce 4xx or 5xx errors."
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The source does not explicitly confirm whether the staffMembers connection returns suspended or deactivated accounts; no status filter is applied.",
+      "The source lists accountType values but does not define normalized user types; collaborator values are mapped to guest and the other documented values to member.",
+      "The source documents cost-based throttling but no requests-per-minute limit or reset headers, so rate-limit fields are null.",
+      "The source documents GraphQL errors in HTTP 200 responses but no boolean success field, so errorEnvelope is null.",
+      "The read_users scope also requires a finance embedded app or Shopify Support enablement; planRequirement captures the documented Shopify Plus or Advanced condition.",
+      "The source does not document OAuth token or authorization URLs, so no OAuth authentication methods are included."
+    ]
+  }
+}

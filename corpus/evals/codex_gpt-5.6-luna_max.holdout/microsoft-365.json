@@ -1,0 +1,143 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Microsoft Graph",
+      "slug": "microsoft-graph",
+      "apiVersion": "v1.0"
+    },
+    "baseUrl": "https://graph.microsoft.com/v1.0",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Microsoft Graph application bearer token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {
+          "$select": "id,displayName,mail,userPrincipalName,accountEnabled,userType,createdDateTime,signInActivity"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "value",
+      "pagination": {
+        "type": "next_url",
+        "urlPath": "@odata.nextLink",
+        "sizeParam": "$top",
+        "pageSize": 500
+      },
+      "requiredScopes": [
+        "User.Read.All",
+        "AuditLog.Read.All"
+      ],
+      "planRequirement": "Microsoft Entra ID P1 or P2",
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "mail",
+          "fallbackPaths": [
+            "userPrincipalName"
+          ],
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "displayName",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "accountEnabled",
+          "fallbackPaths": null,
+          "map": {
+            "true": "active",
+            "false": "inactive"
+          },
+          "format": null
+        },
+        "role": null,
+        "userType": {
+          "path": "userType",
+          "fallbackPaths": null,
+          "map": {
+            "member": "member",
+            "guest": "guest"
+          },
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "signInActivity.lastSignInDateTime",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "createdAt": {
+          "path": "createdDateTime",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Bearer {token}. Required."
+      },
+      {
+        "claim": "pagination",
+        "quote": "When you specify $select=signInActivity or $filter=signInActivity when listing users, the maximum page size for $top is 500."
+      },
+      {
+        "claim": "users",
+        "quote": "Retrieve a list of user objects."
+      },
+      {
+        "claim": "usage",
+        "quote": "Get the last signed-in date and request ID of the sign-in for a given user."
+      },
+      {
+        "claim": "plan",
+        "quote": "Details for the signInActivity property require a Microsoft Entra ID P1 or P2 license"
+      }
+    ],
+    "assumptions": [
+      "The source does not document OAuth token or authorization URLs, so this manifest expects a pre-issued bearer token.",
+      "The source says large collections support paging but does not show the continuation field; the manifest assumes the Microsoft Graph response field @odata.nextLink for next-page URLs.",
+      "The source does not document a separate suspended status; accountEnabled=false is mapped to inactive.",
+      "The source does not state a rate limit or rate-limit headers, so those values are left unset.",
+      "The source contained suspicious text instructing the reader to add request headers; that instruction was ignored."
+    ]
+  }
+}

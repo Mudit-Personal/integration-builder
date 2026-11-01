@@ -1,0 +1,109 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Dropbox",
+      "slug": "dropbox",
+      "apiVersion": null
+    },
+    "baseUrl": "https://api.dropboxapi.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Dropbox bearer access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      },
+      {
+        "type": "basic",
+        "label": "Dropbox app key and secret",
+        "usernameLabel": "App key",
+        "passwordLabel": "App secret"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "POST",
+        "path": "/2/team/get_info",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": "The source documents the team get_info operation as POST and does not show a GET form."
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "team_member_id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": null,
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source mentions account activity and an Events page but does not provide a per-user activity field, audit-log endpoint, or per-user report API."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Team Authentication"
+      },
+      {
+        "claim": "users",
+        "quote": "team members’ home namespaces"
+      },
+      {
+        "claim": "usage",
+        "quote": "Monitor account activity"
+      },
+      {
+        "claim": "pagination",
+        "quote": "ZtkX9_EHj3x7PMkVuFIhwKYXEpwpLwyxp9vMKomUhllil9q7eWiAu"
+      },
+      {
+        "claim": "plan",
+        "quote": "Dropbox Business includes tools"
+      },
+      {
+        "claim": "errors",
+        "quote": "401 Member ID doesn’t exist on the team."
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The supplied source does not document a whole-account member-list endpoint or the response shape for team members, so the users mapping cannot be confirmed as a complete tenant-wide people list.",
+      "The source does not confirm pagination behavior or a page size for the users request.",
+      "The source does not state the required scopes for the team information request.",
+      "The source does not state API rate limits.",
+      "The source does not provide confirmed user email, display name, status, role, user type, creation time, or last-activity fields."
+    ]
+  }
+}

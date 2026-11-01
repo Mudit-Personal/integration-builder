@@ -1,0 +1,128 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "host_undeclared",
+          "where": "baseUrl",
+          "message": "snowflakecomputing.com does not appear anywhere in the source."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Snowflake",
+      "slug": "snowflake",
+      "apiVersion": "v2"
+    },
+    "baseUrl": "https://docs.snowflake.com",
+    "connectionFields": [
+      {
+        "name": "account",
+        "label": "Snowflake account",
+        "example": "account"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Bearer access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/v2/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "0.name",
+        "cursorParam": "fromName",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "showLimit",
+        "pageSize": 100
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source lists a LOGIN_HISTORY view but does not document a REST usage endpoint, per-user activity field, or report response."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Authenticating Snowflake REST APIs with Snowflake"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Parameter to enable fetching rows only following the first row whose object name matches the specified string."
+      },
+      {
+        "claim": "users",
+        "quote": "Lists the users in the system."
+      },
+      {
+        "claim": "usage",
+        "quote": "LOGIN_HISTORY view"
+      },
+      {
+        "claim": "errors",
+        "quote": "Error Response Codes"
+      }
+    ],
+    "assumptions": [
+      "The source does not state the Snowflake account API hostname; the standard account host pattern is assumed.",
+      "The source does not document authentication methods, token URLs, or scopes; bearer access-token authentication is assumed.",
+      "The source does not show the user-list response schema. The documented user name is used as both the external ID and display name; email, status, role, user type, and creation time cannot be mapped.",
+      "The source documents showLimit and fromName but gives no maximum, response cursor field, or explicit continuation response; a name cursor and page size of 100 are assumed.",
+      "The source does not say whether suspended or deactivated users are included.",
+      "The source does not document rate-limit values or headers.",
+      "The source does not document a plan requirement or a 200-response error envelope."
+    ]
+  }
+}
