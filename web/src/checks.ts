@@ -4,7 +4,7 @@ import { startVirtualMock } from '../../src/mock-virtual.ts';
 import { synthUser } from '../../src/mock-core.ts';
 import { getPath, runConnector } from '../../src/runtime.ts';
 import { runScenarioOn, SCENARIOS, type ScenarioResult } from '../../src/scenario-table.ts';
-import { isAllowed, runtimeLimits, type Decisions } from './decisions.ts';
+import { featuresOff, isAllowed, runtimeLimits, type Decisions } from './decisions.ts';
 import type { AppPack } from './pack.ts';
 
 export type ChecksRun =
@@ -19,8 +19,8 @@ const pause = (ms: number) => new Promise(r => setTimeout(r, ms));
 // shortcut: lives in this tab's memory and is lost on reload, keep results server-side if replays must survive one.
 const stored = new Map<string, ScenarioResult[]>();
 
-/** Retries and window are runtime limits, not manifest fields, so the hash alone would replay stale results. */
-export const runKey = (m: Manifest, d: Decisions) => `${hashManifest(m)}:${d.retries}:${d.window}`;
+/** Limits are not manifest fields, so the hash alone would replay stale results. */
+export const runKey = (m: Manifest, d: Decisions) => `${hashManifest(m)}:${JSON.stringify(runtimeLimits(d))}`;
 export const storedResults = (key: string) => stored.get(key);
 export const clearStored = () => stored.clear();
 
@@ -28,7 +28,7 @@ export const runChecks = async (m: Manifest, d: Decisions, replay: ScenarioResul
   const results: ScenarioResult[] = [];
   for (const [i, s] of SCENARIOS.entries()) {
     const started = performance.now();
-    const r = replay?.[i] ?? await runScenarioOn(startVirtualMock, m, s, runtimeLimits(d));
+    const r = replay?.[i] ?? await runScenarioOn(startVirtualMock, m, s, runtimeLimits(d), featuresOff(d));
     await pause((replay ? REPLAY_ROW_MS : LIVE_ROW_MS) - (performance.now() - started));
     if (signal.aborted) return;
     results.push(r);

@@ -1,4 +1,5 @@
 import { parse as parseYaml } from 'yaml';
+import { normalizePath } from './manifest.ts';
 
 export type SpecParam = { name: string; in: string; required: boolean };
 export type SpecOperation = {
@@ -174,7 +175,7 @@ export const isOpenSchema = (schema: unknown): boolean => {
 };
 
 export const schemaAt = (schema: unknown, rawPath: string): unknown => {
-  const path = rawPath.replace(/\[(\d+)\]/g, '.$1');
+  const path = normalizePath(rawPath);
   if (path === '$') return schema;
   const index = /^\d+(?:\.(.+))?$/.exec(path);
   if (index) return index[1] ? schemaAt(itemsOf(schema), index[1]) : itemsOf(schema);
@@ -188,6 +189,10 @@ export const schemaAt = (schema: unknown, rawPath: string): unknown => {
 };
 
 export const arrayItems = (schema: unknown) => itemsOf(schema);
+
+/** Dotted paths to every named property, a few levels deep, without stepping into lists. */
+export const propertyPaths = (schema: unknown, depth = 3, prefix = ''): string[] =>
+  depth === 0 ? [] : Object.entries(propertiesOf(schema)).flatMap(([k, v]) => [`${prefix}${k}`, ...propertyPaths(v, depth - 1, `${prefix}${k}.`)]);
 
 export const samePathShape = (specPath: string, manifestPath: string) => {
   const norm = (p: string) => p.replace(/\{\{?[^}]+\}?\}/g, '{}').replace(/\/+$/, '').toLowerCase();

@@ -1,15 +1,16 @@
 import type { ConnectorSettings } from '../../src/connector-source.ts';
 import { credentialFields, type AuthMethod, type Citation, type Manifest, type Pagination } from '../../src/manifest.ts';
 import type { Limits } from '../../src/runtime.ts';
+import type { Feature } from '../../src/scenario-table.ts';
 import type { AppPack, Endpoint } from './pack.ts';
 
-/**
- * Everything a person can change. Users, errors, pagination and logging have no switch here,
- * because the trusted runtime always includes them.
- */
+export const DELIVERABLES = ['client', 'auth', 'users', 'usage', 'errors', 'pagination', 'logging', 'caching'] as const;
+export type Deliverable = typeof DELIVERABLES[number];
+
+/** Everything a person can change. */
 export type Decisions = {
   authIndex: number;
-  deliverables: { usage: boolean; caching: boolean };
+  deliverables: Record<Deliverable, boolean>;
   window: 7 | 30 | 90;
   /** Null keeps the size the docs gave. */
   pageSize: number | null;
@@ -21,7 +22,7 @@ export type Decisions = {
 };
 
 export const DEFAULT_DECISIONS: Decisions = {
-  authIndex: 0, deliverables: { usage: true, caching: false }, window: 30, pageSize: null,
+  authIndex: 0, deliverables: { client: true, auth: true, users: true, usage: true, errors: true, pagination: true, logging: true, caching: false }, window: 30, pageSize: null,
   retries: 3, logLevel: 'info', cacheTtl: 5, access: {},
 };
 
@@ -48,10 +49,18 @@ export const applyDecisions = (m: Manifest, d: Decisions): Manifest => {
   return next;
 };
 
-export const runtimeLimits = (d: Decisions): Partial<Limits> => ({ maxRetries: d.retries, usageWindowDays: d.window });
+export const runtimeLimits = ({ deliverables: on, retries, window }: Decisions): Partial<Limits> => ({
+  usageWindowDays: window,
+  ...(on.errors ? { maxRetries: retries } : { maxRetries: 0, maxRetryWaitMs: 0 }),
+  ...(on.pagination ? {} : { maxPages: 1 }),
+});
+
+/** Turned-off features whose sandbox checks would prove nothing. */
+export const featuresOff = ({ deliverables: on }: Decisions): Feature[] => [...(on.errors ? [] : ['retries' as const]), ...(on.pagination ? [] : ['pagination' as const])];
 
 export const connectorSettings = (d: Decisions, endpoints: Endpoint[]): ConnectorSettings => ({
-  limits: runtimeLimits(d), logLevel: d.logLevel, cacheTtlMs: d.deliverables.caching ? d.cacheTtl * 60_000 : 0,
+  limits: runtimeLimits(d), logLevel: d.deliverables.logging ? d.logLevel : 'off', cacheTtlMs: d.deliverables.caching ? d.cacheTtl * 60_000 : 0,
+  skipAuth: !d.deliverables.auth, exports: { users: d.deliverables.users, usage: d.deliverables.usage },
   approvedPaths: endpoints.filter(e => isAllowed(e, d.access)).map(e => e.path),
   blockedPaths: endpoints.filter(e => !isAllowed(e, d.access)).map(e => e.path),
 });
@@ -62,9 +71,11 @@ export const envName = (m: Manifest, field: string) =>
 export const quote = (m: Manifest, claim: Citation['claim']) =>
   m.evidence.find(e => e.claim === claim)?.quote.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 
-export type Source = 'docs' | 'default' | 'you';
+export type Source = 'docs' | 'default' | 'you' | 'off';
 export type Choice = { current: string; options: string[]; patch: (value: string) => Partial<Decisions> };
 export type QuestionId = 'auth' | 'usage';
+/** The questions someone who isn't a developer is asked. The rest take the recommended answer. */
+export const BUSINESS_QUESTIONS: QuestionId[] = ['usage'];
 export type Question = { id: QuestionId; text: string; options: string[]; current: number; recommended: number; why: string; patch: (index: number) => Partial<Decisions> };
 export type DecisionRow = {
   group: string; title: string; value: string; plain: string; source: Source;
@@ -133,7 +144,38 @@ const usageRows = (m: Manifest, d: Decisions): DecisionRow[] => {
   return rows;
 };
 
+/** What leaving each one out means, in the words Source and Decisions both use. */
+export const LEFT_OUT: Record<Deliverable, string> = {
+  client: 'Manifest and README only. You write the client.',
+  auth: 'Your code signs each request. We send no credentials.',
+  users: 'No users function. Usage data still reads the list to work.',
+  usage: 'Users only.',
+  errors: 'One try per request. A rate limit or outage fails the run.',
+  pagination: 'First page only. A longer list is reported as partial.',
+  logging: 'No log events.',
+  caching: 'Every call goes to the API.',
+};
+const GROUP_OF: Record<string, Deliverable> = {
+  'API client': 'client', 'Auth setup': 'auth', Users: 'users', 'Usage data': 'usage',
+  Pagination: 'pagination', 'Error handling': 'errors', Logging: 'logging', 'Response caching': 'caching',
+};
+
+/** Usage and caching keep their own on/off choice here. Any other group that was left out collapses to one row. */
 export const decisionRows = (pack: AppPack, d: Decisions): DecisionRow[] => {
+  const seen = new Set<string>();
+  return allRows(pack, d).flatMap(r => {
+    const key = GROUP_OF[r.group];
+    if (d.deliverables[key] || key === 'usage' || key === 'caching') return [r];
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{
+      group: r.group, title: 'Left out', value: LEFT_OUT[key], plain: LEFT_OUT[key], source: 'off' as const,
+      choice: { current: 'Off', options: ['On', 'Off'], patch: v => ({ deliverables: { ...d.deliverables, [key]: v === 'On' } }) },
+    }];
+  });
+};
+
+const allRows = (pack: AppPack, d: Decisions): DecisionRow[] => {
   const m = pack.manifest;
   const name = m.app.name;
   const method = m.authMethods[d.authIndex];

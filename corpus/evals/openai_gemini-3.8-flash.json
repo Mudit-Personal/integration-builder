@@ -1,0 +1,21 @@
+[
+  {
+    "slug": "calendly",
+    "status": "error",
+    "correct": false,
+    "attempts": 0,
+    "ms": 249348,
+    "tokens": {
+      "input": 0,
+      "output": 0
+    },
+    "scenarios": {
+      "passed": 0,
+      "failed": 0
+    },
+    "matches": 0,
+    "of": 0,
+    "differs": [],
+    "reason": "OpenAI 400: Bad Request"
+  }
+]

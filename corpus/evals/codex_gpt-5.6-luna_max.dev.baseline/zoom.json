@@ -1,0 +1,131 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Zoom",
+      "slug": "zoom",
+      "apiVersion": "v2"
+    },
+    "baseUrl": "https://api.zoom.us/v2",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Bearer access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "division",
+        "request": {
+          "method": "GET",
+          "path": "/divisions",
+          "query": {
+            "page_size": "30"
+          },
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "divisionId": "divisions[0].division_id"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/divisions/{{context.divisionId}}/users",
+        "query": {
+          "page_size": "30"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "users",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "next_page_token",
+        "cursorParam": "next_page_token",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "page_size",
+        "pageSize": 30
+      },
+      "requiredScopes": [
+        "division:read:admin"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user_id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "user_email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user_display_name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The supplied documentation does not describe a per-user last activity field, audit or activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Scopes : division:read:admin"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Use the next page token to paginate through a large set of results."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Rate Limit Label : LIGHT"
+      },
+      {
+        "claim": "users",
+        "quote": "List the users of a division under your account."
+      }
+    ],
+    "assumptions": [
+      "The source lists an admin scope but does not document the server authentication method; a bearer Authorization token is used because the schema requires an authentication method.",
+      "The source does not provide an account-wide user listing. This manifest uses the first division returned by the divisions endpoint, so it may not include users in other divisions.",
+      "The source does not document pagination for the context step, so only the first returned division can be selected.",
+      "The divisions endpoints are documented as not supported in the Gov cluster.",
+      "The documented user response has no status field, so suspended or deactivated users cannot be identified explicitly.",
+      "The source provides only a qualitative rate-limit label, not numeric limits or rate-limit headers."
+    ]
+  }
+}

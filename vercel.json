@@ -3,6 +3,17 @@
   "buildCommand": "npm run demo:build",
   "outputDirectory": "web/dist",
   "functions": {
-    "api/read.mjs": { "maxDuration": 300 }
-  }
+    "api/read.mjs": {
+      "maxDuration": 300
+    },
+    "api/app.mjs": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/((?!read$).*)",
+      "destination": "/api/app"
+    }
+  ]
 }

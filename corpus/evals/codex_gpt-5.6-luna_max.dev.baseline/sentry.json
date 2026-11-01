@@ -1,0 +1,200 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "context_path_missing",
+          "where": "context[0].extract.organizationSlug",
+          "message": "\"[0].slug\" is not in the response schema."
+        },
+        {
+          "severity": "block",
+          "code": "pagination_path_missing",
+          "where": "users.pagination",
+          "message": "\"cursor\" is not in the response schema."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "context_path_missing",
+          "where": "context[0].extract.organizationSlug",
+          "message": "\"$[0].slug\" is not in the response schema."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "context_path_missing",
+          "where": "context[0].extract.organizationSlug",
+          "message": "\"[0].slug\" is not in the response schema."
+        }
+      ]
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Sentry",
+      "slug": "sentry",
+      "apiVersion": "v0"
+    },
+    "baseUrl": "https://{region}.sentry.io",
+    "connectionFields": [
+      {
+        "name": "region",
+        "label": "Sentry region",
+        "example": "us"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Auth token",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      },
+      {
+        "type": "api_key",
+        "label": "DSN",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": "DSN "
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "organization",
+        "request": {
+          "method": "GET",
+          "path": "/api/0/organizations/",
+          "query": {
+            "per_page": "100"
+          },
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "organizationSlug": "[0].slug"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/0/organizations/{{context.organizationSlug}}/members/",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [
+        "org:read",
+        "member:read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user.id",
+          "fallbackPaths": [
+            "id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": [
+            "user.email"
+          ],
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": [
+            "user.name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "user.isActive",
+          "fallbackPaths": null,
+          "map": {
+            "true": "active",
+            "false": "inactive"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "orgRole",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": null,
+        "lastActiveAt": {
+          "path": "user.lastActive",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "createdAt": {
+          "path": "dateCreated",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "\"type\":\"http\",\"scheme\":\"bearer\""
+      },
+      {
+        "claim": "pagination",
+        "quote": "cursor(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "List all organization members. Response includes pending invites"
+      },
+      {
+        "claim": "usage",
+        "quote": "\"lastActive\":\"string date-time\""
+      }
+    ],
+    "assumptions": [
+      "The source lists a custom DSN HTTP authentication scheme but does not explain how it is sent; it is represented as an Authorization header with the DSN prefix because the schema has no custom HTTP-scheme option.",
+      "The organization list can return more than one organization, but the source does not specify how to choose one; this manifest uses the first returned organization slug.",
+      "The members endpoint documents a cursor query parameter and a paginated response, but the source does not document a response cursor, a has-more field, a next URL, or a maximum page size; pagination cannot be configured from the documented response schema.",
+      "The source provides both isActive and isSuspended, but the manifest schema has one normalized status path; status is mapped from isActive while the unfiltered members request still includes suspended members.",
+      "The source does not state an API request-rate limit or a plan requirement.",
+      "The source does not document an audit log or per-user report, so usage uses the available lastActive field."
+    ]
+  }
+}

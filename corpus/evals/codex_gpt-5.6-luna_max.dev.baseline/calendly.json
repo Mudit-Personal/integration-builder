@@ -1,0 +1,212 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Calendly",
+      "slug": "calendly",
+      "apiVersion": "2.0.0"
+    },
+    "baseUrl": "https://api.calendly.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0",
+        "authorizeUrl": "https://auth.calendly.com/oauth/authorize",
+        "tokenUrl": "https://auth.calendly.com/oauth/token",
+        "scopes": []
+      },
+      {
+        "type": "bearer",
+        "label": "Personal access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "current_user",
+        "request": {
+          "method": "GET",
+          "path": "/users/me",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "organization": "resource.current_organization"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/organization_memberships",
+        "query": {
+          "organization": "{{context.organization}}",
+          "count": "100"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "collection",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "pagination.next_page_token",
+        "cursorParam": "page_token",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "count",
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "organizations:read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user.uri",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "user.email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user.name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": {
+          "path": "role",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": {
+          "path": "user.created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/activity_log_entries",
+        "query": {
+          "organization": "{{context.organization}}",
+          "min_occurred_at": "{{window.start}}",
+          "max_occurred_at": "{{window.end}}",
+          "count": "100"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "collection",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "pagination.next_page_token",
+        "cursorParam": "page_token",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "count",
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "activity_log:read"
+      ],
+      "planRequirement": "Enterprise",
+      "forEachUser": false,
+      "window": {
+        "startParam": "min_occurred_at",
+        "endParam": "max_occurred_at",
+        "format": "iso8601",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "actor.uri",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "occurred_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "metric": {
+          "path": "action",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Put the access token in the `Authorization: Bearer <TOKEN>` header"
+      },
+      {
+        "claim": "pagination",
+        "quote": "page_token(query) count(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "Use this to list the Organization Memberships for all users belonging to an organization"
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns a list of activity log entries"
+      },
+      {
+        "claim": "plan",
+        "quote": "This endpoint requires an <strong>Enterprise</strong> subscription."
+      },
+      {
+        "claim": "errors",
+        "quote": "Users on the Free plan will receive a 403 Forbidden response."
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The documentation does not state a maximum count, so a page size of 100 is used.",
+      "Organization membership records do not expose a status field, so inclusion of suspended or deactivated people cannot be confirmed.",
+      "No per-user last-active or last-login field is documented, so usage uses the Enterprise-only activity log.",
+      "The documentation does not state a request rate limit or rate-limit headers, so those fields are null.",
+      "The OAuth scheme lists no scopes in the source, so the OAuth auth method scope list is empty.",
+      "The documentation does not describe a 200-response error envelope.",
+      "The documentation does not describe service-account or client-credentials authentication."
+    ]
+  }
+}

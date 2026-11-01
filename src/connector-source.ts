@@ -3,17 +3,20 @@ import type { Limits } from './runtime.ts';
 
 /** What a person decided on top of the manifest. Limits and logging are not manifest fields, so they travel in the generated code. */
 export type ConnectorSettings = {
-  limits: Partial<Limits>; logLevel: 'debug' | 'info' | 'warn'; cacheTtlMs: number;
+  limits: Partial<Limits>; logLevel: 'debug' | 'info' | 'warn' | 'off'; cacheTtlMs: number;
   approvedPaths: string[]; blockedPaths: string[];
+  /** The caller's fetch signs requests, so the connector sends no credentials. */
+  skipAuth: boolean;
+  exports: { users: boolean; usage: boolean };
 };
 
 const settingsCode = (s: ConnectorSettings) => {
   const { limits, logLevel, cacheTtlMs } = s;
-  const pass = `const LOG_RANK = { debug: 0, info: 1, warn: 2, error: 3 };
+  const pass = `const LOG_RANK = { debug: 0, info: 1, warn: 2, error: 3, off: 4 };
 const settings = ${JSON.stringify({ limits, logLevel, cacheTtlMs })};
 
 const withSettings = (options: RunOptions): RunOptions => ({
-  ...options,
+  ...options,${s.skipAuth ? '\n  skipAuth: true,' : ''}
   limits: { ...settings.limits, ...options.limits },
   log: options.log && (e => { if (LOG_RANK[e.level] >= LOG_RANK[settings.logLevel as keyof typeof LOG_RANK]) options.log!(e); }),
 });
@@ -37,7 +40,7 @@ const run = (options: RunOptions) => runConnector(manifest, withSettings(options
 
 const settingsHeader = (s: ConnectorSettings) => `
  * Retries      ${s.limits.maxRetries ?? 'default'} after the first attempt
- * Log level    ${s.logLevel}
+ * Log level    ${s.logLevel === 'off' ? 'off, no events' : s.logLevel}
  * Cache        ${s.cacheTtlMs ? `${s.cacheTtlMs / 60_000} min, in memory` : 'off'}
  * Approved     ${s.approvedPaths.join(', ') || 'none'}
  * Blocked      ${s.blockedPaths.join(', ') || 'none'}`;
@@ -69,9 +72,8 @@ export const connectorSource = (m: Manifest, hash: string, settings?: ConnectorS
  * Regenerate from the manifest so the tests, approval and audit trail stay valid.
  *
  * API client   ${m.baseUrl}, read only, this host only
- * Auth setup
-${authSummary(m)}
- * Users        ${m.users.request.method} ${m.users.request.path}
+ * Auth setup${settings?.skipAuth ? '   left out, pass a fetch that signs every request' : `\n${authSummary(m)}`}
+ * Users        ${m.users.request.method} ${m.users.request.path}${settings && !settings.exports.users ? ', read for usage only' : ''}
  * Usage        ${usage}
  * Pagination   ${describePagination(m)}
  * Rate limits  ${m.rateLimit.maxRequestsPerMinute ? `${m.rateLimit.maxRequestsPerMinute} requests a minute, ` : ''}Retry-After honoured, exponential backoff with jitter
@@ -89,7 +91,7 @@ const manifest: Manifest = JSON.parse(readFileSync(new URL('./manifest.json', im
 ${settings ? settingsCode(settings) : 'const run = (options: RunOptions) => runConnector(manifest, options);\n'}
 export const run${name}Sync = (options: RunOptions): Promise<RunResult> => run(options);
 
-export const get${name}Users = async (options: RunOptions) => {
+${!settings || settings.exports.users ? `export const get${name}Users = async (options: RunOptions) => {
   const result = await run(options);
   if (result.streams.users.status === 'failed') {
     const error = result.streams.users.error ?? result.streams.context.error;
@@ -97,12 +99,12 @@ export const get${name}Users = async (options: RunOptions) => {
   }
   return { users: result.users, complete: result.streams.users.status === 'complete', reconcile: result.reconcile };
 };
-
+` : ''}${!settings || settings.exports.usage ? `
 export const get${name}Usage = async (options: RunOptions) => {
   const result = await run(options);
   return { usage: result.usage, status: result.streams.usage.status, note: result.streams.usage.note ?? result.streams.usage.error?.action };
 };
-`;
+` : ''}`;
 };
 
 export const bundleFrom = (m: Manifest, hash: string, sources: { runtime: string; manifest: string }, settings?: ConnectorSettings) => ({

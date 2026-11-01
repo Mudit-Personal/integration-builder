@@ -1,4 +1,4 @@
-import { credentialFields, type ActiveUsageStream, type AuthMethod, type Manifest, type Pagination, type RequestSpec, type StreamConfig } from './manifest.ts';
+import { credentialFields, normalizePath, type ActiveUsageStream, type AuthMethod, type Manifest, type Pagination, type RequestSpec, type StreamConfig } from './manifest.ts';
 
 export type Reply = { status?: number; headers?: Record<string, string>; body?: string; hangMs?: number };
 /** A request stripped of its transport, so the same vendor answers over HTTP and through a virtual fetch. Header names are lower case. */
@@ -31,8 +31,9 @@ const DEFAULT_RECORDS = 57;
 const DEFAULT_PAGE_CAP = 20;
 
 export const setPath = (target: Record<string, unknown>, path: string, value: unknown) => {
-  if (path === '$') return;
-  const keys = path.replace(/\[(\d+)\]/g, '.$1').split('.');
+  const normal = normalizePath(path);
+  if (normal === '$') return;
+  const keys = normal.split('.');
   let node = target;
   for (const [i, key] of keys.slice(0, -1).entries()) node = (node[key] ??= /^\d+$/.test(keys[i + 1]) ? [] : {}) as Record<string, unknown>;
   node[keys.at(-1)!] = value;
@@ -132,8 +133,10 @@ const buildPage = (s: StreamConfig, all: Record<string, unknown>[], url: URL, ve
     u.searchParams.set('__at', String(fault.stuckPagination ? 0 : end));
     return fault.nextLinkOrigin ? `${fault.nextLinkOrigin()}${u.pathname}${u.search}` : u.toString();
   };
-  if (p.type === 'cursor' && (more || p.hasMorePath)) assign(body, p.cursorPath, `c${fault.stuckPagination ? 1 : end}`);
-  if (p.type === 'cursor' && p.hasMorePath) assign(body, p.hasMorePath, more);
+  // "More while there is a cursor" is a real vendor pattern: then the cursor itself is the flag, and it's absent on the last page.
+  const cursorIsFlag = p.type === 'cursor' && p.hasMorePath === p.cursorPath;
+  if (p.type === 'cursor' && (more || (p.hasMorePath && !cursorIsFlag))) assign(body, p.cursorPath, `c${fault.stuckPagination ? 1 : end}`);
+  if (p.type === 'cursor' && p.hasMorePath && !cursorIsFlag) assign(body, p.hasMorePath, more);
   if (p.type === 'next_url' && more) assign(body, p.urlPath, nextLink());
   if (p.type === 'link_header' && more) headers.link = `<${nextLink()}>; rel="next"`;
   if (p.type === 'offset') {
@@ -208,8 +211,11 @@ export const createVendor = (m: Manifest, fault: Fault = {}, authIndex = 0) => {
       return { body: JSON.stringify(envelope) };
     }
     const config = match.route.config!;
+    // The paging owns its own parameters, so a fixed first-page value like ?startAt=0 is expected to change.
+    const p = config.pagination as Record<string, unknown>;
+    const paging = new Set(['pageParam', 'sizeParam', 'offsetParam', 'limitParam', 'cursorParam'].map(k => p[k]).filter(v => typeof v === 'string'));
     for (const [k, v] of Object.entries(match.req.query)) {
-      if (!v.includes('{{') && url.searchParams.get(k) !== v) return { status: 400, body: `{"message":"bad ${k}"}` };
+      if (!v.includes('{{') && !paging.has(k) && url.searchParams.get(k) !== v) return { status: 400, body: `{"message":"bad ${k}"}` };
     }
     const pool = match.route.stream === 'users' ? users : usage;
     const records = fault.mutateRecords?.(pool.map(r => structuredClone(r)), match.route) ?? pool;

@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import type { SavedConnector } from '../connectors.ts';
 import { AppLogo, Button, Marker, Mono, P, PageTitle } from '../ds.tsx';
-import { APPS, STEPS } from '../state.ts';
+import { audienceOf, JOURNEYS } from '../journey.ts';
+import { APPS } from '../state.ts';
 
 const logoOf = (slug: string) => APPS.find(a => a.slug === slug)?.logo;
 
-const statusText = (c: SavedConnector) => (c.status === 'ready' ? 'Ready' : `In progress, step ${c.step + 1} ${STEPS[c.step].toLowerCase()}`);
+const statusText = (c: SavedConnector) => {
+  const steps = JOURNEYS[audienceOf(c.flow.audience)].steps.slice(0, c.step + 1).filter(s => s !== null);
+  return c.status === 'ready' ? 'Ready' : `In progress, step ${steps.length} ${steps.at(-1)!.toLowerCase()}`;
+};
 
 const checkText = ({ flow: { result }, hash }: SavedConnector) => {
   if (!result || result.hash !== hash) return 'Checks not run';
@@ -23,7 +27,7 @@ type Props = { connectors: SavedConnector[]; onNew: () => void; onOpen: (c: Save
 
 export function Home({ connectors, onNew, onOpen, onRemove }: Props) {
   const [removing, setRemoving] = useState<string | null>(null);
-  const add = <Button onClick={onNew}>Connect another app</Button>;
+  const add = <Button onClick={onNew}>{connectors.length ? 'Connect another app' : 'Connect your first app'}</Button>;
   return <main className="centered">
     <PageTitle title="Your connectors" lead={connectors.length ? summary(connectors) : undefined} aside={connectors.length ? add : null} />
     {connectors.length ? <ul className="home-list">

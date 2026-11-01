@@ -1,0 +1,152 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Auth0",
+      "slug": "auth0",
+      "apiVersion": "v2"
+    },
+    "baseUrl": "https://{subdomain}.auth0.com/api/v2",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Auth0 tenant subdomain",
+        "example": "example"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Bearer token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {
+          "page": "0",
+          "per_page": "100",
+          "include_totals": "true",
+          "fields": "user_id,email,name,nickname,username,blocked,last_login,created_at,given_name,family_name",
+          "include_fields": "true",
+          "primary_order": "true"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "users",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "per_page",
+        "pageSize": 100,
+        "startAt": 0,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "read:users",
+        "read:user_idp_tokens"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user_id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": [
+            "nickname",
+            "username"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "blocked",
+          "fallbackPaths": null,
+          "map": {
+            "true": "suspended",
+            "false": "active"
+          },
+          "format": null
+        },
+        "role": null,
+        "userType": null,
+        "lastActiveAt": {
+          "path": "last_login",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "createdAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Bearer authentication header of the form Bearer"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Page index of the results to return. First page is 0."
+      },
+      {
+        "claim": "users",
+        "quote": "This endpoint retrieves details of users."
+      },
+      {
+        "claim": "usage",
+        "quote": "Last date and time this user logged in."
+      },
+      {
+        "claim": "errors",
+        "quote": "heavy queries can return a 503."
+      }
+    ],
+    "assumptions": [
+      "The source documents OAuth2 client credentials but does not provide a token URL, so only the fully specified bearer-token method is configured.",
+      "The source uses {tenantDomain} and {YOUR_DOMAIN} placeholders; this manifest assumes the tenant host follows the required {subdomain}.auth0.com form.",
+      "The source says include_totals=true wraps results in an object but does not show the list property; recordsPath assumes that property is users.",
+      "The source warns that this endpoint is eventually consistent and is not intended for exporting the entire user base; no bulk-export request is specified.",
+      "The source provides an administrator-blocked boolean but no separate deactivated state, so blocked users are mapped to suspended.",
+      "The source does not provide role or user-type fields, so those values cannot be mapped.",
+      "The source does not state a plan requirement or rate-limit numbers or headers, so those values remain unset."
+    ]
+  }
+}

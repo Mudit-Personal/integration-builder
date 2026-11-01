@@ -1,0 +1,135 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "GitHub",
+      "slug": "github",
+      "apiVersion": "v3"
+    },
+    "baseUrl": "https://api.github.com",
+    "connectionFields": [
+      {
+        "name": "organization",
+        "label": "GitHub organization login",
+        "example": "example-org"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "OAuth or personal access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/orgs/{{connection.organization}}/members",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "per_page",
+        "pageSize": 100,
+        "startAt": 1,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "read:org"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "login",
+          "fallbackPaths": [
+            "name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": {
+          "path": "type",
+          "fallbackPaths": null,
+          "map": {
+            "user": "member",
+            "bot": "service",
+            "organization": "unknown"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source does not document a per-user last-activity field or an audit log, and the documented per-user Copilot report endpoints return only download links rather than usage records."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth app tokens and personal access tokens (classic)"
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: per_page(query) page(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "members_url\":\"string"
+      },
+      {
+        "claim": "usage",
+        "quote": "detailed user-level usage data"
+      },
+      {
+        "claim": "plan",
+        "quote": "enhanced billing platform"
+      }
+    ],
+    "assumptions": [
+      "The source exposes an organization members_url field but does not document the concrete members operation; the users request uses the standard /orgs/{org}/members route inferred from that field and the documented /orgs/{org}/... routes.",
+      "The source does not state the maximum per_page value for organization members, so page size 100 is used as a sensible default.",
+      "The organization members response schema is not provided; email, name, login, id, and type use fields shown in the documented GitHub user objects, and email may be absent.",
+      "The source does not document the exact Authorization header format, so OAuth and personal access tokens are represented as bearer tokens.",
+      "The source does not document organization-member status, suspension, deactivation, role, or creation-date fields, so those fields are left unavailable.",
+      "The source does not state rate limits or rate-limit response headers, so rateLimit fields are null.",
+      "The source documents Copilot usage reports as signed download links but does not document a follow-up download request or report-row schema usable by this manifest."
+    ]
+  }
+}

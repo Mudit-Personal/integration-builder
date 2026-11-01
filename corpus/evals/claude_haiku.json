@@ -1,0 +1,40 @@
+[
+  {
+    "slug": "okta",
+    "status": "blocked",
+    "attempts": 3,
+    "ms": 83319,
+    "tokens": {
+      "input": 171193,
+      "output": 17820
+    },
+    "scenarios": {
+      "passed": 0,
+      "failed": 0
+    },
+    "matches": 0,
+    "of": 0,
+    "differs": [],
+    "reason": "token_url_mismatch authMethods[1]: Token URL differs from the spec: /oauth2/v1/token."
+  },
+  {
+    "slug": "slack",
+    "status": "passed",
+    "attempts": 3,
+    "ms": 97313,
+    "tokens": {
+      "input": 168255,
+      "output": 22631
+    },
+    "scenarios": {
+      "passed": 27,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "auth: oauth2_authorization_code (accepted: api_key,oauth2_authorization_code)"
+    ],
+    "reason": ""
+  }
+]

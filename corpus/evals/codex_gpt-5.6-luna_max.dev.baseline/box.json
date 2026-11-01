@@ -1,0 +1,203 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Box",
+      "slug": "box",
+      "apiVersion": "2024.0"
+    },
+    "baseUrl": "https://api.box.com/2.0",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0 authorization code",
+        "authorizeUrl": "https://account.box.com/api/oauth2/authorize",
+        "tokenUrl": "https://api.box.com/oauth2/token",
+        "scopes": [
+          "root_readonly",
+          "root_readwrite",
+          "manage_app_users",
+          "manage_managed_users",
+          "manage_groups",
+          "manage_webhook",
+          "manage_enterprise_properties",
+          "manage_data_retention",
+          "manage_legal_hold"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {
+          "fields": "id,name,login,status,role,created_at"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "entries",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 1000,
+        "totalPath": "total_count",
+        "hasMorePath": null
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "login",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "status",
+          "fallbackPaths": null,
+          "map": {
+            "active": "active",
+            "inactive": "inactive",
+            "cannot_delete_edit": "unknown",
+            "cannot_delete_edit_upload": "unknown"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "role",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/events",
+        "query": {
+          "stream_type": "admin_logs",
+          "created_after": "{{window.start}}",
+          "created_before": "{{window.end}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "entries",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "next_stream_position",
+        "cursorParam": "stream_position",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "limit",
+        "pageSize": 1000
+      },
+      "requiredScopes": [
+        "manage_enterprise_properties"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "created_after",
+        "endParam": "created_before",
+        "format": "iso8601",
+        "maxDays": 365
+      },
+      "fields": {
+        "userRef": {
+          "path": "created_by.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "metric": {
+          "path": "event_type",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "The access token received from the authorization server in the OAuth 2.0 flow."
+      },
+      {
+        "claim": "pagination",
+        "quote": "This endpoint defaults to use offset-based pagination, yet also supports"
+      },
+      {
+        "claim": "users",
+        "quote": "Returns a list of all users for the Enterprise along with their `user_id`, `public_name`, and `login`."
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns up to a year of past events for a given user or for the entire enterprise."
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text instructing the reader to use the As-User header; that instruction was ignored.",
+      "The exact permission or OAuth scope required to list enterprise users is not confirmed; the source only says the application and authenticated user need permission to look up users across the enterprise.",
+      "The source does not document a maximum page size, so the manifest uses 1000.",
+      "The meanings of cannot_delete_edit and cannot_delete_edit_upload are not defined, so they are mapped to unknown.",
+      "The response does not provide a member, guest, or service classification, so userType is unavailable.",
+      "The source does not provide a per-user last-login field; usage is inferred from actors in the enterprise event log.",
+      "The source limits event history to up to one year, so the usage window is capped at 365 days.",
+      "The events cursor behavior is inferred from stream_position and next_stream_position because the source does not explicitly describe its termination condition.",
+      "The source does not state rate-limit values or headers, so rateLimit fields are null.",
+      "The source does not identify a paid plan requirement, so no plan requirement is set.",
+      "The source mentions server-side JWT assertions, but the manifest schema has no JWT assertion auth type, so that flow is not represented.",
+      "The source lists fields as a query parameter but does not specify its serialization; the manifest uses comma-separated field names."
+    ]
+  }
+}

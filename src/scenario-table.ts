@@ -25,6 +25,18 @@ const usersIs = (r: RunResult, status: string) => [r.streams.users.status === st
 const kindIs = (r: RunResult, kind: string) => [r.streams.users.error?.kind === kind, `error was ${r.streams.users.error?.kind}, wanted ${kind}`] as [boolean, string];
 const noReconcile = (r: RunResult) => [!r.reconcile.allowed, 'a bad run was allowed to reconcile'] as [boolean, string];
 
+/** A connector feature a person can turn off. A scenario that needs it proves nothing without it. */
+export type Feature = 'retries' | 'pagination';
+const OFF_REASON: Record<Feature, string> = { retries: 'retries are turned off', pagination: 'pagination is turned off' };
+
+/** Measured, not guessed: with the feature off, each of these fails on at least one corpus app. test/features.test.ts keeps it true. */
+export const NEEDS: Partial<Record<string, Feature[]>> = {
+  rate_limit_then_ok: ['retries', 'pagination'], server_blip: ['retries', 'pagination'], slow_then_ok: ['retries', 'pagination'],
+  happy_path: ['pagination'], token_expires_midway: ['pagination'], cursor_loop: ['pagination'], empty_pages_forever: ['pagination'],
+  truncated_json: ['pagination'], null_emails: ['pagination'], duplicates: ['pagination'], clamped_page_size: ['pagination'],
+  count_collapse: ['pagination'], outage_mid_sync: ['pagination'], usage_plan_gated: ['pagination'], offsite_next_link: ['pagination'],
+};
+
 export const SCENARIOS: Scenario[] = [
   {
     id: 'happy_path', title: 'Normal sync', category: 'recovery', proves: 'Auth, context steps, pagination and field mapping work together.',
@@ -194,9 +206,10 @@ const dirty = (row: Record<string, unknown>, m: Manifest) => {
 export type ScenarioResult = { id: string; title: string; proves: string; category: Scenario['category']; status: 'pass' | 'fail' | 'skipped'; detail: string; requests: number };
 
 /** extraLimits carry the user's decisions, and a scenario's own limits still win because it tests them. */
-export const runScenarioOn = async (start: StartMock, m: Manifest, s: Scenario, extraLimits: Partial<Limits> = {}): Promise<ScenarioResult> => {
+export const runScenarioOn = async (start: StartMock, m: Manifest, s: Scenario, extraLimits: Partial<Limits> = {}, off: Feature[] = []): Promise<ScenarioResult> => {
   const base = { id: s.id, title: s.title, proves: s.proves, category: s.category };
-  const skip = s.applies?.(m);
+  const missing = NEEDS[s.id]?.find(f => off.includes(f));
+  const skip = missing ? `Not tested, because ${OFF_REASON[missing]}.` : s.applies?.(m);
   if (skip) return { ...base, status: 'skipped', detail: skip, requests: 0 };
   let offsite = '';
   const mock = await start(m, s.fault?.(m, { offsite: () => offsite }) ?? {});

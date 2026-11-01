@@ -14,8 +14,8 @@ export function AppChip({ name, icon, selected = false, onClick }: { name: strin
   </button>;
 }
 
-export type ButtonProps = { variant?: 'primary' | 'secondary' | 'inverse' | 'link'; disabled?: boolean; autoFocus?: boolean; onClick?: (e: MouseEvent<HTMLButtonElement>) => void; style?: CSSProperties; children?: ReactNode };
-export function Button({ variant = 'primary', disabled = false, autoFocus, children, onClick, style }: ButtonProps) {
+export type ButtonProps = { type?: 'button' | 'submit'; variant?: 'primary' | 'secondary' | 'inverse' | 'link'; disabled?: boolean; autoFocus?: boolean; onClick?: (e: MouseEvent<HTMLButtonElement>) => void; style?: CSSProperties; children?: ReactNode };
+export function Button({ variant = 'primary', type = 'button', disabled = false, autoFocus, children, onClick, style }: ButtonProps) {
   const [h, hp] = useHover();
   const base: CSSProperties = { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, height: 'var(--control-h)', padding: '0 24px', font: 'var(--fw-medium) var(--fs-body)/1 var(--font-sans)', borderWidth: 1, borderStyle: 'solid', borderColor: 'transparent', borderRadius: 0, cursor: disabled ? 'not-allowed' : 'pointer', transition: 'background var(--dur) var(--ease),color var(--dur) var(--ease)', whiteSpace: 'nowrap' };
   const v: Record<string, CSSProperties> = {
@@ -25,17 +25,17 @@ export function Button({ variant = 'primary', disabled = false, autoFocus, child
     link: { background: 'none', height: 'auto', padding: 0, color: h ? 'var(--text-accent)' : 'var(--text-strong)', fontWeight: 400, textDecoration: 'underline', textUnderlineOffset: 4, textDecorationThickness: 1 },
   };
   const dis: CSSProperties = disabled && variant !== 'link' ? { background: 'var(--action-disabled)', color: 'var(--text-disabled)', borderColor: 'transparent' } : disabled ? { color: 'var(--text-disabled)' } : {};
-  return <button type="button" className={variant === 'link' ? 'tap' : undefined} disabled={disabled} autoFocus={autoFocus} onClick={onClick} {...hp} style={{ ...base, ...v[variant], ...dis, ...style }}>{children}</button>;
+  return <button type={type} className={variant === 'link' ? 'tap' : undefined} disabled={disabled} autoFocus={autoFocus} onClick={onClick} {...hp} style={{ ...base, ...v[variant], ...dis, ...style }}>{children}</button>;
 }
 
 export function TextLink({ onClick, children, style }: { onClick: () => void; children: ReactNode; style?: CSSProperties }) {
   return <a href="#" className="tap" onClick={e => { e.preventDefault(); onClick(); }} style={{ fontSize: 14, whiteSpace: 'nowrap', ...style }}>{children}</a>;
 }
 
-export function ToggleGroup({ options, value, onChange, disabled = false, style }: { options: string[]; value?: string; onChange?: (value: string) => void; disabled?: boolean; style?: CSSProperties }) {
+export function ToggleGroup({ options, value, onChange, style }: { options: string[]; value?: string; onChange?: (value: string) => void; style?: CSSProperties }) {
   return <div role="radiogroup" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, ...style }}>{options.map(o => {
     const on = o === value;
-    return <button key={o} role="radio" aria-checked={on} disabled={disabled} onClick={() => onChange?.(o)} style={{ height: 48, padding: '0 17px', whiteSpace: 'nowrap', font: 'var(--fw-regular) var(--fs-body)/1 var(--font-sans)', borderRadius: 0, cursor: disabled ? 'default' : 'pointer', opacity: disabled && !on ? 0.55 : 1, border: '1px solid var(--border-strong)', background: on ? 'var(--action-selected)' : 'transparent', color: on ? 'var(--text-on-accent)' : 'var(--text-strong)' }}>{o}</button>;
+    return <button key={o} role="radio" aria-checked={on} onClick={() => onChange?.(o)} style={{ height: 48, padding: '0 17px', whiteSpace: 'nowrap', font: 'var(--fw-regular) var(--fs-body)/1 var(--font-sans)', borderRadius: 0, cursor: 'pointer', border: '1px solid var(--border-strong)', background: on ? 'var(--action-selected)' : 'transparent', color: on ? 'var(--text-on-accent)' : 'var(--text-strong)' }}>{o}</button>;
   })}</div>;
 }
 
@@ -50,24 +50,25 @@ export function Checkbox({ checked = false, onChange, label, description, disabl
   </label>;
 }
 
-export function TextField({ label, value, onChange, mono = false, type = 'text', style }: { label: string; value: string; onChange: (value: string) => void; mono?: boolean; type?: 'text' | 'password'; style?: CSSProperties }) {
+export function TextField({ label, value, onChange, mono = false, type = 'text', autoComplete, style }: { label: string; value: string; onChange: (value: string) => void; mono?: boolean; type?: 'text' | 'password'; autoComplete?: string; style?: CSSProperties }) {
   const id = `tf-${label.replace(/\W+/g, '-').toLowerCase()}`;
   const [focus, setFocus] = useState(false);
   return <div style={{ display: 'flex', flexDirection: 'column', gap: 10, ...style }}>
     <label htmlFor={id} style={{ font: 'var(--type-label)', color: 'var(--text-strong)' }}>{label}</label>
-    <input id={id} type={type} value={value} onChange={e => onChange(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} style={{ height: 'var(--control-h)', padding: '0 14px', border: '1px solid var(--border-strong)', outline: focus ? '2px solid var(--blue)' : 'none', outlineOffset: -1, borderRadius: 0, background: 'transparent', color: 'var(--text-strong)', font: mono ? 'var(--fw-regular) 15px/1 var(--font-mono)' : 'var(--type-body)', width: '100%' }} />
+    <input id={id} type={type} autoComplete={autoComplete} value={value} onChange={e => onChange(e.target.value)} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} style={{ height: 'var(--control-h)', padding: '0 14px', border: '1px solid var(--border-strong)', outline: focus ? '2px solid var(--blue)' : 'none', outlineOffset: -1, borderRadius: 0, background: 'transparent', color: 'var(--text-strong)', font: mono ? 'var(--fw-regular) 15px/1 var(--font-mono)' : 'var(--type-body)', width: '100%' }} />
   </div>;
 }
 
-export function AppHeader({ steps, current, maxStep, right, onStep, onHome }: { steps: string[]; current: number; maxStep: number; right: ReactNode; onStep: (index: number) => void; onHome: () => void }) {
+/** A null step is hidden. The rest are numbered as shown, and report their own index. */
+export function AppHeader({ steps, current, maxStep, right, onStep, onHome }: { steps: (string | null)[]; current: number; maxStep: number; right: ReactNode; onStep: (index: number) => void; onHome: () => void }) {
   const nav = useRef<HTMLElement>(null);
   useEffect(() => { nav.current?.querySelector('[aria-current]')?.scrollIntoView({ inline: 'center', block: 'nearest' }); }, [current]);
   return <header className="app-header">
     <button type="button" className="app-brand" onClick={onHome}><span style={{ width: 10, height: 10, background: 'var(--blue)' }} />Integration Builder</button>
-    <nav ref={nav} className="app-nav">{steps.map((s, i) => {
+    <nav ref={nav} className="app-nav">{steps.flatMap((s, i) => (s === null ? [] : [[i, s] as const])).map(([i, s], n) => {
       const on = i === current;
-      return <button key={s} aria-label={`Step ${i + 1}, ${s}`} disabled={i > maxStep} aria-current={on ? 'step' : undefined} onClick={() => onStep(i)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 0, background: 'none', border: 0, borderBottom: `2px solid ${on ? 'var(--blue)' : 'transparent'}`, marginBottom: -1, cursor: i > maxStep ? 'default' : 'pointer', color: i > current ? 'var(--text-muted)' : 'var(--text-strong)', font: 'var(--fw-regular) var(--fs-body)/1 var(--font-sans)', whiteSpace: 'nowrap' }}>
-        <span style={{ font: 'var(--fw-regular) 12px/1 var(--font-mono)' }}>{i + 1}</span><span className="step-name">{s}</span></button>;
+      return <button key={s} aria-label={`Step ${n + 1}, ${s}`} disabled={i > maxStep} aria-current={on ? 'step' : undefined} onClick={() => onStep(i)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 0, background: 'none', border: 0, borderBottom: `2px solid ${on ? 'var(--blue)' : 'transparent'}`, marginBottom: -1, cursor: i > maxStep ? 'default' : 'pointer', color: i > current ? 'var(--text-muted)' : 'var(--text-strong)', font: 'var(--fw-regular) var(--fs-body)/1 var(--font-sans)', whiteSpace: 'nowrap' }}>
+        <span style={{ font: 'var(--fw-regular) 12px/1 var(--font-mono)' }}>{n + 1}</span><span className="step-name">{s}</span></button>;
     })}</nav>
     <div className="app-right">{right}</div>
   </header>;

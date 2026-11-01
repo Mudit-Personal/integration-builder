@@ -1,0 +1,233 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "param_required",
+          "where": "usage.request",
+          "message": "Required query parameter \"token\" is missing."
+        },
+        {
+          "severity": "block",
+          "code": "timestamp_format",
+          "where": "usage.fields.occurredAt",
+          "message": "\"date_last\" is numeric, so set format to epoch_seconds or epoch_millis."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "usage.request.query",
+          "message": "{{connection.accessToken}} is never set."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Slack",
+      "slug": "slack",
+      "apiVersion": "1.7.0"
+    },
+    "baseUrl": "https://slack.com/api",
+    "connectionFields": [
+      {
+        "name": "accessToken",
+        "label": "Slack access token",
+        "example": "token"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "Slack OAuth 2.0",
+        "authorizeUrl": "https://slack.com/oauth/authorize",
+        "tokenUrl": "https://slack.com/api/oauth.access",
+        "scopes": [
+          "admin",
+          "users:read"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users.list",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "members",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "response_metadata.next_cursor",
+        "cursorParam": "cursor",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "limit",
+        "pageSize": 200
+      },
+      "requiredScopes": [
+        "users:read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "profile.email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "profile.display_name",
+          "fallbackPaths": [
+            "profile.real_name",
+            "real_name",
+            "name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "deleted",
+          "fallbackPaths": null,
+          "map": {
+            "true": "deleted",
+            "false": "active"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "is_admin",
+          "fallbackPaths": null,
+          "map": {
+            "true": "admin",
+            "false": "member"
+          },
+          "format": null
+        },
+        "userType": {
+          "path": "is_bot",
+          "fallbackPaths": null,
+          "map": {
+            "true": "service",
+            "false": "member"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/team.accessLogs",
+        "query": {
+          "token": "{{connection.accessToken}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "logins",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "count",
+        "pageSize": 100,
+        "startAt": 1,
+        "totalPagesPath": "paging.pages",
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "admin"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": null,
+      "fields": {
+        "userRef": {
+          "path": "user_id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "date_last",
+          "fallbackPaths": [
+            "date_first"
+          ],
+          "map": null,
+          "format": "epoch_seconds"
+        },
+        "metric": null,
+        "metricConstant": "login",
+        "value": {
+          "path": "count",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth 2.0-based user, bot, or workspace tokens"
+      },
+      {
+        "claim": "pagination",
+        "quote": "response_metadata\":{\"next_cursor\":\"string\""
+      },
+      {
+        "claim": "users",
+        "quote": "Lists all users in a Slack team."
+      },
+      {
+        "claim": "usage",
+        "quote": "Gets the access logs for the current team."
+      }
+    ],
+    "assumptions": [
+      "The source documents users.list as listing all users in a Slack team, but it does not confirm that this covers every workspace in an Enterprise organization; this manifest treats the connected team or workspace as the tenant.",
+      "The source exposes a deleted flag but does not define a complete status model for restricted, forgotten, invited, or external users; only deleted=true is mapped to deleted and other values are mapped to active.",
+      "The source does not identify guest users separately, so is_bot=true is mapped to service and is_bot=false to member.",
+      "The role mapping uses is_admin; the source does not define how owner and other administrative roles should be represented.",
+      "The user listing does not contain a last-activity or last-login field, so usage uses the team access-log endpoint.",
+      "The access-log date fields are integers, but the source does not state whether they are epoch seconds or epoch milliseconds, so no timestamp format is declared.",
+      "The access-log count field is used as the usage value; the source does not define whether it is an aggregate count or a single-event value.",
+      "The source does not state maximum page sizes or whether access-log pages start at zero or one; the manifest uses 200 users per page, 100 access-log rows per page, and starts access-log paging at one.",
+      "The source documents OAuth 2.0 user, bot, or workspace tokens but does not document service-account or client-credential authentication.",
+      "The source does not document paid-plan requirements, rate limits, or error response bodies and codes.",
+      "The source does not document start and end parameters for access logs, so no usage window is configured."
+    ]
+  }
+}

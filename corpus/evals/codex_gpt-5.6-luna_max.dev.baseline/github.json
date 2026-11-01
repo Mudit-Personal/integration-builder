@@ -1,0 +1,132 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "GitHub",
+      "slug": "github",
+      "apiVersion": "v3"
+    },
+    "baseUrl": "https://api.github.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "OAuth app token or personal access token (classic)",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/user/memberships/orgs",
+        "query": {
+          "per_page": "100"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "per_page",
+        "pageSize": 100,
+        "startAt": 1,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user.id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "user.email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user.name",
+          "fallbackPaths": [
+            "user.login"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "state",
+          "fallbackPaths": null,
+          "map": {
+            "active": "active",
+            "pending": "pending"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "role",
+          "fallbackPaths": null,
+          "map": {
+            "admin": "admin",
+            "member": "member",
+            "billing_manager": "billing_manager"
+          },
+          "format": null
+        },
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents user-level reports only as download links and does not document a directly readable per-user activity field, event log, or report-row schema."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth app tokens and personal access tokens (classic)"
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: state(query) per_page(query) page(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "Lists all of the authenticated user's organization memberships."
+      },
+      {
+        "claim": "usage",
+        "quote": "The report provides detailed user-level usage data and engagement metrics for Copilot features across the enterprise."
+      }
+    ],
+    "assumptions": [
+      "The source does not include an organization-wide member-list operation; /user/memberships/orgs is only the authenticated user's memberships and cannot guarantee a complete account roster.",
+      "The membership response documents only active and pending states, so suspended or deactivated people cannot be included from this endpoint.",
+      "The source does not state a maximum per_page value, so 100 is used as a practical page size.",
+      "The source lists OAuth app tokens and personal access tokens but declares no authentication scheme or authorization header, so the bearer Authorization representation is inferred.",
+      "The source documents user-level Copilot report download links but not the downloaded report's fields or a direct activity field or event log, so usage is unavailable.",
+      "The source does not state rate-limit values or headers."
+    ]
+  }
+}

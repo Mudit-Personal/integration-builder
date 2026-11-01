@@ -1,0 +1,271 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "timestamp_format",
+          "where": "usage.fields.occurredAt",
+          "message": "\"date_last\" is numeric, so set format to epoch_seconds or epoch_millis."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Slack",
+      "slug": "slack",
+      "apiVersion": "1.7.0"
+    },
+    "baseUrl": "https://slack.com/api",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "Slack OAuth 2.0",
+        "authorizeUrl": "https://slack.com/oauth/authorize",
+        "tokenUrl": "https://slack.com/api/oauth.access",
+        "scopes": [
+          "admin",
+          "admin.apps:read",
+          "admin.apps:write",
+          "admin.conversations:read",
+          "admin.conversations:write",
+          "admin.invites:read",
+          "admin.invites:write",
+          "admin.teams:read",
+          "admin.teams:write",
+          "admin.usergroups:read",
+          "admin.usergroups:write",
+          "admin.users:read",
+          "admin.users:write",
+          "authorizations:read",
+          "bot",
+          "calls:read",
+          "calls:write",
+          "channels:history",
+          "channels:manage",
+          "channels:read",
+          "channels:write",
+          "chat:write",
+          "chat:write:bot",
+          "chat:write:user",
+          "conversations:history",
+          "conversations:read",
+          "conversations:write",
+          "dnd:read",
+          "dnd:write",
+          "emoji:read",
+          "files:read",
+          "files:write:user",
+          "groups:history",
+          "groups:read",
+          "groups:write",
+          "identity.basic",
+          "im:history",
+          "im:read",
+          "im:write",
+          "links:write",
+          "mpim:history",
+          "mpim:read",
+          "mpim:write",
+          "none",
+          "pins:read",
+          "pins:write",
+          "reactions:read",
+          "reactions:write",
+          "reminders:read",
+          "reminders:write",
+          "remote_files:read",
+          "remote_files:share",
+          "remote_files:write",
+          "rtm:stream",
+          "search:read",
+          "stars:read",
+          "stars:write",
+          "team:read",
+          "tokens.basic",
+          "usergroups:read",
+          "usergroups:write",
+          "users.profile:read",
+          "users.profile:write",
+          "users:read",
+          "users:read.email",
+          "users:write",
+          "workflow.steps:execute"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users.list",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "members",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "response_metadata.next_cursor",
+        "cursorParam": "cursor",
+        "cursorIn": "query",
+        "hasMorePath": "response_metadata.next_cursor",
+        "sizeParam": "limit",
+        "pageSize": 200
+      },
+      "requiredScopes": [
+        "users:read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "profile.email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "profile.real_name",
+          "fallbackPaths": [
+            "profile.display_name",
+            "real_name",
+            "name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "deleted",
+          "fallbackPaths": null,
+          "map": {
+            "true": "deleted",
+            "false": "active"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "is_admin",
+          "fallbackPaths": null,
+          "map": {
+            "true": "admin",
+            "false": "member"
+          },
+          "format": null
+        },
+        "userType": {
+          "path": "is_bot",
+          "fallbackPaths": null,
+          "map": {
+            "true": "service",
+            "false": "member"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/team.accessLogs",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "logins",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "count",
+        "pageSize": 100,
+        "startAt": 1,
+        "totalPagesPath": "paging.pages",
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "admin"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": null,
+      "fields": {
+        "userRef": {
+          "path": "user_id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "date_last",
+          "fallbackPaths": [
+            "date_first"
+          ],
+          "map": null,
+          "format": "epoch_seconds"
+        },
+        "metric": null,
+        "metricConstant": "login",
+        "value": {
+          "path": "count",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth 2.0-based user, bot, or workspace tokens blessed with related OAuth scopes."
+      },
+      {
+        "claim": "pagination",
+        "quote": "response_metadata\":{\"next_cursor\":\"string\""
+      },
+      {
+        "claim": "users",
+        "quote": "Lists all users in a Slack team."
+      },
+      {
+        "claim": "usage",
+        "quote": "Gets the access logs for the current team."
+      }
+    ],
+    "assumptions": [
+      "The source confirms team-level users and access logs, but does not confirm organization-wide coverage across multiple Slack workspaces.",
+      "The source does not state maximum page sizes, so the manifest uses 200 users per page and 100 access-log records per page.",
+      "The source does not state whether access-log pagination starts at page 1; this manifest assumes it does.",
+      "The source identifies access-log dates as integers but does not specify their time unit, so the occurredAt format is left unspecified.",
+      "The source exposes an is_bot flag but does not provide a separate service-account field; is_bot=true is mapped to service and other users are mapped to member.",
+      "The source exposes deleted and restricted flags but does not define their status semantics; status is mapped from deleted only.",
+      "No paid plan requirement was provided in the source.",
+      "The source does not state a request rate limit or reset headers.",
+      "The source shows successful responses with ok=true but does not document an ok=false error envelope."
+    ]
+  }
+}

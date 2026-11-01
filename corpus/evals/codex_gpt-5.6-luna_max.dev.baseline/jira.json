@@ -1,0 +1,210 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Jira Cloud",
+      "slug": "jira-cloud",
+      "apiVersion": "3"
+    },
+    "baseUrl": "https://{subdomain}.atlassian.net",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Atlassian site subdomain",
+        "example": "your-domain"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "basic",
+        "label": "Basic authentication",
+        "usernameLabel": "Username",
+        "passwordLabel": "Password"
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0",
+        "authorizeUrl": "https://auth.atlassian.com/authorize",
+        "tokenUrl": "https://auth.atlassian.com/oauth/token",
+        "scopes": [
+          "read:jira-user",
+          "manage:jira-configuration"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/rest/api/3/users/search",
+        "query": {
+          "startAt": "0",
+          "maxResults": "100"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "startAt",
+        "limitParam": "maxResults",
+        "pageSize": 100,
+        "totalPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "read:jira-user"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "accountId",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "emailAddress",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "displayName",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "active",
+          "fallbackPaths": null,
+          "map": {
+            "true": "active",
+            "false": "inactive"
+          },
+          "format": null
+        },
+        "role": null,
+        "userType": {
+          "path": "accountType",
+          "fallbackPaths": null,
+          "map": {
+            "atlassian": "member",
+            "app": "service",
+            "customer": "guest",
+            "unknown": "unknown"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/rest/api/3/auditing/record",
+        "query": {
+          "offset": "0",
+          "limit": "100",
+          "from": "{{window.start}}",
+          "to": "{{window.end}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "records",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": "total",
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "manage:jira-configuration"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "from",
+        "endParam": "to",
+        "format": "iso8601",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "authorKey",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "created",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "metric": null,
+        "metricConstant": "audit_event",
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth2 scopes for Jira"
+      },
+      {
+        "claim": "auth",
+        "quote": "You can access this resource via basic auth."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Returns a [paginated](#pagination) list of all users in a group."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns a list of all users, including active users, inactive users and previously deleted users"
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns a list of audit records."
+      },
+      {
+        "claim": "plan",
+        "quote": "\"plan\":\"string enum UNLICENSED|FREE|PAID\""
+      }
+    ],
+    "assumptions": [
+      "The source does not specify a maximum page size for either selected endpoint, so the manifest uses 100 records per request.",
+      "The source does not specify the date format for the audit log's from and to filters; the manifest uses ISO 8601.",
+      "The user response has active but no separate deleted flag, so active=false is treated as inactive even though the endpoint can return previously deleted users.",
+      "The user response does not contain a last-login, last-activity, or creation timestamp, so those fields are not mapped.",
+      "The audit response names its actor field authorKey and does not document whether it equals accountId; the manifest assumes it can be matched to the user's external ID.",
+      "The audit endpoint is an administrative audit log, not a documented general login or product-activity stream; usage represents users who appear as audit authors.",
+      "Privacy controls may hide email addresses, so email may be absent.",
+      "The source does not document API rate limits, so no rate-limit values are configured.",
+      "The source does not document a paid-plan requirement for the selected endpoints, so no plan requirement is configured.",
+      "The source does not say whether basic-auth credentials belong to a service account; a durable non-person credential is assumed when this method is used."
+    ]
+  }
+}

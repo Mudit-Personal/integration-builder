@@ -185,3 +185,22 @@ test('the repair loop gives up honestly', async () => {
   assert.equal(out.manifest, null);
   assert.ok(isBlocked(out.findings));
 });
+
+test('a required credential parameter counts as supplied by auth, any other required parameter does not', () => {
+  const withRequired = (name: string) => {
+    const s = source();
+    s.spec!.operations.find(o => o.path === '/audit')!.parameters.push({ name, in: 'query', required: true });
+    return s;
+  };
+  assert.ok(!codes(good(), withRequired('token')).includes('param_required'));
+  assert.ok(codes(good(), withRequired('since_id')).includes('param_required'));
+});
+
+test('a relative token URL in the spec matches the same path on the API host', () => {
+  const s = source();
+  s.spec!.authSchemes = [{ name: 'o', type: 'oauth2', tokenUrl: '/oauth/token', scopes: [], description: '' }];
+  const m = makeManifest(PAGINATIONS[1], { type: 'oauth2_client_credentials', label: 'OAuth', tokenUrl: 'https://api.acme.test/oauth/token', scopes: [], clientAuth: 'body' } as never);
+  assert.ok(!codes(m, s).includes('token_url_mismatch'));
+  m.authMethods[0] = { ...m.authMethods[0], tokenUrl: 'https://api.acme.test/other/token' } as never;
+  assert.ok(codes(m, s).includes('token_url_mismatch'));
+});

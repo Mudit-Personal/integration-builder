@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { lookup } from 'node:dns/promises';
 import { BlockList, isIP } from 'node:net';
-import { writeIntent } from './manifest.ts';
+import { normalizePath, writeIntent } from './manifest.ts';
 import type {
   ActiveUsageStream, AuthMethod, Field, Manifest, Pagination, RequestSpec, StreamConfig,
 } from './manifest.ts';
@@ -65,6 +65,8 @@ export type RunOptions = {
   skipDnsCheck?: boolean;
   /** Defaults to the global fetch. The hosted demo passes a virtual one, so no sandbox run touches the network. */
   fetch?: typeof fetch;
+  /** The caller's fetch signs every request itself, so the runtime adds no credentials and fetches no tokens. */
+  skipAuth?: boolean;
   /** Vendors that rotate refresh tokens invalidate the old one, so the caller must persist this or lose the connection. */
   onRefreshTokenRotated?: (token: string) => void;
 };
@@ -104,7 +106,7 @@ const SECRET_QUERY = /(key|token|secret|password|auth|signature|sig|code)$/i;
 const SAFE_HOST_LABEL = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
 
 export const getPath = (value: unknown, rawPath: string): unknown => {
-  const path = rawPath.replace(/\[(\d+)\]/g, '.$1');
+  const path = normalizePath(rawPath);
   if (path === '$') return value;
   if (value === null || typeof value !== 'object') return undefined;
   const obj = value as Record<string, unknown>;
@@ -151,14 +153,17 @@ export const assertPublicUrl = async (url: URL, skipDns = false) => {
   if (addresses.some(a => isPrivateAddress(a.address))) throw new ConnectorError('safety', `Refused ${host}, it resolves to a private address`);
 };
 
+/** Fills {subdomain}-style host labels, on the base URL and on tenant token URLs alike. */
+const fillHost = (template: string, connection: Record<string, string> = {}) => template.replace(/\{(\w+)\}/g, (_, name: string) => {
+  const value = connection[name];
+  if (!value) throw new ConnectorError('config', `Missing connection setting "${name}"`);
+  // Fixed here, never taken from the manifest. A generated pattern could allow "evil.com#".
+  if (!SAFE_HOST_LABEL.test(value)) throw new ConnectorError('safety', `"${name}" must be a single host label`);
+  return value;
+});
+
 export const resolveBaseUrl = (m: Manifest, connection: Record<string, string> = {}): URL => {
-  const url = m.baseUrl.replace(/\{(\w+)\}/g, (_, name: string) => {
-    const value = connection[name];
-    if (!value) throw new ConnectorError('config', `Missing connection setting "${name}"`);
-    // Fixed here, never taken from the manifest. A generated pattern could allow "evil.com#".
-    if (!SAFE_HOST_LABEL.test(value)) throw new ConnectorError('safety', `"${name}" must be a single host label`);
-    return value;
-  });
+  const url = fillHost(m.baseUrl, connection);
   const base = new URL(url.replace(/\/+$/, '') + '/');
   if (base.search || base.hash || base.username || base.password) throw new ConnectorError('safety', 'The base URL must not carry a query, fragment or login');
   return base;
@@ -279,7 +284,7 @@ const pace = async (ctx: Ctx) => {
 };
 
 const postToken = async (ctx: Ctx, tokenUrl: string, form: Record<string, string>, basicAuth?: string) => {
-  const url = toSandbox(ctx, new URL(tokenUrl));
+  const url = toSandbox(ctx, new URL(fillHost(tokenUrl, ctx.opts.connection)));
   await guardDestination(ctx, url);
   ctx.requests++;
   const res = await fetcher(ctx)(url, {
@@ -310,6 +315,7 @@ const postToken = async (ctx: Ctx, tokenUrl: string, form: Record<string, string
 
 const ensureToken = async (ctx: Ctx, force = false) => {
   const { auth, opts: { credentials: c } } = ctx;
+  if (ctx.opts.skipAuth) return false;
   if (auth.type === 'oauth2_authorization_code') {
     ctx.accessToken ??= c.accessToken;
     if (!force) return false;
@@ -339,6 +345,7 @@ const withPrefix = (prefix: string, secret: string) =>
 
 const applyAuth = (ctx: Ctx, url: URL, headers: Record<string, string>) => {
   const { auth, opts: { credentials: c } } = ctx;
+  if (ctx.opts.skipAuth) return;
   const handlers: { [K in AuthMethod['type']]: (a: Extract<AuthMethod, { type: K }>) => void } = {
     bearer: a => { headers[a.headerName || 'Authorization'] = withPrefix(a.prefix, c.token); },
     api_key: a => {
@@ -790,7 +797,7 @@ export const runConnector = async (m: Manifest, opts: RunOptions): Promise<RunRe
     if (!auth) throw new ConnectorError('config', 'That auth method does not exist');
     const base = resolveBaseUrl(m, opts.connection);
     const allowedHosts = new Set([base.host]);
-    if (auth.type === 'oauth2_client_credentials' || auth.type === 'oauth2_authorization_code') allowedHosts.add(new URL(auth.tokenUrl).host);
+    if (auth.type === 'oauth2_client_credentials' || auth.type === 'oauth2_authorization_code') allowedHosts.add(new URL(fillHost(auth.tokenUrl, opts.connection)).host);
     ctx = {
       m, opts, limits, auth, base, allowedHosts, secrets, log: e => emit({ ...e, detail: e.detail && scrub(ctx!, e.detail) }),
       now: opts.now ?? (() => new Date()),

@@ -1,0 +1,117 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "HubSpot",
+      "slug": "hubspot",
+      "apiVersion": "v3"
+    },
+    "baseUrl": "https://api.hubspot.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Private app access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/crm/v3/objects/users/",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "results",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": [
+            "properties.hs_object_id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": null,
+        "status": {
+          "path": "archived",
+          "fallbackPaths": null,
+          "map": {
+            "true": "deleted",
+            "false": "active"
+          },
+          "format": null
+        },
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": {
+          "path": "createdAt",
+          "fallbackPaths": [
+            "properties.hs_createdate"
+          ],
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents user records but no per-user last-active field, activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Legacy public apps and private apps can no longer be created."
+      },
+      {
+        "claim": "pagination",
+        "quote": "To retrieve all users, make a GET request to /crm/v3/objects/users/."
+      },
+      {
+        "claim": "users",
+        "quote": "To retrieve all users, make a GET request to /crm/v3/objects/users/."
+      },
+      {
+        "claim": "usage",
+        "quote": "retrieve analytics data for content and events"
+      },
+      {
+        "claim": "plan",
+        "quote": "Permission sets that have paid seats attached to them can only be modified by applications that have the billing-write scope."
+      }
+    ],
+    "assumptions": [
+      "The source mentions private and public apps but does not specify credential transport; this manifest assumes a bearer token in the Authorization header.",
+      "The source does not document pagination or a page-size limit, so the documented all-users request is treated as complete.",
+      "The source does not document email or display-name fields in the users response.",
+      "The source does not document whether suspended, deactivated, or archived users are returned; archived=true is mapped to deleted and archived=false to active.",
+      "The source does not specify read scopes, rate limits, or a 200-response error envelope.",
+      "The source does not document a per-user usage signal, so usage is unavailable.",
+      "The documented plan restriction applies to modifying permission sets, not retrieving users; no plan requirement is assigned."
+    ]
+  }
+}

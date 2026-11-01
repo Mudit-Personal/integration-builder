@@ -30,7 +30,7 @@ console.log(JSON.stringify({ count: r.users.length, complete: r.complete }));`;
 test('a bundle with settings applies limits, filters logs and caches a complete run', async () => {
   const m = makeManifest(PAGINATIONS[1], AUTHS[0]);
   const dir = mkdtempSync(join(tmpdir(), 'bundle-'));
-  const settings = { limits: { maxRetries: 1 }, logLevel: 'warn' as const, cacheTtlMs: 60_000, approvedPaths: ['/me'], blockedPaths: ['/secrets'] };
+  const settings = { limits: { maxRetries: 1 }, logLevel: 'warn' as const, cacheTtlMs: 60_000, approvedPaths: ['/me'], blockedPaths: ['/secrets'], skipAuth: false, exports: { users: true, usage: true } };
   const files = bundleFrom(m, 'abc', SOURCES, settings);
   assert.match(files['acme.connector.ts'], /Blocked +\/secrets/);
   for (const [name, text] of Object.entries(files)) writeFileSync(join(dir, name), text);
