@@ -7,12 +7,12 @@ export type CheckResult = { hash: string; passed: number; failed: number };
 
 export type SavedConnector = {
   id: string; slug: string; name: string;
-  status: 'draft' | 'ready'; step: number; hash: string; updatedAt: number;
-  flow: Pick<Flow, 'maxStep' | 'url' | 'live' | 'audience' | 'decisions' | 'answers' | 'result' | 'codeReached'>;
+  status: 'draft' | 'ready' | 'handed-off'; step: number; hash: string; updatedAt: number;
+  flow: Pick<Flow, 'maxStep' | 'url' | 'live' | 'audience' | 'decisions' | 'answers' | 'result' | 'codeReached' | 'handedOff'>;
 };
 
-export const statusOf = (f: Pick<Flow, 'result' | 'codeReached'>, hash: string): SavedConnector['status'] =>
-  (f.codeReached && f.result?.failed === 0 && f.result.hash === hash ? 'ready' : 'draft');
+export const statusOf = (f: Pick<Flow, 'result' | 'codeReached' | 'handedOff'>, hash: string): SavedConnector['status'] =>
+  (f.codeReached && f.result?.failed === 0 && f.result.hash === hash ? (f.handedOff ? 'handed-off' : 'ready') : 'draft');
 
 const toSaved = (f: Flow, name: string, hash: string, updatedAt: number): SavedConnector => ({
   id: f.id!, slug: f.slug, name,
@@ -21,15 +21,20 @@ const toSaved = (f: Flow, name: string, hash: string, updatedAt: number): SavedC
   step: Math.min(f.step, CHECKS),
   flow: {
     maxStep: Math.min(f.maxStep, CHECKS), url: f.url, live: f.live, audience: f.audience, decisions: f.decisions,
-    answers: f.answers, result: f.result, codeReached: f.codeReached,
+    answers: f.answers, result: f.result, codeReached: f.codeReached, handedOff: f.handedOff,
   },
 });
+
+const hashOf = (f: Flow, pack: AppPack) => hashManifest(applyDecisions(pack.manifest, f.decisions));
+
+/** True when the checks behind a saved status no longer cover this pack. */
+export const isStale = (f: Flow, pack: AppPack) => statusOf(f, hashOf(f, pack)) === 'draft';
 
 /** Returns the same list when nothing changed, so a reopened connector keeps its place and its time. */
 export const upsert = (list: SavedConnector[], f: Flow, pack: AppPack, now: number): SavedConnector[] => {
   const prev = list.find(c => c.id === f.id);
   if (!prev && f.step === SOURCE) return list;
-  const next = toSaved(f, pack.manifest.app.name, hashManifest(applyDecisions(pack.manifest, f.decisions)), now);
+  const next = toSaved(f, pack.manifest.app.name, hashOf(f, pack), now);
   if (prev && JSON.stringify({ ...prev, updatedAt: now }) === JSON.stringify(next)) return list;
   return [next, ...list.filter(c => c.id !== f.id)];
 };

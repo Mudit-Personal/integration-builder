@@ -135,10 +135,10 @@ export function PageTitle({ title, lead, aside, style }: { title: ReactNode; lea
   </div>;
 }
 
-export function SectionHeading({ children, size = 'title', lead, style }: { children: ReactNode; size?: 'title' | 'label'; lead?: ReactNode; style?: CSSProperties }) {
+export function SectionHeading({ children, size = 'title', lead, style }: { children: ReactNode; size?: 'title' | 'group'; lead?: ReactNode; style?: CSSProperties }) {
   const t = size === 'title';
   return <div style={{ paddingBottom: t ? 20 : 14, borderBottom: 'var(--rule-strong)', ...style }}>
-    <div style={{ font: t ? 'var(--type-title)' : 'var(--type-label)', letterSpacing: t ? 'var(--ls-title)' : 0, color: 'var(--text-strong)' }}>{children}</div>
+    <div style={{ font: t ? 'var(--type-title)' : '500 22px/1.2 var(--font-sans)', letterSpacing: t ? 'var(--ls-title)' : '-0.01em', color: 'var(--text-strong)' }}>{children}</div>
     {lead ? <div style={{ marginTop: 8, font: 'var(--type-body)', color: 'var(--text-muted)' }}>{lead}</div> : null}
   </div>;
 }

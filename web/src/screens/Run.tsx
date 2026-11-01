@@ -5,7 +5,7 @@ import { applyDecisions } from '../decisions.ts';
 import { Button, Callout, KeyValueRow, Mono, P, PageTitle, Push, SectionHeading, SplitLayout, StatusLabel } from '../ds.tsx';
 import type { RunResult } from '../../../src/runtime.ts';
 import { JOURNEYS } from '../journey.ts';
-import { CODE } from '../state.ts';
+import { CODE, READY } from '../state.ts';
 
 type Sync = { kind: 'running' } | { kind: 'done'; result: RunResult; at: Date } | { kind: 'failed'; message: string };
 
@@ -28,7 +28,7 @@ export function Run({ s, go, pack, name }: ScreenProps) {
   }, [m, s.decisions, round]);
 
   const people = JOURNEYS[s.audience].run === 'people';
-  const footer = <><Button variant="link" onClick={() => go(CODE)}>{people ? 'Back' : 'Back to code'}</Button><Push /><Button variant="secondary" disabled={sync.kind === 'running'} onClick={() => setRound(r => r + 1)}>Run again</Button></>;
+  const footer = <><Button variant="link" onClick={() => go(CODE)}>{people ? 'Back' : 'Back to code'}</Button><Push /><Button variant="secondary" disabled={sync.kind === 'running'} onClick={() => setRound(r => r + 1)}>Run again</Button>{sync.kind === 'done' ? <Button onClick={() => go(READY)}>Continue</Button> : null}</>;
   if (sync.kind !== 'done') {
     return <SplitLayout footer={footer} panel={people ? <SectionHeading lead={`A preview on a simulated copy of ${name}. Nothing touches your real account.`}>Preview</SectionHeading> : <SectionHeading lead="The generated connector runs here exactly as it will in your app, against a simulated vendor.">First sync</SectionHeading>}>
       <PageTitle title={sync.kind === 'running' ? (people ? `Finding your ${name} people…` : `Syncing ${name}…`) : "The sync didn't finish"} />
@@ -59,7 +59,7 @@ export function Run({ s, go, pack, name }: ScreenProps) {
     {people ? <PageTitle title="Here are your people" lead={`We found ${users.length} people in a simulated copy of ${name}, the same way it will read your real account. Names and emails are masked.`} aside={<StatusLabel size="lg">Preview complete</StatusLabel>} />
       : <><PageTitle title={`${users.length} people synced from ${name}`} lead={`The generated connector ran once, the same way it will in your app. ${stats.requests} requests in ${stats.elapsedMs} ms, all to a simulated ${name}.`} aside={<StatusLabel size="lg">Sync complete</StatusLabel>} />
       <div className="stats">{tiles.map(([label, value]) => <div key={label} className="stat"><span className="stat-value">{value}</span><span style={{ color: 'var(--text-muted)' }}>{label}</span></div>)}</div></>}
-    <SectionHeading size="label" style={{ marginTop: 40 }}>People, as everyone sees them</SectionHeading>
+    <SectionHeading size="group" style={{ marginTop: 40 }}>People, as everyone sees them</SectionHeading>
     {users.slice(0, SHOWN).map(u => <div key={u.externalId} className="person-row">
       <span style={{ color: 'var(--text-strong)' }}>{maskName(u.displayName)}</span>
       <Mono c="var(--ink-2)">{maskEmail(u.email)}</Mono>

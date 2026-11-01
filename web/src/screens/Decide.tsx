@@ -18,7 +18,7 @@ const Label = ({ tag: [tone, text, color] }: { tag: [Tone, string, string] }) =>
 function DataAccess({ s, dispatch, pack, plain }: Pick<ScreenProps, 's' | 'dispatch' | 'pack'> & { plain: boolean }) {
   const allowed = (e: typeof pack.endpoints[number]) => isAllowed(e, s.decisions.access);
   return <div>
-    <div style={{ display: 'flex', gap: 16, alignItems: 'baseline', flexWrap: 'wrap', padding: '22px 0 10px', borderBottom: 'var(--rule-strong)' }}><span style={{ font: 'var(--type-label)' }}>Data access</span><Mono>Sample data is always masked</Mono></div>
+    <div className="dgroup" style={{ display: 'flex', gap: 16, alignItems: 'baseline', flexWrap: 'wrap' }}><span>Data access</span><Mono>Sample data is always masked</Mono></div>
     {pack.endpoints.map(e => {
       const on = allowed(e);
       return <div key={e.key} className="access-row">
