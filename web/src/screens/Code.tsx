@@ -24,7 +24,7 @@ const download = (name: string, files: BundleFile[]) => {
   URL.revokeObjectURL(url);
 };
 
-export function Code({ s, go, pack, name }: ScreenProps) {
+export function Code({ s, dispatch, go, pack, name }: ScreenProps) {
   const d = s.decisions;
   const passed = s.result?.passed ?? 0;
   const m = useMemo(() => applyDecisions(pack.manifest, d), [pack, d]);
@@ -39,10 +39,12 @@ export function Code({ s, go, pack, name }: ScreenProps) {
   const [note, setNote] = useState<string | null>(null);
   const file = files.find(f => f.name === tab) ?? files[0];
   const zipName = `${m.app.slug}-integration.zip`;
-  const save = () => { download(zipName, files); setNote(`Downloaded ${zipName} (${files.length} files).`); };
+  const handOff = () => dispatch({ type: 'hand-off', at: Date.now() });
+  const save = () => { download(zipName, files); handOff(); setNote(`Downloaded ${zipName} (${files.length} files).`); };
   const copy = async (what: 'prompt' | 'summary', text: string, done: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      handOff();
       setNote(done);
     } catch {
       setNote(`Your browser didn't allow copying. Select the ${what} and copy it by hand.`);

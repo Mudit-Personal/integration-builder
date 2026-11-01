@@ -73,6 +73,32 @@ test('a ready connector whose pack changed since it was saved is stale', () => {
   assert.equal(isStale(opened, { ...pack, manifest: { ...manifest, baseUrl: 'https://api.acme.test/v3' } }), true);
 });
 
+test('taking the code marks a ready connector handed off, and only the first time counts', () => {
+  const taken = play(atCode(started()), { type: 'hand-off', at: 5 }, { type: 'hand-off', at: 9 });
+  const [c] = saved(taken);
+  assert.equal(c.status, 'handed-off');
+  assert.equal(c.flow.handedOff, 5);
+  const opened = reducer(initial(), { type: 'open', saved: c, lost: false });
+  assert.deepEqual([opened.step, opened.handedOff], [READY, 5]);
+  assert.equal(saved(opened, [c])[0].status, 'handed-off');
+});
+
+test('a connector with failing checks is not handed off', () => {
+  assert.equal(saved(play(failing(atCode(started())), { type: 'hand-off', at: 5 }))[0].status, 'draft');
+});
+
+test('a changed decision clears the hand-off', () => {
+  const after = play(atCode(started()), { type: 'hand-off', at: 5 }, changeDecision);
+  assert.equal(after.handedOff, null);
+  assert.equal(saved(after)[0].status, 'draft');
+});
+
+test('a connector saved before hand-off existed opens as not handed off', () => {
+  const [c] = saved(atCode(started()));
+  const { handedOff: _, ...flow } = c.flow;
+  assert.equal(reducer(initial(), { type: 'open', saved: { ...c, flow: flow as SavedConnector['flow'] }, lost: false }).handedOff, null);
+});
+
 test('reopening without changes keeps the list and its time', () => {
   const list = saved(atCode(started()), [], 1);
   const opened = reducer(initial(), { type: 'open', saved: list[0], lost: false });
