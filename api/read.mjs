@@ -35432,7 +35432,7 @@ Deliver the manifest by calling the ${TOOL} tool. Do not answer in text.`,
 };
 var openaiApi = (model, key = process.env.OPENAI_API_KEY) => async (req) => {
   const started = Date.now();
-  const { $schema: _draft, ...schema } = req.schema;
+  const { $schema: _draft, ...schema } = JSON.parse(JSON.stringify(req.schema, (k, v) => k === "propertyNames" || k === "format" && typeof v === "string" ? void 0 : v));
   const res = await fetch(`${process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1"}/chat/completions`, {
     method: "POST",
     headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
@@ -35443,8 +35443,9 @@ var openaiApi = (model, key = process.env.OPENAI_API_KEY) => async (req) => {
     }),
     signal: req.signal
   });
-  const body = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(`OpenAI ${res.status}: ${body?.error?.message ?? res.statusText}`);
+  const raw = await res.json().catch(() => null);
+  const body = Array.isArray(raw) ? raw[0] : raw;
+  if (!res.ok || body?.error) throw new Error(`OpenAI ${body?.error?.code ?? res.status}: ${body?.error?.message ?? res.statusText}`);
   const choice = body?.choices?.[0];
   if (choice?.message?.refusal) throw new LlmStopped("refused", "The AI declined to read this content.");
   if (choice?.finish_reason === "length") throw new LlmStopped("too_long", "These docs produced more output than one read allows.");

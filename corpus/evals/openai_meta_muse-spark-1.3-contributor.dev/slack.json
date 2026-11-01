@@ -1,0 +1,198 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "1.7.0",
+      "name": "Slack",
+      "slug": "slack"
+    },
+    "assumptions": [
+      "Rate limits are not documented in the provided source, so rateLimit fields are null.",
+      "Plan or tier requirements are not documented in the provided source, so planRequirement is null.",
+      "users.list end-of-pages is inferred as empty response_metadata.next_cursor; hasMorePath is null.",
+      "users.list pageSize uses 200 as a sensible value because no maximum is documented.",
+      "team.accessLogs paging is assumed to start at page 1 with total pages at paging.pages; pageSize uses 100 as a sensible value.",
+      "User role is inferred from is_admin (admin vs member); owner distinctions are not mapped separately.",
+      "User type is inferred from is_bot (service vs member); restricted guest flags are not separately mapped and guests may appear as member.",
+      "User created date is not present in users.list, so createdAt is null.",
+      "No per-user last-active field exists on the users.list record, so lastActiveAt is null and usage uses access logs.",
+      "team.accessLogs window filtering is not modeled because date format and range behavior for before are not documented."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://slack.com/oauth/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [
+          "admin",
+          "users:read",
+          "users:read.email"
+        ],
+        "tokenUrl": "https://slack.com/api/oauth.access",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://slack.com/api",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "requiring OAuth 2.0-based user, bot, or workspace tokens blessed with related OAuth scopes"
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: token(query) limit(query) cursor(query) include_locale(query)"
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: token(query,required) before(query) count(query) page(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "Lists all users in a Slack team."
+      },
+      {
+        "claim": "usage",
+        "quote": "Gets the access logs for the current team."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": null,
+        "metricConstant": "login",
+        "occurredAt": {
+          "fallbackPaths": null,
+          "format": "epoch_seconds",
+          "map": null,
+          "path": "date_last"
+        },
+        "userRef": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user_id"
+        },
+        "userRefType": "externalId",
+        "value": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "count"
+        }
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 100,
+        "sizeParam": "count",
+        "startAt": 1,
+        "totalPagesPath": "paging.pages",
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "logins",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/team.accessLogs",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "admin"
+      ],
+      "window": null
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [
+            "profile.display_name",
+            "name"
+          ],
+          "format": null,
+          "map": null,
+          "path": "real_name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "profile.email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "admin"
+          },
+          "path": "is_admin"
+        },
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "active",
+            "true": "deleted"
+          },
+          "path": "deleted"
+        },
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "service"
+          },
+          "path": "is_bot"
+        }
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "cursor",
+        "cursorPath": "response_metadata.next_cursor",
+        "hasMorePath": null,
+        "pageSize": 200,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "members",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users.list",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "users:read"
+      ]
+    }
+  }
+}

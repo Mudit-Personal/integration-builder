@@ -1,0 +1,169 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "param_required",
+          "where": "usage.request",
+          "message": "Required query parameter \"created_at_after\" is missing."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2.11",
+      "name": "Intercom",
+      "slug": "intercom"
+    },
+    "assumptions": [
+      "Teammates are the billable people for SaaS management, so /admins is used for users; /contacts lists end-customers, not workspace members, and was not used.",
+      "The /admins operation does not document pagination parameters, so users pagination is set to none even though other list APIs use starting_after.",
+      "The /admins record does not document status, role, user type, created date or last-active date, so those user fields are null; suspended or deactivated admins cannot be distinguished from this response.",
+      "Usage uses /admins/activity_logs which logs activities by all admins including login events; window dates are assumed to be epoch seconds because created_at is documented as integer date-time.",
+      "Intercom-Version header version 2.11 is sent by default; regional roots https://api.eu.intercom.io and https://api.au.intercom.io exist but the manifest uses https://api.intercom.io.",
+      "Rate-limit totals and headers are not stated, so rateLimit fields are null.",
+      "No paid-tier requirement or 200-body error envelope was documented."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "Bearer Token",
+        "prefix": "Bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://api.intercom.io",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "\"scheme\":\"bearer\""
+      },
+      {
+        "claim": "pagination",
+        "quote": "You can use pagination to limit the number of results returned."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "will be counted against any rate limit that is in place"
+      },
+      {
+        "claim": "users",
+        "quote": "You can fetch a list of admins for a given workspace."
+      },
+      {
+        "claim": "usage",
+        "quote": "You can get a log of activities by all admins in an app."
+      }
+    ],
+    "extraHeaders": {
+      "Intercom-Version": "2.11"
+    },
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "activity_type"
+        },
+        "metricConstant": null,
+        "occurredAt": {
+          "fallbackPaths": null,
+          "format": "epoch_seconds",
+          "map": null,
+          "path": "created_at"
+        },
+        "userRef": {
+          "fallbackPaths": [
+            "performed_by.email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "performed_by.id"
+        },
+        "userRefType": "externalId",
+        "value": null
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "type": "none"
+      },
+      "planRequirement": null,
+      "recordsPath": "activity_logs",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/admins/activity_logs",
+        "query": {
+          "created_at_after": "{{window.start}}"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [],
+      "window": {
+        "endParam": "created_at_before",
+        "format": "epoch_seconds",
+        "maxDays": null,
+        "startParam": "created_at_after"
+      }
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "type": "none"
+      },
+      "planRequirement": null,
+      "recordsPath": "admins",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/admins",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2024-06-18",
+      "name": "Canva",
+      "slug": "canva"
+    },
+    "assumptions": [
+      "No tenant-wide user-list endpoint was found in the source, so users uses per-design viewers as a best-effort proxy and does not represent every person on the account.",
+      "Users listing requires at least one design to exist because a design ID from context is used in the path.",
+      "Timestamp units for last_viewed_at and other integer times are not stated, assumed to be epoch seconds.",
+      "Email address, role, user type and account creation date are not returned by the viewers endpoint.",
+      "Status mapping from visibility values to active and deleted is assumed.",
+      "General per-minute rate limit and rate-limit headers were not stated; export throttles are specific to exports.",
+      "OAuth user token is required; no service account or organization-wide key was documented."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://www.canva.com/api/oauth/authorize",
+        "label": "OAuth2 Authorization Code",
+        "scopes": [
+          "design:content:read",
+          "design:meta:read",
+          "design:content:write",
+          "folder:read",
+          "folder:write",
+          "folder:permission:write",
+          "asset:read",
+          "asset:write",
+          "comment:read",
+          "comment:write",
+          "collaboration:event",
+          "brandtemplate:meta:read",
+          "brandtemplate:content:read",
+          "brandtemplate:content:write",
+          "profile:read",
+          "openid",
+          "profile",
+          "email"
+        ],
+        "tokenUrl": "https://api.canva.com/rest/v1/oauth/token",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://api.canva.com/rest",
+    "connectionFields": [],
+    "context": [
+      {
+        "extract": {
+          "team_id": "team_user.team_id"
+        },
+        "name": "team_id",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/v1/users/me",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      },
+      {
+        "extract": {
+          "design_id": "items[0].id"
+        },
+        "name": "design_id",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/v1/designs",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Authorization Code flow with Proof Key for Code Exchange (PKCE)"
+      },
+      {
+        "claim": "pagination",
+        "quote": "continuation(query)"
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Each app can export a maximum of 750 times per 5-minute window"
+      },
+      {
+        "claim": "users",
+        "quote": "\"user\":{\"user_id\":\"string\",\"team_id\":\"string\",\"display_name\":\"string\"}"
+      },
+      {
+        "claim": "plan",
+        "quote": "member of a [Canva Enterprise](https://www.canva.com/enterprise/) organization"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Canva Connect API provides no tenant-wide user list, audit log, or per-user last-active field; it only exposes the current user profile and per-design view analytics that require a specific design ID."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user.display_name"
+        },
+        "email": null,
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user.user_id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": null,
+          "format": "epoch_seconds",
+          "map": null,
+          "path": "last_viewed_at"
+        },
+        "role": null,
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "another_team": "unknown",
+            "anonymous": "unknown",
+            "deleted": "deleted",
+            "opt_out": "unknown",
+            "shown": "active"
+          },
+          "path": "visibility"
+        },
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "continuation",
+        "cursorPath": "continuation",
+        "hasMorePath": null,
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": "Enterprise",
+      "recordsPath": "items",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/v1/designs/{{context.design_id}}/analytics/viewers",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "design:content:read"
+      ]
+    }
+  }
+}

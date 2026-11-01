@@ -1,0 +1,209 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "context[1].path",
+          "message": "{{context.organization.id}} is never set."
+        },
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "context[1].path",
+          "message": "{{context.organization.accountId}} is never set."
+        },
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.path",
+          "message": "{{context.organization.id}} is never set."
+        },
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.path",
+          "message": "{{context.organization.accountId}} is never set."
+        },
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.path",
+          "message": "{{context.group.dsGroupId}} is never set."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2.1",
+      "name": "Docusign Admin API",
+      "slug": "docusign-admin"
+    },
+    "assumptions": [
+      "The source references an organization-wide user list with To get a list of users in an organization, use getUsers instead, but does not include its path or parameters, so it could not be used.",
+      "User list uses a single DSGroup membership list as a proxy and does not cover the whole organization without iterating all groups and accounts.",
+      "Organization ID is taken from the first organization and account ID from its first account; group ID is taken from the first group in that account.",
+      "Email is assumed to be the user_name field in the DSGroup member record; display name uses first_name with fallbacks to last_name and user_name.",
+      "Status values for DSGroup members are not documented, so no status mapping is provided.",
+      "Page size 100 and starting page 1 are assumed; the source does not state a maximum.",
+      "No rate limits, error envelope, or plan requirements are stated in the source.",
+      "Last login is only available via single-email lookup endpoints requiring the email parameter, so activity cannot be listed for all users."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://account.docusign.com/oauth/auth",
+        "label": "OAuth2 Authorization Code",
+        "scopes": [
+          "organization_read",
+          "user_data_redact",
+          "permission_read",
+          "group_read",
+          "user_read",
+          "account_read",
+          "account_write",
+          "user_write",
+          "identity_provider_read",
+          "domain_read",
+          "asset_group_account_read",
+          "asset_group_account_clone_write",
+          "asset_group_account_clone_read",
+          "organization_sub_account_read",
+          "organization_sub_account_write",
+          "connect_org_config_read_api",
+          "connect_org_config_write_api",
+          "connect_org_hmac_read_api",
+          "connect_org_hmac_write_api",
+          "connect_org_oauth_write_api",
+          "connect_org_oauth_read_api"
+        ],
+        "tokenUrl": "https://account.docusign.com/oauth/auth",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://api.docusign.net/Management",
+    "connectionFields": [],
+    "context": [
+      {
+        "extract": {
+          "accountId": "organizations[0].accounts[0].id",
+          "id": "organizations[0].id"
+        },
+        "name": "organization",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/v2/organizations",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      },
+      {
+        "extract": {
+          "dsGroupId": "groups[0].id"
+        },
+        "name": "group",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/v2/organizations/{{context.id}}/accounts/{{context.accountId}}/groups",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "[Required authentication scopes](/docs/admin-api/admin101/auth/): `user_read`."
+      },
+      {
+        "claim": "pagination",
+        "quote": "\"paging\":{\"result_set_size\":\"integer int32\""
+      },
+      {
+        "claim": "users",
+        "quote": "Gets a list of users in a DSGroup."
+      },
+      {
+        "claim": "usage",
+        "quote": "\"last_login\":\"string date-time\""
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "No audit log or per-user usage report is documented. Per-user last_login exists only on single-email lookup endpoints and async user-list exports do not provide a directly readable user activity list."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [
+            "last_name",
+            "user_name"
+          ],
+          "format": null,
+          "map": null,
+          "path": "first_name"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user_name"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user_id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "status"
+        },
+        "userType": null
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 100,
+        "sizeParam": "page_size",
+        "startAt": 1,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "group_users.users",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/v2.1/organizations/{{context.id}}/accounts/{{context.accountId}}/dsgroups/{{context.dsGroupId}}/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "user_read"
+      ]
+    }
+  }
+}

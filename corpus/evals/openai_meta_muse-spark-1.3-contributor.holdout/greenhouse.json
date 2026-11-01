@@ -1,0 +1,119 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v1",
+      "name": "Greenhouse Harvest",
+      "slug": "greenhouse-harvest"
+    },
+    "assumptions": [
+      "User list details were truncated in the source; path /users and response shape were inferred from the documented pattern GET https://harvest.greenhouse.io/v1/users/{user_id}/pending_approvals and the listed GET: List Users endpoint, not from a full user-object example.",
+      "User field mappings use id for externalId, name for displayName, and primary_email_address for email based on changelog mentions; status, role, type, last-active and created timestamps for staff users were not documented, so those fields are null.",
+      "Whether disabled, suspended or deactivated staff users are included in List Users could not be confirmed, so filtering behavior is unknown.",
+      "Pagination for List Users is assumed to use Link headers like other collections, with per_page up to 500 as documented for candidates and applications.",
+      "No staff-user usage signal (last login, last active, audit log, or per-user report) is documented; candidate activity_feed and application last_activity_at track candidates, not employee usage.",
+      "Rate limit is described per 10 seconds via X-RateLimit-Limit header with example value 50; per-minute maximum and reset timestamp format could not be confirmed, so those are null."
+    ],
+    "authMethods": [
+      {
+        "label": "Harvest API Key",
+        "passwordLabel": "Password (leave blank)",
+        "type": "basic",
+        "usernameLabel": "API Token"
+      }
+    ],
+    "baseUrl": "https://harvest.greenhouse.io/v1",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Harvest uses Basic Auth over HTTPS for authentication."
+      },
+      {
+        "claim": "pagination",
+        "quote": "API methods that return a collection of results are always paginated."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Exceeding the limit will return an HTTP 429 response."
+      },
+      {
+        "claim": "users",
+        "quote": "GET: List Users"
+      },
+      {
+        "claim": "usage",
+        "quote": "The activity feed is the list of activities on a candidate's profile, including interviews, notes, and emails."
+      },
+      {
+        "claim": "plan",
+        "quote": "Custom Fields on the application object are only available to customers with Enterprise-level accounts"
+      },
+      {
+        "claim": "errors",
+        "quote": "Rate limit exceeded – You’re being throttled for exceeding our rate limit."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": "X-RateLimit-Remaining",
+      "resetFormat": null,
+      "resetHeader": "X-RateLimit-Reset"
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Source documents candidate and application activity only (candidate activity feed, last_activity_at) and does not document any staff-user last-active field, audit log contents, or per-user usage report."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "primary_email_address"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "pageSize": 500,
+        "sizeParam": "per_page",
+        "type": "link_header"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

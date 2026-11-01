@@ -1,0 +1,97 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v1",
+      "name": "BambooHR",
+      "slug": "bamboohr"
+    },
+    "assumptions": [
+      "Authentication method is not documented in the provided source, so Basic auth with an API key is assumed and needs verification.",
+      "Pagination is not documented for the directory endpoint, so a single request is assumed to return all employees.",
+      "The directory response sample shows no email, status, role, user type, last-active, or created timestamps, so those user fields cannot be mapped.",
+      "Setting onlyCurrent to false is assumed to return the fullest set of employees; terminated or inactive inclusion could not be confirmed.",
+      "The Company Directory feature can be disabled per company, so the endpoint may return 403 with no directory available."
+    ],
+    "authMethods": [
+      {
+        "label": "Basic Auth",
+        "passwordLabel": "Password",
+        "type": "basic",
+        "usernameLabel": "API Key"
+      }
+    ],
+    "baseUrl": "https://{subdomain}.bamboohr.com/api/v1",
+    "connectionFields": [
+      {
+        "example": "mycompany",
+        "label": "Company Subdomain",
+        "name": "subdomain"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "users",
+        "quote": "\"displayName\":\"John Doe\""
+      }
+    ],
+    "extraHeaders": {
+      "Accept": "application/json"
+    },
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The documented directory endpoint returns only profile fields like displayName and jobTitle with no last-active, login, audit log, or per-user report documented."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "displayName"
+        },
+        "email": null,
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "type": "none"
+      },
+      "planRequirement": null,
+      "recordsPath": "employees",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/employees/directory",
+        "query": {
+          "onlyCurrent": "false"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

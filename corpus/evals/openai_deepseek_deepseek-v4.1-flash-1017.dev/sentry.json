@@ -1,0 +1,214 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "pagination_path_missing",
+          "where": "users.pagination",
+          "message": "\"next_page.offset\" is not in the response schema."
+        },
+        {
+          "severity": "block",
+          "code": "quote_not_found",
+          "where": "evidence",
+          "message": "The pagination citation is not in the source: \"cursor: cursor\""
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "pagination_path_missing",
+          "where": "users.pagination",
+          "message": "\"next_page.offset\" is not in the response schema."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": null,
+      "name": "Sent AAPI",
+      "slug": "sentry"
+    },
+    "assumptions": [
+      "Sentry is treated as one organization (tenant). The connector reads the first organization returned by GET /api/0/organizations/ for the token, then lists that organization's members. If the token can see more than one organization, only the first is used.",
+      "The members endpoint accepts a cursor, but the source does not show where the next cursor is returned in the response body. The runtime is assumed to obtain the next cursor from Sentry's pagination metadata or Link header.",
+      "Status is mapped from the member user's isActive flag. Suspended members have a separate isSuspended flag and pending invites have a pending flag; the source does not provide a single combined status field, so those may appear as active or unknown.",
+      "The source declares DSN authentication, but DSN is for event submission rather than reading user data, so only bearer token authentication is used for this connector.",
+      "No rate limits or plan requirements are documented in the source.",
+      "The region must be supplied as the Sentry region subdomain, such as us or de.",
+      "The source does not document a page-size parameter for the members endpoint; 100 is used as a sensible internal batch size.",
+      "Creation time is taken from user.dateJoined, which may be missing for pending invites."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://{region}.sentry.io/oauth/authorize/",
+        "label": "Auth Token",
+        "scopes": [],
+        "tokenUrl": "https://{region}.sentry.io/oauth/token/",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://{region}.sentry.io",
+    "connectionFields": [
+      {
+        "example": "us",
+        "label": "Region",
+        "name": "region"
+      }
+    ],
+    "context": [
+      {
+        "extract": {
+          "organization": "0.slug"
+        },
+        "name": "CurrentOrganization",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/api/0/organizations/",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "name: auth_token"
+      },
+      {
+        "claim": "pagination",
+        "quote": "cursor(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "List all organization members. Response includes pending invites that are approved by organization owners or managers but waiting to be accepted by the invitee."
+      },
+      {
+        "claim": "usage",
+        "quote": "lastActive: string date-time"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": [
+            "dateCreated",
+            "inviteStatus"
+          ],
+          "format": "iso8601",
+          "map": null,
+          "path": "user.dateJoined"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "user.name"
+          ],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "email": {
+          "fallbackPaths": [
+            "user.email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [
+            "user.id",
+            "email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [
+            "user.lastLogin"
+          ],
+          "format": "iso8601",
+          "map": null,
+          "path": "user.lastActive"
+        },
+        "role": {
+          "fallbackPaths": [
+            "teamRole",
+            "orgRole"
+          ],
+          "format": null,
+          "map": null,
+          "path": "orgRole"
+        },
+        "status": {
+          "fallbackPaths": [
+            "inviteStatus",
+            "user.isSuspended"
+          ],
+          "format": "iso8601",
+          "map": {
+            "active": "active",
+            "deactivated": "inactive",
+            "false": "inactive",
+            "inactive": "inactive",
+            "pending": "pending",
+            "suspended": "suspended",
+            "true": "active"
+          },
+          "path": "user.isActive"
+        },
+        "userType": {
+          "fallbackPaths": [
+            "user.isManaged"
+          ],
+          "format": null,
+          "map": null,
+          "path": "flags.idp:provisioned"
+        }
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "cursor",
+        "cursorPath": ".",
+        "hasMorePath": null,
+        "pageSize": 100,
+        "sizeParam": null,
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/api/0/organizations/{{context.organization}}/members/",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

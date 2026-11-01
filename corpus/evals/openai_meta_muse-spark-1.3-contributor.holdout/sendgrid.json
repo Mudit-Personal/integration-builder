@@ -1,0 +1,125 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "1.0.0",
+      "name": "Twilio SendGrid Teammates",
+      "slug": "sendgrid"
+    },
+    "assumptions": [
+      "EU region uses alternate host https://api.eu.sendgrid.com; manifest uses US host as baseUrl.",
+      "No documented maximum page size; pageSize 100 is a sensible default.",
+      "User response has no status, last-active, or created fields so those are null; all teammates are treated as active members.",
+      "Display name is constructed from first_name with fallbacks to last_name, username, and email.",
+      "No per-user last-active field, audit log, or per-user usage report was found in the source, so usage is unavailable."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "API Key",
+        "prefix": "bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://api.sendgrid.com",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Twilio SendGrid requires you to authenticate with its APIs using an API key. The API key must be sent as a bearer token in the Authorization header."
+      },
+      {
+        "claim": "pagination",
+        "quote": "You can use the `limit` query parameter to set the page size."
+      },
+      {
+        "claim": "users",
+        "quote": "Teammates function like user accounts on the SendGrid account, allowing you to invite additional users to your account with scoped access."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The documented Teammates API only manages teammate invites and permissions; it exposes no per-user last-active/login field, audit/activity log, or per-user usage report."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [
+            "last_name",
+            "username",
+            "email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "first_name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [
+            "email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "username"
+        },
+        "lastActiveAt": null,
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user_type"
+        },
+        "status": null,
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "admin": "member",
+            "owner": "member",
+            "teammate": "member"
+          },
+          "path": "user_type"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "limitParam": "limit",
+        "offsetParam": "offset",
+        "pageSize": 100,
+        "totalPath": null,
+        "type": "offset"
+      },
+      "planRequirement": null,
+      "recordsPath": "result",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/v3/teammates",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

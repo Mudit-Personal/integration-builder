@@ -1,0 +1,139 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "param_required",
+          "where": "users.request",
+          "message": "Required query parameter \"user\" is missing."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2026-10-05",
+      "name": "Amplitude",
+      "slug": "amplitude"
+    },
+    "assumptions": [
+      "No organization or tenant member list was found in the source. The only people-like operations list product analytics end-users, not account seats, so membership, status and role cannot be confirmed.",
+      "The user search operation needs a specific user identifier, so listing every person in one call cannot be confirmed.",
+      "Response field names for user records are not documented, so user field mappings were left empty.",
+      "How to page through people is not clearly documented, so a single request was assumed.",
+      "No per-user last active field, audit log, or per-user usage report with documented fields was found, so usage was marked unavailable.",
+      "Exact request limits per minute and limit headers were not stated, so throttling behavior is unknown.",
+      "Only the Taxonomy event endpoints were stated to need the Amplitude Data add-on; plan limits for other endpoints could not be confirmed.",
+      "An EU host is mentioned in the source but a single base URL is used; EU customers may need a different host."
+    ],
+    "authMethods": [
+      {
+        "label": "Project API key and secret key",
+        "passwordLabel": "Secret Key",
+        "type": "basic",
+        "usernameLabel": "API Key"
+      },
+      {
+        "label": "Organization API key and secret key",
+        "passwordLabel": "Secret Key",
+        "type": "basic",
+        "usernameLabel": "API Key"
+      },
+      {
+        "authorizeUrl": "https://mcp.amplitude.com/authorize",
+        "label": "Amplitude MCP OAuth",
+        "scopes": [
+          "mcp:read",
+          "mcp:write",
+          "offline_access"
+        ],
+        "tokenUrl": "https://mcp.amplitude.com/token",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://amplitude.com",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "HTTP Basic authentication. Username is the project API key, password is the project secret key."
+      },
+      {
+        "claim": "auth",
+        "quote": "DSAR uses HTTP Basic with the org API key and org secret key, as documented in the DSAR request examples."
+      },
+      {
+        "claim": "pagination",
+        "quote": "user(query,required) offset(query) limit(query)"
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Rate limits for this endpoint are lower than other Dashboard REST endpoints."
+      },
+      {
+        "claim": "users",
+        "quote": "Look up users by Amplitude ID, device ID, user ID, or user ID prefix."
+      },
+      {
+        "claim": "usage",
+        "quote": "Active and new user counts"
+      },
+      {
+        "claim": "plan",
+        "quote": "Requires the Amplitude Data add-on."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents only aggregate counts and single-user lookups without a documented per-user last-active field, audit log, or per-user report that can be mapped."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": null,
+        "email": null,
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "placeholder"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "type": "none"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/api/2/usersearch",
+        "query": {
+          "user": ""
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

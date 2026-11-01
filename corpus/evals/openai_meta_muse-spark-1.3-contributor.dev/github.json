@@ -1,0 +1,130 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "1.1.4",
+      "name": "GitHub",
+      "slug": "github"
+    },
+    "assumptions": [
+      "The provided excerpt did not include an organization-wide member listing endpoint, so users uses the organization cache usage by repository listing as a placeholder and does not represent people.",
+      "No per-user last-active field or audit log appeared in the excerpt, so usage is marked unavailable even though Copilot user reports exist as download links.",
+      "Maximum page size was not documented, so a sensible value of 100 is used for pagination.",
+      "Rate limits were not stated in the source, so rate limit fields are unknown.",
+      "Personal access tokens and OAuth app tokens are assumed to be sent as bearer tokens; required scopes vary by endpoint.",
+      "Organization slug must be supplied by the customer or derived from the authenticated user's organizations."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "Personal access token",
+        "prefix": "bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://api.github.com",
+    "connectionFields": [
+      {
+        "example": "octocat",
+        "label": "Organization slug",
+        "name": "org"
+      }
+    ],
+    "context": [
+      {
+        "extract": {
+          "org": "0.login"
+        },
+        "name": "org",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/user/orgs",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint."
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: per_page(query) page(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "Lists the people following the authenticated user."
+      },
+      {
+        "claim": "usage",
+        "quote": "The report provides detailed user-level usage data and engagement metrics for Copilot features across the enterprise."
+      },
+      {
+        "claim": "plan",
+        "quote": "This endpoint is only available to organizations with access to the enhanced billing platform."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The provided excerpt has no per-user last-active field or audit log; Copilot user reports return only download links and billing endpoints return summaries, so individual usage cannot be attributed to users."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "full_name"
+        },
+        "email": null,
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "full_name"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 100,
+        "sizeParam": "per_page",
+        "startAt": 1,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "repository_cache_usages",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/orgs/{{context.org}}/actions/cache/usage-by-repository",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

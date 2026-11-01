@@ -1,0 +1,173 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.path",
+          "message": "{{page}} is not available here."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2",
+      "name": "Adobe User Management API",
+      "slug": "adobe-user-management"
+    },
+    "assumptions": [
+      "The organization user list only returns users whose status is active, so suspended, disabled, locked or removed users cannot be retrieved from the list endpoint even though licences may be held by them.",
+      "The API does not document any per-user last login, last active date, audit log, or usage report, so actual product usage cannot be determined.",
+      "The user list ends when the response field lastPage is true; the manifest pagination has no total-pages or has-more field because the API signals the end only with that flag.",
+      "The maximum page size for user retrieval is 2000 entries per page.",
+      "Every user-list call needs the Organization ID from the Adobe Admin Console, entered as a connection setting.",
+      "API calls need both a Bearer access token obtained by OAuth Server-to-Server and the X-Api-Key Client ID header at the same time.",
+      "The token endpoint host ims-na1 may differ by Adobe region; the documented na1 host is used.",
+      "Identity type values Adobe ID, Enterprise ID and Federated ID are treated as organization members; only unknown is kept as unknown.",
+      "Display name uses email address because first name and last name are separate optional fields.",
+      "Admin roles are only shown inside the groups list, so no separate role field is mapped.",
+      "Rate limit is set to the per-client limit of 25 requests per minute; a global limit of 100 per minute also applies."
+    ],
+    "authMethods": [
+      {
+        "clientAuth": "body",
+        "label": "OAuth Server-to-Server",
+        "scopes": [
+          "openid",
+          "AdobeID",
+          "user_management_sdk"
+        ],
+        "tokenUrl": "https://ims-na1.adobelogin.com/ims/token/v2",
+        "type": "oauth2_client_credentials"
+      },
+      {
+        "in": "header",
+        "label": "API Key (Client ID)",
+        "name": "X-Api-Key",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://usermanagement.adobe.io/v2/usermanagement",
+    "connectionFields": [
+      {
+        "example": "A495E53@AdobeOrg",
+        "label": "Organization ID",
+        "name": "orgId"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "https://ims-na1.adobelogin.com/ims/token/v2?grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&scope=openid,AdobeID,user_management_sdk"
+      },
+      {
+        "claim": "users",
+        "quote": "Retrieve a paged list of all users in your organization along with information about them."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The 0-based index of the page number being requested."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Maximum calls per client: 25 requests per a minute"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": 25,
+      "remainingHeader": null,
+      "resetFormat": "delta_seconds",
+      "resetHeader": "Retry-After"
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The documentation describes only identity, status, and group membership fields and does not document any per-user last-active or login timestamp, audit or activity log, or per-user usage report."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [
+            "username",
+            "firstname"
+          ],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [
+            "id",
+            "username"
+          ],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "active": "active",
+            "disabled": "suspended",
+            "locked": "suspended",
+            "removed": "deleted"
+          },
+          "path": "status"
+        },
+        "userType": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "adobeid": "member",
+            "enterpriseid": "member",
+            "federatedid": "member",
+            "unknown": "unknown"
+          },
+          "path": "type"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 2000,
+        "sizeParam": null,
+        "startAt": 0,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "users",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users/{{connection.orgId}}/0",
+        "query": {
+          "directOnly": "false"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

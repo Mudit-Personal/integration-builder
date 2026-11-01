@@ -1,0 +1,181 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.query",
+          "message": "{{context.calendly_user_me.organization}} is never set."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": null,
+      "name": "calendly",
+      "slug": "calendly"
+    },
+    "assumptions": [
+      "The only organization-wide people listing shown in the source is organization memberships; the connector first reads the signed-in user via /users/me only to get the current organization URI.",
+      "The membership records do not expose a suspended or deactivated status, so deactivated people may not be returned by this connector.",
+      "Usage is based on the Enterprise-only activity log. Accounts without Enterprise access may have no usable usage signal.",
+      "The source does not document a maximum page size for the count parameter; the connector uses 100 as a sensible page size.",
+      "The source does not document rate limits, so rateLimit is left null.",
+      "OAuth 2.0 scopes are listed as empty in the source, even though individual endpoints mention required scopes.",
+      "The membership role field is not used as a status or user type because the source does not define role values as account status.",
+      "The source did not contain suspicious instructions."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://auth.calendly.com/oauth/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [],
+        "tokenUrl": "https://auth.calendly.com/oauth/token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "label": "Personal access token",
+        "passwordLabel": "Personal access token",
+        "type": "basic",
+        "usernameLabel": "Personal access token"
+      }
+    ],
+    "baseUrl": "https://api.calendly.com",
+    "connectionFields": [],
+    "context": [
+      {
+        "extract": {
+          "organization": "resource.current_organization"
+        },
+        "name": "calendly_user_me",
+        "request": {
+          "body": [],
+          "method": "GET",
+          "path": "/users/me",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Put the access token in the `Authorization: Bearer <TOKEN>` header"
+      },
+      {
+        "claim": "pagination",
+        "quote": "next_page_token"
+      },
+      {
+        "claim": "users",
+        "quote": "list the Organization Memberships for all users belonging to an organization"
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns a list of activity log entries"
+      },
+      {
+        "claim": "plan",
+        "quote": "This endpoint requires an <strong>Enterprise</strong> subscription."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Calendly’s API is [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer)-based and has predictable resource-oriented URLs."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "user.created_at"
+        },
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "user.name"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "user.email"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "user.uri"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "user.updated_at"
+        },
+        "role": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "role"
+        },
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "status"
+        },
+        "userType": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "role"
+        }
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "page_token",
+        "cursorPath": "pagination.next_page_token",
+        "hasMorePath": "pagination.next_page_token",
+        "pageSize": 100,
+        "sizeParam": "count",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "collection",
+      "request": {
+        "body": [],
+        "method": "GET",
+        "path": "/organization_memberships",
+        "query": {
+          "organization": "{{context.organization}}"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "organizations:read"
+      ]
+    }
+  }
+}

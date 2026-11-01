@@ -1,0 +1,200 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "baseUrl",
+          "message": "https://{subdomain}.{site} lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "authMethods[2].tokenUrl",
+          "message": "https://{subdomain}.{site}/oauth2/v1/token lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "authMethods[2].authorizeUrl",
+          "message": "https://{subdomain}.{site}/oauth2/v1/authorize lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "V2 Collection 1.0",
+      "name": "Datadog",
+      "slug": "datadog"
+    },
+    "assumptions": [
+      "Source excerpt listed 1712 operations but showed only a subset; organization-wide List Users details were not included so standard GET /api/v2/users pattern was used and should be verified.",
+      "User status values were not documented in the source, so status mapping could not be confirmed.",
+      "User role field was not documented in the source for the list operation, so role is left empty.",
+      "Maximum page size for user listing was not documented, so a sensible value of 100 is used.",
+      "Source declared servers as https://{subdomain}.{site}; site is fixed to datadoghq.com in baseUrl with subdomain variable.",
+      "Rate limits were not stated in the source, so rate limit fields are left empty.",
+      "OAuth2 token and authorize URLs were given in source as paths only, so they were expanded onto the tenant host."
+    ],
+    "authMethods": [
+      {
+        "in": "header",
+        "label": "API Key",
+        "name": "DD-API-KEY",
+        "prefix": "",
+        "type": "api_key"
+      },
+      {
+        "in": "header",
+        "label": "Application Key",
+        "name": "DD-APPLICATION-KEY",
+        "prefix": "",
+        "type": "api_key"
+      },
+      {
+        "authorizeUrl": "https://{subdomain}.datadoghq.com/oauth2/v1/authorize",
+        "label": "OAuth2",
+        "scopes": [],
+        "tokenUrl": "https://{subdomain}.datadoghq.com/oauth2/v1/token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "headerName": "Authorization",
+        "label": "Bearer Token",
+        "prefix": "bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://{subdomain}.datadoghq.com",
+    "connectionFields": [
+      {
+        "example": "api",
+        "label": "Subdomain",
+        "name": "subdomain"
+      }
+    ],
+    "context": [
+      {
+        "extract": {
+          "org_id": "data.relationships.org.data.id"
+        },
+        "name": "current_user",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/api/v2/current_user",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Your Datadog API Key."
+      },
+      {
+        "claim": "pagination",
+        "quote": "[Results are paginated][1]."
+      },
+      {
+        "claim": "users",
+        "quote": "Get the user associated with the current authentication context."
+      },
+      {
+        "claim": "usage",
+        "quote": "last_login_time"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "attributes.created_at"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "attributes.handle"
+          ],
+          "format": null,
+          "map": null,
+          "path": "attributes.name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "attributes.email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "attributes.last_login_time"
+        },
+        "role": null,
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {},
+          "path": "attributes.status"
+        },
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "service"
+          },
+          "path": "attributes.service_account"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page[number]",
+        "pageSize": 100,
+        "sizeParam": "page[size]",
+        "startAt": 0,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "data",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/api/v2/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

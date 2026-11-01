@@ -1,0 +1,179 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "baseUrl",
+          "message": "https://{tenantDomain}/api/v2 lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "authMethods[0].tokenUrl",
+          "message": "https://{tenantDomain}/oauth/token lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2 (Management API)",
+      "name": "Auth0",
+      "slug": "auth0"
+    },
+    "assumptions": [
+      "Connection setting: the vendor documentation shows the API host as https://{tenantDomain}/api/v2, where {tenantDomain} is the tenant's own Auth0 domain such as your-tenant.auth0.com. The tenant name (the 'your-tenant' part) has to be supplied as a connection setting, and the rest of the host (auth0.com) and the /api/v2 path are fixed.",
+      "Sign-in method: client credentials is listed as supported, but the source page does not give the token endpoint address, so the token URL used here (https://{subdomain}.auth0.com/oauth/token) is an assumption and should be confirmed before use.",
+      "Suspend detection: the source has only a 'blocked' true/false flag and no separate deactivated state, so blocked accounts are reported as suspended and all other accounts as active.",
+      "End of list: the page count is not read from the response, because the source does not name the field that holds the array when the total count is requested. The scan stops when a page comes back shorter than 100 users.",
+      "No user role information is available from this endpoint, so role is left unset.",
+      "User type (member, guest, service) cannot be determined from the endpoint fields shown in the source, so it is left unset.",
+      "Rate limits and plan requirements are not described in the source page, so they are left empty.",
+      "Login activity: last_login is used as the activity signal, with a note that a user who has never logged in will have no value there."
+    ],
+    "authMethods": [
+      {
+        "clientAuth": "body",
+        "label": "OAuth 2.0 Client Credentials (Management API application)",
+        "scopes": [
+          "read:users",
+          "read:user_idp_tokens"
+        ],
+        "tokenUrl": "https://{subdomain}.auth0.com/oauth/token",
+        "type": "oauth2_client_credentials"
+      },
+      {
+        "headerName": "Authorization",
+        "label": "Bearer token",
+        "prefix": "Bearer ",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://{subdomain}.auth0.com/api/v2",
+    "connectionFields": [
+      {
+        "example": "your-tenant",
+        "label": "Tenant subdomain",
+        "name": "subdomain"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "bearerAuth oAuth2ClientCredentials"
+      },
+      {
+        "claim": "users",
+        "quote": "This endpoint retrieves details of users."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Page index of the results to return. First page is 0."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Number of results per page."
+      },
+      {
+        "claim": "usage",
+        "quote": "Last date and time this user logged in."
+      }
+    ],
+    "extraHeaders": {
+      "Accept": "application/json"
+    },
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": [],
+          "format": "iso8601",
+          "map": null,
+          "path": "created_at"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "nickname",
+            "username"
+          ],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user_id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [],
+          "format": "iso8601",
+          "map": null,
+          "path": "last_login"
+        },
+        "role": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "role"
+        },
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "blocked"
+        },
+        "userType": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user_id"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 100,
+        "sizeParam": "per_page",
+        "startAt": 0,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

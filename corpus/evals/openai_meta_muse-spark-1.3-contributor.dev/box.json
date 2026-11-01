@@ -1,0 +1,207 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2024.0",
+      "name": "Box",
+      "slug": "box"
+    },
+    "assumptions": [
+      "No per-user last-active or last-login field was found on the user record, so usage uses the enterprise events log.",
+      "Page sizes are not documented; using 1000 for users and 500 for events as sensible values.",
+      "User status values cannot_delete_edit and cannot_delete_edit_upload are assumed to represent active users with restrictions.",
+      "User type is derived from is_platform_access_only: true maps to service (app users), false maps to member; external collaborator distinction could not be confirmed.",
+      "Events window date format for created_after and created_before is assumed to be iso8601; max window not documented.",
+      "Events pagination uses stream_position and next_stream_position as a cursor; completion condition beyond next_stream_position could not be confirmed.",
+      "No rate-limit headers or limits are stated in the source, so rateLimit fields are null.",
+      "No plan or tier requirement is stated in the source."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://account.box.com/api/oauth2/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [
+          "root_readonly",
+          "root_readwrite",
+          "manage_app_users",
+          "manage_managed_users",
+          "manage_groups",
+          "manage_webhook",
+          "manage_enterprise_properties",
+          "manage_data_retention",
+          "manage_legal_hold"
+        ],
+        "tokenUrl": "https://api.box.com/oauth2/token",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://api.box.com/2.0",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "The access token received from the authorization server in the OAuth 2.0 flow."
+      },
+      {
+        "claim": "pagination",
+        "quote": "This endpoint defaults to use offset-based pagination, yet also supports"
+      },
+      {
+        "claim": "users",
+        "quote": "Returns a list of all users for the Enterprise along with their `user_id`,"
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns up to a year of past events for a given user or for the entire enterprise."
+      },
+      {
+        "claim": "usage",
+        "quote": "The user making the API call will need to have admin privileges, and the application will need to have the scope `manage enterprise properties` checked."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": null,
+        "metricConstant": null,
+        "occurredAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "created_at"
+        },
+        "userRef": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "created_by.id"
+        },
+        "userRefType": "externalId",
+        "value": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "event_id"
+        }
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "stream_position",
+        "cursorPath": "next_stream_position",
+        "hasMorePath": null,
+        "pageSize": 500,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "entries",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/events",
+        "query": {
+          "stream_type": "admin_logs"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "manage_enterprise_properties"
+      ],
+      "window": {
+        "endParam": "created_before",
+        "format": "iso8601",
+        "maxDays": null,
+        "startParam": "created_after"
+      }
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "created_at"
+        },
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "login"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "role"
+        },
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "active": "active",
+            "cannot_delete_edit": "active",
+            "cannot_delete_edit_upload": "active",
+            "inactive": "inactive"
+          },
+          "path": "status"
+        },
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "service"
+          },
+          "path": "is_platform_access_only"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "limitParam": "limit",
+        "offsetParam": "offset",
+        "pageSize": 1000,
+        "totalPath": "total_count",
+        "type": "offset"
+      },
+      "planRequirement": null,
+      "recordsPath": "entries",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

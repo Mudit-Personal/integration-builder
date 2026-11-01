@@ -1,0 +1,189 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v1",
+      "name": "Lever",
+      "slug": "lever"
+    },
+    "assumptions": [
+      "User list response fields were not fully documented in the provided source; id, name, email and role mapping is based on the user object shape shown in audit events.",
+      "User status and deactivated/suspended field names were not documented, so status, userType, lastActiveAt and createdAt are left unmapped.",
+      "List path /users is inferred from the List all users resource following the same convention as other list endpoints like GET /archive_reasons and GET /audit_events.",
+      "Audit events pagination parameters were not listed for that endpoint, so general list pagination with limit and offset token is assumed.",
+      "Rate limit converted from 10 requests per second to 600 per minute for the manifest.",
+      "Audit events endpoint is an add-on and may require special enablement; set as planRequirement Add-on."
+    ],
+    "authMethods": [
+      {
+        "label": "API Key",
+        "passwordLabel": "Password (leave blank)",
+        "type": "basic",
+        "usernameLabel": "API Key"
+      },
+      {
+        "authorizeUrl": "https://auth.lever.co/authorize",
+        "label": "OAuth",
+        "scopes": [
+          "users:read:admin",
+          "audit_events:read:admin",
+          "offline_access"
+        ],
+        "tokenUrl": "https://auth.lever.co/oauth/token",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://api.lever.co/v1",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Authenticate to the Lever API via basic auth by providing an API key as the username and leaving the password blank."
+      },
+      {
+        "claim": "pagination",
+        "quote": "All resources with a list endpoint (opportunities, users, postings) have pagination support."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "we allow a steady state number of 10 requests/second per API key"
+      },
+      {
+        "claim": "users",
+        "quote": "List all users"
+      },
+      {
+        "claim": "usage",
+        "quote": "Lever tracks certain activity by recording audit events."
+      },
+      {
+        "claim": "plan",
+        "quote": "is an add-on for customers"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": 600,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "type"
+        },
+        "metricConstant": null,
+        "occurredAt": {
+          "fallbackPaths": null,
+          "format": "epoch_millis",
+          "map": null,
+          "path": "createdAt"
+        },
+        "userRef": {
+          "fallbackPaths": [
+            "meta.user.id"
+          ],
+          "format": null,
+          "map": null,
+          "path": "user.id"
+        },
+        "userRefType": "externalId",
+        "value": null
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "offset",
+        "cursorPath": "next",
+        "hasMorePath": "hasNext",
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": "Add-on",
+      "recordsPath": "data",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/audit_events",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "audit_events:read:admin"
+      ],
+      "window": {
+        "endParam": "created_at_end",
+        "format": "epoch_millis",
+        "maxDays": null,
+        "startParam": "created_at_start"
+      }
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "role"
+        },
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "offset",
+        "cursorPath": "next",
+        "hasMorePath": "hasNext",
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "data",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "users:read:admin"
+      ]
+    }
+  }
+}

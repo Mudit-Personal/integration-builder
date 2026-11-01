@@ -1,0 +1,158 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2.0",
+      "name": "Bitbucket",
+      "slug": "bitbucket"
+    },
+    "assumptions": [
+      "Workspace slug must be supplied by the customer; the members list requires a workspace in the path.",
+      "Member records in the provided documentation show only uuid, display_name and created_on inside user; email, status, role, user type and last-active fields are not shown so they are left empty.",
+      "No per-user last-active field, audit log, or per-user usage report was found in the provided documentation, so usage cannot be determined.",
+      "Pagination is assumed to follow the response next URL with a page size of 100, which is a sensible default not stated in the source.",
+      "Rate limits and plan requirements were not stated in the source."
+    ],
+    "authMethods": [
+      {
+        "in": "header",
+        "label": "API key",
+        "name": "Authorization",
+        "prefix": "",
+        "type": "api_key"
+      },
+      {
+        "authorizeUrl": "https://bitbucket.org/site/oauth2/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [
+          "repository",
+          "repository:write",
+          "repository:admin",
+          "repository:delete",
+          "project",
+          "project:admin",
+          "email",
+          "account",
+          "account:write",
+          "team",
+          "team:write",
+          "pipeline",
+          "pipeline:write",
+          "pipeline:variable",
+          "runner",
+          "runner:write",
+          "test",
+          "test:write",
+          "issue",
+          "issue:write",
+          "pullrequest",
+          "pullrequest:write",
+          "snippet",
+          "snippet:write",
+          "webhook",
+          "wiki"
+        ],
+        "tokenUrl": "https://bitbucket.org/site/oauth2/access_token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "label": "App password",
+        "passwordLabel": "App password",
+        "type": "basic",
+        "usernameLabel": "Username"
+      }
+    ],
+    "baseUrl": "https://api.bitbucket.org/2.0",
+    "connectionFields": [
+      {
+        "example": "my-workspace",
+        "label": "Workspace slug",
+        "name": "workspace"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Basic HTTP Authentication as per [RFC-2617](https://tools.ietf.org/html/rfc2617) (Digest not supported)."
+      },
+      {
+        "claim": "auth",
+        "quote": "OAuth 2 as per [RFC-6749](https://tools.ietf.org/html/rfc6749)."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns all members of the requested workspace."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Returns a paginated list of explicit user permissions for the given repository."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The provided documentation does not include a per-user last-active field, a workspace audit or activity log, or a per-user usage report; workspace member records expose only identity fields such as uuid, display_name and created_on."
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "user.created_on"
+        },
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user.display_name"
+        },
+        "email": null,
+        "externalId": {
+          "fallbackPaths": [
+            "user.account_id"
+          ],
+          "format": null,
+          "map": null,
+          "path": "user.uuid"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "pageSize": 100,
+        "sizeParam": null,
+        "type": "next_url",
+        "urlPath": "next"
+      },
+      "planRequirement": null,
+      "recordsPath": "values",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/workspaces/{{connection.workspace}}/members",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "account"
+      ]
+    }
+  }
+}

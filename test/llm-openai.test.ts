@@ -52,6 +52,20 @@ test('an API error keeps its status so rate limits are retried', async () => {
   await assert.rejects(call(), /OpenAI 429: Rate limit reached/);
 });
 
+test('an upstream error sent with status 200, or wrapped in an array, still fails the call', async () => {
+  reply = { status: 200, body: { error: { message: 'Upstream error from Nvidia', code: 400 } } };
+  await assert.rejects(call(), /OpenAI 400: Upstream error from Nvidia/);
+  reply = { status: 503, body: [{ error: { code: 503, message: 'high demand' } }] };
+  await assert.rejects(call(), /OpenAI 503: high demand/);
+});
+
+test('propertyNames and format are dropped from the schema because some providers reject them', async () => {
+  reply = answer('{}');
+  const schema = { type: 'object', properties: { format: { enum: ['iso8601'] } }, additionalProperties: { type: 'string', format: 'starts_with', pattern: '^/' }, propertyNames: { type: 'string' } };
+  await openaiApi('some-model', 'sk-test')({ system: 's', prompt: 'p', schema });
+  assert.deepEqual(seen.body.response_format.json_schema.schema, { type: 'object', properties: { format: { enum: ['iso8601'] } }, additionalProperties: { type: 'string', pattern: '^/' } });
+});
+
 test('OpenAI is used only when both its key and model are set', () => {
   const saved = { ...process.env };
   delete process.env.ANTHROPIC_API_KEY;

@@ -1,0 +1,103 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": null,
+      "name": "HubSpot",
+      "slug": "hubspot"
+    },
+    "assumptions": [
+      "Authentication is not described in the provided docs, so a bearer private-app token is assumed; confirm OAuth scopes and token type with HubSpot.",
+      "Pagination for the users list is not described, so a single request is assumed; large accounts may need paging not shown here.",
+      "The users example does not show email, display name, role, or user type fields, so those fields are left empty.",
+      "The archived flag is treated as active when false and deleted when true; this mapping was not explicitly confirmed.",
+      "No per-user last-active field, audit log, or usage report was found in the provided docs, so usage is marked unavailable."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "Private App Token",
+        "prefix": "Bearer ",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://api.hubspot.com",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "users",
+        "quote": "To retrieve all users, make a GET request to /crm/v3/objects/users/ ."
+      },
+      {
+        "claim": "usage",
+        "quote": "Use this API to fetch information about users in the account, along with updating their working hours, timezone, additional phone number, and job title properties."
+      },
+      {
+        "claim": "auth",
+        "quote": "Permission sets that have paid seats attached to them can only be modified by applications that have the billing-write scope."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Provided docs show only profile properties like job title, phone, working hours and created/modified dates; no per-user last-active field, audit log, or usage report is documented."
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "createdAt"
+        },
+        "displayName": null,
+        "email": null,
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "active",
+            "true": "deleted"
+          },
+          "path": "archived"
+        },
+        "userType": null
+      },
+      "pagination": {
+        "type": "none"
+      },
+      "planRequirement": null,
+      "recordsPath": "results",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/crm/v3/objects/users/",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

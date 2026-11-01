@@ -1,0 +1,243 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "context_path_missing",
+          "where": "context[0].extract.orgLogin",
+          "message": "\"login\" is not in the response schema."
+        },
+        {
+          "severity": "block",
+          "code": "caller_scoped_users",
+          "where": "users.request",
+          "message": "/user/orgs describes the signed-in caller, not everyone on the account. Use the admin or organization member listing."
+        },
+        {
+          "severity": "block",
+          "code": "paging_ignored",
+          "where": "users.pagination",
+          "message": "The spec pages this list with \"page\", so one request would miss people. Set the pagination it documents."
+        },
+        {
+          "severity": "block",
+          "code": "unbound_path_param",
+          "where": "usage.request",
+          "message": "/orgs/{org}/copilot/metrics/reports/users-1-day has a path parameter with no value. Bind it with {{...}}."
+        },
+        {
+          "severity": "block",
+          "code": "param_required",
+          "where": "usage.request",
+          "message": "Required query parameter \"day\" is missing."
+        },
+        {
+          "severity": "block",
+          "code": "records_not_array",
+          "where": "usage.recordsPath",
+          "message": "\"$\" is not a list."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "param_required",
+          "where": "usage.request",
+          "message": "Required query parameter \"day\" is missing."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "github",
+      "slug": "github",
+      "apiVersion": "v3 (2022-11-28 REST)"
+    },
+    "baseUrl": "https://api.github.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "GitHub App installation token (service account)",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      },
+      {
+        "type": "bearer",
+        "label": "Fine-grained personal access token owned by the organization",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      },
+      {
+        "type": "bearer",
+        "label": "OAuth app token or classic personal access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      }
+    ],
+    "extraHeaders": {
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28"
+    },
+    "context": [
+      {
+        "name": "orgLogin",
+        "request": {
+          "method": "GET",
+          "path": "/user/orgs",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "orgLogin": "0.login"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/orgs/{{context.orgLogin}}/members",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "per_page",
+        "pageSize": 100,
+        "startAt": 1,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "read:org"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": [
+            "node_id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": {
+          "path": "login",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": {
+          "path": "type",
+          "fallbackPaths": null,
+          "map": {
+            "user": "member",
+            "bot": "service",
+            "organization": "unknown"
+          },
+          "format": null
+        },
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "aggregate_report",
+      "request": {
+        "method": "GET",
+        "path": "/orgs/{{context.orgLogin}}/copilot/metrics/reports/users-1-day",
+        "query": {
+          "day": "{{window.start}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "download_links",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [
+        "read:org"
+      ],
+      "planRequirement": "Copilot Business",
+      "forEachUser": false,
+      "window": {
+        "startParam": "day",
+        "endParam": null,
+        "format": "date",
+        "maxDays": 1
+      },
+      "fields": {
+        "userRef": {
+          "path": "$",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": null,
+        "metric": null,
+        "metricConstant": "copilot_user_metrics_report_download",
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": 900,
+      "remainingHeader": "X-RateLimit-Remaining",
+      "resetHeader": "X-RateLimit-Reset",
+      "resetFormat": "epoch_seconds"
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint."
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: per_page(query) page(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "Lists all of the authenticated user's organization memberships."
+      },
+      {
+        "claim": "usage",
+        "quote": "The report contains user-specific metrics for the specified day, including individual user engagement statistics, feature usage patterns, and adoption metrics broken down by user."
+      },
+      {
+        "claim": "plan",
+        "quote": "Organization owners and authorized users with fine-grained \"View Organization Copilot Metrics\" permission can retrieve Copilot metrics reports for the organization."
+      }
+    ],
+    "assumptions": [
+      "GitHub has no single account-wide user directory for a company; people are read from one organization's member listing, so the connection covers the first organization returned for the token and multi-organization customers need one connection per organization.",
+      "The organization is discovered with a read-only call that returns the organizations the signed-in caller can act on; it is used only to get the organization login, never as the list of people.",
+      "The organization member listing only returns current members. GitHub exposes suspended or deactivated members through a different, undocumented-in-source mechanism, so those people cannot be included and their seats may not appear.",
+      "The member listing does not include an email address, a status, a role, a creation date or a last activity time, so those fields are left unmapped. Email-based matching will therefore depend on the login name.",
+      "GitHub Copilot per-user usage data is only offered as a link to a downloadable report file, not as records inside the API response. The connector therefore captures the download link for the requested day; it cannot read the report file itself, so per-user Copilot metrics cannot be attributed to individual people from this response.",
+      "The Copilot usage report requires a specific day to be sent as the required 'day' query parameter; the connector fills it from the start of the requested usage window.",
+      "The exact Copilot plan needed for the usage report is not stated in the source text; it is assumed to require a Copilot Business or Enterprise subscription for the organization.",
+      "No request or response rate limits are documented in the source; the values entered are GitHub's well-known default headers and should be confirmed against the live account.",
+      "The source documentation contained no suspicious or injected instructions."
+    ]
+  }
+}

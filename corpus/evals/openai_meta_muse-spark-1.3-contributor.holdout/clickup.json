@@ -1,0 +1,115 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2.0",
+      "name": "ClickUp",
+      "slug": "clickup"
+    },
+    "assumptions": [
+      "No dedicated organization-wide user-list endpoint appears in the source; using Get Authorized Workspaces which nests members per Workspace.",
+      "User records are nested as teams[].members[].user, so recordsPath uses teams[0].members and may miss members from additional Workspaces.",
+      "No pagination is documented for the Workspaces listing, so pagination is set to none.",
+      "Status, role, user type, last-active and created dates do not appear on the user object in the source, so those fields are null.",
+      "No per-user last-active field, workspace-wide audit or activity log, or per-user usage report appears in the source, so usage is unavailable.",
+      "Rate limits and plan requirements are not stated in the source.",
+      "OAuth authorize URL and scopes are not stated in the source, so OAuth access is modeled as a generic bearer token alongside the Personal API Key."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "OAuth2 Access Token",
+        "prefix": "bearer",
+        "type": "bearer"
+      },
+      {
+        "in": "header",
+        "label": "Personal API Key",
+        "name": "Authorization",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://api.clickup.com/api",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "API token required for authentication."
+      },
+      {
+        "claim": "auth",
+        "quote": "Authorization: Bearer {access_token}"
+      },
+      {
+        "claim": "pagination",
+        "quote": "To fetch the next page of history (older comments), you must use the `start` and `start_id` parameters together"
+      },
+      {
+        "claim": "users",
+        "quote": "View the Workspaces available to the authenticated user."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The provided documentation shows no per-user last-active or last-login field, no workspace-wide audit or activity log, and no per-user usage report."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [
+            "user.initials"
+          ],
+          "format": null,
+          "map": null,
+          "path": "user.username"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user.email"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user.id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "type": "none"
+      },
+      "planRequirement": null,
+      "recordsPath": "teams[0].members",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/v2/team",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2026-06-15",
+      "name": "Gusto",
+      "slug": "gusto"
+    },
+    "assumptions": [
+      "Employee list endpoint path was not shown in the provided source, only the title Get employees of a company and its query filters. The path used here is an unconfirmed inference.",
+      "Employee response field names were not documented in the provided source, so field mappings other than uuid could not be confirmed and are left empty.",
+      "It is assumed that leaving the terminated filter unset returns both active and terminated employees. The source only says the filter selects terminated employees.",
+      "Pagination start page is assumed to be 1. The source only says page loads all objects unless pagination is forced and per defaults to 25.",
+      "Base URL uses the demo server shown in the source. Production host was not shown.",
+      "How to obtain a bearer token was not fully documented in the provided source excerpt, only company-level bearer auth and a truncated OAuth token page.",
+      "No per-user last-active, login, audit log, or per-user usage report was described, so usage is marked unavailable.",
+      "Whether terminated employees are included by default and whether contractors are included with employees could not be confirmed."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "Bearer Token",
+        "prefix": "Bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://api.gusto-demo.com",
+    "connectionFields": [
+      {
+        "example": "e2c4c0ce-2986-48b9-86cf-ec27f6ed9a36",
+        "label": "Company ID",
+        "name": "company_id"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Company-level authentication"
+      },
+      {
+        "claim": "pagination",
+        "quote": "The page that is requested. When unspecified, will load all objects unless endpoint forces pagination."
+      },
+      {
+        "claim": "pagination",
+        "quote": "Number of objects per page. For majority of endpoints will default to 25"
+      },
+      {
+        "claim": "users",
+        "quote": "Get employees of a company"
+      },
+      {
+        "claim": "users",
+        "quote": "Filters employees by those who have been or are scheduled to be terminated"
+      }
+    ],
+    "extraHeaders": {
+      "X-Gusto-API-Version": "2026-06-15"
+    },
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Source describes only employee listing with onboarding and termination filters. No last-active, last-login, audit log, or per-user report fields are documented."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": null,
+        "email": null,
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "uuid"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 25,
+        "sizeParam": "per",
+        "startAt": 1,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/v1/companies/{{connection.company_id}}/employees",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

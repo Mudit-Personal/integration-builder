@@ -1,0 +1,260 @@
+[
+  {
+    "slug": "calendly",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 52579,
+    "tokens": {
+      "input": 17017,
+      "output": 9235
+    },
+    "scenarios": {
+      "passed": 1,
+      "failed": 25
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "auth: basic,oauth2_authorization_code (accepted: bearer)",
+      "usage: last_activity_field (accepted: event_log)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "asana",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 54955,
+    "tokens": {
+      "input": 15788,
+      "output": 12282
+    },
+    "scenarios": {
+      "passed": 17,
+      "failed": 9
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "box",
+    "status": "passed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 110930,
+    "tokens": {
+      "input": 25641,
+      "output": 21734
+    },
+    "scenarios": {
+      "passed": 25,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "pagination: offset (accepted: cursor)",
+      "auth: oauth2_client_credentials (accepted: oauth2_authorization_code)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "github",
+    "status": "passed",
+    "correct": true,
+    "attempts": 3,
+    "ms": 97176,
+    "tokens": {
+      "input": 51473,
+      "output": 22498
+    },
+    "scenarios": {
+      "passed": 21,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "auth: bearer,bearer,bearer (accepted: bearer)",
+      "usage: aggregate_report (accepted: unavailable)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "okta",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 3,
+    "ms": 53277,
+    "tokens": {
+      "input": 58163,
+      "output": 9843
+    },
+    "scenarios": {
+      "passed": 13,
+      "failed": 13
+    },
+    "matches": 3,
+    "of": 6,
+    "differs": [
+      "pagination: cursor (accepted: link_header)",
+      "auth: api_key,oauth2_authorization_code (accepted: api_key)",
+      "usage: event_log (accepted: last_activity_field)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "jira",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 113594,
+    "tokens": {
+      "input": 11782,
+      "output": 20616
+    },
+    "scenarios": {
+      "passed": 1,
+      "failed": 23
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /rest/api/3/users (accepted: GET /rest/api/3/users/search)",
+      "usage: event_log (accepted: unavailable)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "slack",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 22685,
+    "tokens": {
+      "input": 12699,
+      "output": 6960
+    },
+    "scenarios": {
+      "passed": 27,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "auth: api_key,api_key,oauth2_authorization_code (accepted: api_key,oauth2_authorization_code)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "hubspot",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 56274,
+    "tokens": {
+      "input": 8765,
+      "output": 13825
+    },
+    "scenarios": {
+      "passed": 26,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /crm/v3/objects/users/ (accepted: GET /crm/v3/objects/users)",
+      "auth: oauth2_authorization_code,oauth2_authorization_code (accepted: bearer)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "zoom",
+    "status": "passed",
+    "correct": true,
+    "attempts": 2,
+    "ms": 61069,
+    "tokens": {
+      "input": 54360,
+      "output": 8247
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "auth: oauth2_authorization_code (accepted: bearer)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "gitlab",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 33046,
+    "tokens": {
+      "input": 34027,
+      "output": 11151
+    },
+    "scenarios": {
+      "passed": 22,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://gitlab.example.com/api/v4 (accepted: https://gitlab.com/api/v4)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "auth0",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 31862,
+    "tokens": {
+      "input": 73845,
+      "output": 5385
+    },
+    "scenarios": {
+      "passed": 18,
+      "failed": 5
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "auth: bearer,oauth2_client_credentials (accepted: bearer)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "sentry",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 3,
+    "ms": 98723,
+    "tokens": {
+      "input": 31734,
+      "output": 23267
+    },
+    "scenarios": {
+      "passed": 13,
+      "failed": 12
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "pagination: cursor (accepted: link_header)",
+      "auth: oauth2_authorization_code (accepted: bearer)"
+    ],
+    "reason": ""
+  }
+]

@@ -1,0 +1,245 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.path",
+          "message": "{{context.confluenceGroup.groupId}} is never set."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.path",
+          "message": "{{context.confluenceGroup}} is never set."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "1.0.0",
+      "name": "Confluence Cloud",
+      "slug": "confluence-cloud"
+    },
+    "assumptions": [
+      "Tenant host is https://{subdomain}.atlassian.net - customer must supply the your-domain subdomain part.",
+      "No single tenant-wide user list endpoint is documented, so the user list uses members of the first group returned by GET /wiki/rest/api/group as a proxy for all people; if that group is not company-wide some people may be missed.",
+      "Confluence user objects do not include status, role, last-active or created dates in the docs, so those user fields are left empty.",
+      "Account-type mapping assumes atlassian and known/user accounts are regular members and app accounts are service accounts.",
+      "Audit creationDate is an integer and is assumed to be milliseconds since epoch.",
+      "Audit startDate and endDate are assumed to accept ISO8601 dates; the runtime supplies the window.",
+      "Page size 100 is a sensible default; the docs do not state a maximum for group-members or audit endpoints.",
+      "No rate limits or plan requirements are stated in the provided docs, so those are left blank."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://auth.atlassian.com/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [
+          "read:confluence-user",
+          "read:confluence-groups",
+          "read:audit-log:confluence"
+        ],
+        "tokenUrl": "https://auth.atlassian.com/oauth/token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "label": "Basic Auth",
+        "passwordLabel": "API Token",
+        "type": "basic",
+        "usernameLabel": "Email"
+      }
+    ],
+    "baseUrl": "https://{subdomain}.atlassian.net",
+    "connectionFields": [
+      {
+        "example": "your-domain",
+        "label": "Subdomain",
+        "name": "subdomain"
+      }
+    ],
+    "context": [
+      {
+        "extract": {
+          "confluenceGroup": "results[0].id"
+        },
+        "name": "confluenceGroup",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/wiki/rest/api/group",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "You can access this resource via basic auth."
+      },
+      {
+        "claim": "auth",
+        "quote": "This API uses OAuth 2 with the authorizationCode grant flow."
+      },
+      {
+        "claim": "pagination",
+        "quote": "When additional results are available, returns `next` and `prev` URLs to retrieve them in subsequent calls."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns the users that are members of a group."
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns all records in the audit log, optionally for a certain date range."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "category"
+        },
+        "metricConstant": null,
+        "occurredAt": {
+          "fallbackPaths": null,
+          "format": "epoch_millis",
+          "map": null,
+          "path": "creationDate"
+        },
+        "userRef": {
+          "fallbackPaths": [
+            "author.username",
+            "author.userKey"
+          ],
+          "format": null,
+          "map": null,
+          "path": "author.accountId"
+        },
+        "userRefType": "externalId",
+        "value": null
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "hasMorePath": null,
+        "limitParam": "limit",
+        "offsetParam": "start",
+        "pageSize": 100,
+        "totalPath": null,
+        "type": "offset"
+      },
+      "planRequirement": null,
+      "recordsPath": "results",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/wiki/rest/api/audit",
+        "query": {
+          "endDate": "{{window.end}}",
+          "startDate": "{{window.start}}"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "read:audit-log:confluence"
+      ],
+      "window": {
+        "endParam": "endDate",
+        "format": "iso8601",
+        "maxDays": null,
+        "startParam": "startDate"
+      }
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [
+            "publicName"
+          ],
+          "format": null,
+          "map": null,
+          "path": "displayName"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [
+            "userKey",
+            "username"
+          ],
+          "format": null,
+          "map": null,
+          "path": "accountId"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": {
+          "fallbackPaths": [
+            "type"
+          ],
+          "format": null,
+          "map": {
+            "anonymous": "unknown",
+            "app": "service",
+            "atlassian": "member",
+            "known": "member",
+            "unknown": "unknown",
+            "user": "member"
+          },
+          "path": "accountType"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "limitParam": "limit",
+        "offsetParam": "start",
+        "pageSize": 100,
+        "totalPath": "totalSize",
+        "type": "offset"
+      },
+      "planRequirement": null,
+      "recordsPath": "results",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/wiki/rest/api/group/{{context.confluenceGroup}}/membersByGroupId",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "read:confluence-groups"
+      ]
+    }
+  }
+}

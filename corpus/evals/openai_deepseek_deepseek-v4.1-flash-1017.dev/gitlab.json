@@ -1,0 +1,163 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "GitLab",
+      "slug": "gitlab",
+      "apiVersion": "v4"
+    },
+    "baseUrl": "https://gitlab.example.com/api/v4",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Access token",
+        "in": "header",
+        "name": "PRIVATE-TOKEN",
+        "prefix": ""
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "page_number",
+        "pageParam": "page",
+        "sizeParam": "per_page",
+        "pageSize": 100,
+        "startAt": 1,
+        "totalPagesPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "email",
+          "fallbackPaths": [
+            "public_email"
+          ],
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": [
+            "username"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "state",
+          "fallbackPaths": null,
+          "map": {
+            "active": "active",
+            "blocked": "suspended"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "is_admin",
+          "fallbackPaths": null,
+          "map": {
+            "true": "admin",
+            "false": "member"
+          },
+          "format": null
+        },
+        "userType": {
+          "path": "external",
+          "fallbackPaths": null,
+          "map": {
+            "true": "guest",
+            "false": "member"
+          },
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "last_activity_on",
+          "fallbackPaths": [
+            "last_sign_in_at",
+            "current_sign_in_at"
+          ],
+          "map": null,
+          "format": "iso8601"
+        },
+        "createdAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "PRIVATE-TOKEN: <your_access_token>"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Takes pagination parameters page and per_page to restrict the list of users."
+      },
+      {
+        "claim": "users",
+        "quote": "Lists all users."
+      },
+      {
+        "claim": "users",
+        "quote": "As an administrator"
+      },
+      {
+        "claim": "usage",
+        "quote": "last_activity_on"
+      },
+      {
+        "claim": "plan",
+        "quote": "Tier : Free, Premium, Ultimate"
+      }
+    ],
+    "assumptions": [
+      "The documentation only shows an example API host, gitlab.example.com. This manifest uses that example host; customers must replace it with their own GitLab instance host, which this connector format cannot fully template.",
+      "The users list has separate regular-user and administrator responses. This manifest assumes an administrator access token because private email, created date, and last activity fields appear only in the administrator response.",
+      "The page number is assumed to start at 1; the source does not state the starting page.",
+      "The source does not document a maximum per_page value; 100 is used as a sensible page size.",
+      "The source only shows the active and blocked user states, so other states are left unmapped.",
+      "Bots and service accounts are not clearly identified in the list response; the external flag is used for user type and may not classify bots.",
+      "The source does not state rate-limit limits or headers.",
+      "The source shows access-token authentication with the PRIVATE-TOKEN header; OAuth flow details are not included because no token or authorize URLs are provided.",
+      "The source does not state required token scopes; none are listed."
+    ]
+  }
+}

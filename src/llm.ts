@@ -149,7 +149,8 @@ export const claudeApi = (model = API_MODEL): Llm => {
  */
 export const openaiApi = (model: string, key = process.env.OPENAI_API_KEY): Llm => async req => {
   const started = Date.now();
-  const { $schema: _draft, ...schema } = req.schema as { $schema?: string };
+  // Nvidia's grammar engine rejects propertyNames and Zod formats such as starts_with. Zod still checks both after the call. A property named format is an object, so it stays.
+  const { $schema: _draft, ...schema } = JSON.parse(JSON.stringify(req.schema, (k, v) => (k === 'propertyNames' || (k === 'format' && typeof v === 'string') ? undefined : v))) as { $schema?: string };
   const res = await fetch(`${process.env.OPENAI_BASE_URL ?? 'https://api.openai.com/v1'}/chat/completions`, {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
@@ -160,9 +161,11 @@ export const openaiApi = (model: string, key = process.env.OPENAI_API_KEY): Llm 
     }),
     signal: req.signal,
   });
-  const body = await res.json().catch(() => null) as OpenAiReply | null;
+  const raw = await res.json().catch(() => null) as OpenAiReply | OpenAiReply[] | null;
+  // Gemini wraps errors in an array, and OpenRouter can send an upstream error with status 200.
+  const body = Array.isArray(raw) ? raw[0] : raw;
   // The status stays in the message so isRateLimit in read-batch sees a 429.
-  if (!res.ok) throw new Error(`OpenAI ${res.status}: ${body?.error?.message ?? res.statusText}`);
+  if (!res.ok || body?.error) throw new Error(`OpenAI ${body?.error?.code ?? res.status}: ${body?.error?.message ?? res.statusText}`);
   const choice = body?.choices?.[0];
   if (choice?.message?.refusal) throw new LlmStopped('refused', 'The AI declined to read this content.');
   if (choice?.finish_reason === 'length') throw new LlmStopped('too_long', 'These docs produced more output than one read allows.');
@@ -175,7 +178,7 @@ export const openaiApi = (model: string, key = process.env.OPENAI_API_KEY): Llm 
 type OpenAiReply = {
   choices?: { finish_reason?: string; message?: { content?: string | null; refusal?: string | null } }[];
   usage?: { prompt_tokens?: number; completion_tokens?: number };
-  error?: { message?: string };
+  error?: { message?: string; code?: number | string };
 };
 
 /** OpenAI when its key and model are set, else the Anthropic API when its key is set. Keys stay in the server's env. */

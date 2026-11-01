@@ -1,0 +1,554 @@
+[
+  {
+    "slug": "dropbox",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 42532,
+    "tokens": {
+      "input": 20091,
+      "output": 5437
+    },
+    "scenarios": {
+      "passed": 16,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "recordsPath: $ (accepted: members)",
+      "auth: basic,bearer,bearer (accepted: bearer)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "pagerduty",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 52917,
+    "tokens": {
+      "input": 15959,
+      "output": 6458
+    },
+    "scenarios": {
+      "passed": 23,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "microsoft-365",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 68047,
+    "tokens": {
+      "input": 28769,
+      "output": 7961
+    },
+    "scenarios": {
+      "passed": 26,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "google-workspace",
+    "status": "passed",
+    "correct": true,
+    "attempts": 2,
+    "ms": 72988,
+    "tokens": {
+      "input": 61266,
+      "output": 8320
+    },
+    "scenarios": {
+      "passed": 23,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "shopify",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 62043,
+    "tokens": {
+      "input": 25107,
+      "output": 7588
+    },
+    "scenarios": {
+      "passed": 26,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://{shop}.myshopify.com (accepted: https://{subdomain}.myshopify.com)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "monday",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 77761,
+    "tokens": {
+      "input": 30032,
+      "output": 8946
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 2,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://api.monday.com/v2 (accepted: https://api.monday.com)",
+      "usersPath: POST / (accepted: POST /v2)",
+      "pagination: page_number (accepted: none)",
+      "auth: api_key (accepted: bearer)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "trello",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 124444,
+    "tokens": {
+      "input": 14668,
+      "output": 13562
+    },
+    "scenarios": {
+      "passed": 20,
+      "failed": 5
+    },
+    "matches": 3,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /enterprises/{}/members/query (accepted: GET /enterprises/{}/members)",
+      "pagination: cursor (accepted: offset)",
+      "usage: last_activity_field (accepted: event_log)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "docusign",
+    "status": "passed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 157738,
+    "tokens": {
+      "input": 26185,
+      "output": 20577
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 2,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /v2.1/organizations/{}/accounts/{}/dsgroups/{}/users (accepted: GET /v2/organizations/{}/users)",
+      "recordsPath: group_users.users (accepted: users)",
+      "pagination: page_number (accepted: offset)",
+      "usage: unavailable (accepted: last_activity_field)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "clickup",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 50028,
+    "tokens": {
+      "input": 9370,
+      "output": 6582
+    },
+    "scenarios": {
+      "passed": 17,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "smartsheet",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 49242,
+    "tokens": {
+      "input": 22139,
+      "output": 5663
+    },
+    "scenarios": {
+      "passed": 20,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "recordsPath: $ (accepted: data)",
+      "auth: api_key,api_key (accepted: api_key)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "miro",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 61468,
+    "tokens": {
+      "input": 13525,
+      "output": 6886
+    },
+    "scenarios": {
+      "passed": 16,
+      "failed": 9
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "recordsPath: $ (accepted: data)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "canva",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 73731,
+    "tokens": {
+      "input": 12186,
+      "output": 9903
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /v1/designs/{}/analytics/viewers (accepted: GET /v1/designs)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "confluence",
+    "status": "passed",
+    "correct": false,
+    "attempts": 3,
+    "ms": 274984,
+    "tokens": {
+      "input": 47424,
+      "output": 30016
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /wiki/rest/api/group/{}/membersByGroupId (accepted: GET /wiki/rest/api/search/user)",
+      "usage: event_log (accepted: unavailable)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "intercom",
+    "status": "passed",
+    "correct": true,
+    "attempts": 2,
+    "ms": 82223,
+    "tokens": {
+      "input": 35201,
+      "output": 8719
+    },
+    "scenarios": {
+      "passed": 18,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "adobe",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 116059,
+    "tokens": {
+      "input": 62501,
+      "output": 12813
+    },
+    "scenarios": {
+      "passed": 23,
+      "failed": 1
+    },
+    "matches": 3,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://usermanagement.adobe.io/v2/usermanagement (accepted: https://usermanagement.adobe.io)",
+      "usersPath: GET /users/{}/0 (accepted: GET /v2/usermanagement/users/{}/0)",
+      "auth: api_key,oauth2_client_credentials (accepted: oauth2_client_credentials)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "bamboohr",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 39667,
+    "tokens": {
+      "input": 6146,
+      "output": 3914
+    },
+    "scenarios": {
+      "passed": 16,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://{subdomain}.bamboohr.com/api/v1 (accepted: https://{companySubDomain}.bamboohr.com/api/v1)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "freshdesk",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 72025,
+    "tokens": {
+      "input": 36573,
+      "output": 7705
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 3,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://{subdomain}.freshdesk.com (accepted: https://{subdomain}.freshdesk.com/api/v2)",
+      "usersPath: GET /api/v2/agents (accepted: GET /agents)",
+      "usage: unavailable (accepted: last_activity_field)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "gusto",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 60874,
+    "tokens": {
+      "input": 25946,
+      "output": 6152
+    },
+    "scenarios": {
+      "passed": 20,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "greenhouse",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 45861,
+    "tokens": {
+      "input": 38099,
+      "output": 6263
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://harvest.greenhouse.io/v1 (accepted: https://harvest.greenhouse.io)",
+      "usersPath: GET /users (accepted: GET /v1/users)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "lever",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 57579,
+    "tokens": {
+      "input": 36443,
+      "output": 6488
+    },
+    "scenarios": {
+      "passed": 25,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "sendgrid",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 31351,
+    "tokens": {
+      "input": 6641,
+      "output": 3447
+    },
+    "scenarios": {
+      "passed": 22,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "snowflake",
+    "status": "sandbox_failed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 71009,
+    "tokens": {
+      "input": 41881,
+      "output": 9320
+    },
+    "scenarios": {
+      "passed": 14,
+      "failed": 8
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "baseUrl: https://{account}.docs.snowflake.com (accepted: https://{account}.snowflake.com)",
+      "pagination: cursor (accepted: none)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "bitbucket",
+    "status": "passed",
+    "correct": false,
+    "attempts": 1,
+    "ms": 74951,
+    "tokens": {
+      "input": 13545,
+      "output": 8905
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 3,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /workspaces/{}/members (accepted: GET /workspaces/{}/permissions)",
+      "auth: api_key,basic,oauth2_authorization_code (accepted: basic,oauth2_authorization_code)",
+      "usage: unavailable (accepted: last_activity_field)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "datadog",
+    "status": "passed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 123996,
+    "tokens": {
+      "input": 26765,
+      "output": 16160
+    },
+    "scenarios": {
+      "passed": 23,
+      "failed": 0
+    },
+    "matches": 1,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /api/v2/users (accepted: GET /api/v2/current_user)",
+      "recordsPath: data (accepted: data.relationships.other_users.data)",
+      "pagination: page_number (accepted: none)",
+      "auth: api_key,api_key,bearer,oauth2_authorization_code (accepted: api_key,api_key,bearer)",
+      "usage: last_activity_field (accepted: unavailable)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "1password",
+    "status": "passed",
+    "correct": true,
+    "attempts": 1,
+    "ms": 46204,
+    "tokens": {
+      "input": 28914,
+      "output": 6773
+    },
+    "scenarios": {
+      "passed": 26,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "amplitude",
+    "status": "passed",
+    "correct": false,
+    "attempts": 2,
+    "ms": 92655,
+    "tokens": {
+      "input": 15733,
+      "output": 10732
+    },
+    "scenarios": {
+      "passed": 15,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "recordsPath: $ (accepted: matches)",
+      "auth: basic,basic,oauth2_authorization_code (accepted: basic)"
+    ],
+    "reason": ""
+  }
+]

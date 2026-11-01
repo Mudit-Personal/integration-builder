@@ -1,0 +1,112 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v1",
+      "name": "Smartsheet Resource Management",
+      "slug": "smartsheet-resource-management"
+    },
+    "assumptions": [
+      "User list response structure is not documented, so recordsPath is assumed to be the list itself and all user field mappings are left null.",
+      "Pagination first page number is not documented; it is assumed the first page is 1.",
+      "Pagination continuation is assumed by presence of a next link; total pages path is unknown.",
+      "Manifest uses the US base URL as default; EU, AU and Gov regional base URLs exist but multi-region selection is not modeled.",
+      "Gov region requires an additional Smartsheet bearer token in addition to the Resource Management auth token; this extra requirement is not modeled as a separate auth method.",
+      "No per-user last-active field, audit log, activity log, or per-user usage report is described, so usage is unavailable.",
+      "Rate limits and rate-limit headers are not stated for this API.",
+      "Plan or tier requirements are not stated for the users endpoint.",
+      "Whether suspended or deactivated users are included in the users list is not documented."
+    ],
+    "authMethods": [
+      {
+        "in": "header",
+        "label": "API Token (Header)",
+        "name": "auth",
+        "prefix": "",
+        "type": "api_key"
+      },
+      {
+        "in": "query",
+        "label": "API Token (Query Param)",
+        "name": "auth",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://api.rm.smartsheet.com/api/v1",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "In your HTTP requests, you can specify your API token as a query parameter named `auth`, or as an HTTP header with the same name."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The `previous` and `next` links provide access to the corresponding pages in the collection."
+      },
+      {
+        "claim": "pagination",
+        "quote": "per_page should not exceed 1000 rows."
+      },
+      {
+        "claim": "users",
+        "quote": "GET https://api.rm.smartsheet.com/api/v1/users?per_page=100&page=3"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The provided documentation does not describe any per-user last-active field, audit or activity log, or per-user usage report."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": null,
+        "email": null,
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "0.slug"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "hasMorePath": "next",
+        "pageParam": "page",
+        "pageSize": 1000,
+        "sizeParam": "per_page",
+        "startAt": 1,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}

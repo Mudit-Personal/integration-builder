@@ -1,0 +1,224 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2.0.0",
+      "name": "Calendly",
+      "slug": "calendly"
+    },
+    "assumptions": [
+      "Organization URI is obtained from GET /users/me field resource.current_organization and used for both users and usage calls.",
+      "No per-user last active or last login field exists on the user record, so activity log is used for usage and requires Enterprise.",
+      "Actor URI in activity log (actor.uri) is assumed to match the user URI (user.uri) used as users externalId; fallback to actor.alternative_identifier if needed.",
+      "User status is not returned by the memberships API; all roles (user, admin, owner) are treated as active.",
+      "Page size of 100 is a sensible default; the source does not state a maximum count.",
+      "Rate limits are not stated in the source.",
+      "Suspended or deactivated filtering is not documented for organization memberships."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://auth.calendly.com/oauth/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [],
+        "tokenUrl": "https://auth.calendly.com/oauth/token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "headerName": "Authorization",
+        "label": "Personal Access Token",
+        "prefix": "bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://api.calendly.com",
+    "connectionFields": [],
+    "context": [
+      {
+        "extract": {
+          "organization": "resource.current_organization"
+        },
+        "name": "organization",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/users/me",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Put the access token in the `Authorization: Bearer <TOKEN>` header"
+      },
+      {
+        "claim": "pagination",
+        "quote": "This endpoint does not support traditional keyset pagination."
+      },
+      {
+        "claim": "users",
+        "quote": "Use this to list the Organization Memberships for all users belonging to an organization"
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns a list of activity log entries"
+      },
+      {
+        "claim": "plan",
+        "quote": "This endpoint requires an <strong>Enterprise</strong> subscription."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": null,
+        "metricConstant": "activity",
+        "occurredAt": {
+          "fallbackPaths": [],
+          "format": "iso8601",
+          "map": null,
+          "path": "occurred_at"
+        },
+        "userRef": {
+          "fallbackPaths": [
+            "actor.alternative_identifier"
+          ],
+          "format": null,
+          "map": null,
+          "path": "actor.uri"
+        },
+        "userRefType": "externalId",
+        "value": null
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "page_token",
+        "cursorPath": "pagination.next_page_token",
+        "hasMorePath": "pagination.next_page_token",
+        "pageSize": 100,
+        "sizeParam": "count",
+        "type": "cursor"
+      },
+      "planRequirement": "Enterprise",
+      "recordsPath": "collection",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/activity_log_entries",
+        "query": {
+          "organization": "{{context.organization}}"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "activity_log:read"
+      ],
+      "window": {
+        "endParam": "max_occurred_at",
+        "format": "iso8601",
+        "maxDays": null,
+        "startParam": "min_occurred_at"
+      }
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": [
+            "created_at"
+          ],
+          "format": "iso8601",
+          "map": null,
+          "path": "user.created_at"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "user.slug"
+          ],
+          "format": null,
+          "map": null,
+          "path": "user.name"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user.email"
+        },
+        "externalId": {
+          "fallbackPaths": [
+            "uri"
+          ],
+          "format": null,
+          "map": null,
+          "path": "user.uri"
+        },
+        "lastActiveAt": null,
+        "role": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "role"
+        },
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "admin": "active",
+            "owner": "active",
+            "user": "active"
+          },
+          "path": "role"
+        },
+        "userType": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "admin": "member",
+            "owner": "member",
+            "user": "member"
+          },
+          "path": "role"
+        }
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "page_token",
+        "cursorPath": "pagination.next_page_token",
+        "hasMorePath": "pagination.next_page_token",
+        "pageSize": 100,
+        "sizeParam": "count",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "collection",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/organization_memberships",
+        "query": {
+          "organization": "{{context.organization}}"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "organizations:read"
+      ]
+    }
+  }
+}

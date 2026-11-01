@@ -1,0 +1,217 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "field_not_in_schema",
+          "where": "usage.fields.userRef",
+          "message": "\"entries[0].created_by.id\" or \"entries[0].source.user.id\" is not in the response schema."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2024.0",
+      "name": "box",
+      "slug": "box"
+    },
+    "assumptions": [
+      "The source lists only OAuth 2.0 authorization server metadata; I assumed the tenant provides a valid client credentials flow for server-to-server use.",
+      "The source does not state the maximum page size for /users or /events; I used 100.",
+      "The exact syntax for the fields query parameter is not specified; I assumed a comma-separated list of field names.",
+      "I treat cannot_delete_edit and cannot_delete_edit_upload as suspended because they are non-active user statuses that can still hold a licence.",
+      "I use is_platform_access_only to identify service accounts: true maps to service and false maps to member.",
+      "The /events endpoint requires admin privileges and the manage enterprise properties scope; I assume the connecting account has them.",
+      "I assume created_by.id on each event identifies the user for usage.",
+      "The source does not state any rate limits, so rate-limit fields are null.",
+      "The source does not state any paid plan requirement for these endpoints.",
+      "I assume created_at values are ISO 8601 strings, so no numeric date format is needed.",
+      "I assume the /users listing includes all enterprise users, including inactive and suspended users, because the source says it returns all users for the Enterprise.",
+      "The source says /events returns up to a year of past events; windows longer than one year may not be fully covered."
+    ],
+    "authMethods": [
+      {
+        "clientAuth": "basic",
+        "label": "OAuth 2.0 (client credentials)",
+        "scopes": [
+          "read:users",
+          "read:events"
+        ],
+        "tokenUrl": "https://api.box.com/oauth2/token",
+        "type": "oauth2_client_credentials"
+      }
+    ],
+    "baseUrl": "https://api.box.com/2.0",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "The access token received from the authorization server in the OAuth 2.0 flow."
+      },
+      {
+        "claim": "pagination",
+        "quote": "This endpoint defaults to use offset-based pagination, yet also supports marker-based pagination using the `marker` parameter."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns a list of all users for the Enterprise along with their `user_id`, `public_name`, and `login`."
+      },
+      {
+        "claim": "usage",
+        "quote": "To retrieve events for the entire enterprise, set the `stream_type` to `admin_logs_streaming` for live monitoring of new events, or `admin_logs` for querying across historical events."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": null,
+        "metricConstant": "activity",
+        "occurredAt": {
+          "fallbackPaths": [
+            "recorded_at"
+          ],
+          "format": null,
+          "map": null,
+          "path": "created_at"
+        },
+        "userRef": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "created_by.id"
+        },
+        "userRefType": "externalId",
+        "value": null
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "stream_position",
+        "cursorPath": "next_stream_position",
+        "hasMorePath": null,
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "entries",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/events",
+        "query": {
+          "created_after": "{{window.start}}",
+          "created_before": "{{window.end}}",
+          "stream_type": "admin_logs"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "read:events",
+        "manage enterprise properties"
+      ],
+      "window": {
+        "endParam": "created_before",
+        "format": "iso8601",
+        "maxDays": 365,
+        "startParam": "created_after"
+      }
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "created_at"
+        },
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": [
+            "external_app_user_id"
+          ],
+          "format": null,
+          "map": null,
+          "path": "login"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": null,
+        "role": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "role"
+        },
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "active": "active",
+            "cannot_delete_edit": "suspended",
+            "cannot_delete_edit_upload": "suspended",
+            "inactive": "inactive"
+          },
+          "path": "status"
+        },
+        "userType": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "service"
+          },
+          "path": "is_platform_access_only"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "limitParam": "limit",
+        "offsetParam": "offset",
+        "pageSize": 100,
+        "totalPath": "total_count",
+        "type": "offset"
+      },
+      "planRequirement": null,
+      "recordsPath": "entries",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {
+          "fields": "id,name,login,status,created_at,role,is_platform_access_only"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "read:users"
+      ]
+    }
+  }
+}

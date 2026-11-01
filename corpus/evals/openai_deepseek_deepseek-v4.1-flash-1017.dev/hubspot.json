@@ -1,0 +1,172 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v3",
+      "name": "HubSpot",
+      "slug": "hub-spot"
+    },
+    "assumptions": [
+      "Authentication endpoints and token URLs are not documented in the provided source. The manifest lists private app access token and OAuth 2.0 as possible server auth methods, but leaves their URLs null.",
+      "The users list endpoint is documented without pagination details. The manifest does not configure paging and assumes one response contains the full list; verify against the live API.",
+      "The users response example does not include email or name fields. The manifest uses the user id as the external identifier and leaves email and name paths null.",
+      "The only status signal in the users response is the archived boolean; it is mapped true to inactive and false to active. No suspended or pending status is documented.",
+      "No per-user last active or last login field, audit/activity log, or per-user usage report is documented in the provided source, so usage is marked unavailable.",
+      "The source does not state rate limits, so rateLimit fields are null.",
+      "No plan-gated user endpoint is identified, so planRequirement is null."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://api.hubspot.com/oauth/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [
+          "crm.objects.users.read"
+        ],
+        "tokenUrl": "https://api.hubspot.com/oauth/v1/token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "authorizeUrl": "https://api.hubspot.com/oauth/authorize",
+        "label": "Private app access token",
+        "scopes": [
+          "crm.objects.users.read"
+        ],
+        "tokenUrl": "https://api.hubspot.com/oauth/v1/token",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://api.hubspot.com",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Permission sets that have paid seats attached to them can only be modified by applications that have the billing-write scope."
+      },
+      {
+        "claim": "users",
+        "quote": "To retrieve all users, make a GET request to /crm/v3/objects/users/."
+      },
+      {
+        "claim": "users",
+        "quote": "To retrieve a specific user, make a GET request to the above URL and specify a user ID. For example: crm/v3/objects/users/207838823235."
+      },
+      {
+        "claim": "users",
+        "quote": "To retrieve a batch of users by ID, make a POST request to /crm/v3/objects/users/batch/read."
+      },
+      {
+        "claim": "users",
+        "quote": "To retrieve users that meet a specific set of criteria, you can make a POST request to /crm/v3/objects/users/search and include search filters in the request body."
+      },
+      {
+        "claim": "users",
+        "quote": "To return specific properties, include a properties query parameter in the request URL along with comma-separated property names."
+      },
+      {
+        "claim": "users",
+        "quote": "In a response for the users API, id and hs_object_id are the same and represent a user only in the HubSpot account from which the data was requested."
+      },
+      {
+        "claim": "usage",
+        "quote": "This API can be especially useful for syncing HubSpot user data with external workforce management tools."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "No per-user last active or last login field, audit/activity log, or per-user usage report is documented in the provided source. The Users API exposes createdAt, updatedAt, and properties such as job title and phone, but not activity."
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": [],
+          "format": "iso8601",
+          "map": {},
+          "path": "createdAt"
+        },
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "properties.hs_job_title"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "properties.email"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "updatedAt"
+        },
+        "role": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "properties.hs_job_title"
+        },
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "false": "active",
+            "true": "inactive"
+          },
+          "path": "archived"
+        },
+        "userType": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {},
+          "path": "properties.hs_user_type"
+        }
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "after",
+        "cursorPath": "paging.next.after",
+        "hasMorePath": "paging.next.after",
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "results",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/crm/v3/objects/users/",
+        "query": {
+          "properties": "hs_job_title,hs_additional_phone"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "crm.objects.users.read"
+      ]
+    }
+  }
+}

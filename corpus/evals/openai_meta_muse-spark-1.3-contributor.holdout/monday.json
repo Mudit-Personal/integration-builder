@@ -1,0 +1,157 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2026-07",
+      "name": "monday.com",
+      "slug": "monday-com"
+    },
+    "assumptions": [
+      "API version 2026-07 is assumed because the status filter and user_config field used for full coverage are only available in 2026-07 and later; earlier versions default to ACTIVE and PENDING only.",
+      "Personal API token is sent in the Authorization header with no Bearer prefix as shown in the cURL example, so empty prefix is used.",
+      "OAuth app authentication is mentioned but no token URL is documented, so only API token auth is included.",
+      "Users query uses status [ACTIVE, INACTIVE, PENDING] to include deactivated users; omitted status would default to ACTIVE and PENDING only.",
+      "Pagination uses page starting at 1 and limit with maximum 1000; total pages and has-more indicators are not documented so null is used and fetching stops on empty/short page.",
+      "Role and user type are derived from user_config.kind (admin, member, guest, view_only); view_only is treated as member type and full mapping for API/service account kinds could not be confirmed.",
+      "last_activity and created_at are date strings, so no numeric format is needed.",
+      "Rate limit of 5000 requests per minute is documented but exact remaining and reset header names are not stated, so those fields are null.",
+      "Errors are returned with HTTP 200 and an errors array, but there is no ok-style success flag documented, so no errorEnvelope is set.",
+      "Single global endpoint https://api.monday.com/v2 is used; no tenant-specific subdomain is needed."
+    ],
+    "authMethods": [
+      {
+        "in": "header",
+        "label": "Personal API Token",
+        "name": "Authorization",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://api.monday.com/v2",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "passing the token in the `Authorization` header."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The page number to return. Starts at 1."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "You made more than 5,000 requests in one minute"
+      },
+      {
+        "claim": "users",
+        "quote": "Returns an array containing metadata about one or multiple users"
+      },
+      {
+        "claim": "usage",
+        "quote": "The last date and time the user was active."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": 5000,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "created_at"
+        },
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "last_activity"
+        },
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user_config.kind"
+        },
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "active": "active",
+            "inactive": "inactive",
+            "pending": "pending"
+          },
+          "path": "status"
+        },
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "admin": "member",
+            "guest": "guest",
+            "member": "member",
+            "view_only": "member"
+          },
+          "path": "user_config.kind"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 1000,
+        "sizeParam": "limit",
+        "startAt": 1,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "data.users",
+      "request": {
+        "body": {
+          "query": "query { users(limit: 1000, page: 1, status: [ACTIVE, INACTIVE, PENDING]) { id email name status created_at last_activity user_config { kind } } }"
+        },
+        "method": "POST",
+        "path": "/",
+        "query": {},
+        "readOnlyPostReason": "monday.com GraphQL API requires POST for reads; this users query only reads data and changes nothing."
+      },
+      "requiredScopes": [
+        "users:read"
+      ]
+    }
+  }
+}

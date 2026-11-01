@@ -1,0 +1,157 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v4",
+      "name": "GitLab",
+      "slug": "gitlab"
+    },
+    "assumptions": [
+      "Base URL uses GitLab.com (https://gitlab.com/api/v4); self-managed instances use a custom host which must be configured separately.",
+      "An administrator token is required to list all users and to receive email, created_at, last_activity_on and last_sign_in_at fields; regular users see limited fields.",
+      "Pagination starts at page 1 and pageSize 100 is a sensible default; the source does not state a maximum per_page.",
+      "Status value blocked is treated as suspended; no other state values were documented.",
+      "User type uses external flag (true is guest, false is member); the list response does not include the bot flag so bots cannot be distinguished as service in this list.",
+      "last_activity_on is date-only (YYYY-MM-DD) but is treated as iso8601; fallbacks use last_sign_in_at and current_sign_in_at.",
+      "Rate limits were not stated in the source so rateLimit fields are null."
+    ],
+    "authMethods": [
+      {
+        "in": "header",
+        "label": "Private Token",
+        "name": "PRIVATE-TOKEN",
+        "prefix": "",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://gitlab.com/api/v4",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "PRIVATE-TOKEN: <your_access_token>"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Takes pagination parameters page and per_page to restrict the list of users."
+      },
+      {
+        "claim": "users",
+        "quote": "Lists all users."
+      },
+      {
+        "claim": "usage",
+        "quote": "Get the last activity date for users with public profiles, sorted from oldest to newest."
+      },
+      {
+        "claim": "plan",
+        "quote": "Tier : Free, Premium, Ultimate"
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "created_at"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "username"
+          ],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": [
+            "public_email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [
+            "last_sign_in_at",
+            "current_sign_in_at"
+          ],
+          "format": "iso8601",
+          "map": null,
+          "path": "last_activity_on"
+        },
+        "role": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "admin"
+          },
+          "path": "is_admin"
+        },
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "active": "active",
+            "blocked": "suspended"
+          },
+          "path": "state"
+        },
+        "userType": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "member",
+            "true": "guest"
+          },
+          "path": "external"
+        }
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 100,
+        "sizeParam": "per_page",
+        "startAt": 1,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": []
+    }
+  }
+}
