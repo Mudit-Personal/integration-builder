@@ -1,4 +1,3 @@
-import { createHash, timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { generateManifest } from './generate.ts';
 import { ingest, IngestError } from './ingest.ts';
@@ -6,7 +5,7 @@ import { LlmStopped, type Llm } from './llm.ts';
 import { assemblePack, type AppPack } from './pack-build.ts';
 import { isBlocked, type Finding } from './verify.ts';
 
-export type ReadDeps = { llm: Llm | null; accessCode: string | undefined; deadlineMs?: number };
+export type ReadDeps = { llm: Llm | null; deadlineMs?: number };
 export type ReadEvent = { type: 'progress'; message: string } | { type: 'done'; pack: AppPack } | { type: 'failed'; code: string; message: string };
 
 const MAX_BODY = 2_000_000;
@@ -31,10 +30,7 @@ const readBody = (req: IncomingMessage) => new Promise<string | null>((resolve, 
   req.on('error', reject);
 });
 
-const digest = (s: string) => createHash('sha256').update(s).digest();
-const sameCode = (a: string, b: string) => timingSafeEqual(digest(a), digest(b));
-
-const parse = (raw: string): { url?: string; text?: string; code?: unknown } | null => {
+const parse = (raw: string): { url?: string; text?: string } | null => {
   try {
     const body = JSON.parse(raw);
     const ok = body && typeof body === 'object' && ['url', 'text'].every(k => body[k] === undefined || typeof body[k] === 'string');
@@ -57,16 +53,15 @@ const failure = (e: unknown, timedOut: boolean): ReadEvent => {
   return { type: 'failed', code: 'error', message: 'Something went wrong while reading these docs. Try again in a minute.' };
 };
 
-export const handleRead = async (req: IncomingMessage, res: ServerResponse, { llm, accessCode, deadlineMs = DEADLINE_MS }: ReadDeps) => {
+export const handleRead = async (req: IncomingMessage, res: ServerResponse, { llm, deadlineMs = DEADLINE_MS }: ReadDeps) => {
   if (req.method !== 'POST') return json(res, 405, 'Use POST.');
-  if (!llm || !accessCode) return json(res, 503, 'Live reading is not set up on this server.');
+  if (!llm) return json(res, 503, 'Live reading is not set up on this server.');
   // JSON only forces a preflight, so a page in another origin cannot post here.
   if (!String(req.headers['content-type']).includes('application/json')) return json(res, 415, 'Send JSON.');
   const raw = await readBody(req);
   if (raw === null) return json(res, 413, 'That is over the 2 MB limit.');
   const body = parse(raw);
   if (!body) return json(res, 400, 'That request could not be read.');
-  if (typeof body.code !== 'string' || !sameCode(body.code, accessCode)) return json(res, 401, 'That access code is not right.');
 
   const gone = new AbortController();
   res.on('close', () => gone.abort());

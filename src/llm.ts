@@ -46,6 +46,51 @@ export const claudeCli = (model = DEFAULT_MODEL, timeoutMs = 300_000): Llm => as
   });
 };
 
+// Tools an injected prompt could use. Codex has no flag to turn every tool off at once.
+const CODEX_OFF = ['shell_tool', 'unified_exec', 'apps', 'plugins', 'browser_use', 'computer_use', 'in_app_browser', 'image_generation', 'multi_agent', 'hooks'];
+
+/**
+ * Dev-only adapter over the local Codex CLI and its ChatGPT sign-in. Read-only sandbox in an empty temp dir, no user config.
+ * The schema goes in the prompt: --output-schema is OpenAI strict mode, which rejects the manifest's oneOf. Zod and the repair loop validate.
+ */
+export const codexCli = (model = process.env.CODEX_MODEL, timeoutMs = 600_000): Llm => async req => {
+  const { spawn } = await import('node:child_process');
+  const { mkdtemp, readFile, rm } = await import('node:fs/promises');
+  const { join } = await import('node:path');
+  const dir = await mkdtemp(join(tmpdir(), 'codex-read-'));
+  const started = Date.now();
+  try {
+    const { out, err, code } = await new Promise<{ out: string; err: string; code: number | null }>((resolve, reject) => {
+      const child = spawn('codex', [
+        'exec', '--json', '--ephemeral', '--skip-git-repo-check', '--ignore-user-config', '--ignore-rules', '-s', 'read-only', '-C', dir,
+        '-o', join(dir, 'out.json'), ...CODEX_OFF.flatMap(f => ['--disable', f]),
+        ...(model ? ['-m', model] : []), '-',
+      ], { cwd: dir, stdio: ['pipe', 'pipe', 'pipe'] });
+      const timer = setTimeout(() => { child.kill(); reject(new Error(`Model call timed out after ${timeoutMs / 1000}s`)); }, timeoutMs);
+      let out = '';
+      let err = '';
+      child.stdout.on('data', d => { out += d; });
+      child.stderr.on('data', d => { err += d; });
+      child.on('error', e => { clearTimeout(timer); reject(e); });
+      child.on('close', code => { clearTimeout(timer); resolve({ out, err, code }); });
+      req.signal?.addEventListener('abort', () => child.kill());
+      child.stdin.end(`${req.system}\n\nDo not run commands. Answer with one JSON object, no prose, matching this JSON Schema:\n${JSON.stringify(req.schema)}\n\n${req.prompt}`);
+    });
+    const events = out.split('\n').flatMap(l => { try { return [JSON.parse(l)]; } catch { return []; } });
+    const usage = events.findLast(e => e.type === 'turn.completed')?.usage ?? {};
+    const failure = events.findLast(e => e.type === 'error' || e.type === 'turn.failed');
+    const text = await readFile(join(dir, 'out.json'), 'utf8').catch(() => null);
+    if (failure || text === null) throw new Error(`Model call failed (exit ${code}): ${JSON.stringify(failure ?? '').slice(0, 500)} ${err.slice(-300)}`);
+    let output: unknown = null; // Not JSON. The repair loop asks again.
+    try {
+      output = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1));
+    } catch {}
+    return { output, usage: { inputTokens: usage.input_tokens ?? 0, outputTokens: usage.output_tokens ?? 0, costUsd: 0, ms: Date.now() - started, model: model ?? 'codex' } };
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+};
+
 /** The model stopped without an answer. The message is written for the person who asked for the read. */
 export class LlmStopped extends Error {
   code: 'refused' | 'too_long';
