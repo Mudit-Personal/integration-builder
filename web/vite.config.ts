@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 
 const shim = (name: string) => fileURLToPath(new URL(`./src/shims/${name}.ts`, import.meta.url));
 
-const proxy = { '/api': 'http://127.0.0.1:4321' };
+const proxy = { '/api': `http://127.0.0.1:${process.env.READ_PORT ?? 4321}` };
 
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),

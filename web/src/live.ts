@@ -5,10 +5,9 @@ export type LiveRead =
   | { kind: 'idle' }
   | { kind: 'reading'; messages: string[] }
   | { kind: 'paste'; message: string }
-  | { kind: 'failed'; message: string }
-  | { kind: 'denied'; message: string };
+  | { kind: 'failed'; message: string };
 
-export type ReadOutcome = { kind: 'done'; pack: AppPack } | { kind: 'denied' | 'failed' | 'paste'; message: string };
+export type ReadOutcome = { kind: 'done'; pack: AppPack } | { kind: 'failed' | 'paste'; message: string };
 
 export const hostFrom = (url: string) => {
   try {
@@ -23,11 +22,11 @@ const outcomeOf = (e: Extract<ReadEvent, { type: 'done' | 'failed' }>): ReadOutc
   return { kind: e.code === 'needs_paste' || e.code === 'unreachable' ? 'paste' : 'failed', message: e.message };
 };
 
-export const readDocs = async (input: { url: string; text?: string; code: string }, onProgress: (message: string) => void, signal: AbortSignal): Promise<ReadOutcome> => {
+export const readDocs = async (input: { url: string; text?: string }, onProgress: (message: string) => void, signal: AbortSignal): Promise<ReadOutcome> => {
   const res = await fetch('./api/read', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(input), signal });
   if (!res.ok || !res.body) {
     const message = await res.json().then((b: { error?: string }) => b.error, () => undefined) ?? "Live reading isn't available right now.";
-    return { kind: res.status === 401 ? 'denied' : 'failed', message };
+    return { kind: 'failed', message };
   }
   let rest = '';
   for await (const chunk of res.body.pipeThrough(new TextDecoderStream())) {

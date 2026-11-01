@@ -81,7 +81,7 @@ npm run demo:dev
 npm run demo:read
 ```
 
-`demo:read` serves `/api/read` on port 4321 for the dev and preview servers. It uses `ANTHROPIC_API_KEY` when set, otherwise the signed-in `claude` CLI. The access code is `DEMO_ACCESS_CODE`, or `local` if unset.
+`demo:read` serves `/api/read` on port 4321 (or `READ_PORT`, which the dev and preview servers also read) for the dev and preview servers. It uses `ANTHROPIC_API_KEY` when set, otherwise the signed-in `claude` CLI. Set `READ_LLM=codex` to use the signed-in `codex` CLI instead (`CODEX_MODEL` picks the model).
 
 ```bash
 npm run demo:build
@@ -93,12 +93,11 @@ npm run demo:build
 
 1. Run `npm run demo:build` and commit `api/read.mjs`. Vercel looks for functions before the build runs, so the file must be in the repo. The build then replaces it.
 2. Import the repo in Vercel. `vercel.json` sets the build command, the output directory and a 300 second function limit, the Hobby maximum.
-3. Set both environment variables, then deploy.
+3. Set the environment variable, then deploy.
 
 | Variable | Purpose |
 |---|---|
 | `ANTHROPIC_API_KEY` | Pays for live reads. Without it the function answers 503 |
-| `DEMO_ACCESS_CODE` | Visitors enter this to start a live read. Without it the function answers 503 |
 
 Node is pinned to 24.x, because the build runs TypeScript directly.
 
