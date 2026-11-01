@@ -3,7 +3,30 @@
 @import './tokens/spacing.css';
 @import './tokens/base.css';
 
-button { transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+button, .landing-cta { transition: background var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur) var(--ease-out); -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+:is(.press, .landing-form button, .signup-form button, .landing-cta):active:not(:disabled) { transform: scale(.97); }
+.btn-primary { background: var(--action-primary); color: var(--text-on-accent); }
+.btn-secondary, .chip { background: transparent; color: var(--text-strong); }
+.btn-inverse { background: var(--surface-inverse); color: var(--text-on-accent); }
+.btn-link { background: none; color: var(--text-strong); }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.field:focus-visible, .paste:focus-visible, .app-nav button:focus-visible, .tabs button:focus-visible { outline-offset: -2px; }
+.check-input:focus-visible + .check-box { outline: 2px solid var(--blue); outline-offset: 2px; }
+.check-box { transition: background var(--dur) var(--ease), transform var(--dur) var(--ease-out); }
+label:active > .check-box { transform: scale(.88); }
+.marker { transition: background 200ms var(--ease); }
+.marker-live { animation: pulse 1.1s ease-in-out infinite alternate; }
+@keyframes pulse { to { opacity: .35; } }
+@keyframes appear { from { opacity: 0; } }
+.check-desc, .check-meta { transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.check-desc[data-waiting] { opacity: 0; transform: translateY(3px); }
+@starting-style { .check-meta { opacity: 0; } }
+/* Results and messages arrive, so they ease in. Moving between steps is frequent, so that stays instant. */
+.callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat { transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out); }
+@starting-style { .callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat { opacity: 0; transform: translateY(6px); } }
+.highlight:nth-child(2), .stat:nth-child(2) { transition-delay: 50ms; }
+.highlight:nth-child(3), .stat:nth-child(3) { transition-delay: 100ms; }
+.highlight:nth-child(4), .stat:nth-child(4) { transition-delay: 150ms; }
 .mono { white-space: nowrap; }
 .app-header { display: flex; align-items: stretch; gap: 28px; min-height: var(--header-h); padding: 0 var(--page-pad); border-bottom: var(--rule-strong); background: var(--surface-page); }
 .app-brand { display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; cursor: pointer; font: var(--fw-medium) 17px/1 var(--font-sans); color: var(--text-strong); white-space: nowrap; }
@@ -20,7 +43,8 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .dgroup { font: var(--type-label); color: var(--text-strong); padding: 22px 0 10px; border-bottom: var(--rule-strong); }
 .dsummary { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; font: var(--type-body); color: var(--text-muted); }
 .drow { display: grid; grid-template-columns: minmax(110px, 200px) minmax(0, 1fr) 132px 64px; gap: 20px; align-items: center; padding: 13px 0; border-bottom: var(--rule-hair); }
-.drow.ask { background: var(--blue-tint); padding: 16px 0 16px 16px; }
+/* The tint bleeds past the rail so its text stays aligned with the rows around it. */
+.drow.ask { background: var(--blue-tint); margin: 0 -16px; padding: 16px; }
 .dopen { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; padding: 16px 0 16px min(220px, 20%); border-bottom: var(--rule-hair); }
 .access-row { display: grid; grid-template-columns: minmax(110px, 200px) minmax(0, 1fr) 110px 230px; gap: 20px; align-items: center; padding: 10px 0; border-bottom: var(--rule-hair); }
 .access-path { overflow-wrap: anywhere; white-space: normal; }
@@ -30,7 +54,7 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .highlight-title { font: var(--type-title); letter-spacing: var(--ls-title); color: var(--text-strong); }
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 32px; margin-top: 40px; border-top: var(--rule-strong); }
 .stat { display: flex; flex-direction: column; gap: 6px; padding: 20px 0; }
-.stat-value { font: var(--type-display); letter-spacing: var(--ls-display); color: var(--text-strong); }
+.stat-value { font: var(--type-display); font-variant-numeric: tabular-nums; letter-spacing: var(--ls-display); color: var(--text-strong); }
 .person-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 90px 80px 110px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: var(--rule-hair); }
 .sample-row { display: grid; grid-template-columns: 1fr 1.3fr auto; gap: 12px; padding: 9px 0; border-bottom: var(--rule-hair); }
 .notice { padding: 20px var(--page-pad) 0; }
@@ -72,6 +96,10 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
   .home-row > :not(:first-child) { grid-column: 2; }
   .home-actions { justify-content: flex-start; gap: 24px; }
   .home-remove { justify-content: flex-start; }
+  .check-row { flex-wrap: wrap; row-gap: 6px; }
+  .check-row > :nth-child(2) { flex-basis: calc(100% - 34px) !important; }
+  .check-meta { margin-left: 34px; padding-top: 0 !important; }
+  input, textarea { font-size: 16px !important; } /* Below 16px, iOS zooms the page on focus. */
 }
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -85,21 +113,22 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .landing-link { display: inline-flex; align-items: center; min-height: 44px; }
 .landing-cta { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; text-decoration: none; font-weight: 500; }
 .landing-cta-ink { background: var(--ink); color: var(--paper) !important; }
+.landing-cta-blue { background: var(--blue); color: var(--white) !important; }
 .landing-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 32px 72px; padding: clamp(40px, 6vw, 80px) 0 56px; }
-.landing-hero h1 { flex: 1 1 620px; min-width: 0; margin: 0; font-size: clamp(44px, 6.6vw, 96px); line-height: 1; letter-spacing: -.045em; font-weight: 400; }
+.landing-hero h1 { flex: 1 1 620px; min-width: 0; margin: 0; text-wrap: balance; font-size: clamp(44px, 6.6vw, 96px); line-height: 1; letter-spacing: -.045em; font-weight: 400; }
 .landing-lead { margin: 0; font-size: 20px; line-height: 1.35; letter-spacing: -.01em; color: var(--ink-2); }
 .landing-form { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-.landing-form input { flex: 1 1 260px; min-width: 0; min-height: 48px; padding: 0 12px; box-sizing: border-box; border: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); font: 400 14px/1 var(--font-mono); }
-.landing-form button { min-height: 48px; padding: 0 20px; border: 0; border-radius: 0; background: var(--ink); color: var(--paper); font: 500 16px/1 var(--font-sans); cursor: pointer; }
+.landing-form input { flex: 1 1 200px; min-width: 0; min-height: 48px; padding: 0 12px; box-sizing: border-box; border: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); font: 400 14px/1 var(--font-mono); }
+.landing-form button { min-width: 140px; min-height: 48px; padding: 0 20px; border: 0; border-radius: 0; background: var(--ink); color: var(--paper); font: 500 16px/1 var(--font-sans); cursor: pointer; }
 .landing-form button:disabled { cursor: default; }
 .landing-stages { display: flex; flex-wrap: wrap; align-items: flex-start; border-top: 1px solid var(--ink); }
 .landing-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 0 12px; width: 100%; min-height: 104px; padding: 12px 20px 12px 0; box-sizing: border-box; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; font: inherit; cursor: pointer; transition: background .15s ease; }
-.landing-row:hover { background: #eceee9; }
 .landing-n { font: 400 13px/1 var(--font-mono); color: var(--ink-3); }
 .landing-stage { display: block; font-size: 26px; line-height: 1.15; letter-spacing: -.025em; }
 .landing-stage-text { display: block; margin-top: 3px; font-size: 15px; }
 .landing-stack { position: relative; flex: 0 1 460px; min-width: 0; aspect-ratio: 460 / 624; }
 .landing-plate { position: absolute; left: 0; width: 100%; height: auto; overflow: visible; transition: transform .28s cubic-bezier(.2, .8, .2, 1); }
+.landing-plate path { transition: fill .2s var(--ease), stroke .2s var(--ease); }
 .landing-done { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--ink); }
 .landing-done p { margin: 0; font: 400 15px/1.4 var(--font-mono); }
 .landing-done .landing-cta { min-height: 48px; padding: 0 20px; }
@@ -108,7 +137,7 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .signup-header { padding: 0 clamp(16px, 2.2vw, 32px); }
 .signup-main { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 72px; width: 100%; max-width: 1180px; margin: 0 auto; padding: 40px clamp(16px, 2.2vw, 32px); box-sizing: border-box; }
 .signup-copy { flex: 1 1 420px; min-width: 0; max-width: 480px; }
-.signup h1 { margin: 0; font-size: clamp(44px, 5vw, 64px); line-height: 1.02; letter-spacing: -.045em; font-weight: 400; }
+.signup h1 { margin: 0; text-wrap: balance; font-size: clamp(44px, 5vw, 64px); line-height: 1.02; letter-spacing: -.045em; font-weight: 400; }
 .signup-lead { margin: 12px 0 0; font-size: 18px; color: var(--ink-2); }
 .signup-form { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
 .signup-form label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--ink-2); }
@@ -120,11 +149,26 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .signup-stack { position: relative; flex: 1 1 340px; min-width: 0; max-width: 460px; aspect-ratio: 460 / 520; }
 .signup-stack svg { position: absolute; left: 0; width: 100%; height: auto; overflow: visible; }
 .landing :is(button, a, input):focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { .landing-row, .landing-plate { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .landing-plate { transition: none; }
+  .marker-live { animation: none; }
+  :is(.press, .landing-form button, .signup-form button, .landing-cta):active:not(:disabled), label:active > .check-box { transform: none; }
+  .callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat, .check-desc { transition-property: opacity; transition-delay: 0ms; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background: var(--action-primary-hover); }
+  .btn-secondary:not(:disabled):hover, .chip:not([aria-pressed="true"]):hover { background: var(--hover-wash); }
+  .btn-inverse:hover, .landing-form button:not(:disabled):hover, .landing-cta-ink:hover { background: #000; }
+  .btn-link:hover { color: var(--text-accent); }
+  .landing-cta-blue:hover, .signup-form button:not(:disabled):hover { background: var(--blue-ink); }
+  .landing-row:hover { background: #eceee9; }
+  .app-nav button:not(:disabled):not([aria-current]):hover, .tabs button:hover { color: var(--text-strong) !important; }
+}
 @media (max-width: 480px) { .landing-header .landing-brand { font-size: 15px; } .landing-nav { gap: 16px; } .landing-header .landing-cta { padding: 0 12px; } }
 @media (max-width: 1024px) { .landing-leader { display: none; } .landing-stack { margin: 48px auto 0; } }
 .account-open { display: inline-flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
-.account-open:hover .account-name, .account-open[aria-current] .account-name { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.account-open[aria-current] .account-name { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .account-open:hover .account-name { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; } }
 .account-open:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
 .avatar-lg { width: 64px; height: 64px; font-size: 22px; }
 .profile { max-width: 720px; gap: 48px; }

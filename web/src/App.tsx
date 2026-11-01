@@ -137,12 +137,12 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
     {/* Hidden, not unmounted, so a read, a check run or a half-made decision carries on behind the profile. */}
     <div hidden={profile}>
     {notice ? <div className="notice"><Callout>{notice}</Callout></div> : null}
-    {!s.id && !connectors ? <div className="centered">{loadFailed ? <><Callout>{loadFailed}</Callout><Button variant="secondary" style={{ marginTop: 16 }} onClick={load}>Try again</Button></> : <P>Loading your workspace…</P>}</div>
+    {!s.id && !connectors ? <div className="centered">{loadFailed ? <><Callout>{loadFailed}</Callout><Button variant="secondary" style={{ marginTop: 16 }} onClick={load}>Try again</Button></> : <P style={{ animation: 'appear 160ms var(--ease-out) 240ms both' }}>Loading your workspace…</P>}</div>
       : !s.id ? <Home connectors={connectors!} onNew={() => leave({ type: 'new', id: crypto.randomUUID(), audience: lastAudience(connectors!) })} onOpen={open} onRemove={remove} />
       : s.step === SOURCE ? <Source s={s} dispatch={dispatch} go={go} onRead={startRead} />
       : s.step === READ && s.read.kind !== 'idle' ? <LiveReading read={s.read} url={s.url} go={go} onPaste={text => startRead(s.url, text)} />
       : pack ? <Suspense><Screen key={s.slug} s={s} dispatch={dispatch} go={go} pack={pack} name={pack.manifest.app.name} /></Suspense>
-      : <div className="centered"><P>{failed ? "This app's data didn't load. Reload the page to try again." : 'Loading…'}</P></div>}
+      : <div className="centered"><P style={failed ? undefined : { animation: 'appear 160ms var(--ease-out) 240ms both' }}>{failed ? "This app's data didn't load. Reload the page to try again." : 'Loading…'}</P></div>}
     </div>
   </>;
 }
