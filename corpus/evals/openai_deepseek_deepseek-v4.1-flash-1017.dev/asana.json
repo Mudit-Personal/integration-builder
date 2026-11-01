@@ -1,0 +1,182 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "1.0",
+      "name": "Asana",
+      "slug": "asana"
+    },
+    "assumptions": [
+      "The account-wide people list is GET /users. The source only shows compact fields (gid, resource_type, name), so I request email with opt_fields; if Asana does not return it, email will be blank.",
+      "The source does not document status, role, created date, last-active, or guest/service type on GET /users, so those are not mapped. Suspended or deactivated users may not be distinguishable from active users.",
+      "Usage comes from workspace events. That call needs a workspace GID, and the provided source does not include a workspace-listing endpoint, so the workspace GID must be entered as a connection setting.",
+      "Workspace events return a sync token rather than a page number; I treat the sync token as the cursor and has_more as the stop flag.",
+      "No rate limits or error envelope are stated in the provided source, so those settings are left empty.",
+      "No paid-plan requirement was stated in the source for GET /users or workspace events; if Asana requires a specific plan, planRequirement will need to be set."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://app.asana.com/-/oauth_authorize",
+        "label": "OAuth 2.0 authorization code",
+        "scopes": [
+          "users:read",
+          "workspaces:read"
+        ],
+        "tokenUrl": "https://app.asana.com/-/oauth_token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "headerName": "Authorization",
+        "label": "Personal access token",
+        "prefix": "Bearer ",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://app.asana.com/api/1.0",
+    "connectionFields": [
+      {
+        "example": "1200000000000000",
+        "label": "Workspace GID",
+        "name": "workspaceGid"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "We require that applications designed to access the Asana API on behalf of multiple users implement OAuth 2.0."
+      },
+      {
+        "claim": "auth",
+        "quote": "Authorization: Bearer $ASANA_PAT"
+      },
+      {
+        "claim": "pagination",
+        "quote": "The list is always [paginated](/docs/pagination). When more results exist, the response includes a `next_page` with an `offset` that can be used to retrieve the next set of rows."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns the user records for all users in all workspaces and organizations accessible to the authenticated user."
+      },
+      {
+        "claim": "usage",
+        "quote": "Asana limits a single sync token to 1000 events. If more than 1000 events exist for a given domain, `has_more: true` will be returned in the response, indicating that there are more events to pull."
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns the full record for all events that have occurred since the sync token was created."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "fields": {
+        "metric": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "type"
+        },
+        "metricConstant": null,
+        "occurredAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "created_at"
+        },
+        "userRef": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user.gid"
+        },
+        "userRefType": "externalId",
+        "value": null
+      },
+      "forEachUser": false,
+      "kind": "event_log",
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "sync",
+        "cursorPath": "sync",
+        "hasMorePath": "has_more",
+        "pageSize": null,
+        "sizeParam": null,
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "data",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/workspaces/{{connection.workspaceGid}}/events",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [],
+      "window": null
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "gid"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "offset",
+        "cursorPath": "next_page.offset",
+        "hasMorePath": "next_page",
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "data",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {
+          "opt_fields": "name,email"
+        },
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "users:read"
+      ]
+    }
+  }
+}

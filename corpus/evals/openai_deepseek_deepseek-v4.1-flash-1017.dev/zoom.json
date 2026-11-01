@@ -1,0 +1,160 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "schema",
+          "where": "authMethods.0.authorizeUrl",
+          "message": "Invalid URL"
+        },
+        {
+          "severity": "block",
+          "code": "schema",
+          "where": "authMethods.0.tokenUrl",
+          "message": "Invalid URL"
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Zoom Users",
+      "slug": "zoom-users",
+      "apiVersion": "1.0.0"
+    },
+    "baseUrl": "https://api.zoom.us/v2",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth",
+        "authorizeUrl": "https://api.zoom.us/zoom-oauth/authorize",
+        "tokenUrl": "https://api.zoom.us/zoom-oauth/token",
+        "scopes": [
+          "contact_group:read:admin",
+          "division:read:admin",
+          "division:read:member:admin",
+          "group:read:admin",
+          "group:read:list_members:admin"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "division",
+        "request": {
+          "method": "GET",
+          "path": "/divisions",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "divisionId": "0.division_id"
+        }
+      },
+      {
+        "name": "group",
+        "request": {
+          "method": "GET",
+          "path": "/groups",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "groupId": "0.id"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/divisions/{{context.divisionId}}/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "users",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "next_page_token",
+        "cursorParam": "next_page_token",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "page_size",
+        "pageSize": 30
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user_id",
+          "fallbackPaths": [
+            "user_id"
+          ],
+          "map": {},
+          "format": null
+        },
+        "email": null,
+        "displayName": null,
+        "status": {
+          "path": "status",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "No per-user last active or last login field, no audit/activity log, and no per-user usage report are documented."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Scopes : division:read:admin"
+      },
+      {
+        "claim": "users",
+        "quote": "List the users of a division under your account."
+      },
+      {
+        "claim": "usage",
+        "quote": "next_page_token"
+      },
+      {
+        "claim": "pagination",
+        "quote": "The next page token is used to paginate through large result sets."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Rate Limit Label : Medium"
+      },
+      {
+        "claim": "plan",
+        "quote": "Prerequisite : Pro or higher account."
+      }
+    ],
+    "assumptions": []
+  }
+}

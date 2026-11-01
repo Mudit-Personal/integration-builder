@@ -1,0 +1,151 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "unbound_template",
+          "where": "users.request.path",
+          "message": "{{context.division.divisionId}} is never set."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2",
+      "name": "Zoom",
+      "slug": "zoom"
+    },
+    "assumptions": [
+      "Authentication details were not in the provided source; standard Zoom OAuth URLs are assumed.",
+      "No account-wide GET /users endpoint was in the provided source, so users are read from GET /divisions/{divisionId}/users via a divisions context step.",
+      "Listing only the first division does not return the whole account; full coverage would require iterating all divisions since a user can belong to only one division.",
+      "User status, role, user type, last active and created timestamps are not present on the division user record.",
+      "No per-user last-active field, audit log, or usage report was in the provided source.",
+      "Pagination token expiration of 15 minutes is documented but expiry handling is left to the runtime.",
+      "Rate limit quantities and headers were not stated; only Rate Limit Label values were documented."
+    ],
+    "authMethods": [
+      {
+        "clientAuth": "basic",
+        "label": "Server-to-Server OAuth",
+        "scopes": [
+          "division:read:admin"
+        ],
+        "tokenUrl": "https://zoom.us/oauth/token",
+        "type": "oauth2_client_credentials"
+      },
+      {
+        "authorizeUrl": "https://zoom.us/oauth/authorize",
+        "label": "OAuth",
+        "scopes": [
+          "division:read:admin"
+        ],
+        "tokenUrl": "https://zoom.us/oauth/token",
+        "type": "oauth2_authorization_code"
+      }
+    ],
+    "baseUrl": "https://api.zoom.us/v2",
+    "connectionFields": [],
+    "context": [
+      {
+        "extract": {
+          "divisionId": "divisions[0].division_id"
+        },
+        "name": "divisionId",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/divisions",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Scopes : division:read:admin"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Use the next page token to paginate through a large set of results."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Rate Limit Label : LIGHT"
+      },
+      {
+        "claim": "users",
+        "quote": "List the users of a division under your account."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "Provided source contains only contact groups, divisions, and groups membership with no per-user last-active field, audit log, or usage report."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user_display_name"
+        },
+        "email": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user_email"
+        },
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "user_id"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "next_page_token",
+        "cursorPath": "next_page_token",
+        "hasMorePath": "next_page_token",
+        "pageSize": 30,
+        "sizeParam": "page_size",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "users",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/divisions/{{context.divisionId}}/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "division:read:admin"
+      ]
+    }
+  }
+}

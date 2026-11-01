@@ -1,0 +1,172 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "1.0",
+      "name": "Asana",
+      "slug": "asana"
+    },
+    "assumptions": [
+      "User list returns only compact fields gid and name in the source, so email, status, role, user type, last active and created dates could not be confirmed and are left null.",
+      "Pagination uses next_page.offset; page size maximum is not documented for /users so 100 is used as a sensible value.",
+      "No per-user last-active or last-login field is documented on the user record.",
+      "An audit-log endpoint exists but it requires a specific workspace_gid in the path and the source does not document a way to list all workspaces for the tenant, so it could not be configured as generally available usage.",
+      "Rate limits are not stated in the source so rateLimit fields are left null.",
+      "One documentation line about service-account restriction was truncated and could not be confirmed, so no plan requirement was set."
+    ],
+    "authMethods": [
+      {
+        "authorizeUrl": "https://app.asana.com/-/oauth_authorize",
+        "label": "Asana OAuth",
+        "scopes": [
+          "default",
+          "openid",
+          "email",
+          "profile",
+          "attachments:read",
+          "attachments:write",
+          "attachments:delete",
+          "custom_fields:read",
+          "custom_fields:write",
+          "custom_types:read",
+          "goals:read",
+          "jobs:read",
+          "notifications:read",
+          "notifications:write",
+          "ooo_entries:read",
+          "ooo_entries:write",
+          "ooo_entries:delete",
+          "tasks:read",
+          "tasks:write",
+          "tasks:delete",
+          "task_custom_types:read",
+          "task_templates:read",
+          "team_memberships:read",
+          "portfolios:read",
+          "portfolios:write",
+          "project_templates:read",
+          "project_portfolio_settings:read",
+          "project_portfolio_settings:write",
+          "projects:delete",
+          "projects:read",
+          "projects:write",
+          "records:read",
+          "records:write",
+          "records:delete",
+          "roles:read",
+          "roles:write",
+          "roles:delete",
+          "users:read",
+          "teams:read",
+          "time_tracking_categories:read",
+          "time_tracking_categories:write",
+          "time_tracking_categories:delete",
+          "time_tracking_entries:read",
+          "timesheet_approval_statuses:read",
+          "timesheet_approval_statuses:write",
+          "stories:read",
+          "stories:write",
+          "tables:read",
+          "tables:write",
+          "tables:delete",
+          "tags:read",
+          "tags:write",
+          "webhooks:read",
+          "webhooks:write",
+          "webhooks:delete",
+          "workspaces:read"
+        ],
+        "tokenUrl": "https://app.asana.com/-/oauth_token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "headerName": "Authorization",
+        "label": "Personal Access Token",
+        "prefix": "bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://app.asana.com/api/1.0",
+    "connectionFields": [],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "A personal access token allows access to the api for the user who created it. This should be kept a secret and be treated like a password."
+      },
+      {
+        "claim": "pagination",
+        "quote": "The list is always [paginated](/docs/pagination). When more results exist, the response includes a `next_page` with an `offset` that can be used to retrieve the next set of rows."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns the user records for all users in all workspaces and organizations accessible to the authenticated user. Accepts an optional workspace ID parameter."
+      },
+      {
+        "claim": "usage",
+        "quote": "Retrieve the audit log events that have been captured in your domain."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "unavailable",
+      "reason": "No per-user last-active or last-login field is documented on the user record (only gid and name shown), and the audit-log and events endpoints require a specific workspace/domain GID or resource sync token with no documented tenant-wide discovery, so no generally usable usage signal could be configured."
+    },
+    "users": {
+      "fields": {
+        "createdAt": null,
+        "displayName": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": null,
+        "externalId": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "gid"
+        },
+        "lastActiveAt": null,
+        "role": null,
+        "status": null,
+        "userType": null
+      },
+      "pagination": {
+        "cursorIn": "query",
+        "cursorParam": "offset",
+        "cursorPath": "next_page.offset",
+        "hasMorePath": "next_page",
+        "pageSize": 100,
+        "sizeParam": "limit",
+        "type": "cursor"
+      },
+      "planRequirement": null,
+      "recordsPath": "data",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "users:read"
+      ]
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "sensitive_header",
+          "where": "extraHeaders.appauth",
+          "message": "Credentials may only be set by the auth method."
+        },
+        {
+          "severity": "block",
+          "code": "op_not_in_spec",
+          "where": "usage.request",
+          "message": "GET /api/logs is not in the API spec."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "field_not_in_schema",
+          "where": "usage.fields.userRef",
+          "message": "\"id\" is not in the response schema."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Okta Admin Management API",
+      "slug": "okta",
+      "apiVersion": "2026.42.1"
+    },
+    "baseUrl": "https://{subdomain}.okta.com",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Okta subdomain",
+        "example": "example"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0",
+        "authorizeUrl": "https://{subdomain}.okta.com/oauth2/v1/authorize",
+        "tokenUrl": "https://{subdomain}.okta.com/oauth2/v1/token",
+        "scopes": [
+          "okta.users.read"
+        ]
+      },
+      {
+        "type": "api_key",
+        "label": "API token",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": "SSWS "
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "$",
+        "cursorParam": "after",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "limit",
+        "pageSize": 200
+      },
+      "requiredScopes": [
+        "okta.users.read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "email": {
+          "path": "profile.email",
+          "fallbackPaths": [
+            "profile.login"
+          ],
+          "map": {},
+          "format": null
+        },
+        "displayName": {
+          "path": "profile.displayName",
+          "fallbackPaths": [
+            "profile.firstName"
+          ],
+          "map": {},
+          "format": null
+        },
+        "status": {
+          "path": "status",
+          "fallbackPaths": [
+            "transitioningToStatus"
+          ],
+          "map": {
+            "active": "active",
+            "deprovisioned": "deleted",
+            "locked_out": "active",
+            "password_expired": "active",
+            "provisioned": "pending",
+            "recovery": "pending",
+            "staged": "pending",
+            "suspended": "suspended"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "profile.title",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "userType": {
+          "path": "profile.userType",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "lastLogin",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "createdAt": {
+          "path": "created",
+          "fallbackPaths": [
+            "statusChanged"
+          ],
+          "map": {},
+          "format": null
+        }
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/logs",
+        "query": {
+          "since": "{{window.start}}",
+          "until": "{{window.end}}"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "$",
+        "cursorParam": "after",
+        "cursorIn": "query",
+        "hasMorePath": null,
+        "sizeParam": "limit",
+        "pageSize": 200
+      },
+      "requiredScopes": [
+        "okta.logs.read"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "since",
+        "endParam": "until",
+        "format": "iso8601",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "actor.id",
+          "fallbackPaths": [],
+          "map": {},
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": null,
+        "metric": null,
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Pass the access_token as the value of the Authorization header: `Authorization: Bearer {access_token}`"
+      },
+      {
+        "claim": "auth",
+        "quote": "Pass the API token as the Authorization header value prefixed with SSWS: `Authorization: SSWS {API Token}`"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Lists users in your org, with pagination in most cases."
+      },
+      {
+        "claim": "plan",
+        "quote": "Lists all agent pools with pagination support"
+      },
+      {
+        "claim": "usage",
+        "quote": "lastLogin"
+      },
+      {
+        "claim": "users",
+        "quote": "Lists users in your org, with pagination in most cases. A subset of users can be returned that match a supported filter expression or search criteria."
+      }
+    ],
+    "assumptions": [
+      "The connector assumes your Okta org is at <subdomain>.okta.com. Orgs on other Okta domain suffixes such as .okta-emea.com or .oktapreview.com, and orgs on a custom domain, aren't handled.",
+      "The source gives only the OAuth 2.0 authorize and token URLs and the list of scopes. It doesn't say which grant types are enabled for unattended server access, so you need an admin app that has the okta.users.read scope.",
+      "The vendor documents that the standard user listing leaves out anyone whose status is DEPROVISIONED. Deactivated people can therefore be missing from the licence count. I didn't add a filter or search query because the source doesn't document an expression that returns every status.",
+      "The source states no maximum page size. The connector asks for 200 rows per page because the vendor recommends limit=200 on its group-member listing.",
+      "For the user list the next-page cursor isn't in the response body. Okta returns it in an HTTP Link header, so the runtime must read that header to page through the org.",
+      "The user record has no reliable guest or service-account marker, so every person returned is treated as a member.",
+      "Status mapping used: active stays active; staged, provisioned and recovery become pending; suspended stays suspended; locked_out and password_expired are treated as active because the accounts still hold a licence; deprovisioned would be deleted but is normally not returned by this listing.",
+      "The source doesn't document rate limits, so the rate-limit fields are left empty.",
+      "No endpoint used here is described as requiring a paid tier or special plan."
+    ]
+  }
+}

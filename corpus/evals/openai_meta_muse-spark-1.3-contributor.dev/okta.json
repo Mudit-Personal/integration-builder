@@ -1,0 +1,166 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "2026.42.1",
+      "name": "Okta",
+      "slug": "okta"
+    },
+    "assumptions": [
+      "Okta domain is tenant-specific; user must provide subdomain e.g. company for company.okta.com.",
+      "Page size is not documented for List all users; 200 used as sensible value.",
+      "List all users omits DEPROVISIONED users by default; source says to use filter or search to return all users but does not document exact filter value, so no filter is set.",
+      "Role is not present on the user record, so role is null.",
+      "profile.userType values are not documented, so userType is null.",
+      "OAuth client authentication method is not documented; basic is assumed.",
+      "Rate limits and plan requirements are not stated in the source."
+    ],
+    "authMethods": [
+      {
+        "clientAuth": "basic",
+        "label": "OAuth 2.0 Service App",
+        "scopes": [
+          "okta.users.read",
+          "okta.logs.read"
+        ],
+        "tokenUrl": "https://{subdomain}.okta.com/oauth2/v1/token",
+        "type": "oauth2_client_credentials"
+      },
+      {
+        "authorizeUrl": "https://{subdomain}.okta.com/oauth2/v1/authorize",
+        "label": "OAuth 2.0",
+        "scopes": [
+          "okta.users.read",
+          "okta.logs.read"
+        ],
+        "tokenUrl": "https://{subdomain}.okta.com/oauth2/v1/token",
+        "type": "oauth2_authorization_code"
+      },
+      {
+        "in": "header",
+        "label": "API Token",
+        "name": "Authorization",
+        "prefix": "SSWS",
+        "type": "api_key"
+      }
+    ],
+    "baseUrl": "https://{subdomain}.okta.com",
+    "connectionFields": [
+      {
+        "example": "company",
+        "label": "Okta subdomain",
+        "name": "subdomain"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Pass the access_token as the value of the Authorization header: `Authorization: Bearer {access_token}`"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Lists users in your org, with pagination in most cases."
+      },
+      {
+        "claim": "users",
+        "quote": "List all users"
+      },
+      {
+        "claim": "usage",
+        "quote": "\"lastLogin\":\"string date-time\""
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "created"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "profile.login",
+            "profile.email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "profile.displayName"
+        },
+        "email": {
+          "fallbackPaths": [
+            "profile.login",
+            "profile.secondEmail"
+          ],
+          "format": null,
+          "map": null,
+          "path": "profile.email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "lastLogin"
+        },
+        "role": null,
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "active": "active",
+            "deprovisioned": "deleted",
+            "locked_out": "suspended",
+            "password_expired": "active",
+            "provisioned": "pending",
+            "recovery": "active",
+            "staged": "pending",
+            "suspended": "suspended"
+          },
+          "path": "status"
+        },
+        "userType": null
+      },
+      "pagination": {
+        "pageSize": 200,
+        "sizeParam": "limit",
+        "type": "link_header"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/api/v1/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "okta.users.read"
+      ]
+    }
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v2",
+      "name": "Auth0",
+      "slug": "auth0"
+    },
+    "assumptions": [
+      "Source only documents the /users list endpoint; no separate activity log or report endpoint was provided, so usage relies on the last_login field.",
+      "Source does not document a token endpoint, so only the documented Bearer header method is listed and client-credentials details are not confirmed.",
+      "Source does not document user roles or user types, so those fields are left null.",
+      "Source does not state rate limits or special plan requirements, so those fields are left null.",
+      "Blocked users are treated as suspended and unblocked users as active; email verification and other states are not mapped.",
+      "Default response is a direct array (include_totals false), so records are read from the root array."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "API Token",
+        "prefix": "Bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://{subdomain}.auth0.com/api/v2",
+    "connectionFields": [
+      {
+        "example": "your-tenant",
+        "label": "Subdomain",
+        "name": "subdomain"
+      }
+    ],
+    "context": [],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Bearer authentication header of the form Bearer"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Page index of the results to return. First page is 0."
+      },
+      {
+        "claim": "users",
+        "quote": "This endpoint retrieves details of users."
+      },
+      {
+        "claim": "usage",
+        "quote": "Last date and time this user logged in."
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "created_at"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "nickname",
+            "username",
+            "email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": null,
+          "path": "user_id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": null,
+          "format": "iso8601",
+          "map": null,
+          "path": "last_login"
+        },
+        "role": null,
+        "status": {
+          "fallbackPaths": null,
+          "format": null,
+          "map": {
+            "false": "active",
+            "true": "suspended"
+          },
+          "path": "blocked"
+        },
+        "userType": null
+      },
+      "pagination": {
+        "hasMorePath": null,
+        "pageParam": "page",
+        "pageSize": 100,
+        "sizeParam": "per_page",
+        "startAt": 0,
+        "totalPagesPath": null,
+        "type": "page_number"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/users",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "read:users"
+      ]
+    }
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "jira-cloud",
+      "slug": "jira-cloud",
+      "apiVersion": "1001.0.0-SNAPSHOT-d794cfb4c7554a89092e2f32783da3a72153f3f0"
+    },
+    "baseUrl": "https://{subdomain}.atlassian.net",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Subdomain",
+        "example": "your-domain"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0 Authorization Code",
+        "authorizeUrl": "https://auth.atlassian.com/authorize",
+        "tokenUrl": "https://auth.atlassian.com/oauth/token",
+        "scopes": [
+          "read:jira-user",
+          "manage:jira-configuration"
+        ]
+      },
+      {
+        "type": "basic",
+        "label": "Basic Auth",
+        "usernameLabel": "Email",
+        "passwordLabel": "API Token"
+      }
+    ],
+    "extraHeaders": {
+      "Accept": "application/json"
+    },
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/rest/api/3/users",
+        "query": {},
+        "body": {
+          "type": "none"
+        },
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "startAt",
+        "limitParam": "maxResults",
+        "pageSize": 100,
+        "totalPath": null,
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "read:jira-user"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "accountId",
+          "fallbackPaths": [
+            "key"
+          ],
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "emailAddress",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "displayName",
+          "fallbackPaths": [
+            "name",
+            "emailAddress"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "active",
+          "fallbackPaths": [],
+          "map": {
+            "true": "active",
+            "false": "inactive"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "accountType",
+          "fallbackPaths": [],
+          "map": {
+            "atlassian": "member",
+            "app": "service",
+            "customer": "guest",
+            "unknown": "unknown"
+          },
+          "format": null
+        },
+        "userType": {
+          "path": "accountType",
+          "fallbackPaths": [],
+          "map": {
+            "atlassian": "member",
+            "app": "service",
+            "customer": "guest",
+            "unknown": "unknown"
+          },
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "lastActive",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        },
+        "createdAt": {
+          "path": "created",
+          "fallbackPaths": [],
+          "map": null,
+          "format": null
+        }
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/rest/api/3/auditing/record",
+        "query": {},
+        "body": {
+          "type": "none"
+        },
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "records",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": "total",
+        "hasMorePath": null
+      },
+      "requiredScopes": [
+        "manage:jira-configuration"
+      ],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "from",
+        "endParam": "to",
+        "format": "iso8601",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "authorKey",
+          "fallbackPaths": [
+            "objectItem.id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "created",
+          "fallbackPaths": [],
+          "map": null,
+          "format": "iso8601"
+        },
+        "metric": {
+          "path": "summary",
+          "fallbackPaths": [
+            "category"
+          ],
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "OAuth2 scopes for Jira"
+      },
+      {
+        "claim": "pagination",
+        "quote": "params: startAt(query) maxResults(query) expand(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "Returns a list of all users, including active users, inactive users and previously deleted users that have an Atlassian account."
+      },
+      {
+        "claim": "usage",
+        "quote": "Returns a list of audit records. The list can be filtered to include items:"
+      }
+    ],
+    "assumptions": [
+      "Jira Cloud requires a tenant subdomain; the subdomain connection field is used to build https://{subdomain}.atlassian.net.",
+      "The user listing endpoint /rest/api/3/users requires the Browse users and groups global permission; the audit log endpoint requires Administer Jira.",
+      "The audit log is used as the usage signal because the Jira user object does not expose a last login or last activity field. Audit events may not capture every user action and may omit some users from the usage signal.",
+      "No rate limits are documented in the provided source, so rate limit fields are null.",
+      "User email addresses may be hidden by Jira profile privacy settings, so emailAddress may be missing.",
+      "Jira user records have no createdAt field in the provided source, so createdAt is not mapped.",
+      "The source does not document a maximum page size for the user or audit endpoints; 100 is used as a sensible page size.",
+      "The OAuth2 scopes requested are read:jira-user and manage:jira-configuration, based on the operations used.",
+      "Basic auth and OAuth2 are both supported; OAuth2 is listed first.",
+      "The accountType field is mapped to userType; the guest boolean is not used separately because accountType customer covers guests."
+    ]
+  }
+}

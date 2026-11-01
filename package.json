@@ -14,8 +14,8 @@
     "demo:build": "npm run demo:packs && npm run demo:api && vite build --config web/vite.config.ts",
     "demo:preview": "vite preview --config web/vite.config.ts --port 4320",
     "demo:api": "esbuild server/read.ts server/app.ts --bundle --platform=node --format=esm --target=node24 --outdir=api --out-extension:.js=.mjs --log-level=warning \"--banner:js=import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\"",
-    "demo:read": "node --no-warnings scripts/read-dev.ts",
-    "demo:compare": "node --no-warnings scripts/compare-models.ts"
+    "demo:read": "node --no-warnings --env-file-if-exists=.env.local scripts/read-dev.ts",
+    "demo:compare": "node --no-warnings --env-file-if-exists=.env.local scripts/compare-models.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",

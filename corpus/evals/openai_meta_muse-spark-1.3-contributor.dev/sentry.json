@@ -1,0 +1,162 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "app": {
+      "apiVersion": "v0",
+      "name": "Sentry",
+      "slug": "sentry"
+    },
+    "assumptions": [
+      "Region subdomain such as us or de is required in the API host; example us for https://us.sentry.io.",
+      "The connector uses the first organization returned by List Your Organizations when an account has multiple organizations.",
+      "User status only distinguishes pending versus active from the pending flag; suspended and deactivated members are still returned but the single-status mapping does not separately label isSuspended or isActive.",
+      "No field distinguishes member, guest, or service accounts, so user type is not mapped.",
+      "Pagination follows HTTP Link headers with a page size of 100; documentation only states results are paginated and lists a cursor parameter.",
+      "No API rate limits or plan requirements were stated in the provided documentation."
+    ],
+    "authMethods": [
+      {
+        "headerName": "Authorization",
+        "label": "Auth Token",
+        "prefix": "Bearer",
+        "type": "bearer"
+      }
+    ],
+    "baseUrl": "https://{region}.sentry.io",
+    "connectionFields": [
+      {
+        "example": "us",
+        "label": "Region",
+        "name": "region"
+      }
+    ],
+    "context": [
+      {
+        "extract": {
+          "organization_slug": "0.slug"
+        },
+        "name": "organization_slug",
+        "request": {
+          "body": null,
+          "method": "GET",
+          "path": "/api/0/organizations/",
+          "query": {},
+          "readOnlyPostReason": null
+        }
+      }
+    ],
+    "errorEnvelope": null,
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "\"scheme\":\"bearer\""
+      },
+      {
+        "claim": "pagination",
+        "quote": "Returns a paginated list of members bound to a organization"
+      },
+      {
+        "claim": "users",
+        "quote": "List all organization members."
+      },
+      {
+        "claim": "usage",
+        "quote": "\"lastActive\":\"string date-time\""
+      }
+    ],
+    "extraHeaders": {},
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetFormat": null,
+      "resetHeader": null
+    },
+    "schemaVersion": 1,
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "users": {
+      "fields": {
+        "createdAt": {
+          "fallbackPaths": [
+            "dateCreated"
+          ],
+          "format": "iso8601",
+          "map": null,
+          "path": "user.dateJoined"
+        },
+        "displayName": {
+          "fallbackPaths": [
+            "user.name",
+            "user.username"
+          ],
+          "format": null,
+          "map": null,
+          "path": "name"
+        },
+        "email": {
+          "fallbackPaths": [
+            "user.email"
+          ],
+          "format": null,
+          "map": null,
+          "path": "email"
+        },
+        "externalId": {
+          "fallbackPaths": [
+            "id"
+          ],
+          "format": null,
+          "map": null,
+          "path": "user.id"
+        },
+        "lastActiveAt": {
+          "fallbackPaths": [
+            "user.lastLogin"
+          ],
+          "format": "iso8601",
+          "map": null,
+          "path": "user.lastActive"
+        },
+        "role": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": null,
+          "path": "orgRole"
+        },
+        "status": {
+          "fallbackPaths": [],
+          "format": null,
+          "map": {
+            "false": "active",
+            "true": "pending"
+          },
+          "path": "pending"
+        },
+        "userType": null
+      },
+      "pagination": {
+        "pageSize": 100,
+        "sizeParam": null,
+        "type": "link_header"
+      },
+      "planRequirement": null,
+      "recordsPath": "$",
+      "request": {
+        "body": null,
+        "method": "GET",
+        "path": "/api/0/organizations/{{context.organization_slug}}/members/",
+        "query": {},
+        "readOnlyPostReason": null
+      },
+      "requiredScopes": [
+        "member:read"
+      ]
+    }
+  }
+}
