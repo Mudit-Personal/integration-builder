@@ -40,12 +40,12 @@ export function Code({ s, go, pack, name }: ScreenProps) {
   const file = files.find(f => f.name === tab) ?? files[0];
   const zipName = `${m.app.slug}-integration.zip`;
   const save = () => { download(zipName, files); setNote(`Downloaded ${zipName} (${files.length} files).`); };
-  const copy = async (what: 'prompt' | 'summary', text: string, done: string) => {
+  const copySummary = async () => {
     try {
-      await navigator.clipboard.writeText(text);
-      setNote(done);
+      await navigator.clipboard.writeText(summary);
+      setNote('Summary copied. Paste it into a ticket or a message.');
     } catch {
-      setNote(`Your browser didn't allow copying. Select the ${what} and copy it by hand.`);
+      setNote("Your browser didn't allow copying. Select the summary and copy it by hand.");
     }
   };
   const snippet = usageSnippet(m, d, `./${m.app.slug}.connector.ts`);
@@ -59,11 +59,11 @@ export function Code({ s, go, pack, name }: ScreenProps) {
   return <SplitLayout panel={<>
     {mode === PROMPT || mode === SUMMARY ? <><SectionHeading>How to use it</SectionHeading>
       {(prompted ? ['Copy the summary and send it to your developer, in a ticket or a message.', 'Or hand it to an AI coding tool yourself: download the files and copy the prompt from the AI tool prompt tab.', 'Before it goes live, someone runs one check with a real account.'] : ['Copy the prompt and download the files.', TOOLS[tool], 'Review the changes your tool makes, like any pull request.']).map((t, i) => <div key={i} style={{ display: 'flex', gap: 24, padding: '14px 0', borderBottom: 'var(--rule-hair)' }}><Mono>{i + 1}</Mono><span>{t}</span></div>)}</>
-      : snippet ? <><SectionHeading>Use it in your app</SectionHeading><CodeBlock code={snippet} style={{ margin: '8px calc(var(--page-pad) * -1) 0', background: 'transparent' }} /></>
+      : snippet ? <><SectionHeading>Use it in your app</SectionHeading><CodeBlock code={snippet} name="usage.ts" style={{ marginTop: 16 }} /></>
         : <><SectionHeading>Use it in your app</SectionHeading><P>You left out the API client. Build yours from manifest.json; it holds every request, field and limit.</P></>}
     {prompted ? null : <><SectionHeading size="label" style={{ marginTop: 24 }}>What's in it</SectionHeading>
       {inc.map(r => <div key={r[0]} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: 'var(--rule-hair)' }}><Marker tone={r[1] === 'Left out' ? 'hollow' : 'done'} /><span style={{ flex: 1 }}>{r[0]}</span><Mono>{r[1]}</Mono></div>)}</>}
-    <div className="footer-row" style={{ gap: 12, marginTop: 24 }}><Button variant="link" onClick={() => go(CHECKS)}>Back</Button><Push />{mode === SUMMARY ? <Button variant="secondary" onClick={() => copy('summary', summary, 'Summary copied. Paste it into a ticket or a message.')}>Copy summary</Button> : mode !== PROMPT ? <Button variant="secondary" onClick={save}>Download .zip</Button> : <><Button variant="secondary" onClick={save}>Download files</Button><Button variant="secondary" onClick={() => copy('prompt', prompt, `Prompt copied. ${TOOLS[tool]}`)}>Copy prompt</Button></>}<Button onClick={() => go(RUN)}>{prompted ? 'See a preview' : 'Run a sync'}</Button></div>
+    <div className="footer-row" style={{ gap: 12, marginTop: 24 }}><Button variant="link" onClick={() => go(CHECKS)}>Back</Button><Push />{mode === SUMMARY ? <Button variant="secondary" onClick={copySummary}>Copy summary</Button> : mode !== PROMPT ? <Button variant="secondary" onClick={save}>Download .zip</Button> : <Button variant="secondary" onClick={save}>Download files</Button>}<Button onClick={() => go(RUN)}>{prompted ? 'See a preview' : 'Run a sync'}</Button></div>
     {/* Below the buttons, so the one just pressed doesn't move. */}
     <div role="status">{note ? <Callout style={{ marginTop: 24 }}>{note}</Callout> : null}</div></>}>
     {prompted ? <PageTitle title="Hand it to your developer" lead={`Send this summary to whoever builds it. It carries every choice you made for ${name}.`} aside={<StatusLabel>Checks passed</StatusLabel>} />
@@ -74,10 +74,10 @@ export function Code({ s, go, pack, name }: ScreenProps) {
       <Mono>Plain words, no code. Paste it into a ticket, an email or Slack.</Mono></div>
     : mode !== PROMPT ? <>
       <Tabs tabs={files.map(f => f.name)} value={file.name} onChange={setTab} style={{ marginTop: 20, borderBottomColor: 'var(--line)' }} />
-      <CodeBlock code={file.code} style={{ margin: '0 calc(var(--page-pad) * -1)', background: 'transparent', maxHeight: '70vh' }} /></>
+      <CodeBlock key={file.name} code={file.code} name={file.name} style={{ marginTop: 16, maxHeight: '70vh' }} /></>
       : <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 28 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}><span style={{ font: 'var(--type-label)' }}>Your tool</span><ToggleGroup options={Object.keys(TOOLS)} value={tool} onChange={setTool} /></div>
-        <div className="prompt">{prompt}</div>
+        <CodeBlock code={prompt} name="Prompt" prose style={{ maxHeight: '70vh' }} />
         <Mono>The {files.length} generated files come with the prompt as a .zip.</Mono></div>}
   </SplitLayout>;
 }
