@@ -22,8 +22,14 @@ label:active > .check-box { transform: scale(.88); }
 .check-desc[data-waiting] { opacity: 0; transform: translateY(3px); }
 @starting-style { .check-meta { opacity: 0; } }
 /* Results and messages arrive, so they ease in. Moving between steps is frequent, so that stays instant. */
-.callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat { transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out); }
-@starting-style { .callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat { opacity: 0; transform: translateY(6px); } }
+.callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat, .home-empty { transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out); }
+@starting-style { .callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat, .home-empty { opacity: 0; transform: translateY(6px); } }
+.home-remove { transition: opacity 160ms var(--ease-out); }
+@starting-style { .home-remove { opacity: 0; } }
+.home-row { view-transition-class: home-row; }
+::view-transition-group(.home-row) { animation-duration: 240ms; animation-timing-function: var(--ease-out); }
+::view-transition-old(.home-row) { animation-duration: 160ms; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 .highlight:nth-child(2), .stat:nth-child(2) { transition-delay: 50ms; }
 .highlight:nth-child(3), .stat:nth-child(3) { transition-delay: 100ms; }
 .highlight:nth-child(4), .stat:nth-child(4) { transition-delay: 150ms; }
@@ -153,7 +159,8 @@ label:active > .check-box { transform: scale(.88); }
   .landing-plate { transition: none; }
   .marker-live { animation: none; }
   :is(.press, .landing-form button, .signup-form button, .landing-cta):active:not(:disabled), label:active > .check-box { transform: none; }
-  .callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat, .check-desc { transition-property: opacity; transition-delay: 0ms; }
+  .callout, .signup-error, .profile-note, .landing-done, .stream > :last-child, .highlight, .stat, .check-desc, .home-empty { transition-property: opacity; transition-delay: 0ms; }
+  ::view-transition-group(.home-row) { animation: none; }
 }
 @media (hover: hover) and (pointer: fine) {
   .btn-primary:hover { background: var(--action-primary-hover); }
