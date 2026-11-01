@@ -149,7 +149,7 @@ label:active > .check-box { transform: scale(.88); }
 .landing-n { font: 400 13px/1 var(--font-mono); color: var(--ink-3); }
 .landing-stage { display: block; font-size: 26px; line-height: 1.15; letter-spacing: -.025em; }
 .landing-stage-text { display: block; margin-top: 3px; font-size: 15px; }
-.landing-stack { position: relative; flex: 0 1 460px; min-width: 0; aspect-ratio: 460 / 624; }
+.landing-stack { position: relative; flex: 0 1 460px; min-width: 0; aspect-ratio: 460 / 416; }
 .landing-plate { position: absolute; left: 0; width: 100%; height: auto; overflow: visible; transition: transform .28s cubic-bezier(.2, .8, .2, 1); }
 .landing-plate path { transition: fill .2s var(--ease), stroke .2s var(--ease); }
 .landing-done { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--ink); }
