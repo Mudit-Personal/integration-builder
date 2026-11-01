@@ -1,36 +1,19 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { beforeEach, test } from 'node:test';
+import { test } from 'node:test';
 import { hashManifest } from '../src/hash.ts';
-import { dropPack, loadConnectors, loadRole, packLost, readPack, saveConnectors, savePack, saveRole, statusOf, upsert, type SavedConnector } from '../web/src/connectors.ts';
+import { dropPack, packLost, savePack, upsert, type SavedConnector } from '../web/src/connectors.ts';
 import { applyDecisions, DEFAULT_DECISIONS } from '../web/src/decisions.ts';
 import type { AppPack } from '../web/src/pack.ts';
-import { APPS, CHECKS, CODE, initial, READ, reducer, type Action, type Flow } from '../web/src/state.ts';
+import type { Audience } from '../web/src/journey.ts';
+import { CHECKS, CODE, DECIDE, initial, READ, reducer, type Action, type Flow } from '../web/src/state.ts';
 import { AUTHS, makeManifest, PAGINATIONS } from './fixtures.ts';
 
 const manifest = makeManifest(Object.values(PAGINATIONS)[0], Object.values(AUTHS)[0]);
 const pack: AppPack = { manifest, hash: hashManifest(manifest), docsUrl: '', findings: null, readSteps: [], endpoints: [] };
 const hash = hashManifest(applyDecisions(manifest, DEFAULT_DECISIONS));
 
-let items: Map<string, string>;
-let full: boolean;
-const fakeStorage = {
-  getItem: (k: string) => items.get(k) ?? null,
-  setItem: (k: string, v: string) => {
-    if (full) throw new DOMException('quota', 'QuotaExceededError');
-    items.set(k, v);
-  },
-  removeItem: (k: string) => { items.delete(k); },
-};
-Object.defineProperty(globalThis, 'localStorage', { value: fakeStorage, configurable: true });
-
-beforeEach(() => {
-  items = new Map();
-  full = false;
-});
-
 const play = (flow: Flow, ...actions: Action[]) => actions.reduce(reducer, flow);
-const started = (id = 'a') => ({ ...play(initial(), { type: 'new', id }), slug: 'acme' });
+const started = (id = 'a', audience: Audience = 'developer') => ({ ...play(initial(), { type: 'new', id, audience }), slug: 'acme' });
 const passing = (flow: Flow) => play(flow, { type: 'checks-start', replay: false }, { type: 'checks-done', hash, fixed: ['pass', 'pass', 'skipped'] });
 const failing = (flow: Flow) => play(flow, { type: 'checks-start', replay: false }, { type: 'checks-done', hash, fixed: ['pass', 'fail'] });
 const atRead = (flow: Flow) => play(flow, { type: 'go', step: READ });
@@ -101,28 +84,6 @@ test('start over keeps the connector and its app, and clears its progress', () =
   assert.equal(c.status, 'draft');
 });
 
-test('the list survives a reload', () => {
-  const list = saved(atRead(started()));
-  assert.equal(saveConnectors(list), true);
-  assert.deepEqual(loadConnectors(), list);
-});
-
-test('corrupt storage reads as an empty list', () => {
-  items.set('ib-connectors', '{not json');
-  assert.deepEqual(loadConnectors(), []);
-  items.set('ib-connectors', '[{"id":"x"},null]');
-  assert.deepEqual(loadConnectors(), []);
-});
-
-test('a full browser reports failure and keeps the pack for this visit', () => {
-  full = true;
-  assert.equal(savePack('quota', pack), false);
-  assert.equal(readPack('quota')?.hash, pack.hash);
-  assert.equal(saveConnectors([]), false);
-  dropPack('quota');
-  assert.equal(readPack('quota'), null);
-});
-
 test('a live connector whose pack is gone or replaced is reported lost', () => {
   const flow = { ...atRead(started('live')), live: { url: 'https://x.test', hash: pack.hash } };
   const [c] = saved(flow);
@@ -141,65 +102,35 @@ test('opening a lost connector goes to Source with its link, ready to read again
   assert.deepEqual([opened.step, opened.live, opened.url, opened.result], [0, null, 'https://x.test', null]);
 });
 
-const app = APPS[0];
 
-test('an old flow migrates to one connector, once', () => {
-  items.set('ibv2', JSON.stringify({ step: 2, maxStep: 2, slug: app.slug, url: app.docsUrl, live: null, decisions: { ...DEFAULT_DECISIONS, retries: 5 } }));
-  const [c, ...rest] = loadConnectors();
-  assert.deepEqual([c.slug, c.name, c.step, c.status, c.flow.decisions.retries, rest.length], [app.slug, app.name, 2, 'draft', 5, 0]);
-  assert.equal(items.has('ibv2'), false);
-  assert.deepEqual(loadConnectors().map(x => x.id), [c.id]);
+test('a connector saved before every deliverable had a switch opens with the rest turned on', () => {
+  const [c] = saved(atCode(started()));
+  const old = { ...c, flow: { ...c.flow, decisions: { ...c.flow.decisions, deliverables: { usage: false, caching: true } as never } } };
+  const opened = reducer(initial(), { type: 'open', saved: old, lost: false });
+  assert.deepEqual(opened.decisions.deliverables, { ...DEFAULT_DECISIONS.deliverables, usage: false, caching: true });
 });
 
-test('an old live read migrates with its pack', () => {
-  items.set('ibv2', JSON.stringify({ step: 2, maxStep: 2, slug: 'acme', url: 'https://x.test', live: { url: 'https://x.test', hash: pack.hash } }));
-  items.set('ibv2-pack', JSON.stringify(pack));
-  const [c] = loadConnectors();
-  assert.equal(c.name, 'Acme');
-  assert.equal(packLost(c), false);
-  assert.equal(items.has('ibv2-pack'), false);
+test('a connector saved with the old Not a developer label opens in the business journey', () => {
+  const [c] = saved(atRead(started()));
+  const old = { ...c, flow: { ...c.flow, audience: 'Not a developer' as never } };
+  assert.equal(reducer(initial(), { type: 'open', saved: old, lost: false }).audience, 'business');
+  assert.equal(reducer(initial(), { type: 'open', saved: { ...c, flow: { ...c.flow, audience: 'Developer' as never } }, lost: false }).audience, 'developer');
 });
 
-test('an old flow still on Source migrates to nothing', () => {
-  items.set('ibv2', JSON.stringify({ step: 0, maxStep: 0, slug: app.slug }));
-  assert.deepEqual(loadConnectors(), []);
-  assert.equal(items.has('ibv2'), false);
+test('a finished read lands on Decisions for business and stays on Read for developers', () => {
+  const read = (audience: Audience) => play(started('a', audience), { type: 'read-start', url: 'https://x.test' }, { type: 'read-done', pack });
+  assert.deepEqual([read('business').step, read('business').maxStep], [DECIDE, DECIDE]);
+  assert.deepEqual([read('developer').step, read('developer').maxStep], [READ, READ]);
 });
 
-test('an old flow stays put when the new list cannot be written', () => {
-  items.set('ibv2', JSON.stringify({ step: 2, maxStep: 2, slug: app.slug }));
-  full = true;
-  assert.equal(loadConnectors().length, 1);
-  assert.equal(items.has('ibv2'), true);
+test('a new connector starts in the journey it is given', () => {
+  assert.equal(started('a', 'business').audience, 'business');
+  assert.equal(started('a').audience, 'developer');
 });
 
-test('role survives a reload and ignores junk', () => {
-  saveRole('Viewer');
-  assert.equal(loadRole(), 'Viewer');
-  items.set('ib-role', '"Root"');
-  assert.equal(loadRole(), 'Builder');
-});
-
-test('a first visit opens on the sample workspace, and its ready connectors hold up on reopening', () => {
-  const list = loadConnectors(10_000_000);
-  assert.ok(list.length >= 3);
-  assert.ok(list.some(c => c.status === 'draft'));
-  for (const c of list.filter(x => x.status === 'ready')) {
-    const p = JSON.parse(readFileSync(`web/public/packs/${c.slug}.json`, 'utf8')) as AppPack;
-    assert.equal(c.hash, hashManifest(applyDecisions(p.manifest, c.flow.decisions)), `${c.slug} hash`);
-    assert.equal(statusOf(c.flow, c.hash), 'ready', `${c.slug} status`);
-    assert.ok(c.updatedAt < 10_000_000);
-  }
-});
-
-test('the sample workspace never comes back once the list is stored, even empty', () => {
-  saveConnectors([]);
-  assert.deepEqual(loadConnectors(), []);
-});
-
-test('a viewer cannot change a decision, so a ready connector stays ready', () => {
-  const ready = atCode(started());
-  const viewing = play(ready, { type: 'set', patch: { role: 'Viewer' } }, changeDecision);
-  assert.deepEqual(viewing.decisions, ready.decisions);
-  assert.equal(saved(viewing)[0].status, 'ready');
+test('switching to business puts the deliverables it hides back on their defaults', () => {
+  const custom = play(started(), { type: 'decide', patch: { deliverables: { ...DEFAULT_DECISIONS.deliverables, logging: false, usage: false } } });
+  const switched = reducer(custom, { type: 'audience', audience: 'business' });
+  assert.deepEqual(switched.decisions.deliverables, { ...DEFAULT_DECISIONS.deliverables, usage: false });
+  assert.equal(reducer(started(), { type: 'audience', audience: 'business' }).decisions, started().decisions);
 });

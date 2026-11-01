@@ -1,0 +1,235 @@
+[
+  {
+    "slug": "github",
+    "status": "passed",
+    "attempts": 1,
+    "ms": 205920,
+    "tokens": {
+      "input": 36173,
+      "output": 11085
+    },
+    "scenarios": {
+      "passed": 22,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /user/memberships/orgs (accepted: GET /orgs/{{connection.org}}/members)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "calendly",
+    "status": "passed",
+    "attempts": 1,
+    "ms": 236621,
+    "tokens": {
+      "input": 29956,
+      "output": 12798
+    },
+    "scenarios": {
+      "passed": 26,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "auth: bearer,oauth2_authorization_code (accepted: bearer)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "asana",
+    "status": "sandbox_failed",
+    "attempts": 1,
+    "ms": 283845,
+    "tokens": {
+      "input": 31640,
+      "output": 14649
+    },
+    "scenarios": {
+      "passed": 15,
+      "failed": 8
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "pagination: offset (accepted: cursor)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "box",
+    "status": "passed",
+    "attempts": 1,
+    "ms": 289081,
+    "tokens": {
+      "input": 33639,
+      "output": 15583
+    },
+    "scenarios": {
+      "passed": 25,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "pagination: offset (accepted: cursor)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "hubspot",
+    "status": "passed",
+    "attempts": 1,
+    "ms": 96407,
+    "tokens": {
+      "input": 30128,
+      "output": 5041
+    },
+    "scenarios": {
+      "passed": 16,
+      "failed": 0
+    },
+    "matches": 4,
+    "of": 6,
+    "differs": [
+      "usersPath: GET /crm/v3/objects/users/ (accepted: GET /crm/v3/objects/users)",
+      "pagination: none (accepted: cursor)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "jira",
+    "status": "sandbox_failed",
+    "attempts": 1,
+    "ms": 281033,
+    "tokens": {
+      "input": 33538,
+      "output": 15262
+    },
+    "scenarios": {
+      "passed": 15,
+      "failed": 8
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "usage: event_log (accepted: unavailable)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "okta",
+    "status": "blocked",
+    "attempts": 3,
+    "ms": 339524,
+    "tokens": {
+      "input": 119915,
+      "output": 17340
+    },
+    "scenarios": {
+      "passed": 0,
+      "failed": 0
+    },
+    "matches": 0,
+    "of": 0,
+    "differs": [],
+    "reason": "schema authMethods.1.tokenUrl: Invalid URL"
+  },
+  {
+    "slug": "zoom",
+    "status": "passed",
+    "attempts": 1,
+    "ms": 208421,
+    "tokens": {
+      "input": 47612,
+      "output": 11274
+    },
+    "scenarios": {
+      "passed": 24,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  },
+  {
+    "slug": "slack",
+    "status": "passed",
+    "attempts": 3,
+    "ms": 429102,
+    "tokens": {
+      "input": 87674,
+      "output": 22888
+    },
+    "scenarios": {
+      "passed": 27,
+      "failed": 0
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "auth: oauth2_authorization_code (accepted: api_key,oauth2_authorization_code)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "auth0",
+    "status": "sandbox_failed",
+    "attempts": 1,
+    "ms": 255435,
+    "tokens": {
+      "input": 56222,
+      "output": 13831
+    },
+    "scenarios": {
+      "passed": 16,
+      "failed": 7
+    },
+    "matches": 5,
+    "of": 6,
+    "differs": [
+      "recordsPath: users (accepted: $)"
+    ],
+    "reason": ""
+  },
+  {
+    "slug": "sentry",
+    "status": "blocked",
+    "attempts": 3,
+    "ms": 438591,
+    "tokens": {
+      "input": 95421,
+      "output": 23481
+    },
+    "scenarios": {
+      "passed": 0,
+      "failed": 0
+    },
+    "matches": 0,
+    "of": 0,
+    "differs": [],
+    "reason": "context_path_missing context[0].extract.organizationSlug: \"[0].slug\" is not in the response schema."
+  },
+  {
+    "slug": "gitlab",
+    "status": "passed",
+    "attempts": 1,
+    "ms": 357217,
+    "tokens": {
+      "input": 48829,
+      "output": 19557
+    },
+    "scenarios": {
+      "passed": 22,
+      "failed": 0
+    },
+    "matches": 6,
+    "of": 6,
+    "differs": [],
+    "reason": ""
+  }
+]

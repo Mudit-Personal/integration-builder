@@ -7,8 +7,9 @@ import { startVirtualMock } from '../src/mock-virtual.ts';
 import { runScenarioOn, SCENARIOS } from '../src/scenarios.ts';
 import { buildPack } from '../scripts/build-packs.ts';
 import { endpointsFor, type AppPack } from '../src/pack-build.ts';
-import { applyDecisions, decisionRows, DEFAULT_DECISIONS, isAllowed, pageSizeOptions, runtimeLimits, type Decisions } from '../web/src/decisions.ts';
-import { buildFiles, buildPrompt } from '../web/src/handover.ts';
+import { applyDecisions, decisionRows, DEFAULT_DECISIONS, featuresOff, isAllowed, pageSizeOptions, runtimeLimits, type Decisions, type Deliverable } from '../web/src/decisions.ts';
+const ENGINE_SOURCES = { runtime: '', manifest: '' };
+import { buildFiles, buildPrompt, buildSummary } from '../web/src/handover.ts';
 import { makeManifest, PAGINATIONS, AUTHS } from './fixtures.ts';
 
 const corpus = readdirSync('corpus/manifests').map(f => Manifest.parse(JSON.parse(readFileSync(`corpus/manifests/${f}`, 'utf8'))));
@@ -41,7 +42,7 @@ test('page size applies only where the pagination type has one', () => {
 
 test('turning usage off or blocking its endpoint makes usage unavailable', () => {
   const m = makeManifest(PAGINATIONS[1], AUTHS[0]);
-  assert.equal(applyDecisions(m, decide({ deliverables: { usage: false, caching: false } })).usage.kind, 'unavailable');
+  assert.equal(applyDecisions(m, decide({ deliverables: { ...DEFAULT_DECISIONS.deliverables, usage: false } })).usage.kind, 'unavailable');
   assert.equal(applyDecisions(m, decide({ access: { usage: false } })).usage.kind, 'unavailable');
 });
 
@@ -67,7 +68,7 @@ test('a plan-gated usage stream asks the person, and recommends leaving it out',
 test('every auth method and decision set still passes the sandbox', async () => {
   for (const m of corpus) {
     for (const authIndex of m.authMethods.keys()) {
-      const d = decide({ authIndex, retries: 2, pageSize: pageSizeOptions(m.users.pagination)[0] ?? null, deliverables: { usage: authIndex === 0, caching: true } });
+      const d = decide({ authIndex, retries: 2, pageSize: pageSizeOptions(m.users.pagination)[0] ?? null, deliverables: { ...DEFAULT_DECISIONS.deliverables, usage: authIndex === 0, caching: true } });
       const applied = applyDecisions(m, d);
       for (const s of SCENARIOS) {
         const r = await runScenarioOn(startVirtualMock, applied, s, runtimeLimits(d));
@@ -110,4 +111,44 @@ test('access decisions reach the prompt and the code header', () => {
   assert.match(buildPrompt(pack, allowed, files, 20), /only these paths: \/contacts/);
   assert.match(files[0].code, /Approved +\/contacts/);
   assert.deepEqual(files.map(f => f.name), ['acme.connector.ts', 'manifest.json', 'runtime.ts', 'manifest.ts', 'README.md']);
+});
+
+const without = (...off: Deliverable[]) => decide({ deliverables: { ...DEFAULT_DECISIONS.deliverables, ...Object.fromEntries(off.map(k => [k, false])) } });
+
+test('turning off retries or pagination skips the checks that need it, and never fails one', async () => {
+  for (const off of ['errors', 'pagination'] as const) {
+    const d = without(off);
+    for (const m of corpus) {
+      for (const s of SCENARIOS) {
+        const r = await runScenarioOn(startVirtualMock, m, s, runtimeLimits(d), featuresOff(d));
+        assert.notEqual(r.status, 'fail', `${off} off, ${m.app.slug} ${s.id}: ${r.detail}. Add it to NEEDS.`);
+      }
+    }
+  }
+});
+
+test('each deliverable left out changes the generated code', () => {
+  const pack = packOf(corpus[0]);
+  const code = (d: Decisions) => buildFiles(pack, d, ENGINE_SOURCES, 0);
+  const connector = (d: Decisions) => code(d).find(f => f.name.endsWith('.connector.ts'))!.code;
+  const full = connector(DEFAULT_DECISIONS);
+  assert.match(full, /Users = async/);
+  assert.doesNotMatch(full, /skipAuth/);
+  assert.deepEqual(code(without('client')).map(f => f.name), ['manifest.json', 'README.md']);
+  assert.match(connector(without('auth')), /skipAuth: true/);
+  assert.doesNotMatch(connector(without('users')), /Users = async/);
+  assert.doesNotMatch(connector(without('usage')), /Usage = async/);
+  assert.match(connector(without('logging')), /"logLevel":"off"/);
+  assert.match(connector(without('errors')), /"maxRetries":0/);
+  assert.match(connector(without('pagination')), /"maxPages":1/);
+  assert.ok(decisionRows(pack, without('pagination')).some(r => r.group === 'Pagination' && r.title === 'Left out'));
+});
+
+test('the summary for a developer names the app, what is blocked and how many checks passed', () => {
+  const m = makeManifest(PAGINATIONS[1], AUTHS[0]);
+  const pack = packOf(m, [{ key: 'sensitive:/contacts', name: 'Contacts', path: '/contacts', sensitivity: 'sensitive' as const, note: '' }]);
+  const summary = buildSummary(pack, DEFAULT_DECISIONS, 20);
+  assert.match(summary, /^Acme integration/);
+  assert.match(summary, /Blocked: Contacts \(\/contacts\)/);
+  assert.match(summary, /Checks: 20 passed/);
 });

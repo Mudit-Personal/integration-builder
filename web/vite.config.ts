@@ -4,7 +4,8 @@ import { defineConfig } from 'vite';
 
 const shim = (name: string) => fileURLToPath(new URL(`./src/shims/${name}.ts`, import.meta.url));
 
-const proxy = { '/api': 'http://127.0.0.1:4321' };
+// xfwd passes the browser's host on, so the API's same-origin check sees localhost:4320 as Vercel would see its own host.
+const proxy = { '/api': { target: 'http://127.0.0.1:4321', changeOrigin: true, xfwd: true } };
 
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),

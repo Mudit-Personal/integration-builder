@@ -1,0 +1,203 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "baseUrl",
+          "message": "https://{yourOktaDomain} lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "authMethods[1].tokenUrl",
+          "message": "https://{yourOktaDomain}/oauth2/v1/token lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        },
+        {
+          "severity": "block",
+          "code": "token_url_mismatch",
+          "where": "authMethods[1]",
+          "message": "Token URL differs from the spec: /oauth2/v1/token."
+        },
+        {
+          "severity": "block",
+          "code": "host_is_variable",
+          "where": "authMethods[1].authorizeUrl",
+          "message": "https://{yourOktaDomain}/oauth2/v1/authorize lets a setting choose the host. Fix the vendor domain, like https://{subdomain}.vendor.com."
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "token_url_mismatch",
+          "where": "authMethods[1]",
+          "message": "Token URL differs from the spec: /oauth2/v1/token."
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "blocks": [
+        {
+          "severity": "block",
+          "code": "schema",
+          "where": "authMethods.1.tokenUrl",
+          "message": "Invalid URL"
+        }
+      ]
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Okta Admin Management API",
+      "slug": "okta",
+      "apiVersion": "2026.42.1"
+    },
+    "baseUrl": "https://{subdomain}.okta.com",
+    "connectionFields": [
+      {
+        "name": "subdomain",
+        "label": "Okta domain",
+        "example": "your-org"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "api_key",
+        "label": "Okta API token",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": "SSWS"
+      },
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0",
+        "authorizeUrl": "https://{subdomain}.okta.com/oauth2/v1/authorize",
+        "tokenUrl": "/oauth2/v1/token",
+        "scopes": [
+          "okta.users.read",
+          "okta.logs.read"
+        ]
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/users",
+        "query": {
+          "limit": "200"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "link_header",
+        "sizeParam": "limit",
+        "pageSize": 200
+      },
+      "requiredScopes": [
+        "okta.users.read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "profile.email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "profile.displayName",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "status",
+          "fallbackPaths": null,
+          "map": {
+            "active": "active",
+            "deprovisioned": "deleted",
+            "locked_out": "suspended",
+            "password_expired": "inactive",
+            "provisioned": "pending",
+            "recovery": "pending",
+            "staged": "pending",
+            "suspended": "suspended"
+          },
+          "format": null
+        },
+        "role": null,
+        "userType": {
+          "path": "profile.userType",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "lastActiveAt": {
+          "path": "lastLogin",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "createdAt": {
+          "path": "created",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Pass the access_token as the value of the Authorization header"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Lists users in your org, with pagination in most cases."
+      },
+      {
+        "claim": "users",
+        "quote": "List all users"
+      },
+      {
+        "claim": "usage",
+        "quote": "\"lastLogin\":\"string date-time\""
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The /api/v1/users documentation says DEPROVISIONED users are omitted unless a filter or search query is used, but it does not document an all-users filter or search value; deprovisioned people may not be returned.",
+      "The source names the after parameter but does not document the users response cursor or link-header format; header-link pagination and a 200-item page size are inferred.",
+      "The OAuth scheme does not state its grant type or client authentication method; it is represented as authorization-code OAuth because both authorizeUrl and tokenUrl are provided.",
+      "The source does not document a rate limit, so rateLimit values are unset.",
+      "The source does not define allowed profile.userType values or a user role field; userType normalization is left unmapped and role is unset."
+    ]
+  }
+}

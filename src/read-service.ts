@@ -20,14 +20,14 @@ const json = (res: ServerResponse, status: number, error: string) => {
 };
 
 /** Resolves null past the limit. It reads to the end, because a client still sending can't receive the 413. */
-const readBody = (req: IncomingMessage) => new Promise<string | null>((resolve, reject) => {
+export const readBody = (req: IncomingMessage, max = MAX_BODY) => new Promise<string | null>((resolve, reject) => {
   const chunks: Buffer[] = [];
   let size = 0;
   req.on('data', (c: Buffer) => {
     size += c.length;
-    if (size <= MAX_BODY) chunks.push(c);
+    if (size <= max) chunks.push(c);
   });
-  req.on('end', () => resolve(size > MAX_BODY ? null : Buffer.concat(chunks).toString('utf8')));
+  req.on('end', () => resolve(size > max ? null : Buffer.concat(chunks).toString('utf8')));
   req.on('error', reject);
 });
 

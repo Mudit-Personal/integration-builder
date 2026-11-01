@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "slack",
+    "status": "blocked",
+    "attempts": 3,
+    "ms": 360338,
+    "tokens": {
+      "input": 86809,
+      "output": 18888
+    },
+    "scenarios": {
+      "passed": 0,
+      "failed": 0
+    },
+    "matches": 0,
+    "of": 0,
+    "differs": [],
+    "reason": "param_required usage.request: Required query parameter \"token\" is missing."
+  },
+  {
+    "slug": "okta",
+    "status": "blocked",
+    "attempts": 3,
+    "ms": 444589,
+    "tokens": {
+      "input": 120417,
+      "output": 23585
+    },
+    "scenarios": {
+      "passed": 0,
+      "failed": 0
+    },
+    "matches": 0,
+    "of": 0,
+    "differs": [],
+    "reason": "schema authMethods.1.tokenUrl: Invalid URL"
+  }
+]

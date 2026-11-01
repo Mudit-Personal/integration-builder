@@ -112,3 +112,34 @@ test('scenario runner fails when the behaviour is wrong', async () => {
   const broken = { ...SCENARIOS[0], expect: () => 'forced failure' };
   assert.equal((await runScenario(m, broken)).status, 'fail');
 });
+
+test('paths written from the response root resolve the same way', async () => {
+  const { getPath } = await import('../src/runtime.ts');
+  const { schemaAt } = await import('../src/spec.ts');
+  const list = [{ slug: 'acme' }];
+  for (const p of ['0.slug', '[0].slug', '$[0].slug']) assert.equal(getPath(list, p), 'acme', p);
+  assert.deepEqual(getPath({ users: [1] }, '$.users'), [1]);
+  const schema = { type: 'array', items: { type: 'object', properties: { slug: { type: 'string' } } } };
+  for (const p of ['0.slug', '[0].slug', '$[0].slug']) assert.notEqual(schemaAt(schema, p), undefined, p);
+});
+
+test('a token URL on the tenant host is filled from the connection, like the base URL', async () => {
+  const m = makeManifest(PAGINATIONS[1], { ...AUTHS[6], tokenUrl: 'https://{subdomain}.acme.test/oauth/token' } as never, {
+    baseUrl: 'https://{subdomain}.acme.test/v2', connectionFields: [{ name: 'subdomain', label: 'Subdomain', example: 'acme' }],
+  });
+  const { startVirtualMock } = await import('../src/mock-virtual.ts');
+  const mock = await startVirtualMock(m);
+  const hosts: string[] = [];
+  const fetch: typeof globalThis.fetch = (input, init) => {
+    const url = new URL(String(input instanceof Request ? input.url : input));
+    if (init?.method === 'POST') hosts.push(url.searchParams.get('__vendor_host') ?? url.host);
+    return mock.fetch!(input, init);
+  };
+  try {
+    const r = await runConnector(m, { credentials: { ...mock.credentials }, connection: mock.connection, sandboxOrigin: mock.origin, fetch, sleep: async () => {} });
+    assert.equal(r.streams.users.status, 'complete');
+    assert.deepEqual([...new Set(hosts)], [`${mock.connection.subdomain}.acme.test`]);
+  } finally {
+    await mock.stop();
+  }
+});

@@ -1,5 +1,5 @@
 import { USER_STATUSES, USER_TYPES, writeIntent, type Field, type Manifest, type Pagination, type RequestSpec, type StreamConfig } from './manifest.ts';
-import { arrayItems, findOperation, isOpenSchema, schemaAt, type ApiSpec } from './spec.ts';
+import { arrayItems, findOperation, isOpenSchema, propertyPaths, schemaAt, type ApiSpec } from './spec.ts';
 
 export type Severity = 'block' | 'review' | 'info';
 export type Finding = { severity: Severity; code: string; message: string; where: string };
@@ -95,8 +95,10 @@ const checkRequest = (c: Check, where: string, req: RequestSpec, scope: Set<stri
     if (op.deprecated) add(c, 'review', 'op_deprecated', where, `${req.method} ${req.path} is deprecated.`);
     const known = new Set(op.parameters.map(p => p.name));
     for (const k of Object.keys(req.query)) if (!known.has(k)) add(c, 'review', 'param_unknown', where, `Query parameter "${k}" is not listed in the spec.`);
+    // A required credential parameter, like Slack's ?token=, is supplied by the auth method, not the request.
+    const fromAuth = new Set([...c.m.authMethods.flatMap(a => (a.type === 'api_key' && a.in === 'query' ? [a.name] : [])), 'token', 'access_token', 'api_key', 'apikey', 'auth_token']);
     for (const p of op.parameters) {
-      if (p.required && p.in === 'query' && !(p.name in req.query)) add(c, 'block', 'param_required', where, `Required query parameter "${p.name}" is missing.`);
+      if (p.required && p.in === 'query' && !(p.name in req.query) && !fromAuth.has(p.name.toLowerCase())) add(c, 'block', 'param_required', where, `Required query parameter "${p.name}" is missing.`);
     }
     return op;
   }
@@ -131,7 +133,14 @@ const checkField = (c: Check, where: string, item: unknown, field: Field | null,
   }
 };
 
+const PAGING_PARAM = /^(page|page_?token|page_?number|offset|start_?at|cursor|after|next|starting_after|marker|skip)$/i;
+// /user/... and /me describe whoever holds the token, never everyone on the account.
+const CALLER_SCOPED = /^\/(user|me)(\/|$)|\/me\/?$/i;
+
 const checkStream = (c: Check, where: string, s: StreamConfig, scope: Set<string>) => {
+  if (where === 'users' && CALLER_SCOPED.test(s.request.path.replace(TEMPLATE, '{x}'))) {
+    add(c, 'block', 'caller_scoped_users', `${where}.request`, `${s.request.path} describes the signed-in caller, not everyone on the account. Use the admin or organization member listing.`);
+  }
   const op = checkRequest(c, `${where}.request`, s.request, scope);
   if (!op) return;
   const known = new Set(op.parameters.map(p => p.name));
@@ -144,6 +153,15 @@ const checkStream = (c: Check, where: string, s: StreamConfig, scope: Set<string
   if (item === undefined) return add(c, 'block', 'records_not_array', `${where}.recordsPath`, `"${s.recordsPath}" is not a list.`);
   if (s.pagination.type === 'offset' && /page/i.test(s.pagination.offsetParam)) {
     add(c, 'block', 'offset_is_page_number', `${where}.pagination`, `"${s.pagination.offsetParam}" counts pages, not rows. Use page_number, because treating it as an offset would skip users.`);
+  }
+  // Asana-style: the response hands back the next "offset" as an opaque token, so it's a cursor, not a row count.
+  const handedBack = s.pagination.type === 'offset' ? propertyPaths(schema).find(p => p.includes('.') && p.endsWith(`.${(s.pagination as { offsetParam: string }).offsetParam}`)) : undefined;
+  if (handedBack) {
+    add(c, 'block', 'offset_is_cursor', `${where}.pagination`, `The response returns the next value at "${handedBack}". That makes it a cursor: use type cursor, cursorPath "${handedBack}", cursorParam "${(s.pagination as { offsetParam: string }).offsetParam}".`);
+  }
+  const pagingParam = op.parameters.find(p => p.in === 'query' && PAGING_PARAM.test(p.name));
+  if (where === 'users' && s.pagination.type === 'none' && pagingParam) {
+    add(c, 'block', 'paging_ignored', `${where}.pagination`, `The spec pages this list with "${pagingParam.name}", so one request would miss people. Set the pagination it documents.`);
   }
   for (const [path, required] of paginationBodyPaths(s.pagination)) {
     if (schemaAt(schema, path) === undefined) add(c, required ? 'block' : 'review', 'pagination_path_missing', `${where}.pagination`, `"${path}" is not in the response schema.`);
@@ -173,8 +191,9 @@ const checkAuth = (c: Check) => {
     const where = `authMethods[${i}]`;
     if (a.type === 'oauth2_client_credentials' || a.type === 'oauth2_authorization_code') {
       checkHost(c, `${where}.tokenUrl`, a.tokenUrl);
-      const declared = spec?.authSchemes.map(s => s.tokenUrl).filter(Boolean) ?? [];
-      if (declared.length && !declared.includes(a.tokenUrl)) add(c, 'block', 'token_url_mismatch', where, `Token URL differs from the spec: ${declared.join(', ')}.`);
+      const declared = spec?.authSchemes.flatMap(s => (s.tokenUrl ? [s.tokenUrl] : [])) ?? [];
+      // Specs often give the token URL relative to the API host, like /oauth2/v1/token.
+      if (declared.length && !declared.some(d => d === a.tokenUrl || (d.startsWith('/') && URL.canParse(a.tokenUrl) && new URL(a.tokenUrl).pathname === d))) add(c, 'block', 'token_url_mismatch', where, `Token URL differs from the spec: ${declared.join(', ')}.`);
       const known = new Set(spec?.authSchemes.flatMap(s => s.scopes) ?? []);
       if (known.size) for (const s of a.scopes) if (!known.has(s)) add(c, 'review', 'scope_unknown', where, `Scope "${s}" is not in the spec.`);
     }

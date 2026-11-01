@@ -207,3 +207,6 @@ export const credentialFields = (m: AuthMethod): { name: string; label: string; 
 };
 
 export const manifestJsonSchema = () => z.toJSONSchema(Manifest, { target: 'draft-7' });
+
+/** [0].slug, $[0].slug and $.users are common ways to write a path from the response root. */
+export const normalizePath = (rawPath: string) => rawPath.trim().replace(/\[(\d+)\]/g, '.$1').replace(/^\$(?=\.)/, '').replace(/^\./, '') || '$';

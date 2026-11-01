@@ -1,0 +1,238 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Asana",
+      "slug": "asana",
+      "apiVersion": "1.0"
+    },
+    "baseUrl": "https://app.asana.com/api/1.0",
+    "connectionFields": [
+      {
+        "name": "workspace_gid",
+        "label": "Workspace or organization GID",
+        "example": "123456789"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "oauth2_authorization_code",
+        "label": "OAuth 2.0 Authorization Code",
+        "authorizeUrl": "https://app.asana.com/-/oauth_authorize",
+        "tokenUrl": "https://app.asana.com/-/oauth_token",
+        "scopes": [
+          "default",
+          "openid",
+          "email",
+          "profile",
+          "attachments:read",
+          "attachments:write",
+          "attachments:delete",
+          "custom_fields:read",
+          "custom_fields:write",
+          "custom_types:read",
+          "goals:read",
+          "jobs:read",
+          "notifications:read",
+          "notifications:write",
+          "ooo_entries:read",
+          "ooo_entries:write",
+          "ooo_entries:delete",
+          "tasks:read",
+          "tasks:write",
+          "tasks:delete",
+          "task_custom_types:read",
+          "task_templates:read",
+          "team_memberships:read",
+          "portfolios:read",
+          "portfolios:write",
+          "project_templates:read",
+          "project_portfolio_settings:read",
+          "project_portfolio_settings:write",
+          "projects:delete",
+          "projects:read",
+          "projects:write",
+          "records:read",
+          "records:write",
+          "records:delete",
+          "roles:read",
+          "roles:write",
+          "roles:delete",
+          "users:read",
+          "teams:read",
+          "time_tracking_categories:read",
+          "time_tracking_categories:write",
+          "time_tracking_categories:delete",
+          "time_tracking_entries:read",
+          "timesheet_approval_statuses:read",
+          "timesheet_approval_statuses:write",
+          "stories:read",
+          "stories:write",
+          "tables:read",
+          "tables:write",
+          "tables:delete",
+          "tags:read",
+          "tags:write",
+          "webhooks:read",
+          "webhooks:write",
+          "webhooks:delete",
+          "workspaces:read"
+        ]
+      },
+      {
+        "type": "bearer",
+        "label": "Personal Access Token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "query": {
+          "workspace": "{{connection.workspace_gid}}",
+          "limit": "100",
+          "offset": "0"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "data",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 100,
+        "totalPath": null,
+        "hasMorePath": "next_page"
+      },
+      "requiredScopes": [
+        "users:read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "gid",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": {
+          "path": "name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "event_log",
+      "request": {
+        "method": "GET",
+        "path": "/workspaces/{{connection.workspace_gid}}/audit_log_events",
+        "query": {
+          "start_at": "{{window.start}}",
+          "end_at": "{{window.end}}",
+          "actor_type": "user",
+          "limit": "1000",
+          "offset": "0"
+        },
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "data",
+      "pagination": {
+        "type": "offset",
+        "offsetParam": "offset",
+        "limitParam": "limit",
+        "pageSize": 1000,
+        "totalPath": null,
+        "hasMorePath": "next_page"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "forEachUser": false,
+      "window": {
+        "startParam": "start_at",
+        "endParam": "end_at",
+        "format": "iso8601",
+        "maxDays": null
+      },
+      "fields": {
+        "userRef": {
+          "path": "actor.gid",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userRefType": "externalId",
+        "occurredAt": {
+          "path": "created_at",
+          "fallbackPaths": null,
+          "map": null,
+          "format": "iso8601"
+        },
+        "metric": {
+          "path": "event_type",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "metricConstant": null,
+        "value": null
+      }
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "We require that applications designed to access the Asana API on behalf of multiple users implement OAuth 2.0."
+      },
+      {
+        "claim": "pagination",
+        "quote": "When more results exist, the response includes a `next_page` with an `offset` that can be used to retrieve the next set of rows."
+      },
+      {
+        "claim": "users",
+        "quote": "Returns the user records for all users in all workspaces and organizations accessible to the authenticated user."
+      },
+      {
+        "claim": "usage",
+        "quote": "Retrieve the audit log events that have been captured in your domain."
+      }
+    ],
+    "assumptions": [
+      "The source only documents gid, resource_type, and name for /users records, so email, role, status, user type, creation time, and per-user last activity are unavailable.",
+      "The source does not say whether /users includes suspended or deactivated people.",
+      "The connection must provide workspace_gid because the audit-log endpoint requires it, and the source excerpt does not provide a workspace-discovery call.",
+      "The source does not specify the input format for start_at and end_at; ISO 8601 is used to match the documented date-time event timestamps.",
+      "The /users endpoint has no documented maximum page size, so a page size of 100 is used.",
+      "Audit-log activity is only captured from October 8, 2021 onward.",
+      "The source does not define which audit event types represent product use, so user audit events are exposed with event_type as the metric.",
+      "The source provides no rate-limit values or headers, so rate-limit fields are null.",
+      "The source provides no plan requirement for the selected endpoints, so planRequirement is null.",
+      "The source contained suspicious text."
+    ]
+  }
+}

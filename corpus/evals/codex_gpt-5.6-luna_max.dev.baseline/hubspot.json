@@ -1,0 +1,100 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "HubSpot",
+      "slug": "hubspot",
+      "apiVersion": "v3"
+    },
+    "baseUrl": "https://api.hubspot.com",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Bearer access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      }
+    ],
+    "extraHeaders": {},
+    "context": [],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/crm/v3/objects/users/",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "results",
+      "pagination": {
+        "type": "none"
+      },
+      "requiredScopes": [],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "id",
+          "fallbackPaths": [
+            "properties.hs_object_id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "email": null,
+        "displayName": null,
+        "status": {
+          "path": "archived",
+          "fallbackPaths": null,
+          "map": {
+            "false": "active",
+            "true": "deleted"
+          },
+          "format": null
+        },
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": {
+          "path": "createdAt",
+          "fallbackPaths": [
+            "properties.hs_createdate"
+          ],
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source documents no per-user last active or last login field, audit or activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "users",
+        "quote": "To retrieve all users"
+      }
+    ],
+    "assumptions": [
+      "The source does not document server authentication; this manifest assumes a bearer access token in the Authorization header with the Bearer prefix.",
+      "The source does not document required scopes for retrieving users.",
+      "The source does not document pagination for the all-users endpoint, so pagination is set to none; completeness beyond the returned response is unconfirmed.",
+      "The source does not confirm whether the all-users response includes suspended or deactivated people, or define archived status semantics; archived=true is treated as deleted.",
+      "The source does not document email, display name, role, or user type fields in the all-users response, so those fields are unavailable.",
+      "The source does not document rate limits, plan requirements, or API errors returned in successful HTTP 200 response bodies."
+    ]
+  }
+}

@@ -46,6 +46,55 @@ export const claudeCli = (model = DEFAULT_MODEL, timeoutMs = 300_000): Llm => as
   });
 };
 
+/**
+ * Dev-only adapter over the local Codex CLI and its ChatGPT sign-in. A read-only sandbox in an empty temp folder, no user config
+ * and no rules, so a prompt injected through vendor docs can't write or reach the network. Codex has no system prompt flag,
+ * so the system text leads the prompt. Its --output-schema is strict and rejects the manifest's oneOf and records, so the schema
+ * rides in the prompt too, and Zod and the repair loop validate. effort is a Codex reasoning level such as low, high or max.
+ */
+export const codexCli = (model?: string, effort?: string, timeoutMs = 600_000): Llm => async req => {
+  const { spawn } = await import('node:child_process');
+  const { mkdtemp, readFile, rm } = await import('node:fs/promises');
+  const { join } = await import('node:path');
+  const dir = await mkdtemp(join(tmpdir(), 'codex-read-'));
+  const { $schema: _draft, ...schema } = req.schema as { $schema?: string };
+  const started = Date.now();
+  const args = [
+    'exec', '--ephemeral', '--skip-git-repo-check', '--ignore-user-config', '--ignore-rules', '--json', '-s', 'read-only', '-C', dir,
+    '-o', join(dir, 'answer.json'),
+    ...(model ? ['-m', model] : []), ...(effort ? ['-c', `model_reasoning_effort="${effort}"`] : []), '-',
+  ];
+  try {
+    const events = await new Promise<string>((resolve, reject) => {
+      const child = spawn('codex', args, { cwd: dir, stdio: ['pipe', 'pipe', 'pipe'] });
+      const timer = setTimeout(() => { child.kill(); reject(new Error(`Model call timed out after ${timeoutMs / 1000}s`)); }, timeoutMs);
+      let out = '';
+      let err = '';
+      child.stdout.on('data', d => { out += d; });
+      child.stderr.on('data', d => { err += d; });
+      child.on('error', e => { clearTimeout(timer); reject(e); });
+      child.on('close', code => {
+        clearTimeout(timer);
+        if (code === 0) resolve(out);
+        else reject(new Error(`Codex call failed (exit ${code}): ${(out.match(/"message":"([^"]+)"/)?.[1] ?? err).slice(0, 300)}`));
+      });
+      req.signal?.addEventListener('abort', () => child.kill());
+      child.stdin.end(`${req.system}\n\nDo not run commands. Answer with one JSON object that matches this JSON Schema, and nothing else.\n${JSON.stringify(schema)}\n\n${req.prompt}`);
+    });
+    let output: unknown = null;
+    const answer = await readFile(join(dir, 'answer.json'), 'utf8').catch(() => '');
+    try { output = JSON.parse(answer.slice(answer.indexOf('{'), answer.lastIndexOf('}') + 1)); } catch { /* Fails schema review, so the repair loop asks again. */ }
+    const usage = { inputTokens: 0, outputTokens: 0, costUsd: 0, ms: Date.now() - started, model: [model ?? 'codex default', effort].filter(Boolean).join(' ') };
+    for (const line of events.split('\n')) {
+      const e = line.startsWith('{') ? JSON.parse(line) : null;
+      if (e?.type === 'turn.completed') { usage.inputTokens += e.usage?.input_tokens ?? 0; usage.outputTokens += e.usage?.output_tokens ?? 0; }
+    }
+    return { output, usage };
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+};
+
 /** The model stopped without an answer. The message is written for the person who asked for the read. */
 export class LlmStopped extends Error {
   code: 'refused' | 'too_long';
@@ -91,4 +140,46 @@ export const claudeApi = (model = API_MODEL): Llm => {
     const call = message.content.find(b => b.type === 'tool_use' && b.name === TOOL);
     return { output: call?.type === 'tool_use' ? call.input : null, usage };
   };
+};
+
+/**
+ * OpenAI Chat Completions adapter, over fetch so no SDK is added. Strict schemas need additionalProperties false on every
+ * object and the manifest has records, so strict is off. Zod and the repair loop in generate.ts validate, as for claudeApi.
+ */
+export const openaiApi = (model: string, key = process.env.OPENAI_API_KEY): Llm => async req => {
+  const started = Date.now();
+  const { $schema: _draft, ...schema } = req.schema as { $schema?: string };
+  const res = await fetch(`${process.env.OPENAI_BASE_URL ?? 'https://api.openai.com/v1'}/chat/completions`, {
+    method: 'POST',
+    headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: 'system', content: req.system }, { role: 'user', content: req.prompt }],
+      response_format: { type: 'json_schema', json_schema: { name: 'manifest', schema, strict: false } },
+    }),
+    signal: req.signal,
+  });
+  const body = await res.json().catch(() => null) as OpenAiReply | null;
+  // The status stays in the message so isRateLimit in read-batch sees a 429.
+  if (!res.ok) throw new Error(`OpenAI ${res.status}: ${body?.error?.message ?? res.statusText}`);
+  const choice = body?.choices?.[0];
+  if (choice?.message?.refusal) throw new LlmStopped('refused', 'The AI declined to read this content.');
+  if (choice?.finish_reason === 'length') throw new LlmStopped('too_long', 'These docs produced more output than one read allows.');
+  let output: unknown = null;
+  try { output = JSON.parse(choice?.message?.content ?? ''); } catch { /* Unparsable JSON fails schema review, so the repair loop asks again. */ }
+  // shortcut: costUsd stays 0 because prices differ per model and change often. Add a price table when cost is compared.
+  return { output, usage: { inputTokens: body?.usage?.prompt_tokens ?? 0, outputTokens: body?.usage?.completion_tokens ?? 0, costUsd: 0, ms: Date.now() - started, model } };
+};
+
+type OpenAiReply = {
+  choices?: { finish_reason?: string; message?: { content?: string | null; refusal?: string | null } }[];
+  usage?: { prompt_tokens?: number; completion_tokens?: number };
+  error?: { message?: string };
+};
+
+/** OpenAI when its key and model are set, else the Anthropic API when its key is set. Keys stay in the server's env. */
+export const llmFromEnv = (): Llm | null => {
+  const { OPENAI_API_KEY, OPENAI_MODEL, ANTHROPIC_API_KEY } = process.env;
+  if (OPENAI_API_KEY && OPENAI_MODEL) return openaiApi(OPENAI_MODEL, OPENAI_API_KEY);
+  return ANTHROPIC_API_KEY ? claudeApi() : null;
 };

@@ -1,0 +1,174 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Sentry",
+      "slug": "sentry",
+      "apiVersion": "v0"
+    },
+    "baseUrl": "https://{region}.sentry.io",
+    "connectionFields": [
+      {
+        "name": "region",
+        "label": "Sentry region",
+        "example": "us"
+      }
+    ],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Auth token",
+        "headerName": "Authorization",
+        "prefix": "Bearer"
+      },
+      {
+        "type": "api_key",
+        "label": "DSN",
+        "in": "header",
+        "name": "Authorization",
+        "prefix": "DSN"
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "organization",
+        "request": {
+          "method": "GET",
+          "path": "/api/0/organizations/",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "organizationSlug": "0.slug"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/api/0/organizations/{{context.organizationSlug}}/members/",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "$",
+      "pagination": {
+        "type": "link_header",
+        "sizeParam": null,
+        "pageSize": 100
+      },
+      "requiredScopes": [
+        "org:read",
+        "member:read"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user.id",
+          "fallbackPaths": [
+            "id"
+          ],
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "user.email",
+          "fallbackPaths": [
+            "email"
+          ],
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user.name",
+          "fallbackPaths": [
+            "name"
+          ],
+          "map": null,
+          "format": null
+        },
+        "status": {
+          "path": "user.isActive",
+          "fallbackPaths": null,
+          "map": {
+            "true": "active",
+            "false": "inactive"
+          },
+          "format": null
+        },
+        "role": {
+          "path": "orgRole",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "userType": null,
+        "lastActiveAt": {
+          "path": "user.lastActive",
+          "fallbackPaths": [
+            "user.lastLogin"
+          ],
+          "map": null,
+          "format": "iso8601"
+        },
+        "createdAt": {
+          "path": "user.dateJoined",
+          "fallbackPaths": [
+            "dateCreated"
+          ],
+          "map": null,
+          "format": "iso8601"
+        }
+      }
+    },
+    "usage": {
+      "kind": "last_activity_field"
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "\"name\":\"auth_token\",\"type\":\"http\",\"scheme\":\"bearer\""
+      },
+      {
+        "claim": "auth",
+        "quote": "\"name\":\"dsn\",\"type\":\"http\",\"scheme\":\"DSN\""
+      },
+      {
+        "claim": "pagination",
+        "quote": "cursor(query)"
+      },
+      {
+        "claim": "users",
+        "quote": "List all organization members."
+      },
+      {
+        "claim": "usage",
+        "quote": "\"lastActive\":\"string date-time\""
+      }
+    ],
+    "assumptions": [
+      "The source contained suspicious text.",
+      "The source does not document how to select an organization when credentials can access more than one, so the first organization returned is used.",
+      "The source lists a custom DSN HTTP auth scheme but does not document its wire header; it is represented as Authorization with the DSN prefix.",
+      "The organization-members endpoint exposes a cursor query parameter but does not document where the next cursor is returned; link-header pagination is assumed.",
+      "The source exposes isActive and isSuspended separately; status is mapped from isActive, so suspended status is not represented independently.",
+      "The source does not state API request limits or rate-limit headers, so rateLimit is left null.",
+      "The source does not document a paid plan requirement."
+    ]
+  }
+}

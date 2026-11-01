@@ -1,0 +1,131 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "blocks": []
+    }
+  ],
+  "last": {
+    "schemaVersion": 1,
+    "app": {
+      "name": "Zoom",
+      "slug": "zoom",
+      "apiVersion": "v2"
+    },
+    "baseUrl": "https://api.zoom.us/v2",
+    "connectionFields": [],
+    "authMethods": [
+      {
+        "type": "bearer",
+        "label": "Bearer access token",
+        "headerName": "Authorization",
+        "prefix": "Bearer "
+      }
+    ],
+    "extraHeaders": {},
+    "context": [
+      {
+        "name": "division",
+        "request": {
+          "method": "GET",
+          "path": "/divisions",
+          "query": {},
+          "body": null,
+          "readOnlyPostReason": null
+        },
+        "extract": {
+          "divisionId": "divisions.0.division_id"
+        }
+      }
+    ],
+    "users": {
+      "request": {
+        "method": "GET",
+        "path": "/divisions/{{context.divisionId}}/users",
+        "query": {},
+        "body": null,
+        "readOnlyPostReason": null
+      },
+      "recordsPath": "users",
+      "pagination": {
+        "type": "cursor",
+        "cursorPath": "next_page_token",
+        "cursorParam": "next_page_token",
+        "cursorIn": "query",
+        "hasMorePath": "next_page_token",
+        "sizeParam": "page_size",
+        "pageSize": 30
+      },
+      "requiredScopes": [
+        "division:read:admin"
+      ],
+      "planRequirement": null,
+      "fields": {
+        "externalId": {
+          "path": "user_id",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "email": {
+          "path": "user_email",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "displayName": {
+          "path": "user_display_name",
+          "fallbackPaths": null,
+          "map": null,
+          "format": null
+        },
+        "status": null,
+        "role": null,
+        "userType": null,
+        "lastActiveAt": null,
+        "createdAt": null
+      }
+    },
+    "usage": {
+      "kind": "unavailable",
+      "reason": "The source does not document a per-user last-activity field, audit or activity log, or per-user usage report."
+    },
+    "errorEnvelope": null,
+    "rateLimit": {
+      "maxRequestsPerMinute": null,
+      "remainingHeader": null,
+      "resetHeader": null,
+      "resetFormat": null
+    },
+    "evidence": [
+      {
+        "claim": "auth",
+        "quote": "Scopes : division:read:admin"
+      },
+      {
+        "claim": "pagination",
+        "quote": "Use the next page token to paginate through a large set of results."
+      },
+      {
+        "claim": "rate_limit",
+        "quote": "Rate Limit Label : LIGHT"
+      },
+      {
+        "claim": "users",
+        "quote": "List the users of a division under your account."
+      },
+      {
+        "claim": "plan",
+        "quote": "Prerequisite : Pro or higher account."
+      }
+    ],
+    "assumptions": [
+      "The source does not document how to obtain or refresh the access token; this manifest assumes a bearer access token in the Authorization header.",
+      "The provided source does not provide an account-wide users endpoint or a way to iterate every division. The users request uses the first division returned by the divisions response, so complete account coverage is unconfirmed.",
+      "The source does not state whether the division user list includes suspended or deactivated people.",
+      "The division user response documents only user_id, user_email, and user_display_name, so status, role, user type, last activity, and creation time cannot be mapped.",
+      "The source gives rate-limit labels but no numeric limit, remaining header, or reset header.",
+      "The source does not state a plan requirement for the division endpoints."
+    ]
+  }
+}

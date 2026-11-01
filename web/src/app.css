@@ -9,9 +9,7 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .app-brand { display: flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; cursor: pointer; font: var(--fw-medium) 17px/1 var(--font-sans); color: var(--text-strong); white-space: nowrap; }
 .app-nav { display: flex; gap: 24px; min-width: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
 .app-right { margin-left: auto; display: flex; align-items: center; gap: 20px; white-space: nowrap; flex: none; }
-.role-label { display: flex; align-items: center; gap: 8px; font: 400 13px/1 var(--font-mono); color: var(--ink-2); }
 .paste { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: 0; background: transparent; color: var(--text-strong); font: 400 14px/1.5 var(--font-mono); resize: vertical; }
-.role-select { height: 30px; padding: 0 6px; border: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font: 400 13px/1 var(--font-mono); }
 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, min(var(--panel-w), 38%)); min-height: calc(100vh - var(--header-h)); }
 .split-main { display: flex; flex-direction: column; min-width: 0; padding: 56px var(--page-pad) 40px; }
 .split-panel { min-width: 0; background: var(--surface-panel); border-left: 1px solid var(--border-panel); padding: 56px var(--page-pad) 40px; }
@@ -36,6 +34,9 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
 .person-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 90px 80px 110px; gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: var(--rule-hair); }
 .sample-row { display: grid; grid-template-columns: 1fr 1.3fr auto; gap: 12px; padding: 9px 0; border-bottom: var(--rule-hair); }
 .notice { padding: 20px var(--page-pad) 0; }
+.account { display: flex; align-items: center; gap: 12px; font: 400 13px/1 var(--font-mono); color: var(--ink-2); }
+.avatar { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--blue); color: var(--white); font: 500 12px/1 var(--font-sans); letter-spacing: .02em; }
+.account-name { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .home-list { list-style: none; margin: 32px 0 0; padding: 0; border-top: var(--rule-strong); }
 .home-row { display: grid; grid-template-columns: 10px minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) 150px; gap: 20px; align-items: center; padding: 16px 0; border-bottom: var(--rule-hair); }
 .home-name { display: flex; align-items: center; gap: 10px; min-width: 0; font-weight: var(--fw-medium); color: var(--text-strong); overflow-wrap: anywhere; }
@@ -48,12 +49,11 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
   .app-header { flex-wrap: wrap; gap: 0 16px; padding-top: 8px; }
   .app-brand { min-height: 44px; }
   .app-nav { order: 3; flex-basis: 100%; }
-  .app-nav button:not([aria-current]) .step-name, .role-text { display: none; }
+  .app-nav button:not([aria-current]) .step-name, .account-name { display: none; }
   .app-brand { font-size: 15px; }
   .app-right { gap: 12px; }
   .app-nav button, .tap { min-height: 44px; }
   .tap { display: inline-flex; align-items: center; }
-  .role-select { height: 44px; }
   .split { grid-template-columns: minmax(0, 1fr); }
   .split-main, .split-panel { padding-top: 32px; }
   .split-panel { border-left: 0; border-top: 1px solid var(--border-panel); }
@@ -73,3 +73,63 @@ button { transition: background var(--dur) var(--ease), color var(--dur) var(--e
   .home-actions { justify-content: flex-start; gap: 24px; }
   .home-remove { justify-content: flex-start; }
 }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.landing { min-height: 100vh; background: var(--paper); color: var(--ink); font: 400 16px/1.45 var(--font-sans); }
+.landing-inner { max-width: 1312px; margin: 0 auto; padding: 0 clamp(16px, 2.2vw, 32px); box-sizing: border-box; }
+.landing a { color: inherit; text-underline-offset: 4px; }
+.landing-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; border-bottom: 1px solid var(--line); }
+.landing-brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 500; letter-spacing: -.01em; }
+.landing-nav { display: flex; align-items: center; gap: 24px; }
+.landing-brand, .landing-cta, .landing-link { white-space: nowrap; }
+.landing-link { display: inline-flex; align-items: center; min-height: 44px; }
+.landing-cta { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; text-decoration: none; font-weight: 500; }
+.landing-cta-ink { background: var(--ink); color: var(--paper) !important; }
+.landing-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 32px 72px; padding: clamp(40px, 6vw, 80px) 0 56px; }
+.landing-hero h1 { flex: 1 1 620px; min-width: 0; margin: 0; font-size: clamp(44px, 6.6vw, 96px); line-height: 1; letter-spacing: -.045em; font-weight: 400; }
+.landing-lead { margin: 0; font-size: 20px; line-height: 1.35; letter-spacing: -.01em; color: var(--ink-2); }
+.landing-form { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.landing-form input { flex: 1 1 260px; min-width: 0; min-height: 48px; padding: 0 12px; box-sizing: border-box; border: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); font: 400 14px/1 var(--font-mono); }
+.landing-form button { min-height: 48px; padding: 0 20px; border: 0; border-radius: 0; background: var(--ink); color: var(--paper); font: 500 16px/1 var(--font-sans); cursor: pointer; }
+.landing-form button:disabled { cursor: default; }
+.landing-stages { display: flex; flex-wrap: wrap; align-items: flex-start; border-top: 1px solid var(--ink); }
+.landing-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 0 12px; width: 100%; min-height: 104px; padding: 12px 20px 12px 0; box-sizing: border-box; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; font: inherit; cursor: pointer; transition: background .15s ease; }
+.landing-row:hover { background: #eceee9; }
+.landing-n { font: 400 13px/1 var(--font-mono); color: var(--ink-3); }
+.landing-stage { display: block; font-size: 26px; line-height: 1.15; letter-spacing: -.025em; }
+.landing-stage-text { display: block; margin-top: 3px; font-size: 15px; }
+.landing-stack { position: relative; flex: 0 1 460px; min-width: 0; aspect-ratio: 460 / 624; }
+.landing-plate { position: absolute; left: 0; width: 100%; height: auto; overflow: visible; transition: transform .28s cubic-bezier(.2, .8, .2, 1); }
+.landing-done { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--ink); }
+.landing-done p { margin: 0; font: 400 15px/1.4 var(--font-mono); }
+.landing-done .landing-cta { min-height: 48px; padding: 0 20px; }
+.landing-foot { margin: 0; padding: 40px 0 64px; font-size: 14px; color: var(--ink-3); }
+.signup { display: flex; flex-direction: column; }
+.signup-header { padding: 0 clamp(16px, 2.2vw, 32px); }
+.signup-main { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 72px; width: 100%; max-width: 1180px; margin: 0 auto; padding: 40px clamp(16px, 2.2vw, 32px); box-sizing: border-box; }
+.signup-copy { flex: 1 1 420px; min-width: 0; max-width: 480px; }
+.signup h1 { margin: 0; font-size: clamp(44px, 5vw, 64px); line-height: 1.02; letter-spacing: -.045em; font-weight: 400; }
+.signup-lead { margin: 12px 0 0; font-size: 18px; color: var(--ink-2); }
+.signup-form { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+.signup-form label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--ink-2); }
+.signup-form input { width: 100%; min-height: 48px; padding: 0 12px; box-sizing: border-box; border: 1px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); font: inherit; }
+.signup-error { margin: 0; padding: 12px 14px; border-left: 2px solid var(--ink); background: var(--paper-raised); font-size: 15px; }
+.signup-form input::placeholder { color: var(--ink-3); }
+.signup-form button:disabled { opacity: .7; cursor: default; }
+.signup-form button { min-height: 52px; margin-top: 4px; border: 0; border-radius: 0; background: var(--blue); color: var(--white); font: 500 16px/1 var(--font-sans); cursor: pointer; }
+.signup-stack { position: relative; flex: 1 1 340px; min-width: 0; max-width: 460px; aspect-ratio: 460 / 520; }
+.signup-stack svg { position: absolute; left: 0; width: 100%; height: auto; overflow: visible; }
+.landing :is(button, a, input):focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .landing-row, .landing-plate { transition: none; } }
+@media (max-width: 480px) { .landing-header .landing-brand { font-size: 15px; } .landing-nav { gap: 16px; } .landing-header .landing-cta { padding: 0 12px; } }
+@media (max-width: 1024px) { .landing-leader { display: none; } .landing-stack { margin: 48px auto 0; } }
+.account-open { display: inline-flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+.account-open:hover .account-name, .account-open[aria-current] .account-name { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.account-open:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+.avatar-lg { width: 64px; height: 64px; font-size: 22px; }
+.profile { max-width: 720px; gap: 48px; }
+.profile-head { display: flex; align-items: center; gap: 24px; }
+.profile-head .page-title { min-width: 0; }
+.profile-section { display: flex; flex-direction: column; gap: 20px; }
+.profile-note { margin: 0; font: var(--type-body); color: var(--text-strong); }
+.profile-back { margin-top: -16px; }
