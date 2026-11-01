@@ -1,0 +1,8 @@
+# gitleaks' default rules, plus allowances for text that is public by design.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Vendor docs and specs are fetched from public URLs by scripts, and their example tokens are documentation, not credentials."
+paths = ['''^corpus/(specs|docs)/''']
+regexes = ['''tok-secret-\d+''']

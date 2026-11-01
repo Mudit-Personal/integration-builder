@@ -4,3 +4,7 @@ web/dist/
 .DS_Store
 .env*
 .vercel/
+*.pem
+*.key
+*.p12
+.npmrc
