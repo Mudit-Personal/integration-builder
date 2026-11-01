@@ -81,7 +81,7 @@ Decisions already made (ask me before changing any)
 - Client: ${d.deliverables.client ? 'generated, in the attached files' : 'not generated. Write a client from manifest.json'}.
 - Auth: ${authLine(m, d)}.
 - Users: ${d.deliverables.users ? `${m.users.request.method} ${m.users.request.path}` : 'not exported'}.
-- Usage: ${usageLine(m)}.
+- Usage: ${usageLine(m).replace(/\.$/, '')}.
 - Pagination: ${pagingLine(m, d)}.
 - Errors: classified by the runtime. Retries ${retryLine(d)}.${d.deliverables.errors ? ' On 429, follow Retry-After.' : ''}
 - Logging: ${d.deliverables.logging ? `JSON at ${d.logLevel}. Never log secrets` : 'off'}.
