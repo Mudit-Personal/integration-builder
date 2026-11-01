@@ -9,9 +9,10 @@ import { Decide } from './screens/Decide.tsx';
 import { Home } from './screens/Home.tsx';
 import { Profile } from './screens/Profile.tsx';
 import { LiveReading, Read } from './screens/Read.tsx';
+import { Ready } from './screens/Ready.tsx';
 import { Source } from './screens/Source.tsx';
 import { audienceOf, JOURNEYS } from './journey.ts';
-import { CHECKS, CODE, DECIDE, initial, READ, reducer, RUN, SOURCE, type Action, type Flow } from './state.ts';
+import { CHECKS, CODE, DECIDE, initial, READ, READY, reducer, RUN, SOURCE, type Action, type Flow } from './state.ts';
 
 export type ScreenProps = { s: Flow; dispatch: (a: Action) => void; go: (step: number) => void; pack: AppPack; name: string };
 
@@ -117,6 +118,7 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
     dispatch(action);
     window.scrollTo(0, 0);
   };
+  const home = () => leave({ type: 'home' }, notice === NOT_SAVED ? notice : null);
   const open = (saved: SavedConnector) => {
     const lost = packLost(saved);
     leave({ type: 'open', saved, lost }, lost ? PACK_LOST : null);
@@ -127,13 +129,13 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
   };
   const Screen = SCREENS[s.step];
   return <>
-    <AppHeader steps={s.id && !profile ? JOURNEYS[s.audience].steps : []} current={s.step} maxStep={s.maxStep} onStep={go} onHome={() => leave({ type: 'home' }, notice === NOT_SAVED ? notice : null)} right={<>
+    <AppHeader steps={s.id && !profile ? JOURNEYS[s.audience].steps : []} current={s.step} maxStep={s.maxStep} onStep={go} onHome={home} right={<>
       {s.id && !profile ? <Button variant="link" style={{ font: '400 13px/1 var(--font-mono)' }} onClick={() => leave({ type: 'reset' })}>Start over</Button> : null}
       <span className="account"><button type="button" className="account-open" aria-label={`Your profile, signed in as ${account.email}`} aria-current={profile ? 'page' : undefined} onClick={() => onProfile(true)}>
-        <span className="avatar" title={displayName(account)}>{initialsOf(account)}</span><span className="account-name">{account.workspace.name}</span></button>
+        <span className="avatar" title={displayName(account)}>{initialsOf(account)}</span></button>
         <Button variant="link" style={{ font: '400 13px/1 var(--font-mono)' }} onClick={onLogOut}>Log out</Button></span>
     </>} />
-    {profile ? <Profile account={account} onAccount={onAccount} onBack={() => onProfile(false)} backLabel={s.id ? `Back to ${pack?.manifest.app.name ?? 'your connector'}` : 'Back to your connectors'} /> : null}
+    {profile ? <Profile account={account} connectors={connectors && connectors.length} onAccount={onAccount} onBack={() => onProfile(false)} backLabel={s.id ? `Back to ${pack?.manifest.app.name ?? 'your connector'}` : 'Back to your connectors'} /> : null}
     {/* Hidden, not unmounted, so a read, a check run or a half-made decision carries on behind the profile. */}
     <div hidden={profile}>
     {notice ? <div className="notice"><Callout>{notice}</Callout></div> : null}
@@ -141,6 +143,7 @@ export function App({ account, start = null, profile, onProfile, onAccount, onLo
       : !s.id ? <Home connectors={connectors!} onNew={() => leave({ type: 'new', id: crypto.randomUUID(), audience: lastAudience(connectors!) })} onOpen={open} onRemove={remove} />
       : s.step === SOURCE ? <Source s={s} dispatch={dispatch} go={go} onRead={startRead} />
       : s.step === READ && s.read.kind !== 'idle' ? <LiveReading read={s.read} url={s.url} go={go} onPaste={text => startRead(s.url, text)} />
+      : pack && s.step === READY ? <Ready s={s} go={go} name={pack.manifest.app.name} onHome={home} onAnother={() => leave({ type: 'new', id: crypto.randomUUID(), audience: s.audience })} />
       : pack ? <Suspense><Screen key={s.slug} s={s} dispatch={dispatch} go={go} pack={pack} name={pack.manifest.app.name} /></Suspense>
       : <div className="centered"><P>{failed ? "This app's data didn't load. Reload the page to try again." : 'Loading…'}</P></div>}
     </div>

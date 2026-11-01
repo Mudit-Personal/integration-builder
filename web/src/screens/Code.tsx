@@ -66,7 +66,7 @@ export function Code({ s, go, pack, name }: ScreenProps) {
     {note ? <Callout style={{ marginTop: 24 }}>{note}</Callout> : null}
     <div className="footer-row" style={{ gap: 12, marginTop: 24 }}><Button variant="link" onClick={() => go(CHECKS)}>Back</Button><Push />{mode === SUMMARY ? <Button variant="secondary" onClick={() => copy('summary', summary, 'Summary copied. Paste it into a ticket or a message.')}>Copy summary</Button> : mode !== PROMPT ? <Button variant="secondary" onClick={save}>Download .zip</Button> : <><Button variant="secondary" onClick={save}>Download files</Button><Button variant="secondary" onClick={() => copy('prompt', prompt, `Prompt copied. ${TOOLS[tool]}`)}>Copy prompt</Button></>}<Button onClick={() => go(RUN)}>{prompted ? 'See a preview' : 'Run a sync'}</Button></div></>}>
     {prompted ? <PageTitle title="Hand it to your developer" lead={`Send this summary to whoever builds it. It carries every choice you made for ${name}.`} aside={<StatusLabel>Checks passed</StatusLabel>} />
-      : <PageTitle title={`Your ${name} integration is ready`} lead={LEADS[mode](FOLDER(m))} aside={<StatusLabel>Checks passed</StatusLabel>} />}
+      : <PageTitle title={`Your ${name} code is ready`} lead={LEADS[mode](FOLDER(m))} aside={<StatusLabel>Checks passed</StatusLabel>} />}
     <Tabs tabs={modes} value={mode} onChange={v => { setMode(v); setNote(null); }} style={{ marginTop: 32 }} />
     {mode === SUMMARY ? <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 28 }}>
       <div className="prompt">{summary}</div>

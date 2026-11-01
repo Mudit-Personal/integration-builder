@@ -7,7 +7,7 @@ import type { LiveRead } from './live.ts';
 import { audienceOf, CHECKS, CODE, DECIDE, JOURNEYS, READ, SOURCE, type Audience } from './journey.ts';
 import { matchApp, type AppEntry, type AppPack } from './pack.ts';
 
-export { CHECKS, CODE, DECIDE, READ, RUN, SOURCE } from './journey.ts';
+export { CHECKS, CODE, DECIDE, READ, READY, RUN, SOURCE } from './journey.ts';
 
 export const APPS = apps as AppEntry[];
 

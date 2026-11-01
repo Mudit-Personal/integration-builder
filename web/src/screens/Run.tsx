@@ -5,7 +5,7 @@ import { applyDecisions } from '../decisions.ts';
 import { Button, Callout, KeyValueRow, Mono, P, PageTitle, Push, SectionHeading, SplitLayout, StatusLabel } from '../ds.tsx';
 import type { RunResult } from '../../../src/runtime.ts';
 import { JOURNEYS } from '../journey.ts';
-import { CODE } from '../state.ts';
+import { CODE, READY } from '../state.ts';
 
 type Sync = { kind: 'running' } | { kind: 'done'; result: RunResult; at: Date } | { kind: 'failed'; message: string };
 
@@ -28,7 +28,7 @@ export function Run({ s, go, pack, name }: ScreenProps) {
   }, [m, s.decisions, round]);
 
   const people = JOURNEYS[s.audience].run === 'people';
-  const footer = <><Button variant="link" onClick={() => go(CODE)}>{people ? 'Back' : 'Back to code'}</Button><Push /><Button variant="secondary" disabled={sync.kind === 'running'} onClick={() => setRound(r => r + 1)}>Run again</Button></>;
+  const footer = <><Button variant="link" onClick={() => go(CODE)}>{people ? 'Back' : 'Back to code'}</Button><Push /><Button variant="secondary" disabled={sync.kind === 'running'} onClick={() => setRound(r => r + 1)}>Run again</Button>{sync.kind === 'done' ? <Button onClick={() => go(READY)}>Continue</Button> : null}</>;
   if (sync.kind !== 'done') {
     return <SplitLayout footer={footer} panel={people ? <SectionHeading lead={`A preview on a simulated copy of ${name}. Nothing touches your real account.`}>Preview</SectionHeading> : <SectionHeading lead="The generated connector runs here exactly as it will in your app, against a simulated vendor.">First sync</SectionHeading>}>
       <PageTitle title={sync.kind === 'running' ? (people ? `Finding your ${name} people…` : `Syncing ${name}…`) : "The sync didn't finish"} />
