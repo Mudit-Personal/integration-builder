@@ -96,7 +96,7 @@ label:active > .check-box { transform: scale(.88); }
   .app-header { flex-wrap: wrap; gap: 0 16px; padding-top: 8px; }
   .app-brand { min-height: 44px; }
   .app-nav { order: 3; flex-basis: 100%; }
-  .app-nav button:not([aria-current]) .step-name { display: none; }
+  .app-nav button:not([aria-current]) .step-name, .account-name { display: none; }
   .app-brand { font-size: 15px; }
   .app-right { gap: 12px; }
   .app-nav button, .tap { min-height: 44px; }
@@ -192,6 +192,9 @@ label:active > .check-box { transform: scale(.88); }
 @media (max-width: 480px) { .landing-header .landing-brand { font-size: 15px; } .landing-nav { gap: 16px; } .landing-header .landing-cta { padding: 0 12px; } }
 @media (max-width: 1024px) { .landing-leader { display: none; } .landing-stack { margin: 48px auto 0; } }
 .account-open { display: inline-flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+.account-name { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-open[aria-current] .account-name { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .account-open:hover .account-name { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; } }
 .account-open:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
 .avatar-lg { width: 72px; height: 72px; font-size: 24px; }
 .profile-head { display: flex; align-items: center; gap: 24px; margin-bottom: 48px; }
