@@ -26,8 +26,8 @@ export function LiveReading({ read, url, go, onRetry, onPaste }: { read: Exclude
   if (read.kind === 'reading') {
     return <SplitLayout footer={back} panel={<>{HOW_READ}<Elapsed /></>}>
       <PageTitle title={`Reading ${host}'s documentation…`} lead="This usually takes 1 to 3 minutes." />
-      <div style={{ borderTop: 'var(--rule-strong)', marginTop: 28 }}>
-        {read.messages.map((m, i) => <CheckItem key={`${i}${m}`} title={m} status={i === read.messages.length - 1 ? 'pending' : 'done'} />)}
+      <div className="stream" style={{ borderTop: 'var(--rule-strong)', marginTop: 28 }}>
+        {read.messages.map((m, i) => <CheckItem key={`${i}${m}`} title={m} status={i === read.messages.length - 1 ? 'live' : 'done'} />)}
       </div>
     </SplitLayout>;
   }
@@ -67,6 +67,6 @@ export function Read({ s, go, pack, name }: ScreenProps) {
     <SectionHeading size="group" style={{ marginTop: 36 }}>Fingerprint</SectionHeading>
     <P>The result is fingerprinted as <code>{pack.hash}</code>.</P></>}>
     <PageTitle title={done ? `${name}'s documentation is mapped` : `Mapping ${name}'s documentation…`} lead={done ? `${steps.length} steps done. Nothing has been generated yet.` : live ? 'Showing what the read found.' : `Replaying an AI read of ${name}'s docs, with the quote behind each finding.`} />
-    <div style={{ borderTop: 'var(--rule-strong)', marginTop: 28 }}>{steps.map((r, i) => <CheckItem key={r.title} title={r.title} description={i < n ? r.description : '…'} meta={i < n ? r.meta : ''} status={i < n ? 'done' : 'pending'} />)}</div>
+    <div style={{ borderTop: 'var(--rule-strong)', marginTop: 28 }}>{steps.map((r, i) => <CheckItem key={r.title} title={r.title} description={r.description} waiting={i >= n} meta={i < n ? r.meta : ''} status={i < n ? 'done' : i === n ? 'live' : 'pending'} />)}</div>
   </SplitLayout>;
 }

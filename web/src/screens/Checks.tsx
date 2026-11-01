@@ -14,8 +14,8 @@ const HIGHLIGHTS = ['server_down', 'token_expires_midway', 'token_revoked', 'cou
 const NOT_TESTED = 'Not tested, because';
 const STATIC_META = { pass: ['Passed', 'done'], fail: ['Needs you', 'hollow'], skipped: ['Skipped', 'pending'] } as const;
 
-const scenarioRow = (r: ScenarioResult | undefined, replay: boolean): { description: string; meta: string; status: Tone } => {
-  if (!r) return { description: 'Waiting', meta: '', status: 'pending' };
+const scenarioRow = (proves: string, r: ScenarioResult | undefined, replay: boolean, next: boolean): { description: string; meta: string; status: Tone; waiting?: boolean } => {
+  if (!r) return { description: proves, meta: '', status: next ? 'live' : 'pending', waiting: true };
   if (r.status === 'skipped') return { description: r.detail.startsWith(NOT_TESTED) ? r.detail : `Not applicable. ${r.detail}`, meta: 'Skipped', status: 'pending' };
   if (r.status === 'fail') return { description: r.detail, meta: 'Failed', status: 'hollow' };
   return { description: r.proves, meta: replay ? 'Passed · replayed' : 'Passed', status: 'done' };
@@ -99,7 +99,7 @@ export function Checks({ s, dispatch, go, onRead, pack, name }: ScreenProps) {
     {survived.length || (verdict && done) ? <div style={{ marginTop: 24 }}><Button variant="link" onClick={() => setShowAll(v => !v)}>{showAll ? 'Hide the full list' : `Show every check, ${passed} passed`}</Button></div> : null}
     {folded ? null : <div className="checks-grid">
       {GROUPS.map((g, gi) => <div key={g.label}><SectionHeading size="group" style={{ marginTop: 16 }}>{g.label}</SectionHeading>
-        {SCENARIOS.filter(x => g.categories.includes(x.category)).map(x => <CheckItem key={x.id} title={x.title} {...scenarioRow(results[SCENARIOS.indexOf(x)], replay)} />)}
+        {SCENARIOS.filter(x => g.categories.includes(x.category)).map(x => <CheckItem key={x.id} title={x.title} {...scenarioRow(x.proves, results[SCENARIOS.indexOf(x)], replay, run.kind === 'running' && SCENARIOS.indexOf(x) === results.length)} />)}
         {g.categories.includes('safety') ? fixed.map(c => <CheckItem key={c.id} title={c.title} description={run.kind === 'idle' ? 'Waiting' : c.detail} meta={run.kind === 'idle' ? '' : STATIC_META[c.status][0]} status={run.kind === 'idle' ? 'pending' : STATIC_META[c.status][1]} />) : null}
       </div>)}
     </div>}

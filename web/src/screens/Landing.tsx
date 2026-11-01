@@ -32,6 +32,9 @@ const AUTO = 4;
 const STEP_MS = 800;
 const ACCENT = 'var(--blue)', INK = 'var(--ink)', GROUND = 'var(--paper)', MUTED = 'var(--ink-3)';
 
+const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reveal = (el: HTMLElement | null) => el?.scrollIntoView({ block: 'nearest', behavior: still() ? 'auto' : 'smooth' });
+
 type Props = { signedIn: boolean; onLogIn: () => void; onStart: (url?: string) => void };
 
 export function Landing({ signedIn, onLogIn, onStart }: Props) {
@@ -40,13 +43,16 @@ export function Landing({ signedIn, onLogIn, onStart }: Props) {
   const [running, setRunning] = useState(false);
   const [pick, setPick] = useState(3);
   const timers = useRef<number[]>([]);
+  const stack = useRef<HTMLElement>(null);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
   const finished = ran >= AUTO;
 
   const run = (e: FormEvent) => {
     e.preventDefault();
     if (running) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setRan(AUTO); setPick(AUTO - 1); return; }
+    // The plates sit below the fold on most laptops, and they are what this button runs.
+    stack.current?.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' });
+    if (still()) { setRan(AUTO); setPick(AUTO - 1); return; }
     setRan(0); setRunning(true); setPick(0);
     timers.current = range(AUTO).map(i => window.setTimeout(() => {
       const n = i + 1;
@@ -89,7 +95,7 @@ export function Landing({ signedIn, onLogIn, onStart }: Props) {
         </div>
       </section>
 
-      <section aria-label="What happens to an API" className="landing-stages">
+      <section ref={stack} aria-label="What happens to an API" className="landing-stages">
         <div style={{ flex: '1 1 520px', minWidth: 0 }}>
           {stages.map(p => <button key={p.name} type="button" className="landing-row" aria-pressed={p.isOn} onClick={() => { if (!running) setPick(p.i); }}>
             <span className="landing-n">{p.n}</span>
@@ -110,9 +116,9 @@ export function Landing({ signedIn, onLogIn, onStart }: Props) {
         </div>
       </section>
 
-      {finished ? <div aria-live="polite" className="landing-done">
+      {finished ? <div ref={reveal} aria-live="polite" className="landing-done">
         <p>Every problem handled. Ready for you to try.</p>
-        <a href="#app" onClick={e => { e.preventDefault(); onStart(api); }} className="landing-cta" style={{ background: ACCENT, color: 'var(--white)' }}>Build this for real</a>
+        <a href="#app" onClick={e => { e.preventDefault(); onStart(api); }} className="landing-cta landing-cta-blue">Build this for real</a>
       </div> : null}
       <p className="landing-foot">Tested on {APPS.length} real apps. About 30 seconds from docs to a checked integration.</p>
     </div>
